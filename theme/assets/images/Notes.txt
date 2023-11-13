@@ -1,0 +1,36 @@
+User: echocrew
+Password: wifi
+
+Test case:
+User pegawai (jft)      : 199003202015031005 (Rakhmat Darmawan)
+
+User Kabid              : 196609211983032001 (Dra. Hj. DENI KORIANTI)
+
+User jft penyetaraan    : 198303092010011016 (Dody Romansyah Kang)
+
+User kepala dinas/badan : 196507171986091001 (JULIA NOOR, S.IP / BKPSDM Samarinda)
+
+Testing transfer userinfo antar opd
+
+Source      : C2608476E7312525 (BKPSDM)
+Destination : C2608476E7061F34 (UPT METROLOGI)
+
+algoritma syncronisasi dengan mesin absensi
+Potensi Bug :
+1. script execution terlalu lama
+2. kemungkinan hasilnya NULL
+3. kemungkinan error saat tarik data
+
+
+1. opsi pertama lakukan satu per satu untuk setiap mesin dengan jangka waktu 1 hari
+iterasi dengan mengecek counter di database per hari,  
+kolom isinya tgl sinkro, dan counter, lakukan setiap jam 00:05 setiap 30 detik sekali
+setiap berhasil counter tambah 1 sampai counter sama dengan jumlah mesin di m_setup_mesin
+
+2. opsi kedua buat menu sinkronisasi manual, khusus admin BKPSDM saja.
+lakukan pemanggilan api secara asynchronous, per mesin per hari sampai hari yang di tentukan.
+filter yang disediakan
+1. cloud id mesin -> ambil dari m_setup_mesin
+2. nip/pin -> text box
+3. tgl Mulai
+4. tgl selesai

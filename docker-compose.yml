@@ -1,0 +1,91 @@
+# version: "3.7"
+# services:
+#   app:
+#     build:
+#       context: .
+#       dockerfile: .docker/Dockerfile
+#     image: "app-php7.4"
+#     ports:
+#       - 80:80
+#       # - 443:443
+#     volumes:
+#       # - ./docker/ssl/jembranakab_go_id.crt:/etc/ssl/certs/mycert.crt
+#       # - ./docker/ssl/jembranakab_go_id.key:/etc/ssl/private/mycert.key
+#       - ./:/var/www/html:delegated
+#       - ./.docker/php/php.ini:/usr/local/etc/php/php.ini
+#     networks:
+#       - my-network
+#     environment:
+#       TZ: "Asia/Makassar"
+#     restart: always
+#     hostname: swadayamurni.jembranakab.go.id
+#     domainname: jembranakab.go.id
+
+#   # Jika mengunakan container DB , klau tidak dicommand saja
+#   db:
+#     image: mysql:8.0.31
+#     restart: unless-stopped
+#     hostname: db-mysql
+#     ports:
+#       - "3306:3306"
+#     environment:
+#       MYSQL_DATABASE: ${DB_DATABASE}
+#       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+#       MYSQL_PASSWORD: ${DB_PASSWORD}
+#       MYSQL_USER: ${DB_USERNAME}
+#       SERVICE_TAGS: dev
+#       SERVICE_NAME: mysql
+#     volumes:
+#       - .docker/mysql/my.cnf:/etc/mysql/my.cnf
+#       - .docker/mysql/data:/var/lib/mysql:delegated
+#       - .docker/mysql/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
+#     networks:
+#       - my-network
+
+# networks:
+#   my-network:
+#     driver: bridge
+# Menggunakan nginx proxy
+# Run printah ini sebelum menjalankan docker-compose
+# =====================================
+# docker network create nginx-proxy
+# =====================================
+
+# =====================================
+# docker-composer untuk proxy
+# =====================================
+# version: "3.7"
+# services:
+#   nginx-proxy:
+#     image: jwilder/nginx-proxy
+#     container_name: nginx-proxy
+#     ports:
+#       - "80:80"
+#     volumes:
+#       - /var/run/docker.sock:/tmp/docker.sock:ro
+
+# networks:
+#   default:
+#     external:
+#       name: nginx-proxy
+# =====================================
+
+version: "3.7"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+    image: "app-php7.4"
+    volumes:
+      - ./:/var/www/html
+      - ./.docker/php/php.ini:/usr/local/etc/php/php.ini
+    environment:
+      VIRTUAL_HOST: sipekakrenta.jembranakab.go.id
+      TZ: "Asia/Makassar"
+    restart: always
+
+networks:
+  default:
+    external:
+      name: nginx-proxy

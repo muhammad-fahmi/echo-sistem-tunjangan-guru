@@ -1,0 +1,32 @@
+image: atlassian/ssh-ubuntu:0.2.2
+pipelines:
+  branches:
+    dev:
+      - step:
+          name: Deploy to development
+          runs-on:
+            - "self.hosted"
+            - "linux"
+            - "noc"
+          deployment: test
+          script:
+            - echo "Deploying to development environment"
+            - echo "HOST *" > ~/.ssh/config
+            - echo "StrictHostKeyChecking no" >> ~/.ssh/config
+            - eval `ssh-agent -s`
+            - ssh-add $BITBUCKET_SSH_KEY_FILE
+            - ssh -tt $SSH_USER@$SERVER "cd $APP_FOLDER && git pull && docker exec -it $DOCKER_CONTAINER composer install"
+    main:
+      - step:
+          name: Deploy to production
+          runs-on:
+            - "self.hosted"
+            - "linux"
+          deployment: production
+          script:
+            - echo "Deploying to production environment"
+            - echo "HOST *" > ~/.ssh/config
+            - echo "StrictHostKeyChecking no" >> ~/.ssh/config
+            - eval `ssh-agent -s`
+            - ssh-add $BITBUCKET_SSH_KEY_FILE
+            - ssh -tt $SSH_USER@$SERVER "cd $APP_FOLDER && git pull"
