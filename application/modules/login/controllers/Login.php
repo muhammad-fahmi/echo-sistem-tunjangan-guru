@@ -27,7 +27,7 @@ class Login extends MY_Controller
   {
     $res = array();
     $post = $this->input->post();
-    $user = $this->db->get_where('v_user', array(
+    $user = $this->db->get_where('progurinda_m_user', array(
       'id_user' => $post['username'],
       'aktif' => 'Y'
     ));

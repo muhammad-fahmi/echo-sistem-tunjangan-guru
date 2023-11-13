@@ -18,7 +18,7 @@ class Mapel_guru extends MY_Controller
   public function index()
   {
     $this->session->set_userdata('menu', 'mapel_guru');
-    $sent_data = $this->db->get_where('r_mapel_progurinda', 'kode_unor IS NOT NULL')->row_array();
+    $sent_data = $this->db->get_where('progurinda_r_mapel', 'nip IS NOT NULL')->row_array();
     $data = array(
       'page_title' => "Setup Mata Pelajaran Guru",
       'module' => "mapel_guru",
@@ -72,23 +72,19 @@ class Mapel_guru extends MY_Controller
     /// | COMMANDS
     /// |----------------------------------------
     switch ($type) {
-      case 'tambah_usul_ssh': {
-          $select_volume = ssh_get_volume_selection();
+      case 'tambah_mapel_guru': {
           $dataset = [
-            'tahun' => '',
-            'kode_standar' => '',
-            'uraian_standar' => '',
-            'spesifikasi_standar' => '',
-            'volume_standar' => '',
-            'harga_standar' => '',
-            'pdn_standar' => '',
-            'jenis_standar' => '',
+            'nip' => '',
+            'nama_lengkap' => '',
+            'ket_jab' => '',
+            'unit_kerja' => '',
+            'mapel' => '',
+            'id' => $id
           ];
           $data = [
             'modal_title' => "Tambah Mapel Guru",
             'data' => $dataset,
-            'type' => 'insert',
-            'select_volume' => ($select_volume['count'] > 0) ? $select_volume['data'] : ''
+            'type' => 'insert'
           ];
           $res = [
             'status' => true,
@@ -115,47 +111,34 @@ class Mapel_guru extends MY_Controller
     $post = $this->input->post();
 
     /// |----------------------------------------
-    /// | CEK TAHUN & KODE STANDAR
-    /// |----------------------------------------
-    $cek_tahun_kodeStandar = $this->db->get_where('r_standarharga', [
-      'tahun' => $post['tahun'],
-      'kode_standar' => $post['kode_standar'],
-    ])->num_rows();
-    if ($cek_tahun_kodeStandar > 0) {
-      return $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode([
-          'status' => false,
-          'message' => "Maaf, proses penambahan data usul SSH gagal dilakukan karena sudah ada data dengan Tahun dan Kode Standar yang sama dalam database."
-        ]));
-    }
-
-    /// |----------------------------------------
     /// | DB PROCESS
     /// |----------------------------------------
     $this->db->trans_begin();
     // do your db process here
 
     try {
-
+      $id = $post["id"];
       $data_to_save = array(
-        'tahun' => $post['tahun'],
-        'kode_standar' => $post['kode_standar'],
-        'uraian_standar' => $post['uraian_standar'],
-        'spesifikasi_standar' => $post['spesifikasi_standar'],
-        'volume_standar' => $post['volume_standar'],
-        'harga_standar' => $post['harga_standar'],
-        'pdn_standar' => $post['pdn_standar'],
-        'jenis_standar' => $post['jenis_standar'],
+        'id' => $post['id'],
+        'nip' => $post['nip'],
+        'mapel' => $post['mapel'],
       );
-
-      $this->db->insert('r_standarharga', $data_to_save);
+      if ($id == 0) {
+        unset($data_to_save["id"]);
+        $data_to_save["insert_by"] = $this->session->userdata("username");
+        $data_to_save["insert_on"] = date("Y-m-d H:i:s");
+        $this->db->insert('progurinda_r_mapel', $data_to_save);
+      } else {
+        $data_to_save["update_by"] = $this->session->userdata("username");
+        $data_to_save["update_on"] = date("Y-m-d H:i:s");
+        $this->db->where(["id" => $id])->update("progurinda_r_mapel", $data_to_save);
+      }
     } catch (\Throwable $th) {
       return $this->output
         ->set_content_type('application/json')
         ->set_output(json_encode([
           'status' => false,
-          'message' => "Maaf, proses penambahan data usul SSH mengalami error.\n" . $th->getMessage()
+          'message' => "Maaf, proses penyimpanan data mapel mengalami error.\n" . $th->getMessage()
         ]));
     }
 
@@ -166,7 +149,7 @@ class Mapel_guru extends MY_Controller
         ->set_content_type('application/json')
         ->set_output(json_encode([
           'status' => false,
-          'message' => "Maaf, proses penambahan data usul SSH mengalami error.\n(error code: GCGHC_TDTDJ_HGTJN)"
+          'message' => "Maaf, proses penambahan data mapel mengalami error.\n(error code: MPL_INST_RB)"
         ]));
     } else {
       // do your success handler here
@@ -175,7 +158,7 @@ class Mapel_guru extends MY_Controller
         ->set_content_type('application/json')
         ->set_output(json_encode([
           'status' => true,
-          'message' => "Proses penambahan data Usul SSH berhasil dilakukan!"
+          'message' => "Proses penambahan data mapel berhasil dilakukan!"
         ]));
     }
   }

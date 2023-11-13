@@ -6,105 +6,92 @@
 </div>
 <div class="modal-body">
 
-  <form id="saveSSH" action="<?= site_url('usul_ssh/save'); ?>" method="POST" enctype="multipart/form-data">
+  <form id="saveMapel" action="<?= site_url('mapel_guru/save'); ?>" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="type" value="<?= $data['type'] ?>">
+    <input type="hidden" name="type" value="<?= $data['id'] ?>">
 
     <div class="row g-2">
-
-      <div class="col-4 form_ssh">
-        <label for="i_tahun">Tahun</label>
-        <?php
-        $tahun_anggaran = $this->session->userdata('tahun_anggaran');
-        if (isset_nn_nes($tahun_anggaran)) {
-        ?>
-          <input type="hidden" name="tahun" value="<?= $tahun_anggaran ?>">
-          <div id="i_tahun" class="form-control form-control-sm"><?= $tahun_anggaran ?></div>
-        <?php
-        } else {
-        ?>
-          <select name="tahun" id="i_tahun" class="form-select form-select-sm">
-            <option value="2023">2022</option>
-            <option value="2023" default selected>2023</option>
-            <option value="2023">2024</option>
-          </select>
-        <?php
-        }
-        ?>
-      </div>
-
-      <div class="col-8 form_ssh">
-        <label for="i_kode_standar">Kode Standar</label>
-        <input type="text" name="kode_standar" id="i_kode_standar" class="form-control form-control-sm" value="<?= $data['kode_standar'] ?>">
-        <div class="invalid-feedback"></div>
-      </div>
-
-      <div class="col-12 col-lg-6 form_ssh">
-        <label for="i_uraian_standar">Uraian Standar</label>
-        <input type="text" name="uraian_standar" id="i_uraian_standar" class="form-control form-control-sm" value="<?= $data['uraian_standar'] ?>">
-      </div>
-
-      <div class="col-12 col-lg-6 form_ssh">
-        <label for="i_spesifikasi_standar">Spesifikasi Standar</label>
-        <input type="text" name="spesifikasi_standar" id="i_spesifikasi_standar" class="form-control form-control-sm" value="<?= $data['spesifikasi_standar'] ?>">
-      </div>
-
-      <div class="col-12 col-lg-6 form_ssh">
-        <label for="i_volume_standar">Volume Standar</label>
-        <?php
-        if ($select_volume != '') {
-        ?>
-          <select name="volume_standar" id="i_volume_standar" class="form-select form-select-sm">
-            <?php
-            foreach ($select_volume as $value) {
-              $selected = ($value['volume_standar'] == $data['volume_standar']) ? 'default selected' : '';
-              echo '<option value="' . $value['volume_standar'] . '" ' . $selected . '>' . strtoupper($value['volume_standar']) . '</option>';
-            }
-            ?>
-          </select>
-        <?php
-        } else {
-        ?>
-          <input type="text" name="volume_standar" id="i_volume_standar" class="form-control form-control-sm" value="<?= $data['volume_standar'] ?>">
-        <?php
-        }
-        ?>
-      </div>
-
-      <div class="col-12 col-lg-6 form_ssh">
-        <label for="i_harga_standar">Harga Standar</label>
-        <input type="text" name="harga_standar" id="i_harga_standar" class="form-control form-control-sm" value="<?= $data['harga_standar'] ?>">
-      </div>
-
-      <div class="col-12 col-lg-6 form_ssh">
-        <label for="i_pdn_standar">PDN Standar</label>
-        <input type="text" name="pdn_standar" id="i_pdn_standar" class="form-control form-control-sm" value="<?= $data['pdn_standar'] ?>">
-      </div>
-
-      <div class="col-12 col-lg-6 form_ssh">
-        <label for="i_jenis_standar">Jenis Standar</label>
-        <select name="jenis_standar" id="i_jenis_standar" class="form-select form-select-sm">
-          <option value="SSH" default selected>SSH</option>
-          <option value="SBU">SBU</option>
-          <option value="HSPK">HSPK</option>
-          <option value="ASB">ASB</option>
+      <div class="col-12 form_mapel">
+        <label for="i_tahun">NIP</label>
+        <br>
+        <select name="nip" id="nip" class="form-control form-control-sm" style="width:100%">
+          <?php $selected = ($data["nip"] != "") ? "selected" : ""; ?>
+          <option value=""> - - - Pilih Pegawai - - - </option>
+          <option value="<?php echo $data["nip"]; ?>" <?php echo $selected ?>><?php echo $data["nip"]; ?></option>
         </select>
       </div>
 
+      <div class="col-12 form_mapel">
+        <label for="i_kode_standar">Nama Lengkap</label>
+        <input type="text" name="nama_lengkap" id="nama_lengkap" class="form-control form-control-sm" value="<?= $data['nama_lengkap']; ?>" readonly=true>
+        <div class="invalid-feedback"></div>
+      </div>
+
+      <div class="col-12 col-lg-12 form_mapel">
+        <label for="ket_jab">Jabatan</label>
+        <input type="text" name="ket_jab" id="ket_jab" class="form-control form-control-sm" value="<?= $data['ket_jab']; ?>" readonly=true>
+      </div>
+      <div class="col-12 col-lg-12 form_mapel">
+        <label for="ket_ukerja">Unit Kerja</label>
+        <input type="text" name="ket_ukerja" id="ket_ukerja" class="form-control form-control-sm" value="<?= $data['ket_ukerja']; ?>" readonly=true>
+      </div>
+
+      <div class="col-12 col-lg-12 form_mapel">
+        <label for="mapel">Mata Pelajaran</label>
+        <input type="text" name="mapel" id="mapel" class="form-control form-control-sm" value="<?= $data['mapel'] ?>">
+      </div>
     </div>
   </form>
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-sm btn-light-secondary" data-bs-dismiss="modal">Batal</button>
-  <button id="saveSSHbtn" type="submit" form="saveSSH" class="btn btn-sm btn-light-success">Simpan</button>
+  <button id="saveMapelbtn" type="submit" form="saveMapel" class="btn btn-sm btn-light-success">Simpan</button>
 </div>
 
 <script>
-  $('#saveSSH').validate($.extend({
+  $('#nip').select2({
+    allowClear: true,
+    placeholder: 'Pilih Pegawai yang akan disetup.',
+    dropdownParent: $('#whole_modal_id .modal-content'),
+    ajax: {
+      type: 'POST',
+      dataType: 'json',
+      url: '<?= site_url('config/select2_pegawai_jab') ?>',
+      delay: 800,
+      /* delay before sending ajax request */
+      data: function(params) {
+        return {
+          search: params.term
+        }
+      },
+      processResults: function(data) {
+        return {
+          results: data
+        };
+      },
+    }
+  }).on('select2:select', function(e) {
+    // what to do when option selected
+    console.log(e);
+    selected_kewenangan = $('#select2_kewenangan').val();
+    $("#nama_lengkap").val(e.params.data.nama_lengkap);
+    $("#ket_jab").val(e.params.data.ket_jab);
+    $("#ket_ukerja").val(e.params.data.ket_ukerja);
+
+  }).on('select2:close', function(e) {
+    // what to do when selection closed
+  }).on('select2:clear', function(e) {
+    // what to do when clearing (only if allowClear: true)
+    selected_kewenangan = '';
+  });
+
+
+  $('#saveMapel').validate($.extend({
     submitHandler: function(form, event) {
       // declare element that will be affected
       // by every state of the form submission
       // right here
-      var submit = $('#saveSSHbtn');
+      var submit = $('#saveMapelbtn');
       // declare button submit disabling right here if needed
       submit.attr('disabled', true);
       $(form).ajaxSubmit({
@@ -132,29 +119,21 @@
       });
     },
     rules: {
-      kode_standar: {
+      nip: {
         required: true
       },
-      uraian_standar: {
+      nama_lengkap: {
         required: true
       },
-      spesifikasi_standar: {
+      ket_jab: {
         required: true
       },
-      volume_standar: {
+      ket_ukerja: {
         required: true
       },
-      harga_standar: {
-        required: true,
-        number: true
-      },
-      pdn_standar: {
-        required: true,
-        number: true
-      },
-      jenis_standar: {
+      mapel: {
         required: true
-      },
+      }
     },
     errorClass: 'is-invalid',
     validClass: 'mv-valid',
@@ -166,6 +145,22 @@
         error.insertAfter(element);
       }
     },
-    messages: {},
+    messages: {
+      nip: {
+        required: "NIP tidak boleh kosong"
+      },
+      nama_lengkap: {
+        required: "Nama Lengkap tidak boleh kosong"
+      },
+      ket_jab: {
+        required: "Keterangan Jabatan tidak boleh kosong"
+      },
+      ket_ukerja: {
+        required: "Keterangan unit kerja tidak boleh kosong"
+      },
+      mapel: {
+        required: "Mata Pelajaran tidak boleh kosong"
+      }
+    },
   }));
 </script>

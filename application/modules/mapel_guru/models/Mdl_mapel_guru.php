@@ -1,6 +1,6 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Mdl_usul_ssh extends CI_Model
+class Mdl_mapel_guru extends CI_Model
 {
   /** fungsi untuk menarik data dari database */
   public function get($table, $where = null, $result_array = false)
@@ -34,23 +34,19 @@ class Mdl_usul_ssh extends CI_Model
     // lakukan filtering data
     // deklarasi where condition
     $where_search = (isset_nn_nes($data['search']))
-      ? "AND (uraian_standar LIKE '%$data[search]%' 
-      OR spesifikasi_standar LIKE '%$data[search]%'
-      OR kode_standar LIKE '%$data[search]%'
-      OR jenis_standar LIKE '%$data[search]%'
-      OR volume_standar LIKE '%$data[search]%')"
+      ? "WHERE (nama_lengkap LIKE '%$data[search]%' 
+      OR mapel LIKE '%$data[search]%'
+      OR nip LIKE '$data[search]%')"
       : "";
 
-    $thn_value = $this->session->userdata('tahun_anggaran');
-    $where_tahun = "AND tahun = '$thn_value'";
     /* kalau ada tambahan where condition bisa add lagi di atas */
     // deklarasi query yang digunakan
-    $query_result = $this->db->query("SELECT * FROM r_standarharga 
-      WHERE tahun IS NOT NULL $where_search $where_tahun 
+    $query_result = $this->db->query("SELECT * FROM v_mapel_progurinda
+      $where_search
       ORDER BY $data[order_column] $data[order_sort]
       LIMIT $data[start], $data[length]");
-    $query_total = $this->db->query("SELECT * FROM r_standarharga 
-      WHERE tahun IS NOT NULL $where_search $where_tahun");
+    $query_total = $this->db->query("SELECT * FROM v_mapel_progurinda 
+      $where_search");
     // cari total hasil
     $total_count = $query_total->num_rows();
     // cari data result + penomoran
@@ -63,16 +59,12 @@ class Mdl_usul_ssh extends CI_Model
       /// |----------------------------------------------------------------------
       $data_result[$index] = $row;
       $data_result[$index]['no'] = $no;
-
-      $data_result[$index]['tahun'] = isset_nn_nes($row['tahun'], '-');
-      $data_result[$index]['kode_standar'] = isset_nn_nes($row['kode_standar'], '-');
-      $data_result[$index]['uraian_standar'] = isset_nn_nes($row['uraian_standar'], '-');
-      $data_result[$index]['spesifikasi_standar'] = isset_nn_nes($row['spesifikasi_standar'], '-');
-      $data_result[$index]['volume_standar'] = isset_nn_nes($row['volume_standar'], '-');
-      $data_result[$index]['harga_standar'] = to_rp(isset_nn_nes($row['harga_standar'], '-'), false);
-      $data_result[$index]['pdn_standar'] = to_rp(isset_nn_nes($row['pdn_standar'], '-'), false);
-      $data_result[$index]['jenis_standar'] = isset_nn_nes($row['jenis_standar'], '-');
-
+      $data_result[$index]['nip'] = isset_nn_nes($row['nip'], '-');
+      $data_result[$index]['nama_lengkap'] = isset_nn_nes($row['nama_lengkap'], '-');
+      $data_result[$index]['ket_jab'] = isset_nn_nes($row['ket_jab'], '-');
+      $data_result[$index]['ket_ukerja'] = isset_nn_nes($row['ket_ukerja'], '-');
+      $data_result[$index]['mapel'] = isset_nn_nes($row['mapel'], '-');
+      $data_result[$index]['id'] = to_rp(isset_nn_nes($row['id'], '-'), false);
       $no += 1;
       $index += 1;
     }

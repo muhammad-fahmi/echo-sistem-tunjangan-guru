@@ -11,7 +11,7 @@
     <div class="col-4">
       <div class="panel h img">
         <div class="container">
-          <img src="https://cdn.discordapp.com/attachments/909749687492423680/915516637254385694/unknown.png" alt="map img">
+          <!-- <img src="https://cdn.discordapp.com/attachments/909749687492423680/915516637254385694/unknown.png" alt="map img"> -->
         </div>
       </div>
     </div>
@@ -53,7 +53,7 @@
             msg.addClass('alert-success');
             msg.html(e.message);
             setTimeout(() => {
-              window.location.href = '<?= site_url('dashboard') ?>';
+              window.location.href = '<?= site_url('mapel_guru') ?>';
             }, 2000);
           } else {
             // tampilkan feedback

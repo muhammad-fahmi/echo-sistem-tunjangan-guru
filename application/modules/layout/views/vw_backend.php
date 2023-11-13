@@ -353,7 +353,7 @@
       <!-- footer -->
       <!-- ============================================================== -->
       <footer class="footer">
-        All Rights Reserved by I Made Cipta Wahyudi. Template Material Pro @ Wrappixel.
+        All Rights Reserved Dinas Pendidikan dan Kebudayaan Kota Samarinda. Template Material Pro @ Wrappixel.
       </footer>
       <!-- ============================================================== -->
       <!-- End footer -->
