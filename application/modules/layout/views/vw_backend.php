@@ -112,7 +112,7 @@
             <!--End Logo icon -->
             <!-- Logo text -->
             <span class="logo-text">
-              <h3 style="color:white;font-weight:600">SIPEKAK RENTA</h3>
+              <h3 style="color:white;font-weight:600">PROGURINDA</h3>
               <!-- dark Logo text -->
               <!-- <img src="<?= base_url("theme/assets/images/logo-text.png") ?>" alt="homepage" class="dark-logo" /> -->
               <!-- Light Logo text -->
@@ -181,10 +181,10 @@
                 </div>
                 <a class="dropdown-item" href="#"><i data-feather="user" class="feather-sm text-info me-1 ms-1"></i>
                   My Profile</a>
-                <a class="dropdown-item" href="#"><i data-feather="credit-card" class="feather-sm text-info me-1 ms-1"></i>
-                  My Balance</a>
-                <a class="dropdown-item" href="#"><i data-feather="mail" class="feather-sm text-success me-1 ms-1"></i>
-                  Inbox</a>
+                <!-- <a class="dropdown-item" href="#"><i data-feather="credit-card" class="feather-sm text-info me-1 ms-1"></i>
+                  My Balance</a> -->
+                <!-- <a class="dropdown-item" href="#"><i data-feather="mail" class="feather-sm text-success me-1 ms-1"></i>
+                  Inbox</a> -->
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#"><i data-feather="settings" class="feather-sm text-warning me-1 ms-1"></i>
                   Account Setting</a>
@@ -192,9 +192,9 @@
                 <a class="dropdown-item" href="#"><i data-feather="log-out" class="feather-sm text-danger me-1 ms-1"></i>
                   Logout</a>
                 <div class="dropdown-divider"></div>
-                <div class="pl-4 p-2">
+                <!-- <div class="pl-4 p-2">
                   <a href="#" class="btn d-block w-100 btn-info rounded-pill">View Profile</a>
-                </div>
+                </div> -->
               </div>
             </li>
           </ul>
@@ -232,14 +232,14 @@
             <div class="dropdown-menu animated flipInY" aria-labelledby="dropdownMenuLink">
               <a class="dropdown-item" href="#"><i data-feather="user" class="feather-sm text-info me-1 ms-1"></i>
                 My Profile</a>
-              <a class="dropdown-item" href="#"><i data-feather="mail" class="feather-sm text-success me-1 ms-1"></i>
-                Inbox</a>
+              <!-- <a class="dropdown-item" href="#"><i data-feather="mail" class="feather-sm text-success me-1 ms-1"></i>
+                Inbox</a> -->
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="#"><i data-feather="settings" class="feather-sm text-warning me-1 ms-1"></i>
                 Account Setting</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="authentication-login3.html"><i data-feather="log-out" class="feather-sm text-danger me-1 ms-1"></i>
-                Logout</a>
+              <!-- <a class="dropdown-item" href="authentication-login3.html"><i data-feather="log-out" class="feather-sm text-danger me-1 ms-1"></i>
+                Logout</a> -->
               <div class="dropdown-divider"></div>
               <div class="ps-4 p-2">
                 <a href="#" class="btn d-block w-100 btn-info rounded-pill">View Profile</a>
@@ -254,7 +254,7 @@
             <li class="nav-small-cap">
               <i class="mdi mdi-dots-horizontal"></i>
               <span class="hide-menu">Menu Sistem</span>
-            </li>
+            </li> 
             <li class="sidebar-item">
               <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("dashboard"); ?>" aria-expanded="false"><i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Dashboard Monitoring</span></a>
             </li>

