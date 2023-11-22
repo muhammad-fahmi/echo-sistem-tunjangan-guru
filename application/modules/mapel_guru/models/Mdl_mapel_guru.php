@@ -77,6 +77,43 @@ class Mdl_mapel_guru extends CI_Model
     );
   }
 
+  public function save($data)
+  {
+    try {
+      //start db transaction
+      $this->db->trans_begin();
+      //cek apakah insert atau update
+      if ($data["id"] == 0) {
+        //insert data
+        $this->db->insert("progurinda_r_mapel", $data);
+      } else {
+        //update data
+        $this->db->where(["id" => $data["id"]])->update("progurinda_r_mapel", $data);
+      }
+      if ($this->db->trans_status() === FALSE) {
+        // do your error handler here
+        $this->db->trans_rollback();
+        $res = [
+          'status' => false,
+          'message' => "Data mata pelajaran gagal disimpan!"
+        ];
+      } else {
+        // do your success handler here
+        $this->db->trans_commit();
+        $res = [
+          'status' => true,
+          'message' => "Data mata pelajaran berhasil disimpan!"
+        ];
+      }
+    } catch (\Throwable $th) {
+      $res = [
+        'status' => false,
+        'message' => "Proses simpan mata pelajaran Error! Error message : " . $th->getMessage()
+      ];
+    }
+    return $res;
+  }
+
   public function delete($data)
   {
     try {

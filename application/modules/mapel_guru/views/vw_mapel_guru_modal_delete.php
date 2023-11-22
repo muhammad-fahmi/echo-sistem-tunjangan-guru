@@ -8,7 +8,7 @@
 
   <form id="deleteMapel" action="<?= site_url('mapel_guru/delete'); ?>" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="type" value="<?= $data['type'] ?>">
-    <input type="hidden" name="type" value="<?= $data['id'] ?>">
+    <input type="hidden" name="id" value="<?= $data['id'] ?>">
 
     <div class="row g-2">
 
