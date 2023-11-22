@@ -30,10 +30,12 @@
       <div class="col-12 col-lg-12 form_mapel">
         <label for="ket_jab">Jabatan</label>
         <input type="text" name="ket_jab" id="ket_jab" class="form-control form-control-sm" value="<?= $data['ket_jab']; ?>" readonly=true>
+        <input type="hidden" name="kode_jab" id="kode_jab" class="form-control form-control-sm" value="<?= $data['kode_jab']; ?>" readonly=true>
       </div>
       <div class="col-12 col-lg-12 form_mapel">
         <label for="ket_ukerja">Unit Kerja</label>
         <input type="text" name="ket_ukerja" id="ket_ukerja" class="form-control form-control-sm" value="<?= $data['ket_ukerja']; ?>" readonly=true>
+        <input type="hidden" name="kode_ukerja" id="kode_ukerja" class="form-control form-control-sm" value="<?= $data['kode_ukerja']; ?>" readonly=true>
       </div>
 
       <div class="col-12 col-lg-12 form_mapel">
@@ -76,7 +78,9 @@
     selected_kewenangan = $('#select2_kewenangan').val();
     $("#nama_lengkap").val(e.params.data.nama_lengkap);
     $("#ket_jab").val(e.params.data.ket_jab);
+    $("#kode_jab").val(e.params.data.kode_jab);
     $("#ket_ukerja").val(e.params.data.ket_ukerja);
+    $("#kode_ukerja").val(e.params.data.kode_ukerja);
 
   }).on('select2:close', function(e) {
     // what to do when selection closed

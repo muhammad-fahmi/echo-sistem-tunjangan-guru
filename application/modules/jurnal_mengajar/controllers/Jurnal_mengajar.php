@@ -29,7 +29,8 @@ class Jurnal_mengajar extends MY_Controller
     echo Modules::run('layout/backend', $data);
   }
 
-  public function datalist() {
+  public function datalist()
+  {
     // get index value
     $index = $this->input->post("order[0][column]");
     // insert datatable param to transfer
@@ -53,5 +54,118 @@ class Jurnal_mengajar extends MY_Controller
     $this->output
       ->set_content_type('application/json')
       ->set_output(json_encode($data));
+  }
+
+  public function modal()
+  {
+    $type = $this->input->post('type');
+    $id = $this->input->post('id');
+
+    /// |----------------------------------------
+    /// | DEFAULT VALUE
+    /// |----------------------------------------
+    $res = [
+      'status' => false,
+      'message' => "Sorry this feature is under development."
+    ];
+
+    /// |----------------------------------------
+    /// | COMMANDS
+    /// |----------------------------------------
+    switch ($type) {
+      case 'tambah_jurnal_mengajar': {
+          $dataset = [
+            'nip' => '',
+            'kode_jab' => '',
+            'kode_ukerja' => '',
+            'bulan' => '',
+            'tahun' => '',
+            'jam_mengajar' => '',
+            'id' => $id
+          ];
+          $data = [
+            'modal_title' => "Tambah Jurnal Mengajar",
+            'data' => $dataset,
+            'type' => 'insert'
+          ];
+          $res = [
+            'status' => true,
+            'message' => "Modal Tambah Jurnal Mengajar",
+            'html' => $this->load->view('vw_jurnal_mengajar_modal_save', $data, true)
+          ];
+          break;
+        }
+      default: {
+          break;
+        }
+    }
+
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($res));
+  }
+
+  public function save()
+  {
+    /// |----------------------------------------
+    /// | AMBIL DATA POST
+    /// |----------------------------------------
+    $post = $this->input->post();
+
+    /// |----------------------------------------
+    /// | DB PROCESS
+    /// |----------------------------------------
+    $this->db->trans_begin();
+    // do your db process here
+
+    try {
+      $id = $post["id"];
+      $data_to_save = array(
+        'id' => $post['id'],
+        'nip' => $post['nip'],
+        'kode_jab' => $post['kode_jab'],
+        'kode_ukerja' => $post['kode_ukerja'],
+        'bulan' => $post['bulan'],
+        'tahun' => $post['tahun'],
+        'jam_mengajar' => $post['jam_mengajar'],
+      );
+      if ($id == 0) {
+        unset($data_to_save["id"]);
+        // $data_to_save["insert_by"] = $this->session->userdata("username");
+        // $data_to_save["insert_on"] = date("Y-m-d H:i:s");
+        $this->db->insert('progurinda_r_jurnal_mengajar', $data_to_save);
+      } else {
+        // $data_to_save["update_by"] = $this->session->userdata("username");
+        // $data_to_save["update_on"] = date("Y-m-d H:i:s");
+        $this->db->where(["id" => $id])->update("progurinda_r_jurnal_mengajar", $data_to_save);
+      }
+    } catch (\Throwable $th) {
+      return $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode([
+          'status' => false,
+          'message' => "Maaf, proses penyimpanan data jurnal mengajar mengalami error.\n" . $th->getMessage()
+        ]));
+    }
+
+    if ($this->db->trans_status() === FALSE) {
+      // do your error handler here
+      $this->db->trans_rollback();
+      return $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode([
+          'status' => false,
+          'message' => "Maaf, proses penambahan data jurnal mengajar mengalami error.\n(error code: MPL_INST_RB)"
+        ]));
+    } else {
+      // do your success handler here
+      $this->db->trans_commit();
+      return $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode([
+          'status' => true,
+          'message' => "Proses penambahan data jurnal mengajar berhasil dilakukan!"
+        ]));
+    }
   }
 }

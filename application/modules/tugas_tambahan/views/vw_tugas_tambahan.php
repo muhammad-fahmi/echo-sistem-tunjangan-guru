@@ -76,7 +76,9 @@
                   <th>Nama</th>
                   <th>Jabatan</th>
                   <th>Unit Kerja</th>
-                  <th>Mata Pelajaran yang diampu</th>
+                  <th>Tugas Tambahan</th>
+                  <th>Tgl Mulai</th>
+                  <th>Tgl Selesai</th>
                   <th>Aksi</th>
                 </tr>
               </thead>
@@ -166,7 +168,23 @@
         },
       },
       {
-        data: 'mapel',
+        data: 'kode_tgs_tambahan',
+        orderable: false,
+        className: 'vam',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-end">' + cellData + '</div>');
+        },
+      },
+      {
+        data: 'tmt_mulai',
+        orderable: false,
+        className: 'vam',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-end">' + cellData + '</div>');
+        },
+      },
+      {
+        data: 'tmt_selesai',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {

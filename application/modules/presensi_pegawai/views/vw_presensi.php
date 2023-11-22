@@ -98,7 +98,7 @@
 <!-- -------------------------------------------------------------- -->
 
 <script>
-  var urlDatatable = "<?= site_url('mapel_guru/datalist') ?>";
+  var urlDatatable = "<?= site_url('presensi/datalist') ?>";
   var init_btn_add = false;
   var tabel_mapel_guru = $("#table_mapel_guru").DataTable({
     responsive: true,

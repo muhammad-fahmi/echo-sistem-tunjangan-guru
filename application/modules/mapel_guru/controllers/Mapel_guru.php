@@ -73,29 +73,64 @@ class Mapel_guru extends MY_Controller
     /// |----------------------------------------
     switch ($type) {
       case 'tambah_mapel_guru': {
-          $dataset = [
-            'nip' => '',
-            'nama_lengkap' => '',
-            'ket_jab' => '',
-            'unit_kerja' => '',
-            'mapel' => '',
-            'id' => $id
-          ];
+        // INSERT DATA
+        $dataset = [
+          'nip' => '',
+          'nama_lengkap' => '',
+          'ket_jab' => '',
+          'unit_kerja' => '',
+          'mapel' => '',
+          'id' => $id
+        ];
+        $data = [
+          'modal_title' => "Tambah Mapel Guru",
+          'data' => $dataset,
+          'type' => 'insert'
+        ];
+        $res = [
+          'status' => true,
+          'message' => "Modal Tambah Mapel Guru",
+          'html' => $this->load->view('vw_mapel_guru_modal_save', $data, true)
+        ];
+        break;
+      }
+      case 'edit_mapel_guru': {
+        // EDIT DATA
+        $dataset = $this->mmpg->get('v_progurinda_mapel', "id = '$id'");
+        if (isset_nn_nes($dataset)) {
           $data = [
-            'modal_title' => "Tambah Mapel Guru",
+            'modal_title' => "Edit Mapel Guru",
             'data' => $dataset,
-            'type' => 'insert'
+            'type' => 'edit'
           ];
           $res = [
             'status' => true,
-            'message' => "Modal Tambah Mapel Guru",
+            'message' => "Modal Edit Mapel Guru",
             'html' => $this->load->view('vw_mapel_guru_modal_save', $data, true)
           ];
-          break;
         }
+        break;
+      }
+      case 'delete_mapel_guru': {
+        // DELETE DATA
+        $dataset = $this->mmpg->get('v_progurinda_mapel', "id = '$id'");
+        if (isset_nn_nes($dataset)) {
+          $data = [
+            'modal_title' => "Hapus Mapel Guru",
+            'data' => $dataset,
+            'type' => 'delete'
+          ];
+          $res = [
+            'status' => true,
+            'message' => "Modal Hapus Mapel Guru",
+            'html' => $this->load->view('vw_mapel_guru_modal_delete', $data, true)
+          ];
+        }
+        break; 
+      }
       default: {
-          break;
-        }
+        break;
+      }
     }
 
     return $this->output
@@ -121,16 +156,18 @@ class Mapel_guru extends MY_Controller
       $data_to_save = array(
         'id' => $post['id'],
         'nip' => $post['nip'],
+        'kode_jab' => $post['kode_jab'],
+        'kode_ukerja' => $post['kode_ukerja'],
         'mapel' => $post['mapel'],
       );
       if ($id == 0) {
         unset($data_to_save["id"]);
-        $data_to_save["insert_by"] = $this->session->userdata("username");
-        $data_to_save["insert_on"] = date("Y-m-d H:i:s");
+        // $data_to_save["insert_by"] = $this->session->userdata("username");
+        // $data_to_save["insert_on"] = date("Y-m-d H:i:s");
         $this->db->insert('progurinda_r_mapel', $data_to_save);
       } else {
-        $data_to_save["update_by"] = $this->session->userdata("username");
-        $data_to_save["update_on"] = date("Y-m-d H:i:s");
+        // $data_to_save["update_by"] = $this->session->userdata("username");
+        // $data_to_save["update_on"] = date("Y-m-d H:i:s");
         $this->db->where(["id" => $id])->update("progurinda_r_mapel", $data_to_save);
       }
     } catch (\Throwable $th) {
@@ -161,5 +198,20 @@ class Mapel_guru extends MY_Controller
           'message' => "Proses penambahan data mapel berhasil dilakukan!"
         ]));
     }
+  }
+
+  public function delete()
+  {
+    $res = [
+      'status' => false,
+      'message' => "Maaf, proses penghapusan data Mapel Guru gagal dilakukan!"
+    ];
+
+    $data["id"] = $this->input->post('id');
+    $res = $this->mmpg->delete($data);
+
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($res));
   }
 }

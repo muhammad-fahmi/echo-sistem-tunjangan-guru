@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
-class Presensi_pegawai extends MY_Controller
+class Presensi extends MY_Controller
 {
   public function __construct()
   {
@@ -18,12 +18,12 @@ class Presensi_pegawai extends MY_Controller
   public function index()
   {
     // lakukan proses init halaman
-    $this->session->set_userdata('menu', 'presensi_pegawai');
+    $this->session->set_userdata('menu', 'presensi');
     $sent_data = array();
     $data = array(
       'page_title' => "Presensi Pegawai",
-      'module' => "presensi_pegawai",
-      'view' => "vw_presensi_pegawai",
+      'module' => "presensi",
+      'view' => "vw_presensi",
       'data' => $sent_data
     );
     echo Modules::run('layout/backend', $data);

@@ -76,4 +76,33 @@ class Mdl_mapel_guru extends CI_Model
       'draw' => $data['draw']
     );
   }
+
+  public function delete($data)
+  {
+    try {
+      $this->db->trans_begin();
+      $this->db->where(["id" => $data["id"]])->delete("progurinda_r_mapel");
+      if ($this->db->trans_status() === FALSE) {
+        // do your error handler here
+        $this->db->trans_rollback();
+        $res = [
+          'status' => false,
+          'message' => "Data Mapel Guru gagal dihapus!"
+        ];
+      } else {
+        // do your success handler here
+        $this->db->trans_commit();
+        $res = [
+          'status' => true,
+          'message' => "Data Mapel Guru berhasil dihapus!"
+        ];
+      }
+    } catch (\Throwable $th) {
+      $res = [
+        'status' => false,
+        'message' => "Proses hapus kamar kost error! Error message : " . $th->getMessage()
+      ];
+    }
+    return $res;
+  }
 }

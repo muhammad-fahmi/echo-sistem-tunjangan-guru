@@ -29,7 +29,8 @@ class Tugas_tambahan extends MY_Controller
     echo Modules::run('layout/backend', $data);
   }
 
-  public function datalist() {
+  public function datalist()
+  {
     // get index value
     $index = $this->input->post("order[0][column]");
     // insert datatable param to transfer
@@ -75,11 +76,9 @@ class Tugas_tambahan extends MY_Controller
       case 'tambah_tugas_tambahan': {
           $dataset = [
             'nip' => '',
-            'nama_lengkap' => '',
-            'ket_jab' => '',
-            'unit_kerja' => '',
-            'mapel' => '',
-            'tugas_tambahan' => '',
+            'kode_tgs_tambahan' => '',
+            'tmt_mulai' => '',
+            'tmt_selesai' => '',
             'id' => $id
           ];
           $data = [
@@ -122,24 +121,26 @@ class Tugas_tambahan extends MY_Controller
       $data_to_save = array(
         'id' => $post['id'],
         'nip' => $post['nip'],
-        'mapel' => $post['mapel'],
+        'kode_tgs_tambahan' => $post['kode_tgs_tambahan'],
+        'tmt_mulai' => $post['tmt_mulai'],
+        'tmt_selesai' => $post['tmt_selesai'],
       );
       if ($id == 0) {
         unset($data_to_save["id"]);
         $data_to_save["insert_by"] = $this->session->userdata("username");
         $data_to_save["insert_on"] = date("Y-m-d H:i:s");
-        $this->db->insert('progurinda_r_mapel', $data_to_save);
+        $this->db->insert('progurinda_r_tugas_tambahan', $data_to_save);
       } else {
         $data_to_save["update_by"] = $this->session->userdata("username");
         $data_to_save["update_on"] = date("Y-m-d H:i:s");
-        $this->db->where(["id" => $id])->update("progurinda_r_mapel", $data_to_save);
+        $this->db->where(["id" => $id])->update("progurinda_r_tugas_tambahan", $data_to_save);
       }
     } catch (\Throwable $th) {
       return $this->output
         ->set_content_type('application/json')
         ->set_output(json_encode([
           'status' => false,
-          'message' => "Maaf, proses penyimpanan data mapel mengalami error.\n" . $th->getMessage()
+          'message' => "Maaf, proses penyimpanan data tugas tambahan mengalami error.\n" . $th->getMessage()
         ]));
     }
 
@@ -150,7 +151,7 @@ class Tugas_tambahan extends MY_Controller
         ->set_content_type('application/json')
         ->set_output(json_encode([
           'status' => false,
-          'message' => "Maaf, proses penambahan data mapel mengalami error.\n(error code: MPL_INST_RB)"
+          'message' => "Maaf, proses penambahan data tugas tambahan mengalami error.\n(error code: MPL_INST_RB)"
         ]));
     } else {
       // do your success handler here
@@ -159,7 +160,7 @@ class Tugas_tambahan extends MY_Controller
         ->set_content_type('application/json')
         ->set_output(json_encode([
           'status' => true,
-          'message' => "Proses penambahan data mapel berhasil dilakukan!"
+          'message' => "Proses penambahan data tugas tambahan berhasil dilakukan!"
         ]));
     }
   }
