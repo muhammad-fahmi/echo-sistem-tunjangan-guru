@@ -34,18 +34,18 @@ class Mdl_jurnal_mengajar extends CI_Model
     // lakukan filtering data
     // deklarasi where condition
     $where_search = (isset_nn_nes($data['search']))
-      ? "WHERE (nama_lengkap LIKE '%$data[search]%' 
-      OR mapel LIKE '%$data[search]%'
+      ? "WHERE (ket_jab LIKE '%$data[search]%' 
+      OR jam_mengajar LIKE '%$data[search]%'
       OR nip LIKE '$data[search]%')"
       : "";
 
     /* kalau ada tambahan where condition bisa add lagi di atas */
     // deklarasi query yang digunakan
-    $query_result = $this->db->query("SELECT * FROM v_progurinda_mapel
+    $query_result = $this->db->query("SELECT * FROM v_progurinda_jurnal_mengajar
       $where_search
       ORDER BY $data[order_column] $data[order_sort]
       LIMIT $data[start], $data[length]");
-    $query_total = $this->db->query("SELECT * FROM v_progurinda_mapel 
+    $query_total = $this->db->query("SELECT * FROM v_progurinda_jurnal_mengajar 
       $where_search");
     // cari total hasil
     $total_count = $query_total->num_rows();
@@ -63,7 +63,9 @@ class Mdl_jurnal_mengajar extends CI_Model
       $data_result[$index]['nama_lengkap'] = isset_nn_nes($row['nama_lengkap'], '-');
       $data_result[$index]['ket_jab'] = isset_nn_nes($row['ket_jab'], '-');
       $data_result[$index]['ket_ukerja'] = isset_nn_nes($row['ket_ukerja'], '-');
-      $data_result[$index]['mapel'] = isset_nn_nes($row['mapel'], '-');
+      $data_result[$index]['bulan'] = isset_nn_nes($row['bulan'], '-');
+      $data_result[$index]['tahun'] = isset_nn_nes($row['tahun'], '-');
+      $data_result[$index]['jam_mengajar'] = isset_nn_nes($row['jam_mengajar'], '-');
       $data_result[$index]['id'] = to_rp(isset_nn_nes($row['id'], '-'), false);
       $no += 1;
       $index += 1;
@@ -75,5 +77,34 @@ class Mdl_jurnal_mengajar extends CI_Model
       'data' => $data_result,
       'draw' => $data['draw']
     );
+  }
+
+  public function delete($data)
+  {
+    try {
+      $this->db->trans_begin();
+      $this->db->where(["id" => $data["id"]])->delete("progurinda_r_jurnal_mengajar");
+      if ($this->db->trans_status() === FALSE) {
+        // do your error handler here
+        $this->db->trans_rollback();
+        $res = [
+          'status' => false,
+          'message' => "Data Mapel Guru gagal dihapus!"
+        ];
+      } else {
+        // do your success handler here
+        $this->db->trans_commit();
+        $res = [
+          'status' => true,
+          'message' => "Data Mapel Guru berhasil dihapus!"
+        ];
+      }
+    } catch (\Throwable $th) {
+      $res = [
+        'status' => false,
+        'message' => "Proses hapus kamar kost error! Error message : " . $th->getMessage()
+      ];
+    }
+    return $res;
   }
 }

@@ -44,7 +44,7 @@ class Jurnal_mengajar extends MY_Controller
       /* additional data can be declared here */
     );
     // move the db operation to the designated models
-    $result = $this->mjm->get_datatable('progurinda_r_jurnal_mengajar',$param);
+    $result = $this->mjm->get_datatable('v_progurinda_jurnal_mengajar',$param);
     // return the data back to the views
     $data["recordsTotal"] = $result['total'];
     $data["recordsFiltered"] = $result['filtered'];
@@ -74,30 +74,67 @@ class Jurnal_mengajar extends MY_Controller
     /// |----------------------------------------
     switch ($type) {
       case 'tambah_jurnal_mengajar': {
-          $dataset = [
-            'nip' => '',
-            'kode_jab' => '',
-            'kode_ukerja' => '',
-            'bulan' => '',
-            'tahun' => '',
-            'jam_mengajar' => '',
-            'id' => $id
-          ];
+        /// |----------------------------------------
+        /// | INSERT DATA
+        /// |----------------------------------------
+        $dataset = [
+          'nip' => '',
+          'kode_jab' => '',
+          'kode_ukerja' => '',
+          'bulan' => '',
+          'tahun' => '',
+          'jam_mengajar' => '',
+          'id' => $id
+        ];
+        $data = [
+          'modal_title' => "Tambah Jurnal Mengajar",
+          'data' => $dataset,
+          'type' => 'insert'
+        ];
+        $res = [
+          'status' => true,
+          'message' => "Modal Tambah Jurnal Mengajar",
+          'html' => $this->load->view('vw_jurnal_mengajar_modal_save', $data, true)
+        ];
+        break;
+      }
+      case 'edit_jurnal_mengajar': {
+        /// |----------------------------------------
+        /// | EDIT DATA
+        /// |----------------------------------------
+        $dataset = $this->mjm->get('v_progurinda_jurnal_mengajar', "id = '$id'");
+        $data = [
+          'modal_title' => "Edit Jurnal Mengajar Guru",
+          'data' => $dataset,
+        ];
+        $res = [
+          'status' => true,
+          'message' => "Modal Edit Jurnal Mengajar Guru",
+          'html' => $this->load->view('vw_jurnal_mengajar_modal_save', $data, true)
+        ];
+        break;
+      }
+      case 'delete_jurnal_mengajar': {
+        /// |----------------------------------------
+        /// | DELETE DATA
+        /// |----------------------------------------
+        $dataset = $this->mjm->get('v_progurinda_jurnal_mengajar', "id = '$id'");
+        if (isset_nn_nes($dataset)) {
           $data = [
-            'modal_title' => "Tambah Jurnal Mengajar",
+            'modal_title' => "Hapus Jurnal Mengajar Guru",
             'data' => $dataset,
-            'type' => 'insert'
           ];
           $res = [
             'status' => true,
-            'message' => "Modal Tambah Jurnal Mengajar",
-            'html' => $this->load->view('vw_jurnal_mengajar_modal_save', $data, true)
+            'message' => "Modal Hapus Jurnal Mengajar Guru",
+            'html' => $this->load->view('vw_jurnal_mengajar_modal_delete', $data, true)
           ];
-          break;
         }
+        break;
+      }
       default: {
-          break;
-        }
+        break;
+      }
     }
 
     return $this->output
@@ -130,7 +167,7 @@ class Jurnal_mengajar extends MY_Controller
         'jam_mengajar' => $post['jam_mengajar'],
       );
       if ($id == 0) {
-        unset($data_to_save["id"]);
+        // unset($data_to_save["id"]);
         // $data_to_save["insert_by"] = $this->session->userdata("username");
         // $data_to_save["insert_on"] = date("Y-m-d H:i:s");
         $this->db->insert('progurinda_r_jurnal_mengajar', $data_to_save);
@@ -140,32 +177,44 @@ class Jurnal_mengajar extends MY_Controller
         $this->db->where(["id" => $id])->update("progurinda_r_jurnal_mengajar", $data_to_save);
       }
     } catch (\Throwable $th) {
-      return $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode([
-          'status' => false,
-          'message' => "Maaf, proses penyimpanan data jurnal mengajar mengalami error.\n" . $th->getMessage()
-        ]));
+      $res = [
+        'status' => false,
+        'message' => "Maaf, proses penyimpanan data jurnal mengajar mengalami error.\n" . $th->getMessage()
+      ];
     }
 
     if ($this->db->trans_status() === FALSE) {
       // do your error handler here
       $this->db->trans_rollback();
-      return $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode([
-          'status' => false,
-          'message' => "Maaf, proses penambahan data jurnal mengajar mengalami error.\n(error code: MPL_INST_RB)"
-        ]));
+      $res = [
+        'status' => false,
+        'message' => "Maaf, proses penambahan data jurnal mengajar mengalami error.\n(error code: MPL_INST_RB)"
+      ];
     } else {
       // do your success handler here
       $this->db->trans_commit();
-      return $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode([
-          'status' => true,
-          'message' => "Proses penambahan data jurnal mengajar berhasil dilakukan!"
-        ]));
+      $res = [
+        'status' => true,
+        'message' => "Proses penambahan data jurnal mengajar berhasil dilakukan!"
+      ];
     }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($res));
+  }
+
+  public function delete()
+  {
+    $res = [
+      'status' => false,
+      'message' => "Maaf, proses penghapusan data jurnal mengajar gagal dilakukan!"
+    ];
+
+    $data["id"] = $this->input->post('id');
+    $res = $this->mjm->delete($data);
+
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($res));
   }
 }
