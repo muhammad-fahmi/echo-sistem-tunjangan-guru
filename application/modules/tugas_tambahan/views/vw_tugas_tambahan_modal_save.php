@@ -8,11 +8,11 @@
 
   <form id="saveTugasTambahan" action="<?= site_url('tugas_tambahan/save'); ?>" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="type" value="<?= $data['type'] ?>">
-    <input type="hidden" name="type" value="<?= $data['id'] ?>">
+    <input type="hidden" name="id" value="<?= $data['id'] ?>">
 
     <div class="row g-2">
       <div class="col-12 form_mapel">
-        <label for="i_tahun">NIP</label>
+        <label for="nip">NIP</label>
         <br>
         <select name="nip" id="nip" class="form-control form-control-sm" style="width:100%">
           <?php $selected = ($data["nip"] != "") ? "selected" : ""; ?>
@@ -22,7 +22,7 @@
       </div>
 
       <div class="col-12 form_mapel">
-        <label for="i_kode_standar">Nama Lengkap</label>
+        <label for="nama_lengkap">Nama Lengkap</label>
         <input type="text" name="nama_lengkap" id="nama_lengkap" class="form-control form-control-sm" value="<?= $data['nama_lengkap']; ?>" readonly=true>
         <div class="invalid-feedback"></div>
       </div>
@@ -30,15 +30,33 @@
       <div class="col-12 col-lg-12 form_mapel">
         <label for="ket_jab">Jabatan</label>
         <input type="text" name="ket_jab" id="ket_jab" class="form-control form-control-sm" value="<?= $data['ket_jab']; ?>" readonly=true>
-      </div>
-      <div class="col-12 col-lg-12 form_mapel">
-        <label for="ket_ukerja">Unit Kerja</label>
-        <input type="text" name="ket_ukerja" id="ket_ukerja" class="form-control form-control-sm" value="<?= $data['ket_ukerja']; ?>" readonly=true>
+        <input type="hidden" name="kode_jab" id="kode_jab" class="form-control form-control-sm" value="<?= $data['kode_jab']; ?>" readonly=true>
       </div>
 
       <div class="col-12 col-lg-12 form_mapel">
-        <label for="mapel">Mata Pelajaran</label>
-        <input type="text" name="mapel" id="mapel" class="form-control form-control-sm" value="<?= $data['mapel'] ?>">
+        <label for="ket_ukerja">Unit Kerja</label>
+        <input type="text" name="ket_ukerja" id="ket_ukerja" class="form-control form-control-sm" value="<?= $data['ket_ukerja']; ?>" readonly=true>
+        <input type="hidden" name="kode_ukerja" id="kode_ukerja" class="form-control form-control-sm" value="<?= $data['kode_ukerja']; ?>" readonly=true>
+      </div>
+
+      <div class="col-12 form_mapel">
+        <label for="kode_tgs_tambahan">Tugas Tambahan</label>
+        <br>
+        <select name="kode_tgs_tambahan" id="kode_tgs_tambahan" class="form-control form-control-sm" style="width:100%">
+          <?php $selected = ($data["kode_tgs_tambahan"] != "") ? "selected" : ""; ?>
+          <option value=""> - - - Pilih Tugas Tambahan - - - </option>
+          <option value="<?php echo $data["kode_tgs_tambahan"]; ?>" <?php echo $selected ?>><?php echo $data["kode_tgs_tambahan"]; ?></option>
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-12 form_mapel">
+        <label for="tmt_mulai">Tgl Mulai Tugas</label>
+        <input type="date" name="tmt_mulai" id="tmt_mulai" class="form-control form-control-sm" value="<?= $data['tmt_mulai'] ?>">
+      </div>
+
+      <div class="col-12 col-lg-12 form_mapel">
+        <label for="tmt_selesai">Tgl Selesai Tugas</label>
+        <input type="date" name="tmt_selesai" id="tmt_selesai" class="form-control form-control-sm" value="<?= $data['tmt_selesai'] ?>">
       </div>
     </div>
   </form>
@@ -76,7 +94,44 @@
     selected_kewenangan = $('#select2_kewenangan').val();
     $("#nama_lengkap").val(e.params.data.nama_lengkap);
     $("#ket_jab").val(e.params.data.ket_jab);
+    $("#kode_jab").val(e.params.data.kode_jab);
     $("#ket_ukerja").val(e.params.data.ket_ukerja);
+    $("#kode_ukerja").val(e.params.data.kode_ukerja);
+
+  }).on('select2:close', function(e) {
+    // what to do when selection closed
+  }).on('select2:clear', function(e) {
+    // what to do when clearing (only if allowClear: true)
+    selected_kewenangan = '';
+  });
+
+  // Select2 utk Tugas Tambahan
+  $('#kode_tgs_tambahan').select2({
+    allowClear: true,
+    placeholder: 'Pilih Tugas tambahan yang akan disetup.',
+    dropdownParent: $('#whole_modal_id .modal-content'),
+    ajax: {
+      type: 'POST',
+      dataType: 'json',
+      url: '<?= site_url('tugas_tambahan/select2_tgs_tambahan') ?>',
+      delay: 800,
+      /* delay before sending ajax request */
+      data: function(params) {
+        return {
+          search: params.term
+        }
+      },
+      processResults: function(data) {
+        return {
+          results: data
+        };
+      },
+    }
+  }).on('select2:select', function(e) {
+    // what to do when option selected
+    console.log(e);
+    selected_kewenangan = $('#select2_kewenangan').val();
+    $("#kode_tgs_tambahan").val(e.params.data.kode_tgs_tambahan);
 
   }).on('select2:close', function(e) {
     // what to do when selection closed
@@ -131,7 +186,13 @@
       ket_ukerja: {
         required: true
       },
-      mapel: {
+      // kode_tgs_tambahan: {
+      //   required: true
+      // },
+      tmt_mulai: {
+        required: true
+      },
+      tmt_selesai: {
         required: true
       }
     },
@@ -158,8 +219,14 @@
       ket_ukerja: {
         required: "Keterangan unit kerja tidak boleh kosong"
       },
-      mapel: {
-        required: "Mata Pelajaran tidak boleh kosong"
+      // kode_tgs_tambahan: {
+      //   required: "Tugas Tambahan tidak boleh kosong"
+      // },
+      tmt_mulai: {
+        required: "Tanggal mulai Tugas Tambahan tidak boleh kosong"
+      },
+      tmt_selesai: {
+        required: "Tanggal selesai Tugas Tambahan tidak boleh kosong"
       }
     },
   }));

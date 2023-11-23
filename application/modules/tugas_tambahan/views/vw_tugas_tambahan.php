@@ -60,7 +60,7 @@
     <div class="col-12">
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title">Daftar Tugas Tambahan Guru Pengampu</h4>
+          <h4 class="card-title">Daftar Tugas Tambahan</h4>
 
           <div class="table-responsive mt-4">
 
@@ -135,7 +135,8 @@
       },
     },
     /* Sesuaikan jumlah kolom dengan id table yang digunakan */
-    columns: [{
+    columns: [
+      {
         data: 'nip',
         orderable: false,
         className: 'vam',
@@ -144,7 +145,7 @@
         },
       },
       {
-        data: 'nama_lengkap',
+        data: 'nama',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {

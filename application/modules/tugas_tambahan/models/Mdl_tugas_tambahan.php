@@ -41,11 +41,11 @@ class Mdl_tugas_tambahan extends CI_Model
 
     /* kalau ada tambahan where condition bisa add lagi di atas */
     // deklarasi query yang digunakan
-    $query_result = $this->db->query("SELECT * FROM v_progurinda_mapel
+    $query_result = $this->db->query("SELECT * FROM v_progurinda_tugas_tambahan
       $where_search
       ORDER BY $data[order_column] $data[order_sort]
       LIMIT $data[start], $data[length]");
-    $query_total = $this->db->query("SELECT * FROM v_progurinda_mapel 
+    $query_total = $this->db->query("SELECT * FROM v_progurinda_tugas_tambahan 
       $where_search");
     // cari total hasil
     $total_count = $query_total->num_rows();
@@ -63,7 +63,9 @@ class Mdl_tugas_tambahan extends CI_Model
       $data_result[$index]['nama_lengkap'] = isset_nn_nes($row['nama_lengkap'], '-');
       $data_result[$index]['ket_jab'] = isset_nn_nes($row['ket_jab'], '-');
       $data_result[$index]['ket_ukerja'] = isset_nn_nes($row['ket_ukerja'], '-');
-      $data_result[$index]['mapel'] = isset_nn_nes($row['mapel'], '-');
+      $data_result[$index]['kode_tgs_tambahan'] = isset_nn_nes($row['kode_tgs_tambahan'], '-');
+      $data_result[$index]['tmt_mulai'] = isset_nn_nes($row['tmt_mulai'], '-');
+      $data_result[$index]['tmt_selesai'] = isset_nn_nes($row['tmt_selesai'], '-');
       $data_result[$index]['id'] = to_rp(isset_nn_nes($row['id'], '-'), false);
       $no += 1;
       $index += 1;
@@ -75,5 +77,34 @@ class Mdl_tugas_tambahan extends CI_Model
       'data' => $data_result,
       'draw' => $data['draw']
     );
+  }
+
+  public function delete($data)
+  {
+    try {
+      $this->db->trans_begin();
+      $this->db->where(["id" => $data["id"]])->delete("progurinda_r_tugas_tambahan");
+      if ($this->db->trans_status() === FALSE) {
+        // do your error handler here
+        $this->db->trans_rollback();
+        $res = [
+          'status' => false,
+          'message' => "Data Tugas tambahan gagal dihapus!"
+        ];
+      } else {
+        // do your success handler here
+        $this->db->trans_commit();
+        $res = [
+          'status' => true,
+          'message' => "Data Tugas tambahan berhasil dihapus!"
+        ];
+      }
+    } catch (\Throwable $th) {
+      $res = [
+        'status' => false,
+        'message' => "Proses hapus data tugas tambahan error! Error message : " . $th->getMessage()
+      ];
+    }
+    return $res;
   }
 }
