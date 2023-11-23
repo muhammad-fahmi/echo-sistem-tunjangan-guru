@@ -54,4 +54,11 @@ class Presensi extends MY_Controller
       ->set_content_type('application/json')
       ->set_output(json_encode($data));
   }
+
+  public function get_presensi()
+  {
+    $post = $this->input->post('');
+    $bulan = $post['bulan'];
+    $tahun = $tahun['tahun'];
+  }
 }

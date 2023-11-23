@@ -3,12 +3,12 @@
 <!-- ============================================================== -->
 <div class="row page-titles">
   <div class="col-md-4 col-12 align-self-center">
-    <h3 class="text-themecolor mb-0">Daftar Setup Mata Pelajaran Guru</h3>
+    <h3 class="text-themecolor mb-0">Daftar Setup Presensi Guru</h3>
     <ol class="breadcrumb mb-0">
       <li class="breadcrumb-item">
         <a href="javascript:void(0)">Home</a>
       </li>
-      <li class="breadcrumb-item active">Daftar Mapel Guru</li>
+      <li class="breadcrumb-item active">Daftar Presensi Guru</li>
     </ol>
   </div>
 
@@ -60,7 +60,53 @@
     <div class="col-12">
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title">Daftar Mata Pelajaran dan Guru Pengampu</h4>
+          <h4 class="card-title">Daftar Presensi Guru</h4>
+
+          <!-- Form untuk get data presensi pegawai -->
+          <form id="formPresensi" action="<?= site_url('presensi/get_presensi'); ?>" method="POST" enctype="multipart/form-data">
+            <div class="row mb-4">
+              <div class="col-12 mb-2">
+                <!-- Unit Kerja -->
+                <label for="select_ukerja">Unit Kerja :</label>
+                <select type="text" name="select_ukerja" class="form-select form-select-sm" style="width:100%" id="select_ukerja" value="">
+                </select>
+              </div>
+
+              <div class="col-6">
+                <!-- Bulan -->
+                <label for="bulan">Bulan :</label>
+                <select type="text" name="bulan" class="form-select form-select-sm" style="width:100%" id="bulan" value="">
+                  <option selected>- - - Pilih Bulan - - -</option>
+                  <option value="1">Januari</option>
+                  <option value="2">Februari</option>
+                  <option value="3">Maret</option>
+                  <option value="4">April</option>
+                  <option value="5">Mei</option>
+                  <option value="6">Juni</option>
+                  <option value="7">Juli</option>
+                  <option value="8">Agustus</option>
+                  <option value="9">September</option>
+                  <option value="10">Oktober</option>
+                  <option value="11">November</option>
+                  <option value="12">Desember</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <!-- Tahun -->
+                <label for="tahun">Tahun :</label>
+                <select type="text" name="tahun" class="form-select form-select-sm" style="width:100%" id="tahun" value="">
+                  <option selected>- - - Pilih Tahun - - - </option>
+                  <option value="2021">2021</option>
+                  <option value="2022">2022</option>
+                  <option value="2023">2023</option>
+                </select>
+              </div>
+            </div>
+            <!-- Button integrasi presensi -->
+            <button id="cekPresensi" class="btn btn-sm btn-success me-2" type="submit" form="formPresensi">
+              <i class="fas fa-sync me-2"></i>Integrasi Presensi
+            </button>
+          </form>
 
           <div class="table-responsive mt-4">
 
@@ -99,7 +145,7 @@
 
 <script>
   var urlDatatable = "<?= site_url('presensi/datalist') ?>";
-  var init_btn_add = false;
+  // var init_btn_add = false;
   var tabel_mapel_guru = $("#table_mapel_guru").DataTable({
     responsive: true,
     processing: true,
@@ -202,14 +248,14 @@
       /* parameter callback untuk kostumisasi fungsi */
       $('.loading_tabel_mapel_guru').removeClass('show');
 
-      let btn_add = '<button class="btn btn-sm btn-success me-2" onclick="modal(`0`,`tambah_mapel_guru`)">' +
-        '<i class="fas fa-plus me-1"></i>Tambah Mapel Guru' +
-        '</button>';
+      // let btn_add = '<button class="btn btn-sm btn-success me-2" onclick="modal(`0`,`tambah_mapel_guru`)">' +
+      //   '<i class="fas fa-plus me-1"></i>Tambah Mapel Guru' +
+      //   '</button>';
 
-      if (!init_btn_add) {
-        $('.init_btn_container').append(btn_add);
-        init_btn_add = true;
-      }
+      // if (!init_btn_add) {
+      //   $('.init_btn_container').append(btn_add);
+      //   init_btn_add = true;
+      // }
     }
   });
 
