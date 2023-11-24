@@ -124,7 +124,6 @@ class Tugas_tambahan extends MY_Controller
         $data = [
           'modal_title' => "Tambah Tugas Tambahan Guru",
           'data' => $dataset,
-          'type' => 'insert'
         ];
         $res = [
           'status' => true,
@@ -138,11 +137,9 @@ class Tugas_tambahan extends MY_Controller
         /// | EDIT DATA
         /// |----------------------------------------
         $dataset = $this->mtt->get('v_progurinda_tugas_tambahan', "id = '$id'");
-
         $data = [
           'modal_title' => "Edit Tugas Tambahan",
           'data' => $dataset,
-          'type' => 'edit'
         ];
         $res = [
           'status' => true,
@@ -156,11 +153,10 @@ class Tugas_tambahan extends MY_Controller
         /// | DELETE DATA
         /// |----------------------------------------
         $dataset = $this->mtt->get('v_progurinda_tugas_tambahan', "id = '$id'");
-        if (isset_nn_nes($data)) {
+        if (isset_nn_nes($dataset)) {
           $data = [
             'modal_title' => "Delete Tugas Tambahan",
             'data' => $dataset,
-            'type' => 'delete'
           ];
           $res = [
             'status' => true,
@@ -171,8 +167,8 @@ class Tugas_tambahan extends MY_Controller
         break;
       }
       default: {
-          break;
-        }
+        break;
+      }
     }
 
     return $this->output
