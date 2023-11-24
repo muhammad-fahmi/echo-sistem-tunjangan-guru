@@ -113,9 +113,9 @@ class Tugas_tambahan extends MY_Controller
         /// |----------------------------------------
         $dataset = [
           'nip' => '',
-          // 'nama_lengkap' => '',
-          // 'kode_jab' => '',
-          // 'kode_ukerja' => '',
+          'nama_lengkap' => '',
+          'kode_jab' => '',
+          'kode_ukerja' => '',
           'kode_tgs_tambahan' => '',
           'tmt_mulai' => '',
           'tmt_selesai' => '',
@@ -197,7 +197,7 @@ class Tugas_tambahan extends MY_Controller
       $data_to_save = array(
         'id' => $post['id'],
         'nip' => $post['nip'],
-        'kode_tgs_tambahan' => $post['kode_tugas_tambahan'],
+        'kode_tgs_tambahan' => $post['kode_tgs_tambahan'],
         'tmt_mulai' => $post['tmt_mulai'],
         'tmt_selesai' => $post['tmt_selesai'],
       );

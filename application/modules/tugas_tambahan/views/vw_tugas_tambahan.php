@@ -169,7 +169,7 @@
         },
       },
       {
-        data: 'kode_tgs_tambahan',
+        data: 'ket_tugas_tambahan',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {

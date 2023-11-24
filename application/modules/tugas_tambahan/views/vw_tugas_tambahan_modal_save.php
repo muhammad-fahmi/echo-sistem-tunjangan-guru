@@ -21,11 +21,11 @@
         </select>
       </div>
 
-      <div class="col-12 form_mapel">
+      <!-- <div class="col-12 form_mapel">
         <label for="nama_lengkap">Nama Lengkap</label>
         <input type="text" name="nama_lengkap" id="nama_lengkap" class="form-control form-control-sm" value="<?= $data['nama_lengkap']; ?>" readonly=true>
         <div class="invalid-feedback"></div>
-      </div>
+      </div> -->
 
       <div class="col-12 col-lg-12 form_mapel">
         <label for="ket_jab">Jabatan</label>
@@ -131,7 +131,7 @@
     // what to do when option selected
     console.log(e);
     selected_kewenangan = $('#select2_kewenangan').val();
-    $("#kode_tgs_tambahan").val(e.params.data.kode_tgs_tambahan);
+    // $("#kode_tgs_tambahan").val(e.params.data.kode_tgs_tambahan);
 
   }).on('select2:close', function(e) {
     // what to do when selection closed
@@ -177,9 +177,9 @@
       nip: {
         required: true
       },
-      nama_lengkap: {
-        required: true
-      },
+      // nama_lengkap: {
+      //   required: true
+      // },
       ket_jab: {
         required: true
       },
@@ -210,9 +210,9 @@
       nip: {
         required: "NIP tidak boleh kosong"
       },
-      nama_lengkap: {
-        required: "Nama Lengkap tidak boleh kosong"
-      },
+      // nama_lengkap: {
+      //   required: "Nama Lengkap tidak boleh kosong"
+      // },
       ket_jab: {
         required: "Keterangan Jabatan tidak boleh kosong"
       },

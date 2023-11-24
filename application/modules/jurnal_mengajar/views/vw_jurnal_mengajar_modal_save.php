@@ -51,7 +51,7 @@
 
       <div class="col-12 col-lg-12 form_mapel">
         <label for="jam_mengajar">Jam Mengajar</label>
-        <input type="text" name="jam_mengajar" id="jam_mengajar" class="form-control form-control-sm" value="<?= $data['jam_mengajar'] ?>">
+        <input type="num" name="jam_mengajar" id="jam_mengajar" class="form-control form-control-sm" value="<?= $data['jam_mengajar'] ?>">
       </div>
 
     </div>

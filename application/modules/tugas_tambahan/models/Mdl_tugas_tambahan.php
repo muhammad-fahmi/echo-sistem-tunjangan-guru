@@ -34,8 +34,8 @@ class Mdl_tugas_tambahan extends CI_Model
     // lakukan filtering data
     // deklarasi where condition
     $where_search = (isset_nn_nes($data['search']))
-      ? "WHERE (nama_lengkap LIKE '%$data[search]%' 
-      OR tugas_tambahan LIKE '%$data[search]%'
+      ? "WHERE (id LIKE '%$data[search]%' 
+      OR kode_tgs_tambahan LIKE '%$data[search]%'
       OR nip LIKE '$data[search]%')"
       : "";
 
