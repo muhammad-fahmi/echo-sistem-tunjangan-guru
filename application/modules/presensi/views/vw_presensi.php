@@ -110,11 +110,11 @@
 
           <div class="table-responsive mt-4">
 
-            <div class="_loading loading_tabel_mapel_guru">
+            <div class="_loading loading_tabel_presensi">
               <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>
             </div>
 
-            <table id="table_mapel_guru" class="table table-bordered table-hover fs-3" style="width:100%;">
+            <table id="table_presensi" class="table table-bordered table-hover fs-3" style="width:100%;">
 
               <thead class="bg-info text-white">
                 <tr class="text-center">
@@ -122,7 +122,14 @@
                   <th>Nama</th>
                   <th>Jabatan</th>
                   <th>Unit Kerja</th>
-                  <th>Mata Pelajaran yang diampu</th>
+                  <th>Tahun</th>
+                  <th>Bulan</th>
+                  <th>Terlambat</th>
+                  <th>Pulang Cepat</th>
+                  <th>Tidak Hadir</th>
+                  <th>Tidak Apel Pagi</th>
+                  <th>% Potongan Kehadiran</th>
+                  <!-- <th>Mata Pelajaran yang diampu</th> -->
                   <th>Aksi</th>
                 </tr>
               </thead>
@@ -146,7 +153,7 @@
 <script>
   var urlDatatable = "<?= site_url('presensi/datalist') ?>";
   // var init_btn_add = false;
-  var tabel_mapel_guru = $("#table_mapel_guru").DataTable({
+  var tabel_presensi = $("#table_presensi").DataTable({
     responsive: true,
     processing: true,
     serverSide: true,
@@ -175,7 +182,7 @@
       type: 'POST',
       beforeSend: function() {
         // lakukan sesuatu sebelum mulai ajax process
-        $('.loading_tabel_mapel_guru').addClass('show');
+        $('.loading_tabel_presensi').addClass('show');
       },
     },
     /* Sesuaikan jumlah kolom dengan id table yang digunakan */
@@ -188,7 +195,7 @@
         },
       },
       {
-        data: 'nama_lengkap',
+        data: 'nama',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -212,13 +219,69 @@
         },
       },
       {
-        data: 'mapel',
+        data: 'tahun',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-end">' + cellData + '</div>');
+          $(td).html('<div class="text-center">' + cellData + '</div>');
         },
       },
+      {
+        data: 'bulan',
+        orderable: false,
+        className: 'vam',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        },
+      },
+      {
+        data: 'terlambat',
+        orderable: false,
+        className: 'vam',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        },
+      },
+      {
+        data: 'pulang_cepat',
+        orderable: false,
+        className: 'vam',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        },
+      },
+      {
+        data: 'tidak_masuk',
+        orderable: false,
+        className: 'vam',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        },
+      },
+      {
+        data: 'tidak_apel',
+        orderable: false,
+        className: 'vam',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        },
+      },
+      {
+        data: 'potongan_persen_kehadiran',
+        orderable: false,
+        className: 'vam',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        },
+      },
+      // {
+      //   data: 'mapel',
+      //   orderable: false,
+      //   className: 'vam',
+      //   createdCell: function(td, cellData, rowData, row, col) {
+      //     $(td).html('<div class="text-end">' + cellData + '</div>');
+      //   },
+      // },
       {
         data: 'id',
         orderable: false,
@@ -229,8 +292,8 @@
             'Pilih' +
             '</button>' +
             '<ul class="dropdown-menu">' +
-            '<li><a class="dropdown-item" onclick="modal(`' + id_entry + '`, `edit_mapel_guru`)" href="#"><i class="fas fa-edit me-1"></i>Edit</a></li>' +
-            '<li><a class="dropdown-item text-danger" onclick="modal(`' + id_entry + '`, `delete_mapel_guru`)" href="#"><i class="fas fa-trash me-1"></i>Delete</a></li>' +
+            '<li><a class="dropdown-item" onclick="modal(`' + id_entry + '`, `edit_presensi`)" href="#"><i class="fas fa-edit me-1"></i>Edit</a></li>' +
+            '<li><a class="dropdown-item text-danger" onclick="modal(`' + id_entry + '`, `delete_presensi`)" href="#"><i class="fas fa-trash me-1"></i>Delete</a></li>' +
             '</ul>' +
             '</div>';
           $(td).html('<div class="text-center">' + html_aksi + '</div>');
@@ -246,7 +309,7 @@
         /* jalankan apabila return false */
       }
       /* parameter callback untuk kostumisasi fungsi */
-      $('.loading_tabel_mapel_guru').removeClass('show');
+      $('.loading_tabel_presensi').removeClass('show');
 
       // let btn_add = '<button class="btn btn-sm btn-success me-2" onclick="modal(`0`,`tambah_mapel_guru`)">' +
       //   '<i class="fas fa-plus me-1"></i>Tambah Mapel Guru' +
@@ -261,11 +324,11 @@
 
   /* fungsi untuk reload datatable ajax */
   function reload_table() {
-    tabel_mapel_guru.ajax.reload();
+    tabel_presensi.ajax.reload();
   }
 
   function modal(id, type) {
-    var url = "<?= site_url('mapel_guru/modal') ?>";
+    var url = "<?= site_url('presensi/modal') ?>";
     $.ajax({
       type: "POST",
       url: url,

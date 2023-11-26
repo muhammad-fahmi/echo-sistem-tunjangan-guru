@@ -198,12 +198,12 @@
     orientation: 'bottom',
     autoclose: true
   });
-  flatpickr('#jam_mengajar', {
-    enableTime: true,
-    noCalendar: true,
-    dateFormat: "H:i",
-    time_24hr: true
-  });
+  // flatpickr('#jam_mengajar', {
+  //   enableTime: true,
+  //   noCalendar: true,
+  //   dateFormat: "H:i",
+  //   time_24hr: true
+  // });
   $('#tahun').datepicker({
     format: 'yyyy',
     startView: 'years',

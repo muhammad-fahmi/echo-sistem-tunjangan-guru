@@ -108,9 +108,9 @@
             <b class="logo-icon">
               <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
               <!-- Dark Logo icon -->
-              <img src="<?= base_url("assets_old/images/logo_pemkab.png") ?>" alt="homepage" class="dark-logo" style="max-width:40px" />
+              <img src="<?= base_url("theme/assets/images/logo/logo_pemkot.png") ?>" alt="homepage" class="dark-logo" style="max-width:40px" />
               <!-- Light Logo icon -->
-              <img src="<?= base_url("assets_old/images/logo_pemkab.png") ?>" alt="homepage" class="light-logo" style="max-width:40px" />
+              <img src="<?= base_url("theme/assets/images/logo/logo_pemkot.png") ?>" alt="homepage" class="light-logo" style="max-width:40px" />
             </b>
             <!--End Logo icon -->
             <!-- Logo text -->

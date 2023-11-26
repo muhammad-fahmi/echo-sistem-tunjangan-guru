@@ -41,11 +41,11 @@ class Mdl_presensi_pegawai extends CI_Model
 
     /* kalau ada tambahan where condition bisa add lagi di atas */
     // deklarasi query yang digunakan
-    $query_result = $this->db->query("SELECT * FROM v_progurinda_mapel
+    $query_result = $this->db->query("SELECT * FROM v_progurinda_data_presensi
       $where_search
       ORDER BY $data[order_column] $data[order_sort]
       LIMIT $data[start], $data[length]");
-    $query_total = $this->db->query("SELECT * FROM v_progurinda_mapel 
+    $query_total = $this->db->query("SELECT * FROM v_progurinda_data_presensi 
       $where_search");
     // cari total hasil
     $total_count = $query_total->num_rows();

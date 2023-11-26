@@ -54,11 +54,56 @@ class Presensi extends MY_Controller
       ->set_content_type('application/json')
       ->set_output(json_encode($data));
   }
+  
+  // Select2 utk unit kerja
+  public function select2_ukerja()
+  {
+    // ambil data post
+    $search = $this->input->post('search');
+    // kondisi where
+    $where_search = ($search != '')
+      ? "AND (nama_lengkap LIKE '%$search%' 
+      OR nip LIKE '%$search%')"
+      : "";
+    // query searching
+    $result = $this->db->query("SELECT * FROM m_jab WHERE id IS NOT NULL $where_search 
+      ORDER BY kode_ukerja DESC LIMIT 10")->result_array();
+    $data = array();
+    $index = 0;
+    if (isset_nn_nes($result)) {
+      foreach ($result as $r) {
+        $data[$index]['id'] = $r['id'];
+        $data[$index]['text'] = $r['kode_ukerja'] . ' - ' . trim($r['ket_ukerja']);
+  
+        // additional param to send back
+        $data[$index]['nip'] = $r['nip'];
+        // $data[$index]['nama_lengkap'] = trim($r['nama_lengkap']);
+        $data[$index]['kode_gol'] = $r['kode_gol'];
+        $data[$index]['tmt_gol'] = $r['tmt_gol'];
+        $data[$index]['kode_eselon'] = $r['kode_eselon'];
+        $data[$index]['kode_jab'] = $r['kode_jab'];
+        $data[$index]['kode_ukerja'] = $r['kode_ukerja'];
+  
+        $data[$index]['ket_jab'] = $r['ket_jab'];
+        $data[$index]['ket_ukerja'] = $r['ket_ukerja'];
+        $data[$index]['ket_uorg'] = $r['ket_uorg'];
+  
+        $index++;
+      }
+    } else {
+      $data = $result;
+    }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
 
   public function get_presensi()
   {
     $post = $this->input->post('');
     $bulan = $post['bulan'];
     $tahun = $tahun['tahun'];
+    
+    // Testing code sinkronisasi presensi data
   }
 }
