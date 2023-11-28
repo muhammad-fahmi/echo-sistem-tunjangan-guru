@@ -3,12 +3,12 @@
 <!-- ============================================================== -->
 <div class="row page-titles">
   <div class="col-md-4 col-12 align-self-center">
-    <h3 class="text-themecolor mb-0">Daftar Setup Jurnal Bulanan</h3>
+    <h3 class="text-themecolor mb-0">Laporan Jurnal Bulanan</h3>
     <ol class="breadcrumb mb-0">
       <li class="breadcrumb-item">
         <a href="javascript:void(0)">Home</a>
       </li>
-      <li class="breadcrumb-item active">Daftar Jurnal Bulanan`</li>
+      <li class="breadcrumb-item active">Laporan Jurnal Bulanan`</li>
     </ol>
   </div>
 
@@ -60,9 +60,9 @@
     <div class="col-12">
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title">Daftar Jurnal Bulanan</h4>
+          <h4 class="card-title">Laporan Jurnal Bulanan</h4>
 
-          <form id="formPresensi" action="<?= site_url('presensi/get_presensi'); ?>" method="POST" enctype="multipart/form-data">
+          <form id="form_jurnal_bulanan" action="<?= site_url('laporan/get_jurnal_bulanan'); ?>" method="POST" enctype="multipart/form-data">
             <div class="row mb-4">
               <div class="col-12 mb-2">
                 <!-- Unit Kerja -->
@@ -101,10 +101,14 @@
                 </select>
               </div>
             </div>
-            <!-- Button integrasi presensi -->
-            <button id="cekPresensi" class="btn btn-sm btn-success me-2" type="submit" form="formPresensi">
-              <i class="fas fa-sync me-2"></i>Integrasi Presensi
+            <!-- Button export file -->
+            <button id="btn_export_file" class="btn btn-sm btn-success me-2" type="submit" form="form_jurnal_bulanan">
+              <i class="fas fa-upload me-2"></i>Export File Jurnal
             </button>
+
+            <!-- <button id="btn_export_file" class="btn btn-sm btn-success me-2" type="submit" form="form_jurnal_bulanan">
+              <i class="fas fa-upload me-2"></i>Export File Jurnal
+            </button> -->
           </form>
 
           <div class="table-responsive mt-4">
@@ -145,9 +149,9 @@
 <!-- -------------------------------------------------------------- -->
 
 <script>
-  var urlDatatable = "<?= site_url('jurnal_mengajar/datalist') ?>";
+  var urlDatatable = "<?= site_url('laporan/datalist') ?>";
   var init_btn_add = false;
-  var tabel_jurnal_mengajar = $("#table_jurnal_mengajar").DataTable({
+  var tabel_jurnal_bulanan = $("#table_jurnal_bulanan").DataTable({
     responsive: true,
     processing: true,
     serverSide: true,
@@ -246,8 +250,8 @@
             'Pilih' +
             '</button>' +
             '<ul class="dropdown-menu">' +
-            '<li><a class="dropdown-item" onclick="modal(`' + id_entry + '`, `edit_jurnal_mengajar`)" href="#"><i class="fas fa-edit me-1"></i>Edit</a></li>' +
-            '<li><a class="dropdown-item text-danger" onclick="modal(`' + id_entry + '`, `delete_jurnal_mengajar`)" href="#"><i class="fas fa-trash me-1"></i>Delete</a></li>' +
+            '<li><a class="dropdown-item" onclick="modal(`' + id_entry + '`, `edit_jurnal_bulanan`)" href="#"><i class="fas fa-edit me-1"></i>Edit</a></li>' +
+            '<li><a class="dropdown-item text-danger" onclick="modal(`' + id_entry + '`, `delete_jurnal_bulanan`)" href="#"><i class="fas fa-trash me-1"></i>Delete</a></li>' +
             '</ul>' +
             '</div>';
           $(td).html('<div class="text-center">' + html_aksi + '</div>');
@@ -263,10 +267,10 @@
         /* jalankan apabila return false */
       }
       /* parameter callback untuk kostumisasi fungsi */
-      $('.loading_tabel_jurnal_mengajar').removeClass('show');
+      $('.loading_tabel_jurnal_bulanan').removeClass('show');
 
-      let btn_add = '<button class="btn btn-sm btn-success me-2" onclick="modal(`0`,`tambah_jurnal_mengajar`)">' +
-        '<i class="fas fa-plus me-1"></i>Tambah Jurnal Mengajar' +
+      let btn_add = '<button class="btn btn-sm btn-success me-2" onclick="modal(`0`,`tambah_jurnal_bulanan`)">' +
+        '<i class="fas fa-plus me-1"></i>Tambah Jurnal Bulanan' +
         '</button>';
 
       if (!init_btn_add) {
@@ -278,26 +282,26 @@
 
   /* fungsi untuk reload datatable ajax */
   function reload_table() {
-    tabel_jurnal_mengajar.ajax.reload();
+    tabel_jurnal_bulanan.ajax.reload();
   }
 
-  function modal(id, type) {
-    var url = "<?= site_url('jurnal_mengajar/modal') ?>";
-    $.ajax({
-      type: "POST",
-      url: url,
-      data: {
-        id: id,
-        type: type
-      },
-      success: function(res) {
-        if (res.status) {
-          $("#modal_content_id").html(res.html).show();
-          $("#whole_modal_id").modal("show");
-        } else {
-          toaster('info', 'Unknown error on modal calls.\n- ' + res.message);
-        }
-      }
-    });
-  }
+  // function modal(id, type) {
+  //   var url = "<?= site_url('laporan/modal') ?>";
+  //   $.ajax({
+  //     type: "POST",
+  //     url: url,
+  //     data: {
+  //       id: id,
+  //       type: type
+  //     },
+  //     success: function(res) {
+  //       if (res.status) {
+  //         $("#modal_content_id").html(res.html).show();
+  //         $("#whole_modal_id").modal("show");
+  //       } else {
+  //         toaster('info', 'Unknown error on modal calls.\n- ' + res.message);
+  //       }
+  //     }
+  //   });
+  // }
 </script>

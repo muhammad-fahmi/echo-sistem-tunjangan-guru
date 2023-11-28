@@ -15,19 +15,6 @@ class Laporan extends MY_Controller
     }
   }
 
-  public function index()
-  {
-    // lakukan proses init halaman
-    $sent_data = array();
-    $data = array(
-      'page_title' => "Jurnal Mengajar Bulanan",
-      'module' => "laporan",
-      'view' => "vw_jurnal_bulanan",
-      'data' => $sent_data
-    );
-    echo Modules::run('layout/backend', $data);
-  }
-
   public function tpp_3_bln()
   {
     // lakukan proses init halaman
@@ -36,6 +23,19 @@ class Laporan extends MY_Controller
       'page_title' => "TPP 3 Bulan",
       'module' => "laporan",
       'view' => "vw_tpp_3_bulan",
+      'data' => $sent_data
+    );
+    echo Modules::run('layout/backend', $data);
+  }
+
+  public function jurnal_bulanan()
+  {
+    // lakukan proses init halaman
+    $sent_data = array();
+    $data = array(
+      'page_title' => "Jurnal Bulanan",
+      'module' => "laporan",
+      'view' => "vw_jurnal_bulanan",
       'data' => $sent_data
     );
     echo Modules::run('layout/backend', $data);
@@ -56,7 +56,7 @@ class Laporan extends MY_Controller
       /* additional data can be declared here */
     );
     // move the db operation to the designated models
-    $result = $this->mjb->get_datatable('progurinda_r_jurnal_mengajar',$param);
+    $result = $this->mlp->get_datatable('progurinda_r_jurnal_mengajar',$param);
     // return the data back to the views
     $data["recordsTotal"] = $result['total'];
     $data["recordsFiltered"] = $result['filtered'];
@@ -66,5 +66,10 @@ class Laporan extends MY_Controller
     $this->output
       ->set_content_type('application/json')
       ->set_output(json_encode($data));
+  }
+
+  public function get_jurnal_bulanan()
+  {
+    
   }
 }
