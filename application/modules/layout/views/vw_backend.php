@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="<?= base_url("theme/dist/libs/select2/dist/css/select2.min.css"); ?>">
   <link rel="stylesheet" href="<?= base_url("theme/dist/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css"); ?>">
   <link rel="stylesheet" href="<?= base_url("theme/dist/css/style.min.css"); ?>" rel="stylesheet" />
+  <link rel="stylesheet" href="<?= base_url('assets_old/flatpickr/flatpickr.min.css'); ?>">
   <link rel="stylesheet" href="<?= base_url("theme/overrider/style.css?v=") . em_date('YmdHis'); ?>" rel="stylesheet" />
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -37,6 +38,8 @@
   <script src="<?= base_url("assets_old/jquery/jquery.form.js"); ?>"></script>
   <script src="<?= base_url("assets_old/jquery-validation/jquery.validate.min.js"); ?>"></script>
   <script src="<?= base_url("assets_old/jquery-validation/additional-methods.min.js"); ?>"></script>
+  <!-- Flatpickr datetime picker -->
+  <script src="<?= base_url('assets_old/flatpickr/flatpickr.min.js'); ?>"></script>
   <!-- Bootstrap tether Core JavaScript -->
   <script src="<?= base_url("theme/dist/libs/bootstrap/dist/js/bootstrap.bundle.min.js") ?>"></script>
   <!-- apps -->
@@ -105,9 +108,9 @@
             <b class="logo-icon">
               <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
               <!-- Dark Logo icon -->
-              <img src="<?= base_url("assets_old/images/logo_pemkab.png") ?>" alt="homepage" class="dark-logo" style="max-width:40px" />
+              <img src="<?= base_url("theme/assets/images/logo/logo_pemkot.png") ?>" alt="homepage" class="dark-logo" style="max-width:40px" />
               <!-- Light Logo icon -->
-              <img src="<?= base_url("assets_old/images/logo_pemkab.png") ?>" alt="homepage" class="light-logo" style="max-width:40px" />
+              <img src="<?= base_url("theme/assets/images/logo/logo_pemkot.png") ?>" alt="homepage" class="light-logo" style="max-width:40px" />
             </b>
             <!--End Logo icon -->
             <!-- Logo text -->
