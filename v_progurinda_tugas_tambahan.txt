@@ -1,0 +1,2 @@
+"id"	"nip"	"kode_tgs_tambahan"	"tmt_mulai"	"tmt_selesai"	"insert_by"	"insert_on"	"update_by"	"update_on"	"nama"	"s_jab"	"jns_jab"	"ket_jab"	"ket_uorg"	"ket_ukerja"	"kode_eselon"	"ket_tugas_tambahan"
+"6"	"196412311991031110"	"1"	"24/11/2023"	"30/11/2023"	"SMP Negeri 3 Samarinda"	"24/11/2023 08:11:50"	"SMP Negeri 3 Samarinda"	"24/11/2023 08:13:10"	"MUSLIMIN, S.Pd"	"-1"	"2500"	"Guru Muda"	"UPT SMP N 03"	"UPT SMP N 03"	"90"	"Karya Ilmiah"
