@@ -240,23 +240,23 @@
           $(td).html('<div class="text-end">' + cellData + '</div>');
         },
       },
-      {
-        data: 'id',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          let id_entry = cellData;
-          let html_aksi = '<div class="btn-group">' + '<button type="button" class="btn btn-sm btn-light-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">' +
-            'Pilih' +
-            '</button>' +
-            '<ul class="dropdown-menu">' +
-            '<li><a class="dropdown-item" onclick="modal(`' + id_entry + '`, `edit_jurnal_bulanan`)" href="#"><i class="fas fa-edit me-1"></i>Edit</a></li>' +
-            '<li><a class="dropdown-item text-danger" onclick="modal(`' + id_entry + '`, `delete_jurnal_bulanan`)" href="#"><i class="fas fa-trash me-1"></i>Delete</a></li>' +
-            '</ul>' +
-            '</div>';
-          $(td).html('<div class="text-center">' + html_aksi + '</div>');
-        },
-      },
+      // {
+      //   data: 'id',
+      //   orderable: false,
+      //   className: 'vam',
+      //   createdCell: function(td, cellData, rowData, row, col) {
+      //     let id_entry = cellData;
+      //     let html_aksi = '<div class="btn-group">' + '<button type="button" class="btn btn-sm btn-light-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">' +
+      //       'Pilih' +
+      //       '</button>' +
+      //       '<ul class="dropdown-menu">' +
+      //       '<li><a class="dropdown-item" onclick="modal(`' + id_entry + '`, `edit_jurnal_bulanan`)" href="#"><i class="fas fa-edit me-1"></i>Edit</a></li>' +
+      //       '<li><a class="dropdown-item text-danger" onclick="modal(`' + id_entry + '`, `delete_jurnal_bulanan`)" href="#"><i class="fas fa-trash me-1"></i>Delete</a></li>' +
+      //       '</ul>' +
+      //       '</div>';
+      //     $(td).html('<div class="text-center">' + html_aksi + '</div>');
+      //   },
+      // },
     ],
     /* Lakukan fungsi callback pada bracket ini */
     drawCallback: function(settings) {
@@ -269,14 +269,14 @@
       /* parameter callback untuk kostumisasi fungsi */
       $('.loading_tabel_jurnal_bulanan').removeClass('show');
 
-      let btn_add = '<button class="btn btn-sm btn-success me-2" onclick="modal(`0`,`tambah_jurnal_bulanan`)">' +
-        '<i class="fas fa-plus me-1"></i>Tambah Jurnal Bulanan' +
-        '</button>';
+      // let btn_add = '<button class="btn btn-sm btn-success me-2" onclick="modal(`0`,`tambah_jurnal_bulanan`)">' +
+      //   '<i class="fas fa-plus me-1"></i>Tambah Jurnal Bulanan' +
+      //   '</button>';
 
-      if (!init_btn_add) {
-        $('.init_btn_container').append(btn_add);
-        init_btn_add = true;
-      }
+      // if (!init_btn_add) {
+      //   $('.init_btn_container').append(btn_add);
+      //   init_btn_add = true;
+      // }
     }
   });
 
@@ -284,24 +284,4 @@
   function reload_table() {
     tabel_jurnal_bulanan.ajax.reload();
   }
-
-  // function modal(id, type) {
-  //   var url = "<?= site_url('laporan/modal') ?>";
-  //   $.ajax({
-  //     type: "POST",
-  //     url: url,
-  //     data: {
-  //       id: id,
-  //       type: type
-  //     },
-  //     success: function(res) {
-  //       if (res.status) {
-  //         $("#modal_content_id").html(res.html).show();
-  //         $("#whole_modal_id").modal("show");
-  //       } else {
-  //         toaster('info', 'Unknown error on modal calls.\n- ' + res.message);
-  //       }
-  //     }
-  //   });
-  // }
 </script>

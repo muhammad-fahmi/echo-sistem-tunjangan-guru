@@ -62,6 +62,46 @@
         <div class="card-body">
           <h4 class="card-title">Laporan TPP Per 3 Bulan</h4>
 
+          <form id="form_jurnal_bulanan" action="<?= site_url('laporan/get_jurnal_bulanan'); ?>" method="POST" enctype="multipart/form-data">
+            <div class="row mb-4">
+              <div class="col-12 mb-2">
+                <!-- Unit Kerja -->
+                <label for="select_ukerja">Unit Kerja :</label>
+                <select type="text" name="select_ukerja" class="form-select form-select-sm" style="width:100%" id="select_ukerja" value="">
+                </select>
+              </div>
+
+              <div class="col-6">
+                <!-- Triwulan -->
+                <label for="triwulan">Triwulan ke :</label>
+                <select type="text" name="triwulan" class="form-select form-select-sm" style="width:100%" id="triwulan" value="">
+                  <option selected>- - - Pilih Triwulan - - -</option>
+                  <option value="1">I - (JANUARI-MARET)</option>
+                  <option value="2">II - (APRIL-JUNI)</option>
+                  <option value="3">III - (JULI-SEPTEMBER)</option>
+                  <option value="4">IV - (OKTOBER-DESEMBER)</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <!-- Tahun -->
+                <label for="tahun">Tahun :</label>
+                <select type="text" name="tahun" class="form-select form-select-sm" style="width:100%" id="tahun" value="">
+                  <option selected>- - - Pilih Tahun - - - </option>
+                  <option value="2021">2021</option>
+                  <option value="2022">2022</option>
+                  <option value="2023">2023</option>
+                </select>
+              </div>
+            </div>
+            <!-- Button export file -->
+            <a href="<?= site_url('laporan/generate_pdf_jurnal_bulanan'); ?>" id="btn_export_file" class="btn btn-sm btn-success me-2" type="button">
+              <i class="fas fa-upload me-2"></i>Export Laporan TPP
+            </a>
+            <!-- <button id="btn_export_file" class="btn btn-sm btn-success me-2" type="submit" form="form_jurnal_bulanan">
+              <i class="fas fa-upload me-2"></i>Export File Jurnal
+            </button> -->
+          </form>
+
           <div class="table-responsive mt-4">
 
             <div class="_loading loading_tabel_tpp_3_bulan">
@@ -72,12 +112,22 @@
 
               <thead class="bg-info text-white">
                 <tr class="text-center">
-                  <th>NIP</th>
                   <th>Nama</th>
+                  <th>NIP</th>
+                  <th>Gol</th>
                   <th>Jabatan</th>
                   <th>Unit Kerja</th>
-                  <!-- <th>Mata Pelajaran yang diampu</th> -->
-                  <th>Aksi</th>
+                  <th>Insentif</th>
+                  <th>Bulan</th>
+                  <th>Jumlah Kotor</th>
+                  <th>Jumlah PPh 5%</th>
+                  <th>Jumlah PPh 15%</th>
+                  <th>Jumlah INFAQ 2,5%</th>
+                  <th>Jumlah Bersih</th>
+                  <th>No Rekening</th>
+                  <th>NIK</th>
+                  <th>NPWP</th>
+                  <!-- <th>Aksi</th> -->
                 </tr>
               </thead>
 
@@ -99,12 +149,13 @@
 
 <script>
   var urlDatatable = "<?= site_url('laporan/datalist') ?>";
-  var init_btn_add = false;
+  var init_btn_export = false;
   var tabel_tpp_3_bulan = $("#table_tpp_3_bulan").DataTable({
     responsive: true,
     processing: true,
     serverSide: true,
     orderCellsTop: true,
+    // scrollX: true,
     dom: '<"row g-1"' +
       '<"col-12 col-sm-6 init_btn_container"><"col-12 col-sm-6 vam"f>' +
       '<"col-12"tr>' +
@@ -141,8 +192,16 @@
           $(td).html('<div class="text-start">' + cellData + '</div>');
         },
       },
+      // {
+      //   data: 'nama_lengkap',
+      //   orderable: false,
+      //   className: 'vam',
+      //   createdCell: function(td, cellData, rowData, row, col) {
+      //     $(td).html('<div class="text-start">' + cellData + '</div>');
+      //   },
+      // },
       {
-        data: 'nama_lengkap',
+        data: 'kode_jab',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -150,11 +209,67 @@
         },
       },
       {
+        data: 'kode_ukerja',
+        orderable: false,
+        className: 'vam',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        },
+      },
+      {
+        data: 'bulan',
+        orderable: false,
+        className: 'vam',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        },
+      },
+      {
+        data: 'tahun',
+        orderable: false,
+        className: 'vam',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        },
+      },
+      {
+        data: 'jam_mengajar',
+        orderable: false,
+        className: 'vam',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        },
+      },
+      {
+        data: 'kode_instansi',
+        orderable: false,
+        className: 'vam',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        },
+      },
+      {
+        data: 'jns_jab',
+        orderable: false,
+        className: 'vam',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        },
+      },
+      {
         data: 'ket_jab',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-start">' + cellData + '</div>');
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        },
+      },
+      {
+        data: 'ket_uorg',
+        orderable: false,
+        className: 'vam',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
         },
       },
       {
@@ -165,31 +280,31 @@
           $(td).html('<div class="text-center">' + cellData + '</div>');
         },
       },
-    //   {
-    //     data: 'mapel',
-    //     orderable: false,
-    //     className: 'vam',
-    //     createdCell: function(td, cellData, rowData, row, col) {
-    //       $(td).html('<div class="text-end">' + cellData + '</div>');
-    //     },
-    //   },
-      {
-        data: 'id',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          let id_entry = cellData;
-          let html_aksi = '<div class="btn-group">' + '<button type="button" class="btn btn-sm btn-light-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">' +
-            'Pilih' +
-            '</button>' +
-            '<ul class="dropdown-menu">' +
-            '<li><a class="dropdown-item" onclick="modal(`' + id_entry + '`, `edit_tpp_3_bulan`)" href="#"><i class="fas fa-edit me-1"></i>Edit</a></li>' +
-            '<li><a class="dropdown-item text-danger" onclick="modal(`' + id_entry + '`, `delete_tpp_3_bulan`)" href="#"><i class="fas fa-trash me-1"></i>Delete</a></li>' +
-            '</ul>' +
-            '</div>';
-          $(td).html('<div class="text-center">' + html_aksi + '</div>');
-        },
-      },
+      // {
+      //   data: 'mapel',
+      //   orderable: false,
+      //   className: 'vam',
+      //   createdCell: function(td, cellData, rowData, row, col) {
+      //     $(td).html('<div class="text-end">' + cellData + '</div>');
+      //   },
+      // },
+      // {
+      //   data: 'id',
+      //   orderable: false,
+      //   className: 'vam',
+      //   createdCell: function(td, cellData, rowData, row, col) {
+      //     let id_entry = cellData;
+      //     let html_aksi = '<div class="btn-group">' + '<button type="button" class="btn btn-sm btn-light-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">' +
+      //       'Pilih' +
+      //       '</button>' +
+      //       '<ul class="dropdown-menu">' +
+      //       '<li><a class="dropdown-item" onclick="modal(`' + id_entry + '`, `edit_tpp_3_bulan`)" href="#"><i class="fas fa-edit me-1"></i>Edit</a></li>' +
+      //       '<li><a class="dropdown-item text-danger" onclick="modal(`' + id_entry + '`, `delete_tpp_3_bulan`)" href="#"><i class="fas fa-trash me-1"></i>Delete</a></li>' +
+      //       '</ul>' +
+      //       '</div>';
+      //     $(td).html('<div class="text-center">' + html_aksi + '</div>');
+      //   },
+      // },
     ],
     /* Lakukan fungsi callback pada bracket ini */
     drawCallback: function(settings) {
@@ -202,39 +317,19 @@
       /* parameter callback untuk kostumisasi fungsi */
       $('.loading_tabel_tpp_3_bulan').removeClass('show');
 
-      let btn_add = '<button class="btn btn-sm btn-success me-2" onclick="modal(`0`,`tambah_tpp_3_bulan`)">' +
-        '<i class="fas fa-plus me-1"></i>Tambah TPP' +
-        '</button>';
+      // let btn_export = '<a class="btn btn-sm btn-success me-2" href="'+ <?= base_url('laporan/generate_pdf_jurnal_bulanan') ?> +'">' +
+      //   '<i class="fas fa-plus me-1"></i>Tambah TPP' +
+      //   '</a>';
 
-      if (!init_btn_add) {
-        $('.init_btn_container').append(btn_add);
-        init_btn_add = true;
-      }
+      // if (!init_btn_export) {
+      //   $('.init_btn_container').append(btn_export);
+      //   init_btn_export = true;
+      // }
     }
   });
 
   /* fungsi untuk reload datatable ajax */
   function reload_table() {
-    tabel_mapel_guru.ajax.reload();
+    tabel_tpp_3_bulan.ajax.reload();
   }
-
-//   function modal(id, type) {
-//     var url = "<?= site_url('laporan/modal') ?>";
-//     $.ajax({
-//       type: "POST",
-//       url: url,
-//       data: {
-//         id: id,
-//         type: type
-//       },
-//       success: function(res) {
-//         if (res.status) {
-//           $("#modal_content_id").html(res.html).show();
-//           $("#whole_modal_id").modal("show");
-//         } else {
-//           toaster('info', 'Unknown error on modal calls.\n- ' + res.message);
-//         }
-//       }
-//     });
-//   }
 </script>
