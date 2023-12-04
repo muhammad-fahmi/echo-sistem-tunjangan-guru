@@ -37,7 +37,7 @@ class Mdl_user extends CI_Model
       ? "AND (username LIKE '%$data[search]%' 
       OR nama_lengkap LIKE '%$data[search]%'
       OR kewenangan LIKE '%$data[search]%'
-      OR no_hp LIKE '%$data[search]%'
+      OR id_user LIKE '%$data[search]%'
       )"
       : "";
     /* kalau ada tambahan where condition bisa add lagi di atas */
@@ -58,16 +58,21 @@ class Mdl_user extends CI_Model
     $index = 0;
     $data_result = array();
     while ($row = $query_result->unbuffered_row()) {
+      $ket_kewenangan = array(
+        "00" => "Super Admin",
+        "01" => "Administrator",
+        "10" => "Admin OPD"
+      );
       /// |----------------------------------------------------------------------
       /// | PENATAAN DATA SEBELUM DIMASUKKAN KE DALAM RESULT_ARRAY
       /// |----------------------------------------------------------------------
       $data_result[$index]['no'] = $no;
       $data_result[$index]['username'] = $row->username;
+      $data_result[$index]['id_user'] = $row->username;
       $data_result[$index]['nama_lengkap'] = $row->nama_lengkap;
-      $data_result[$index]['kewenangan'] = $row->ket_kewenangan;
+      $data_result[$index]['kewenangan'] = $ket_kewenangan[$row->kewenangan];
       $data_result[$index]['ket_ukerja'] = $row->ket_ukerja; //tambah keterangan unit kerja
-      $data_result[$index]['no_hp'] = $row->no_hp;
-      $data_result[$index]['tgl_daftar'] = $row->tgl_daftar;
+      //$data_result[$index]['tgl_daftar'] = $row->tgl_daftar;
       $data_result[$index]['aktif'] = $row->aktif;
 
       $no += 1;

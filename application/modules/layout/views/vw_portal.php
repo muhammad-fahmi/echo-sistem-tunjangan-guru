@@ -183,7 +183,7 @@
                                     if (response.status) {
                                         toastr.success("Login Sukses!", response.message);
                                         setTimeout(() => {
-                                            window.location.href = '<?= site_url('dashboard') ?>';
+                                            window.location.href = '<?= site_url('mapel_guru') ?>';
                                         }, 2000);
                                         console.log(response.message);
                                     } else {

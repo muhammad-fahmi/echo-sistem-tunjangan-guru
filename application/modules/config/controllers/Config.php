@@ -117,7 +117,7 @@ class Config extends MY_Controller
   public function select2_instansi()
   {
     //session userdata
-    $session_ukerja = $this->session->userdata("kode_ukerja");
+    $session_ukerja = $this->session->userdata("kode_unor");
     $session_kewenangan = $this->session->userdata("kewenangan");
     // ambil data post
     $search = $this->input->post('search');
@@ -125,8 +125,8 @@ class Config extends MY_Controller
     //kondisi apakah menampilkan yang aktif saja
     $aktif = ($this->input->post('aktif') != "Y") ? "" : " AND s_ukerja = '-1' ";
     // kondisi where
-    $where_search = ($search != '') ? "AND (ket_ukerja LIKE '%$search%' OR kode_ukerja LIKE '%$search%' OR ket_uorg LIKE '%$search%')" : "";
-    $where_admin = ($session_kewenangan != '00') ? "AND kode_ukerja = kode_instansi AND (LEFT(kode_instansi," . strlen($session_ukerja) . ") = '" . $session_ukerja . "' OR unit_kepeg = '" . $session_ukerja . "') " : "AND kode_ukerja = kode_instansi";
+    $where_search = ($search != '') ? "AND (ket_ukerja LIKE '%$search%' OR kode_ukerja LIKE '%$search%' OR ket_uorg LIKE '%$search%' OR kode_ukerja LIKE '%$search%')" : "";
+    $where_admin = ($session_kewenangan != '00') ? "AND kode_ukerja = kode_instansi AND (LEFT(kode_instansi," . strlen($session_ukerja) . ") = '" . $session_ukerja . "' OR unit_kepeg = '" . $session_ukerja . "') AND (kode_ukerja LIKE '69710328%' OR kode_ukerja LIKE '69710345%')" : "AND kode_ukerja = kode_instansi AND (kode_ukerja LIKE '69710328%' OR kode_ukerja LIKE '69710345%')";
     // query searching
     $result = $this->db->query("SELECT * FROM v_ukerja 
       WHERE kode_ukerja IS NOT NULL $where_admin $aktif $where_search 

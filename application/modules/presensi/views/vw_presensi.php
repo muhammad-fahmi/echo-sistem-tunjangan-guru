@@ -68,38 +68,34 @@
               <div class="col-12 mb-2">
                 <!-- Unit Kerja -->
                 <label for="select_ukerja">Unit Kerja :</label>
-                <select type="text" name="select_ukerja" class="form-select form-select-sm" style="width:100%" id="select_ukerja" value="">
+                <select type="text" name="select_ukerja" class="form-select form-select-sm" style="width:100%" id="select_ukerja">
+                <option value="<?= $this->session->userdata("kode_unor"); ?>"><?= $this->session->userdata("ket_unor"); ?></option>
                 </select>
               </div>
 
               <div class="col-6">
                 <!-- Bulan -->
                 <label for="bulan">Bulan :</label>
-                <select type="text" name="bulan" class="form-select form-select-sm" style="width:100%" id="bulan" value="">
-                  <option selected>- - - Pilih Bulan - - -</option>
-                  <option value="1">Januari</option>
-                  <option value="2">Februari</option>
-                  <option value="3">Maret</option>
-                  <option value="4">April</option>
-                  <option value="5">Mei</option>
-                  <option value="6">Juni</option>
-                  <option value="7">Juli</option>
-                  <option value="8">Agustus</option>
-                  <option value="9">September</option>
-                  <option value="10">Oktober</option>
-                  <option value="11">November</option>
-                  <option value="12">Desember</option>
+                <select type="text" name="filter_bln" class="form-select form-select-sm" style="width:100%" id="filter_bln" >
+                  <?php 
+                  $bln_now = date("n");
+                  for($i = 1;$i <= 12;$i++){
+                    $selected = ($i == $bln_now) ? "selected" : "";
+                  ?>
+                    <option value="<?= $i ?>" <?= $selected ?>><?= getBulan($i) ?></option>
+                  <?php } ?>
                 </select>
               </div>
               <div class="col-6">
                 <!-- Tahun -->
                 <label for="tahun">Tahun :</label>
-                <select type="text" name="tahun" class="form-select form-select-sm" style="width:100%" id="tahun" value="">
-                  <option selected>- - - Pilih Tahun - - - </option>
-                  <option value="2021">2021</option>
-                  <option value="2022">2022</option>
-                  <option value="2023">2023</option>
-                </select>
+                <select type="text" name="filter_thn" class="form-select form-select-sm" style="width:100%" id="filter_thn">
+                  <?php for($i = 2023;$i <= date("Y");$i++){ 
+                    $selected = ($i == date('Y')) ? "selected" : "";
+                    ?>
+                    <option value="<?= $i; ?>" <?= $selected; ?>><?= $i; ?></option>    
+                    <?php } ?>
+                  </select>
               </div>
             </div>
             <!-- Button integrasi presensi -->
@@ -151,6 +147,51 @@
 <!-- -------------------------------------------------------------- -->
 
 <script>
+  $('#select_ukerja').select2({
+    allowClear: true,
+    placeholder: 'Pilih Unit Kerja.',
+    //dropdownParent: $('#whole_modal_id .modal-content'),
+    ajax: {
+      type: 'POST',
+      dataType: 'json',
+      url: '<?= site_url('config/select2_instansi') ?>',
+      delay: 800,
+      /* delay before sending ajax request */
+      data: function(params) {
+        return {
+          search: params.term
+        }
+      },
+      processResults: function(data) {
+        return {
+          results: data
+        };
+      },
+    }
+  }).on('select2:select', function(e) {
+    // what to do when option selected
+    reload_table();
+    console.log(e);
+
+  }).on('select2:close', function(e) {
+    // what to do when selection closed
+  }).on('select2:clear', function(e) {
+    // what to do when clearing (only if allowClear: true)
+    selected_kewenangan = '';
+  });
+
+  $('[name=filter_bln]').change(function() {
+    //var data = e.params.data;
+    //console.log(data);
+    reload_table();
+  });
+  $('[name=filter_thn]').change(function() {
+    //var data = e.params.data;
+    //console.log(data);
+    reload_table();
+  });
+
+
   var urlDatatable = "<?= site_url('presensi/datalist') ?>";
   // var init_btn_add = false;
   var tabel_presensi = $("#table_presensi").DataTable({
@@ -175,8 +216,14 @@
       url: urlDatatable,
       /* parameter yang dikirimkan ke controller */
       data: {
-        param1: function() {
-          return $('#id_atau_class_element').val();
+        kode_ukerja: function() {
+          return $('#select_ukerja').val();
+        },
+        filter_bln: function() {
+          return $('#filter_bln').val();
+        },
+        filter_thn: function() {
+          return $('#filter_thn').val();
         },
       },
       type: 'POST',

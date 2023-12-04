@@ -9,7 +9,7 @@ class User extends MY_Controller
     $log = $this->session->userdata('logged_in');
     $user = $this->session->userdata('username');
     $kewenangan = $this->session->userdata('kewenangan');
-    if ($log != true || !menu_auth_sipedal($user, 'user', $kewenangan)) {
+    if ($log != true) {
       redirect(site_url('login'));
     } else {
       $this->load->model('mdl_user', 'user');
@@ -30,7 +30,7 @@ class User extends MY_Controller
       'draw' => ($this->input->post("draw") == null) ? 1 : $this->input->post("draw")
     );
 
-    $result = $this->user->get_datatable('v_user', $param, 'username');
+    $result = $this->user->get_datatable('v_progurinda_user', $param, 'id_user');
 
     $data["recordsTotal"] = $result['total'];
     $data["recordsFiltered"] = $result['filtered'];

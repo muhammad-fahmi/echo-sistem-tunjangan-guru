@@ -27,7 +27,7 @@ class Login extends MY_Controller
   {
     $res = array();
     $post = $this->input->post();
-    $user = $this->db->get_where('progurinda_m_user', array(
+    $user = $this->db->get_where('v_progurinda_user', array(
       'id_user' => $post['username'],
       'aktif' => 'Y'
     ));
@@ -48,7 +48,7 @@ class Login extends MY_Controller
           'username' => $user_data['username'],
           'kewenangan' => $user_data['kewenangan'],
           'kode_unor' => $user_data['kode_unor'],
-          'ket_unor' => $user_data['ket_unor'],
+          'ket_unor' => $user_data['ket_ukerja'],
           'logged_in' => true
         );
         $this->session->set_userdata($new_session);
@@ -63,5 +63,10 @@ class Login extends MY_Controller
     $this->output
       ->set_content_type('application/json')
       ->set_output(json_encode($res));
+  }
+
+  function logout(){
+    $this->session->sess_destroy();
+    redirect(site_url("login"));
   }
 }

@@ -40,13 +40,17 @@ class Presensi extends MY_Controller
       'order_sort' => $this->input->post("order[0][dir]"),
       'search' => $this->input->post("search[value]"),
       'draw' => $this->input->post("draw"),
+      'filter_bln' => $this->input->post('filter_bln'),
+      'filter_thn' => $this->input->post('filter_thn'),
+      'kode_ukerja' => $this->input->post('kode_ukerja')
       /* additional data can be declared here */
     );
     // move the db operation to the designated models
-    $result = $this->mpp->get_datatable('progurinda_r_data_presensi',$param);
+    //$result = $this->mpp->get_datatable('progurinda_r_data_presensi',$param);
+    $result = $this->mpp->get_data_presensi($param);
     // return the data back to the views
-    $data["recordsTotal"] = $result['total'];
-    $data["recordsFiltered"] = $result['filtered'];
+    $data["recordsTotal"] = $result['jml'];
+    $data["recordsFiltered"] = $result['list'];
     $data["data"] = $result['data'];
     $data["draw"] = $result['draw'];
     // using common_helper function
