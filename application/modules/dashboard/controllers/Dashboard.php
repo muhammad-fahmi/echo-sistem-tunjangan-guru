@@ -10,23 +10,19 @@ class Dashboard extends MY_Controller
     if ($log != true) {
       redirect(site_url('login'));
     } else {
-      $this->load->model('mdl_dashboard');
+      $this->load->model('mdl_dashboard', 'mdbo');
     }
   }
 
   public function index()
   {
     $this->session->set_userdata('menu', 'dashboard');
-    $sent_data = array(
-      'm_iku' => $this->db->get_where('m_iku', [
-        'id_iku' => "IS NOT NULL",
-      ])->result_array()
-    );
+    $sent_data = array();
     $data = array(
       'page_title' => "Dashboard",
       'module' => "dashboard",
-      'view' => "vw_dashboard",
-      'data' => ''
+      'view' => "vw_dashboard_admin",
+      'data' => $sent_data
     );
     echo Modules::run('layout/backend', $data);
   }
@@ -61,7 +57,7 @@ class Dashboard extends MY_Controller
       'filter_jnspeg' => $this->input->post("filter_jnspeg") ?? "all"
     );
     // move the db operation to the designated models
-    $result = $this->mdl_dashboard->get_datatable_attlog('r_attlog', $param, 'id');
+    $result = $this->mdbo->get_datatable_attlog('r_attlog', $param, 'id');
     // return the data back to the views
     $data["recordsTotal"] = $result['total'];
     $data["recordsFiltered"] = $result['filtered'];
@@ -73,21 +69,105 @@ class Dashboard extends MY_Controller
       ->set_output(json_encode($data));
   }
 
-  public function export_attlog_pdf($kode_ukerja = "", $cloud_id = "all", $filter_jnspeg = "all", $filter_tgl = "", $filter_tgl_akhir = "")
-  {
-    $params = array(
-      "kode_ukerja" => $kode_ukerja,
-      "cloud_id" => $cloud_id,
-      "filter_tgl" => $filter_tgl,
-      "filter_tgl_akhir" => $filter_tgl_akhir,
-      "filter_jnspeg" => $filter_jnspeg
-    );
-    $data_export["ket_ukerja"] = $this->db->where("kode_ukerja = '" . $kode_ukerja . "'")->get("v_ukerja")->row()->ket_ukerja;
-    $data_export["attlog"] = $this->mdl_dashboard->get_export_attlog($params);
-    $this->load->view("vw_export_pdf", $data_export);
-  }
+  // public function export_attlog_pdf($kode_ukerja = "", $cloud_id = "all", $filter_jnspeg = "all", $filter_tgl = "", $filter_tgl_akhir = "")
+  // {
+  //   $params = array(
+  //     "kode_ukerja" => $kode_ukerja,
+  //     "cloud_id" => $cloud_id,
+  //     "filter_tgl" => $filter_tgl,
+  //     "filter_tgl_akhir" => $filter_tgl_akhir,
+  //     "filter_jnspeg" => $filter_jnspeg
+  //   );
+  //   $data_export["ket_ukerja"] = $this->db->where("kode_ukerja = '" . $kode_ukerja . "'")->get("v_ukerja")->row()->ket_ukerja;
+  //   $data_export["attlog"] = $this->mdl_dashboard->get_export_attlog($params);
+  //   $this->load->view("vw_export_pdf", $data_export);
+  // }
 
-  public function export_attlog_excel()
+  // public function export_attlog_excel()
+  // {
+  // }
+
+  public function modal()
   {
+    $type = $this->input->post('type');
+    $id = $this->input->post('id');
+
+    /// |----------------------------------------
+    /// | DEFAULT VALUE
+    /// |----------------------------------------
+    $res = [
+      'status' => false,
+      'message' => "Sorry this feature is under development."
+    ];
+
+    /// |----------------------------------------
+    /// | COMMANDS
+    /// |----------------------------------------
+    switch ($type) {
+      case 'tambah_mapel_guru': {
+        /// |----------------------------------------
+        /// | INSERT DATA
+        /// |----------------------------------------
+        $dataset = [
+          'nip' => '',
+          'nama_lengkap' => '',
+          'ket_jab' => '',
+          'unit_kerja' => '',
+          'mapel' => '',
+          'id' => $id
+        ];
+        $data = [
+          'modal_title' => "Tambah Mapel Guru",
+          'data' => $dataset,
+        ];
+        $res = [
+          'status' => true,
+          'message' => "Modal Tambah Mapel Guru",
+          'html' => $this->load->view('vw_mapel_guru_modal_save', $data, true)
+        ];
+        break;
+      }
+      case 'edit_mapel_guru': {
+        /// |----------------------------------------
+        /// | EDIT DATA
+        /// |----------------------------------------
+        $dataset = $this->mmpg->get('v_progurinda_mapel', "id = '$id'");
+        $data = [
+          'modal_title' => "Edit Mapel Guru",
+          'data' => $dataset,
+        ];
+        $res = [
+          'status' => true,
+          'message' => "Modal Edit Mapel Guru",
+          'html' => $this->load->view('vw_mapel_guru_modal_save', $data, true)
+        ];
+        break;
+      }
+      case 'delete_mapel_guru': {
+        /// |----------------------------------------
+        /// | DELETE DATA
+        /// |----------------------------------------
+        $dataset = $this->mmpg->get('v_progurinda_mapel', "id = '$id'");
+        if (isset_nn_nes($dataset)) {
+          $data = [
+            'modal_title' => "Hapus Mapel Guru",
+            'data' => $dataset,
+          ];
+          $res = [
+            'status' => true,
+            'message' => "Modal Hapus Mapel Guru",
+            'html' => $this->load->view('vw_mapel_guru_modal_delete', $data, true)
+          ];
+        }
+        break; 
+      }
+      default: {
+        break;
+      }
+    }
+
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($res));
   }
 }
