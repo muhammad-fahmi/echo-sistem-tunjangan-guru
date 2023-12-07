@@ -118,14 +118,8 @@
                   <th>Nama</th>
                   <th>Jabatan</th>
                   <th>Unit Kerja</th>
-                  <th>Tahun</th>
-                  <th>Bulan</th>
-                  <th>Terlambat</th>
-                  <th>Pulang Cepat</th>
-                  <th>Tidak Hadir</th>
                   <th>Tidak Apel Pagi</th>
                   <th>% Potongan Kehadiran</th>
-                  <!-- <th>Mata Pelajaran yang diampu</th> -->
                   <th>Aksi</th>
                 </tr>
               </thead>
@@ -205,9 +199,9 @@
       '<"col-12 col-sm-6"li><"col-12 col-sm-6"p>' +
       '>',
     /* set kolom yang di sortir secara default */
-    order: [
-      [0, "asc"],
-    ],
+    // order: [
+    //   ["nip", "asc"],
+    // ],
     /* set placeholder dari input search */
     language: {
       searchPlaceholder: "Keyword"
@@ -266,46 +260,6 @@
         },
       },
       {
-        data: 'tahun',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'bulan',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'terlambat',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'pulang_cepat',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'tidak_masuk',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
         data: 'tidak_apel',
         orderable: false,
         className: 'vam',
@@ -314,7 +268,7 @@
         },
       },
       {
-        data: 'potongan_persen_kehadiran',
+        data: 'potongan_persen',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {

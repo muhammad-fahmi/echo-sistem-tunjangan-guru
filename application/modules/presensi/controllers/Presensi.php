@@ -50,8 +50,8 @@ class Presensi extends MY_Controller
     $result = $this->mpp->get_data_presensi($param);
     // return the data back to the views
     $data["recordsTotal"] = $result['jml'];
-    $data["recordsFiltered"] = $result['list'];
-    $data["data"] = $result['data'];
+    $data["recordsFiltered"] = $result['jml'];
+    $data["data"] = $result['list'];
     $data["draw"] = $result['draw'];
     // using common_helper function
     $this->output
