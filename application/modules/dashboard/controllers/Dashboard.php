@@ -104,59 +104,59 @@ class Dashboard extends MY_Controller
     /// | COMMANDS
     /// |----------------------------------------
     switch ($type) {
-      case 'tambah_mapel_guru': {
-        /// |----------------------------------------
-        /// | INSERT DATA
-        /// |----------------------------------------
-        $dataset = [
-          'nip' => '',
-          'nama_lengkap' => '',
-          'ket_jab' => '',
-          'unit_kerja' => '',
-          'mapel' => '',
-          'id' => $id
-        ];
-        $data = [
-          'modal_title' => "Tambah Mapel Guru",
-          'data' => $dataset,
-        ];
-        $res = [
-          'status' => true,
-          'message' => "Modal Tambah Mapel Guru",
-          'html' => $this->load->view('vw_mapel_guru_modal_save', $data, true)
-        ];
-        break;
-      }
-      case 'edit_mapel_guru': {
-        /// |----------------------------------------
-        /// | EDIT DATA
-        /// |----------------------------------------
-        $dataset = $this->mmpg->get('v_progurinda_mapel', "id = '$id'");
-        $data = [
-          'modal_title' => "Edit Mapel Guru",
-          'data' => $dataset,
-        ];
-        $res = [
-          'status' => true,
-          'message' => "Modal Edit Mapel Guru",
-          'html' => $this->load->view('vw_mapel_guru_modal_save', $data, true)
-        ];
-        break;
-      }
-      case 'delete_mapel_guru': {
+      // case 'tambah_mapel_guru': {
+      //   /// |----------------------------------------
+      //   /// | INSERT DATA
+      //   /// |----------------------------------------
+      //   $dataset = [
+      //     'nip' => '',
+      //     'nama_lengkap' => '',
+      //     'ket_jab' => '',
+      //     'unit_kerja' => '',
+      //     'mapel' => '',
+      //     'id' => $id
+      //   ];
+      //   $data = [
+      //     'modal_title' => "Tambah Mapel Guru",
+      //     'data' => $dataset,
+      //   ];
+      //   $res = [
+      //     'status' => true,
+      //     'message' => "Modal Tambah Mapel Guru",
+      //     'html' => $this->load->view('vw_mapel_guru_modal_save', $data, true)
+      //   ];
+      //   break;
+      // }
+      // case 'edit_mapel_guru': {
+      //   /// |----------------------------------------
+      //   /// | EDIT DATA
+      //   /// |----------------------------------------
+      //   $dataset = $this->mmpg->get('v_progurinda_mapel', "id = '$id'");
+      //   $data = [
+      //     'modal_title' => "Edit Mapel Guru",
+      //     'data' => $dataset,
+      //   ];
+      //   $res = [
+      //     'status' => true,
+      //     'message' => "Modal Edit Mapel Guru",
+      //     'html' => $this->load->view('vw_mapel_guru_modal_save', $data, true)
+      //   ];
+      //   break;
+      // }
+      case 'delete_arsip_tpp': {
         /// |----------------------------------------
         /// | DELETE DATA
         /// |----------------------------------------
-        $dataset = $this->mmpg->get('v_progurinda_mapel', "id = '$id'");
+        $dataset = $this->mdbo->get('v_progurinda_jurnal_mengajar', "id = '$id'");
         if (isset_nn_nes($dataset)) {
           $data = [
-            'modal_title' => "Hapus Mapel Guru",
+            'modal_title' => "Batalkan Arsip TPP",
             'data' => $dataset,
           ];
           $res = [
             'status' => true,
-            'message' => "Modal Hapus Mapel Guru",
-            'html' => $this->load->view('vw_mapel_guru_modal_delete', $data, true)
+            'message' => "Modal Batalkan Arsip TPP",
+            'html' => $this->load->view('vw_arsip_tpp_modal_delete', $data, true)
           ];
         }
         break; 
@@ -165,6 +165,21 @@ class Dashboard extends MY_Controller
         break;
       }
     }
+
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($res));
+  }
+
+  public function delete()
+  {
+    $res = [
+      'status' => false,
+      'message' => "Maaf, proses pembatalan arsip TPP gagal dilakukan!"
+    ];
+
+    $data["id"] = $this->input->post('id');
+    $res = $this->mdbo->delete($data);
 
     return $this->output
       ->set_content_type('application/json')
