@@ -62,7 +62,7 @@
         <div class="card-body">
           <h4 class="card-title">Laporan TPP Per 3 Bulan</h4>
 
-          <form id="form_jurnal_bulanan" action="<?= site_url('laporan/get_jurnal_bulanan'); ?>" method="POST" enctype="multipart/form-data">
+          <form id="form_tpp_triwulan" action="<?= site_url('laporan/get_tpp_triwulan'); ?>" method="POST" enctype="multipart/form-data">
             <div class="row mb-4">
               <div class="col-12 mb-2">
                 <!-- Unit Kerja -->
@@ -94,7 +94,7 @@
               </div>
             </div>
             <!-- Button export file -->
-            <a href="<?= site_url('laporan/generate_pdf_jurnal_bulanan'); ?>" id="btn_export_file" class="btn btn-sm btn-success me-2" type="button">
+            <a href="<?= site_url('laporan/generate_pdf_tpp_triwulan'); ?>" id="btn_export_file" class="btn btn-sm btn-success me-2" type="button">
               <i class="fas fa-upload me-2"></i>Export Laporan TPP
             </a>
             <!-- <button id="btn_export_file" class="btn btn-sm btn-success me-2" type="submit" form="form_jurnal_bulanan">
@@ -127,7 +127,6 @@
                   <th>No Rekening</th>
                   <th>NIK</th>
                   <th>NPWP</th>
-                  <!-- <th>Aksi</th> -->
                 </tr>
               </thead>
 
@@ -192,14 +191,6 @@
           $(td).html('<div class="text-start">' + cellData + '</div>');
         },
       },
-      // {
-      //   data: 'nama_lengkap',
-      //   orderable: false,
-      //   className: 'vam',
-      //   createdCell: function(td, cellData, rowData, row, col) {
-      //     $(td).html('<div class="text-start">' + cellData + '</div>');
-      //   },
-      // },
       {
         data: 'kode_jab',
         orderable: false,
@@ -280,31 +271,6 @@
           $(td).html('<div class="text-center">' + cellData + '</div>');
         },
       },
-      // {
-      //   data: 'mapel',
-      //   orderable: false,
-      //   className: 'vam',
-      //   createdCell: function(td, cellData, rowData, row, col) {
-      //     $(td).html('<div class="text-end">' + cellData + '</div>');
-      //   },
-      // },
-      // {
-      //   data: 'id',
-      //   orderable: false,
-      //   className: 'vam',
-      //   createdCell: function(td, cellData, rowData, row, col) {
-      //     let id_entry = cellData;
-      //     let html_aksi = '<div class="btn-group">' + '<button type="button" class="btn btn-sm btn-light-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">' +
-      //       'Pilih' +
-      //       '</button>' +
-      //       '<ul class="dropdown-menu">' +
-      //       '<li><a class="dropdown-item" onclick="modal(`' + id_entry + '`, `edit_tpp_3_bulan`)" href="#"><i class="fas fa-edit me-1"></i>Edit</a></li>' +
-      //       '<li><a class="dropdown-item text-danger" onclick="modal(`' + id_entry + '`, `delete_tpp_3_bulan`)" href="#"><i class="fas fa-trash me-1"></i>Delete</a></li>' +
-      //       '</ul>' +
-      //       '</div>';
-      //     $(td).html('<div class="text-center">' + html_aksi + '</div>');
-      //   },
-      // },
     ],
     /* Lakukan fungsi callback pada bracket ini */
     drawCallback: function(settings) {
@@ -316,15 +282,6 @@
       }
       /* parameter callback untuk kostumisasi fungsi */
       $('.loading_tabel_tpp_3_bulan').removeClass('show');
-
-      // let btn_export = '<a class="btn btn-sm btn-success me-2" href="'+ <?= base_url('laporan/generate_pdf_jurnal_bulanan') ?> +'">' +
-      //   '<i class="fas fa-plus me-1"></i>Tambah TPP' +
-      //   '</a>';
-
-      // if (!init_btn_export) {
-      //   $('.init_btn_container').append(btn_export);
-      //   init_btn_export = true;
-      // }
     }
   });
 

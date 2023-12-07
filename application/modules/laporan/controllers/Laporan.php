@@ -69,50 +69,7 @@ class Laporan extends MY_Controller
       ->set_output(json_encode($data));
   }
 
-  public function LoadData($file)
-  {
-    // Read file lines
-    $lines = file($file);
-    $data = array();
-    foreach($lines as $line) {
-        $data[] = explode(';', chop($line));
-    }
-    return $data;
-  }
-
-  // public function ColoredTable($header,$data)
-  // {
-  //   // Colors, line width and bold font
-  //   $this->SetFillColor(255, 0, 0);
-  //   $this->SetTextColor(255);
-  //   $this->SetDrawColor(128, 0, 0);
-  //   $this->SetLineWidth(0.3);
-  //   $this->SetFont('', 'B');
-  //   // Header
-  //   $w = array(40, 35, 40, 45);
-  //   $num_headers = count($header);
-  //   for($i = 0; $i < $num_headers; ++$i) {
-  //       $this->Cell($w[$i], 7, $header[$i], 1, 0, 'C', 1);
-  //   }
-  //   $this->Ln();
-  //   // Color and font restoration
-  //   $this->SetFillColor(224, 235, 255);
-  //   $this->SetTextColor(0);
-  //   $this->SetFont('');
-  //   // Data
-  //   $fill = 0;
-  //   foreach($data as $row) {
-  //       $this->Cell($w[0], 6, $row[0], 'LR', 0, 'L', $fill);
-  //       $this->Cell($w[1], 6, $row[1], 'LR', 0, 'L', $fill);
-  //       $this->Cell($w[2], 6, number_format($row[2]), 'LR', 0, 'R', $fill);
-  //       $this->Cell($w[3], 6, number_format($row[3]), 'LR', 0, 'R', $fill);
-  //       $this->Ln();
-  //       $fill=!$fill;
-  //   }
-  //   $this->Cell(array_sum($w), 0, '', 'T');
-  // }
-
-  public function generate_pdf_jurnal_bulanan($array_of_data = false)
+  public function generate_pdf_tpp_triwulan($array_of_data = false)
   {
     // create new PDF document
     $pdf = new Tcpdf_lib('L', PDF_UNIT, 'F4', true, 'UTF-8', false);
@@ -252,5 +209,139 @@ class Laporan extends MY_Controller
 
     //Close and output PDF document
     $pdf->Output('laporan_tunjangan_produktifitas_guru_triwulan_I_2023.pdf', 'I');
+  }
+
+  public function generate_pdf_jurnal_bulanan($array_of_data = false)
+  {
+    // create new PDF document
+    $pdf = new Tcpdf_lib('L', PDF_UNIT, 'F4', true, 'UTF-8', false);
+
+    // set document information
+    $pdf->SetCreator(PDF_CREATOR);
+    $pdf->SetAuthor('SMPN 3 SAMARINDA');
+    $pdf->SetTitle('Rekapitulasi Jurnal Mengajar Bulanan 2023');
+    $pdf->SetSubject('TCPDF Tutorial');
+    $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+
+    // $logo_samarinda = base_url("theme/assets/images/logo/logo_pemkot.png");
+    $logo_path = FCPATH . 'theme\assets\images\logo\logo_pemkot.jpg';
+    // set default header data
+    $pdf->SetHeaderData($logo_path, 19, 'DINAS PENDIDIKAN DAN KEBUDAYAAN PEMERINTAH KOTA SAMARINDA', "SMP NEGERI 3 SAMARINDA\nRekapitulasi Jurnal Mengajar Tahun 2023");
+
+    // set header and footer fonts
+    $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+    $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+    // set default monospaced font
+    $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+    // set margins
+    $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+    $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+    $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+    // set auto page breaks
+    $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+    // set image scale factor
+    $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+    // ---------------------------------------------------------
+
+    // set font
+    $pdf->SetFont('dejavusans', '', 8);
+
+    // add a page
+    $pdf->AddPage();
+
+    // create some HTML content
+    $html = '<h4>THIS IS JUST A TEST!</h4>';
+
+    /// |----------------------------------------
+    /// | DISINI BUAT FORMAT HTML
+    /// |----------------------------------------
+
+    // kalau mau bikin warna styling table bikin terpisah
+    // misalkan style utk header
+    $style_header = 'color:black; background-color:#d9d9d9; font-size:9px; text-align: center;';
+    $style_content_1 =  "color:green; font-size: 7px; text-align: right;";
+    $style_content_2 =  "color:black; font-size: 7px; text-align: justify;";
+    $width_num =  "width: 30px;";
+    $width_25 = "width: 25%";
+    $width_20 = "width: 20%";
+    $width_15 = "width: 15%";
+    $width_10 = "width: 10%";
+    $width_8 = "width: 8%";
+    $border_thin = "border: 1px solid #999696;";
+    $tebel = "font-weight: 800;";
+
+    // untuk heading sama pembukaan tabel
+    $html_bulan_html = '<p class="mb-5" style="'. $tebel .'">Bulan : Desember</p>';
+    $html_table_open = '<table border="1" cellpadding="6">'.
+    '<thead>'.
+    '<tr>'.
+    '<th style="'. $style_header . $border_thin . $width_num .'">No</th>'.
+    '<th style="'. $style_header . $border_thin . $width_25 .'">Nama Guru</th>'.
+    '<th style="'. $style_header . $border_thin . $width_10 .'">Tugas Yang Diampu (Mapel)</th>'.
+    '<th style="'. $style_header . $border_thin . $width_10 .'">Jumlah Jam/Bulan</th>'.
+    '<th style="'. $style_header . $border_thin .'">Ketidakhadiran</th>'.
+    '<th style="'. $style_header . $border_thin . $width_10 .'">Jumlah Jam Minimal/Bulan</th>'.
+    '<th style="'. $style_header . $border_thin . $width_20 .'">Validasi Kepsek</th>'.
+    '<th style="'. $style_header . $border_thin . $width_8 .'">Keterangan</th>'.
+    '</tr>'.
+    '</thead>'.
+    '<tbody>';
+
+    $html_table_close = '</tbody>'.
+    '</table>';
+    $html_content = '';
+    
+    // sebagai contoh pake for aja dulu ya karena datanya kosong
+    for ($i=0; $i < 10; $i++) { 
+      $no = $i+1;
+      $randomText = strtoupper(md5($i . rand(1000, 9999)));
+      $content2 = substr($randomText,2,8);
+      $content3 = substr($randomText,4,10);
+      $content4 = substr($randomText,6,12);
+      $content5 = substr($randomText,8,14);
+
+      $html_content .= '<tr>'.
+      '<td style="'. $style_content_1 . $border_thin . $width_num .'">'. $no .'</td>'.
+      '<td style="'. $style_content_2 . $border_thin . $width_25 .'">'. $content2 .'</td>'.
+      '<td style="'. $style_content_2 . $border_thin . $width_10 .'">'. $content3 .'</td>'.
+      '<td style="'. $style_content_2 . $border_thin . $width_10 .'">'. $content4 .'</td>'.
+      '<td style="'. $style_content_2 . $border_thin .'">'. $content5 .'</td>'.
+      '<td style="'. $style_content_2 . $border_thin . $width_10 .'">'. $content5 .'</td>'.
+      '<td style="'. $style_content_2 . $border_thin . $width_20 .'">'. $content5 .'</td>'.
+      '<td style="'. $style_content_2 . $border_thin . $width_8 .'">'. $content5 .'</td>'.
+      '</tr>';
+    }
+
+    // Jumlah Final (Last Row)
+    // $html_content_2 = '<tr style="'. $style_header .'">'.
+    //   '<td colspan="5" style="'. $border_thin .'">JUMLAH </td>'.
+    //   '<td style="'. $border_thin .'"> </td>'.
+    //   '<td style="'. $border_thin .'"> </td>'.
+    //   '<td style="'. $border_thin .'"> </td>'.
+    //   '<td style="'. $border_thin .'"> </td>'.
+    //   '<td style="'. $border_thin .'"> </td>'.
+    //   '<td style="'. $border_thin .'"> </td>'.
+    //   '<td style="'. $border_thin .'"> </td>'.
+    //   '<td style="'. $border_thin .'"> </td>'.
+    //   '<td style="'. $border_thin .'"> </td>'.
+    //   '<td style="'. $border_thin .'"> </td>'.
+    //   '</tr>';
+
+    // jadikan satu semuanya
+    $html_full_table = $html_bulan_html . $html_table_open . $html_content . $html_table_close;
+
+    // output the HTML content
+    $pdf->writeHTML($html_full_table, true, false, true, false, '');
+
+    // reset pointer to the last page
+    $pdf->lastPage();
+
+    //Close and output PDF document
+    $pdf->Output('rekapitulasi_jurnal_mengajar_2023.pdf', 'I');
   }
 }
