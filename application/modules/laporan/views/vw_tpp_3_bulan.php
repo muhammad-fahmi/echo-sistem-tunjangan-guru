@@ -68,28 +68,27 @@
                 <!-- Unit Kerja -->
                 <label for="select_ukerja">Unit Kerja :</label>
                 <select type="text" name="select_ukerja" class="form-select form-select-sm" style="width:100%" id="select_ukerja" value="">
+                <option value="<?= $this->session->userdata("kode_unor") ?>"><?= $this->session->userdata("ket_unor"); ?></option>
                 </select>
               </div>
 
               <div class="col-6">
                 <!-- Triwulan -->
                 <label for="triwulan">Triwulan ke :</label>
-                <select type="text" name="triwulan" class="form-select form-select-sm" style="width:100%" id="triwulan" value="">
+                <select type="text" name="triwulan" class="form-select form-select-sm" style="width:100%" id="triwulan">
                   <option selected>- - - Pilih Triwulan - - -</option>
                   <option value="1">I - (JANUARI-MARET)</option>
                   <option value="2">II - (APRIL-JUNI)</option>
                   <option value="3">III - (JULI-SEPTEMBER)</option>
-                  <option value="4">IV - (OKTOBER-DESEMBER)</option>
+                  <option value="4" selected>IV - (OKTOBER-DESEMBER)</option>
                 </select>
               </div>
               <div class="col-6">
                 <!-- Tahun -->
                 <label for="tahun">Tahun :</label>
-                <select type="text" name="tahun" class="form-select form-select-sm" style="width:100%" id="tahun" value="">
+                <select type="text" name="tahun" class="form-select form-select-sm" style="width:100%" id="tahun">
                   <option selected>- - - Pilih Tahun - - - </option>
-                  <option value="2021">2021</option>
-                  <option value="2022">2022</option>
-                  <option value="2023">2023</option>
+                  <option value="2023" selected>2023</option>
                 </select>
               </div>
             </div>
@@ -112,21 +111,17 @@
 
               <thead class="bg-info text-white">
                 <tr class="text-center">
-                  <th>Nama</th>
-                  <th>NIP</th>
+                  <th>NIP/Nama</th>
                   <th>Gol</th>
                   <th>Jabatan</th>
-                  <th>Unit Kerja</th>
-                  <th>Insentif</th>
-                  <th>Bulan</th>
+                  <th>TPP/Bulan</th>
+                  <th>Jumlah Bulan</th>
                   <th>Jumlah Kotor</th>
                   <th>Jumlah PPh 5%</th>
                   <th>Jumlah PPh 15%</th>
                   <th>Jumlah INFAQ 2,5%</th>
                   <th>Jumlah Bersih</th>
-                  <th>No Rekening</th>
-                  <th>NIK</th>
-                  <th>NPWP</th>
+                  
                   <!-- <th>Aksi</th> -->
                 </tr>
               </thead>
@@ -148,7 +143,41 @@
 <!-- -------------------------------------------------------------- -->
 
 <script>
-  var urlDatatable = "<?= site_url('laporan/datalist') ?>";
+$('#select_ukerja').select2({
+    allowClear: true,
+    placeholder: 'Pilih Unit Kerja.',
+    //dropdownParent: $('#whole_modal_id .modal-content'),
+    ajax: {
+      type: 'POST',
+      dataType: 'json',
+      url: '<?= site_url('config/select2_instansi') ?>',
+      delay: 800,
+      /* delay before sending ajax request */
+      data: function(params) {
+        return {
+          search: params.term,
+          aktif : "Y"
+        }
+      },
+      processResults: function(data) {
+        return {
+          results: data
+        };
+      },
+    }
+  }).on('select2:select', function(e) {
+    // what to do when option selected
+    reload_table();
+    console.log(e);
+
+  }).on('select2:close', function(e) {
+    // what to do when selection closed
+  }).on('select2:clear', function(e) {
+    // what to do when clearing (only if allowClear: true)
+    selected_kewenangan = '';
+  });
+
+  var urlDatatable = "<?= site_url('laporan/tpp_3_bln_datalist') ?>";
   var init_btn_export = false;
   var tabel_tpp_3_bulan = $("#table_tpp_3_bulan").DataTable({
     responsive: true,
@@ -189,7 +218,7 @@
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-start">' + cellData + '</div>');
+          $(td).html('<div class="text-start">' + cellData + '<br>'+rowData.nama+'</div>');
         },
       },
       // {
@@ -201,55 +230,7 @@
       //   },
       // },
       {
-        data: 'kode_jab',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-start">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'kode_ukerja',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'bulan',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'tahun',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'jam_mengajar',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'kode_instansi',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'jns_jab',
+        data: 'ket_gol',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -261,11 +242,19 @@
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
+          $(td).html('<div class="text-start">' + cellData + '<br>'+rowData.ket_ukerja+'</div>');
         },
       },
       {
-        data: 'ket_uorg',
+        data: 'tpp_per_bln',
+        orderable: false,
+        className: 'vam',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-start">' + cellData + '</div>');
+        },
+      },
+      {
+        data: 'jumlah_bln',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -273,38 +262,45 @@
         },
       },
       {
-        data: 'ket_ukerja',
+        data: 'jumlah_kotor',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-center">' + cellData + '</div>');
         },
       },
-      // {
-      //   data: 'mapel',
-      //   orderable: false,
-      //   className: 'vam',
-      //   createdCell: function(td, cellData, rowData, row, col) {
-      //     $(td).html('<div class="text-end">' + cellData + '</div>');
-      //   },
-      // },
-      // {
-      //   data: 'id',
-      //   orderable: false,
-      //   className: 'vam',
-      //   createdCell: function(td, cellData, rowData, row, col) {
-      //     let id_entry = cellData;
-      //     let html_aksi = '<div class="btn-group">' + '<button type="button" class="btn btn-sm btn-light-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">' +
-      //       'Pilih' +
-      //       '</button>' +
-      //       '<ul class="dropdown-menu">' +
-      //       '<li><a class="dropdown-item" onclick="modal(`' + id_entry + '`, `edit_tpp_3_bulan`)" href="#"><i class="fas fa-edit me-1"></i>Edit</a></li>' +
-      //       '<li><a class="dropdown-item text-danger" onclick="modal(`' + id_entry + '`, `delete_tpp_3_bulan`)" href="#"><i class="fas fa-trash me-1"></i>Delete</a></li>' +
-      //       '</ul>' +
-      //       '</div>';
-      //     $(td).html('<div class="text-center">' + html_aksi + '</div>');
-      //   },
-      // },
+      {
+        data: 'pph5',
+        orderable: false,
+        className: 'vam',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-end">' + cellData + '</div>');
+        },
+      },
+      {
+        data: 'pph15',
+        orderable: false,
+        className: 'vam',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-end">' + cellData + '</div>');
+        },
+      },
+      {
+        data: 'infaq',
+        orderable: false,
+        className: 'vam',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-end">' + cellData + '</div>');
+        },
+      },
+      {
+        data: 'jumlah_bersih',
+        orderable: false,
+        className: 'vam',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        },
+      }      
     ],
     /* Lakukan fungsi callback pada bracket ini */
     drawCallback: function(settings) {

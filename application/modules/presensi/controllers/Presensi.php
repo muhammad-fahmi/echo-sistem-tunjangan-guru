@@ -110,4 +110,113 @@ class Presensi extends MY_Controller
     
     // Testing code sinkronisasi presensi data
   }
+
+  public function modal_integrasi()
+  {
+    $filter_bln = $this->input->post('filter_bln');
+    $filter_thn = $this->input->post('filter_thn');
+    $kode_unor = $this->input->post('kode_unor');
+
+    $data = [
+      'modal_title' => "Integrasi Presensi",
+      'data' => $dataset,
+    ];
+    $res = [
+      'status' => true,
+      'message' => "Modal Tambah Mapel Guru",
+      'html' => $this->load->view('vw_mapel_integrasi_presensi', $data, true)
+    ];
+    
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($res));
+  }
+
+  //Fungsi untuk menarik data presensi dari aplikasi absensi_web_samarinda
+  function integrasi_presensi($kode_ukerja = "", $bulan = "", $tahun = "")
+  {
+    //cek apakah sudah difinalkan klo sudah tidak usah integrasi
+    if (isFinal($kode_ukerja, (int)$bulan, $tahun)) {
+      echo "<div class='row'><div class='col-md-12'><h4>Integrasi gagal! DATA SUDAH FINAL!</h4></div></div>";
+    } else {
+      // Create a client with a base URI
+      //$client = new GuzzleHttp\Client(['base_uri' => 'http://[::1]/absensi_samarinda_web/index.php/api/']);
+      $client = new GuzzleHttp\Client(['base_uri' => 'http://localhost/absensi_samarinda_web/index.php/api/', 'verify' => false]);
+      $response = $client->request('GET', 'export_ringkasan_opd/' . $kode_ukerja . '/' . $bulan . '/' . $tahun);
+      //using response
+      $code = $response->getStatusCode();
+      $reason = $response->getReasonPhrase();
+      $body = json_decode($response->getBody());
+      if ($code == '200') {
+        //jika sukses
+        if ($body->success) {
+          //vardump list 
+          //var_dump($body->attlog);
+          $total = 0;
+          $insert = 0;
+          $update = 0;
+          $list_sudah_masuk = false;
+          $arr_data_presensi = array();
+          try {
+            // get list data presensi yang sudah masuk sesuai periode dan unit kerja filter
+            if ($kode_ukerja == "69710345") {
+              $where_ukerja = "(kode_ukerja like '" . $kode_ukerja . "%' OR kode_ukerja like '69710328%')";
+            } else {
+              $where_ukerja = "kode_instansi = '" . $kode_ukerja . "'";
+            }
+            $q_list_sudah_masuk = $this->db->where($where_ukerja . " AND tahun = '" . $tahun . "' AND bulan ='" . (int)$bulan . "'")->get("v_data_presensi");
+            if ($q_list_sudah_masuk->num_rows() > 0) {
+              $list_sudah_masuk = $q_list_sudah_masuk->result_array();
+              foreach ($list_sudah_masuk as $key => $value) {
+                $arr_data_presensi[$value["nip"]] = true;
+              }
+            }
+            //var_dump($arr_data_presensi);
+            foreach ($body->attlog as $key => $value) {
+              //echo $value->pegawai->nip . " - " . $value->pegawai->nama . " : " . $value->potongan . "<br>";
+              //siapkan data presensi
+              $persen_potongan = ((int)$value->potongan > 100) ? 100 : $value->potongan;
+              $data_presensi = array(
+                "nip" => $value->pegawai->nip,
+                "kode_jab" => $value->pegawai->kode_jab,
+                "kode_ukerja" => $value->pegawai->kode_ukerja,
+                "tahun" => $tahun,
+                "bulan" => (int)$bulan,
+                "username_input" => $this->session->userdata("username"),
+                "potongan_persen" => $persen_potongan
+              );
+              /* $message = "NIP : " . $value->pegawai->nip;
+              if (isset($arr_data_presensi[$data_presensi["nip"]])) {
+                $message .= "Array Index " . $data_presensi["nip"] . " is NOT EXIST <br>";
+              } else {
+                $message .= "Array Index " . $data_presensi["nip"] . " is NOT EXIST <br>";
+              } */
+              //echo $message;
+              //cek riwayat presensi
+              //$q_cek_presensi = $this->db->where(["nip" => $data_presensi["nip"], "tahun" => $tahun, "bulan" => (int)$bulan])->get("r_data_presensi");
+              $data_exist =  (array_key_exists($value->pegawai->nip, $arr_data_presensi)) ? true : false;
+
+              if ($data_exist) {
+                //jika sudah ada maka update
+                $this->db->where(["nip" => $data_presensi["nip"], "tahun" => $tahun, "bulan" => (int)$bulan])->update("progurinda_r_data_presensi", $data_presensi);
+                $update++;
+              } else {
+                //jika belum maka insert data presensi
+                $this->db->insert("progurinda_r_data_presensi", $data_presensi);
+                $insert++;
+              }
+              $total++;
+            }
+            echo "<div class='row'><div class='col-md-12'><h4>Integrasi Data Berhasil!</h4><br>Data diproses : " . $total . " | Diupdate : " . $update . " | Ditambah : " . $insert . "</div></div>";
+          } catch (\Throwable $th) {
+            //throw $th;
+            echo "ERROR!Process Message : " . $th->getMessage();
+          }
+        } else {
+          //jika gagal
+          echo "<div class='row'><div class='col-md-12'><h4>Integrasi gagal! " . $body->message . "</h4></div></div>";
+        }
+      }
+    }
+  }
 }

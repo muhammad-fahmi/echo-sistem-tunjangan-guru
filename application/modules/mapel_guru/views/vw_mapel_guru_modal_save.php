@@ -58,7 +58,7 @@
     ajax: {
       type: 'POST',
       dataType: 'json',
-      url: '<?= site_url('config/select2_pegawai_jab') ?>',
+      url: '<?= site_url('config/select2_pegawai') ?>',
       delay: 800,
       /* delay before sending ajax request */
       data: function(params) {

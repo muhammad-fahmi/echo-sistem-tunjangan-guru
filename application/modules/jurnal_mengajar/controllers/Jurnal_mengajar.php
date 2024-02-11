@@ -19,7 +19,7 @@ class Jurnal_mengajar extends MY_Controller
   {
     // lakukan proses init halaman
     $this->session->set_userdata('menu', 'jurnal_mengajar');
-    $sent_data = array();
+    $sent_data = array('bln_now' => date('m'));
     $data = array(
       'page_title' => "List Jurnal Mengajar",
       'module' => "jurnal_mengajar",
@@ -42,6 +42,10 @@ class Jurnal_mengajar extends MY_Controller
       'search' => $this->input->post("search[value]"),
       'draw' => $this->input->post("draw"),
       /* additional data can be declared here */
+      'filter_bln' =>  (isset_nn_nes($this->input->post("filter_bln"))) ? $this->input->post("filter_bln") : date('m'),
+      'filter_thn' =>  (isset_nn_nes($this->input->post("filter_thn"))) ? $this->input->post("filter_thn") : date('Y'),
+      'select_ukerja' =>  $this->input->post("select_ukerja"),
+
     );
     // move the db operation to the designated models
     $result = $this->mjm->get_datatable('v_progurinda_jurnal_mengajar',$param);

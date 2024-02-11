@@ -304,9 +304,9 @@
             <li class="sidebar-item">
               <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("tpp_per_bulan") ?>" aria-expanded="false"><i class="mdi mdi-directions"></i><span class="hide-menu">List TPP Per Bulan</span></a>
             </li>
-            <li class="sidebar-item">
+            <!-- <li class="sidebar-item">
               <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("tpp_per_bulan") ?>" aria-expanded="false"><i class="mdi mdi-directions"></i><span class="hide-menu">Cuti</span></a>
-            </li>
+            </li> -->
             <li class="sidebar-item">
               <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-file-document"></i><span class="hide-menu">Laporan</span></a>
               <ul aria-expanded="false" class="collapse first-level">

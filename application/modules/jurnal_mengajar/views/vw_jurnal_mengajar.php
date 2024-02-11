@@ -61,7 +61,46 @@
       <div class="card">
         <div class="card-body">
           <h4 class="card-title">Daftar Jurnal Mengajar Guru Pengampu</h4>
+          <div class="row mb-4">
+              <div class="col-12 mb-2">
+                <!-- Unit Kerja -->
+                <label for="select_ukerja">Unit Kerja :</label>
+                <select type="text" name="select_ukerja" class="form-select form-select-sm" style="width:100%" id="select_ukerja">
+                <option value="<?= $this->session->userdata("kode_unor"); ?>"><?= $this->session->userdata("ket_unor"); ?></option>
+                </select>
+              </div>
 
+              <div class="col-3">
+                <!-- Bulan -->
+                <label for="bulan">Bulan :</label>
+                <select type="text" name="filter_bln" class="form-select form-select-sm" style="width:100%" id="filter_bln" >
+                  <?php 
+                  $bln_now = date("n");
+                  for($i = 1;$i <= 12;$i++){
+                    $selected = ($i == $bln_now) ? "selected" : "";
+                  ?>
+                    <option value="<?= $i ?>" <?= $selected ?>><?= getBulan($i) ?></option>
+                  <?php } ?>
+                </select>
+              </div>
+              <div class="col-3">
+                <!-- Tahun -->
+                <label for="tahun">Tahun :</label>
+                <select type="text" name="filter_thn" class="form-select form-select-sm" style="width:100%" id="filter_thn">
+                  <?php for($i = 2023;$i <= date("Y");$i++){ 
+                    $selected = ($i == date('Y')) ? "selected" : "";
+                    ?>
+                    <option value="<?= $i; ?>" <?= $selected; ?>><?= $i; ?></option>    
+                    <?php } ?>
+                  </select>
+              </div>
+              
+            </div>
+          <div class="row">
+          <div class="col-3">
+                <button class="btn btn-primary" onclick="reload_table()"><i class="fa fa-refresh"></i> Refresh </button>
+              </div>
+          </div>
           <div class="table-responsive mt-4">
 
             <div class="_loading loading_tabel_jurnal_mengajar">
@@ -73,7 +112,6 @@
               <thead class="bg-info text-white">
                 <tr class="text-center">
                   <th>NIP</th>
-                  <!-- <th>Nama</th> -->
                   <th>Jabatan</th>
                   <th>Unit Kerja</th>
                   <th>Bulan</th>
@@ -124,8 +162,14 @@
       url: urlDatatable,
       /* parameter yang dikirimkan ke controller */
       data: {
-        param1: function() {
-          return $('#id_atau_class_element').val();
+        filter_bln: function() {
+          return $('#filter_bln').val();
+        },
+        filter_thn: function() {
+          return $('#filter_thn').val();
+        },
+        select_ukerja: function() {
+          return $('#select_ukerja').val();
         },
       },
       type: 'POST',
@@ -140,17 +184,10 @@
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-start">' + cellData + '</div>');
+          $(td).html('<div class="text-start">' + cellData + '</div><br><b>'+rowData.nama_lengkap+'</b>');
         },
       },
-      // {
-      //   data: 'nama_lengkap',
-      //   orderable: false,
-      //   className: 'vam',
-      //   createdCell: function(td, cellData, rowData, row, col) {
-      //     $(td).html('<div class="text-start">' + cellData + '</div>');
-      //   },
-      // },
+      
       {
         data: 'ket_jab',
         orderable: false,

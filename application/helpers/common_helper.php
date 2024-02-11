@@ -686,3 +686,13 @@ function phpFileUploadError($errorCode, $lang = 'en')
   }
   return $array[$errorCode];
 }
+
+function konversi_counting($nilai, $decimal = 0, $spare = ".", $spare_dec = ",")
+{
+  if ($nilai == '')
+    $nilai = 0;
+
+  $result = number_format($nilai, $decimal, $spare_dec, $spare);
+
+  return $result;
+}

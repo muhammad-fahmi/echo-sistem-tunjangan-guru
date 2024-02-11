@@ -69,24 +69,6 @@ class Dashboard extends MY_Controller
       ->set_output(json_encode($data));
   }
 
-  // public function export_attlog_pdf($kode_ukerja = "", $cloud_id = "all", $filter_jnspeg = "all", $filter_tgl = "", $filter_tgl_akhir = "")
-  // {
-  //   $params = array(
-  //     "kode_ukerja" => $kode_ukerja,
-  //     "cloud_id" => $cloud_id,
-  //     "filter_tgl" => $filter_tgl,
-  //     "filter_tgl_akhir" => $filter_tgl_akhir,
-  //     "filter_jnspeg" => $filter_jnspeg
-  //   );
-  //   $data_export["ket_ukerja"] = $this->db->where("kode_ukerja = '" . $kode_ukerja . "'")->get("v_ukerja")->row()->ket_ukerja;
-  //   $data_export["attlog"] = $this->mdl_dashboard->get_export_attlog($params);
-  //   $this->load->view("vw_export_pdf", $data_export);
-  // }
-
-  // public function export_attlog_excel()
-  // {
-  // }
-
   public function modal()
   {
     $type = $this->input->post('type');
@@ -169,5 +151,47 @@ class Dashboard extends MY_Controller
     return $this->output
       ->set_content_type('application/json')
       ->set_output(json_encode($res));
+  }
+
+  public function get_data_list(){
+    $dummy_data = array(
+      [
+        "id" => "0",
+        "kode_ukerja" => "",
+        "ket_ukerja" => "SD N 016 Samarinda Seberang",
+        "tgl_arsip" => null,
+        "status" => 0
+      ],
+      [
+        "id" => "1",
+        "kode_ukerja" => "",
+        "ket_ukerja" => "UPT SMP N 01",
+        "tgl_arsip" => "2023-12-07",
+        "status" => 1
+      ],
+      [
+        "id" => "2",
+        "kode_ukerja" => "",
+        "ket_ukerja" => "UPT SMP N 02",
+        "tgl_arsip" => "2023-12-05",
+        "status" => 1
+      ],
+      [
+        "id" => "3",
+        "kode_ukerja" => "",
+        "ket_ukerja" => "UPT SMP N 03",
+        "tgl_arsip" => null,
+        "status" => 0
+      ],
+    );
+    $response = array(
+      "draw" => "1",
+      "data" => $dummy_data,
+      "recordTotal" => 4,
+      "recordFiltered" => 4
+    );
+    $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($response));
   }
 }

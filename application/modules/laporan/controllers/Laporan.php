@@ -69,6 +69,59 @@ class Laporan extends MY_Controller
       ->set_output(json_encode($data));
   }
 
+  public function tpp_3_bln_datalist(){
+    $dummy_data = array(
+      [
+        "nip" => "196805151990102004",
+        "nama" => "ERNI SUHARTINI",
+        "ket_gol" => "IV/b",
+        "kode_gol" => "42",
+        "ket_jab" => "Guru Madya /Kepala Sekolah",
+        "kode_jab" => "",
+        "kode_ukerja" => "",
+        "ket_ukerja" => "SD N 016 Samarinda Seberang",
+        "tpp_per_bln" => "1.000.000",
+        "jumlah_bln" => 3,
+        "jumlah_kotor" => "3.000.000",
+        "pph5" => 0,
+        "pph15" => "450.000",
+        "infaq" => "63.750",
+        "jumlah_bersih" => "2.486.750",
+        "no_rekening" => "1252213925",
+        "nik" => "",
+        "npwp" => "79.064.892.7-722.001"
+      ],
+      [
+        "nip" => "197204192014082002",
+        "nama" => "HUSNIATI",
+        "ket_gol" => "III/b",
+        "kode_gol" => "32",
+        "ket_jab" => "Guru Pertama",
+        "kode_jab" => "",
+        "kode_ukerja" => "",
+        "ket_ukerja" => "SD N 016 Samarinda Seberang",
+        "tpp_per_bln" => "850.000",
+        "jumlah_bln" => 3,
+        "jumlah_kotor" => "2.550.000",
+        "pph5" => 0,
+        "pph15" => "127.500",
+        "infaq" => "60.563",
+        "jumlah_bersih" => "2.361.937",
+        "no_rekening" => "1253333925",
+        "nik" => "",
+        "npwp" => "77.146.776.8-722.001"
+      ],
+    );
+    $data["recordsTotal"] = 12;
+    $data["recordsFiltered"] = 12;
+    $data["data"] = $dummy_data;
+    $data["draw"] = 1;
+    // using common_helper function
+    $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
   public function LoadData($file)
   {
     // Read file lines
@@ -119,7 +172,7 @@ class Laporan extends MY_Controller
 
     // set document information
     $pdf->SetCreator(PDF_CREATOR);
-    $pdf->SetAuthor('SMPN 3 SAMARINDA');
+    $pdf->SetAuthor('SD N 016 SAMARINDA SEBERANG');
     $pdf->SetTitle('Laporan Tunjangan Produktifitas Guru Triwulan');
     $pdf->SetSubject('TCPDF Tutorial');
     $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
@@ -127,7 +180,7 @@ class Laporan extends MY_Controller
     // $logo_samarinda = base_url("theme/assets/images/logo/logo_pemkot.png");
     $logo_path = FCPATH . 'theme\assets\images\logo\logo_pemkot.jpg';
     // set default header data
-    $pdf->SetHeaderData($logo_path, 19, 'DINAS PENDIDIKAN DAN KEBUDAYAAN PEMERINTAH KOTA SAMARINDA', "SMP NEGERI 3 SAMARINDA\nTunjangan Produktifitas Guru Triwulan I Tahun 2023");
+    $pdf->SetHeaderData($logo_path, 19, 'DINAS PENDIDIKAN DAN KEBUDAYAAN PEMERINTAH KOTA SAMARINDA', "SD NEGERI 016 SAMARINDA\nTunjangan Produktifitas Guru Triwulan IV Tahun 2023");
 
     // set header and footer fonts
     $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
@@ -197,6 +250,92 @@ class Laporan extends MY_Controller
     $html_table_close = '</tbody>'.
     '</table>';
     $html_content = '';
+
+    //dummy data
+    $data_dummy = array(
+      [
+        "nama" => "ERNI SUHARTINI,S.Pd.SD",
+        "nip" => "196805151990102004",
+        "ket_jab" => "Guru Madya /Kepala Sekolah",
+        "ket_ukerja" => "SD N 016 Samarinda Seberang",
+        "ket_gol" => "IV/a",
+        "insentif" => "1.000.000",
+        "jumlah_bulan" => 3,
+        "jumlah_kotor" => "3.000.000",
+        "jumlah_pph_5" => "0",
+        "jumlah_pph_15" => "450.000",
+        "jumlah_infaq" => "63.750",
+        "jumlah_bersih" => "2.486.250",
+        "no_rekening" => "",
+        "nik" => "",
+        "npwp" => ""
+      ],
+      [
+        "nama" => "M ABIDINSYAH",
+        "nip" => "196503091992031011",
+        "ket_jab" => "Guru Madya",
+        "ket_ukerja" => "SD N 016 Samarinda Seberang",
+        "ket_gol" => "IV/a",
+        "insentif" => "1.000.000",
+        "jumlah_bulan" => 3,
+        "jumlah_kotor" => "3.000.000",
+        "jumlah_pph_5" => "0",
+        "jumlah_pph_15" => "450.000",
+        "jumlah_infaq" => "63.750",
+        "jumlah_bersih" => "2.486.250",
+        "no_rekening" => "",
+        "nik" => "",
+        "npwp" => ""
+      ],[
+        "nama" => "	Hj. ALIANTI MALLU, A.Md.Pd",
+        "nip" => "196507141988042004",
+        "ket_jab" => "Guru Madya",
+        "ket_ukerja" => "SD N 016 Samarinda Seberang",
+        "ket_gol" => "IV/b",
+        "insentif" => "1.000.000",
+        "jumlah_bulan" => 3,
+        "jumlah_kotor" => "3.000.000",
+        "jumlah_pph_5" => "0",
+        "jumlah_pph_15" => "450.000",
+        "jumlah_infaq" => "63.750",
+        "jumlah_bersih" => "2.486.250",
+        "no_rekening" => "",
+        "nik" => "",
+        "npwp" => ""
+      ],[
+        "nama" => "KRISMI PUJIASTUTI, S.Pd,",
+        "nip" => "196805182008012017",
+        "ket_jab" => "Guru Pertama",
+        "ket_ukerja" => "SD N 016 Samarinda Seberang",
+        "ket_gol" => "III/b",
+        "insentif" => "850.000",
+        "jumlah_bulan" => 3,
+        "jumlah_kotor" => "2.550.000",
+        "jumlah_pph_5" => "127.500",
+        "jumlah_pph_15" => "0",
+        "jumlah_infaq" => "60.563",
+        "jumlah_bersih" => "2.361.937",
+        "no_rekening" => "",
+        "nik" => "",
+        "npwp" => ""
+      ],[
+        "nama" => "NURHAYATI",
+        "nip" => "196808202007012026",
+        "ket_jab" => "Guru",
+        "ket_ukerja" => "SD N 016 Samarinda Seberang",
+        "ket_gol" => "II/d",
+        "insentif" => "800.000",
+        "jumlah_bulan" => 3,
+        "jumlah_kotor" => "2.400.000",
+        "jumlah_pph_5" => "0",
+        "jumlah_pph_15" => "0",
+        "jumlah_infaq" => "60.000",
+        "jumlah_bersih" => "2.340.000",
+        "no_rekening" => "",
+        "nik" => "",
+        "npwp" => ""
+      ],
+    );
     
     // sebagai contoh pake for aja dulu ya karena datanya kosong
     for ($i=0; $i < 10; $i++) { 
@@ -251,6 +390,6 @@ class Laporan extends MY_Controller
     $pdf->lastPage();
 
     //Close and output PDF document
-    $pdf->Output('laporan_tunjangan_produktifitas_guru_triwulan_I_2023.pdf', 'I');
+    $pdf->Output('laporan_tunjangan_produktifitas_guru_triwulan_IV_2023.pdf', 'I');
   }
 }
