@@ -313,6 +313,7 @@ class Mdl_presensi_pegawai extends CI_Model
     $name_temp_pegawai_pensiun = "temp_pegawai_pensiun".time();
     $name_temp_pegawai_aktif = "temp_pegawai_aktif".time();
     $name_temp_presensi_pegawai = "temp_presensi_pegawai".time();
+    $name_temp_pegawai_gol = "temp_presensi_gol".time();
    
     $where_q = "kode_instansi = '" . $param["kode_ukerja"] . "'";
     //$index = $this->input->post("order[0][column]");
@@ -470,6 +471,7 @@ $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_jab);
 $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_pensiun);
 $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_aktif);
 $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_presensi_pegawai);
+$this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_gol);
        
     $idx = 0;
     
