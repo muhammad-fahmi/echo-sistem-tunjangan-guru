@@ -35,9 +35,9 @@ class Mdl_user extends CI_Model
     // deklarasi where condition
     $where_search = (isset_nn_nes($data['search']))
       ? "AND (username LIKE '%$data[search]%' 
-      OR nama_lengkap LIKE '%$data[search]%'
-      OR kewenangan LIKE '%$data[search]%'
       OR id_user LIKE '%$data[search]%'
+      OR kewenangan LIKE '%$data[search]%'
+      OR ket_ukerja LIKE '%$data[search]%'
       )"
       : "";
     /* kalau ada tambahan where condition bisa add lagi di atas */

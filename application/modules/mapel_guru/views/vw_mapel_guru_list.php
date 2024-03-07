@@ -61,14 +61,6 @@
     <div class="col-12">
       <div class="card">
         <div class="card-body">
-          <?php highlight_string("<?php\nOUTPUT = " . var_export($this->session->userdata(), true) . ";\n?>"); ?>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-12">
-      <div class="card">
-        <div class="card-body">
           <h4 class="card-title">Daftar Mata Pelajaran dan Guru Pengampu</h4>
 
           <div class="table-responsive mt-4">
