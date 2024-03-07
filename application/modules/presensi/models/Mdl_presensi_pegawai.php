@@ -335,6 +335,7 @@ class Mdl_presensi_pegawai extends CI_Model
 
     //mulai query untuk presensi
     $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_jab);
+    $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_gol);
     $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_pensiun);
     $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_aktif);
     $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_presensi_pegawai);
@@ -529,6 +530,7 @@ $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_presensi_pegawai);
       $list[$idx]["id_hari_kerja"] = $id_hari_kerja;
       //potongan per menit pegawai
       $list[$idx]["no"] = $param["start"] + $idx + 1;
+      $list[$idx]["tidak_apel"] = ($r['tidak_apel'] == null) ? 0 : $r['tidak_apel'];
       //$list[$idx]["total_potongan"] = $r["terlambat"] + $r["pulang_cepat"] + $r["tidak_masuk"];
       //nilai potongan lupa absen
       //$list[$idx]["potongan_lupa_absen"] = round((float)($r["lupa_absen"] * $persentase_potongan_disiplin["persen_potongan_lupa"] * $tpp_disiplin_kerja / 100), 0, PHP_ROUND_HALF_UP);

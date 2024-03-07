@@ -68,10 +68,11 @@
                 <!-- Unit Kerja -->
                 <label for="select_ukerja">Unit Kerja :</label>
                 <select type="text" name="select_ukerja" class="form-select form-select-sm" style="width:100%" id="select_ukerja" >
+                <option value="<?= $this->session->userdata("kode_unor"); ?>"><?= $this->session->userdata("ket_unor"); ?></option>
                 </select>
               </div>
 
-              <div class="col-6">
+              <div class="col-3">
                 <!-- Triwulan -->
                 <label for="bln_filter">Masa TPP Bulan:</label>
                 <select type="text" name="bln_filter" class="form-select form-select-sm" style="width:100%" id="triwulan" >
@@ -89,25 +90,35 @@
                   <option value="12" <?php echo ($bln_filter == 12) ? "selected" : ""; ?>>Desember</option>
                 </select>
               </div>
-              <div class="col-6">
+              <div class="col-3">
                 <!-- Tahun -->
                 <label for="tahun">Tahun :</label>
                 <select type="text" name="tahun" class="form-select form-select-sm" style="width:100%" id="tahun" >
                   <?php for($y = 2023; $y <= date("Y"); $y++){ ?>
                     <option value="<?= $y ?>" <?php echo ($y == $thn_filter ) ? "selected" : ""; ?>><?= $y ?></option>
-                  <?php } ?>
-                  
+                  <?php } ?>                  
                 </select>
               </div>
             </div>
-            <!-- Button export file -->
-            <a href="<?= site_url('laporan/generate_pdf_tpp_triwulan'); ?>" id="btn_export_file" class="btn btn-sm btn-primary me-2" type="button">
-              <i class="fas fa-upload me-2"></i>Cetak DRAFT Daftar TPP
-            </a>
-
-            <a href="<?= site_url('laporan/generate_pdf_tpp_triwulan'); ?>" id="btn_export_file" class="btn btn-sm btn-success me-2" type="button">
-              <i class="fas fa-upload me-2"></i>Finalkan Daftar TPP
-            </a>
+            <div class="row">
+                <div class="col-3">
+                  <button class="btn btn-primary" onclick="reload_table()"><i class="fa fa-refresh"></i> Refresh </button>
+                  <br>
+                  <br>
+                </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <!-- Button export file -->
+                <a href="<?= site_url('laporan/generate_pdf_tpp_triwulan'); ?>" id="btn_export_file" class="btn btn-sm btn-primary me-2" type="button">
+                  <i class="fas fa-upload me-2"></i>Cetak DRAFT Daftar TPP
+                </a>
+                <a href="<?= site_url('laporan/generate_pdf_tpp_triwulan'); ?>" id="btn_export_file" class="btn btn-sm btn-success me-2" type="button">
+                  <i class="fas fa-upload me-2"></i>Finalkan Daftar TPP
+                </a>
+              </div>
+            </div>
+            
             <!-- <button id="btn_export_file" class="btn btn-sm btn-success me-2" type="submit" form="form_jurnal_bulanan">
               <i class="fas fa-upload me-2"></i>Export File Jurnal
             </button> -->
