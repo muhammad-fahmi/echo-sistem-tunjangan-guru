@@ -35,7 +35,7 @@ class Tpp_per_bulan extends MY_Controller
 
     $data = array(
       'page_title' => "List TPP Per Bulan",
-      'module' => "pp_per_bulan",
+      'module' => "tpp_per_bulan",
       'view' => "vw_list_tpp_per_bulan",
       'data' => $sent_data
     );
