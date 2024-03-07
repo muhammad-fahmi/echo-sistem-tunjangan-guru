@@ -149,7 +149,7 @@ class Config extends MY_Controller
       ->set_output(json_encode($data));
   }
 
-  
+
 
   public function select2_shift()
   {
@@ -247,7 +247,7 @@ class Config extends MY_Controller
     } else {
       $kode_instansi = (isset_nn_nes($kode_instansi))
         ? $kode_instansi
-        : $this->session->userdata("kode_instansi");
+        : $this->session->userdata("kode_unor");
       $where_instansi = " AND (kode_instansi LIKE '" . $kode_instansi . "%' OR unit_kepeg LIKE '" . $kode_instansi . "%')";
     }
     // query searching
