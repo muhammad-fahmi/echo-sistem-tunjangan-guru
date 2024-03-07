@@ -57,6 +57,15 @@
   <!-- -------------------------------------------------------------- -->
   <!-- basic table -->
   <div class="row">
+
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <?php highlight_string("<?php\nOUTPUT = " . var_export($this->session->userdata(), true) . ";\n?>"); ?>
+        </div>
+      </div>
+    </div>
+
     <div class="col-12">
       <div class="card">
         <div class="card-body">

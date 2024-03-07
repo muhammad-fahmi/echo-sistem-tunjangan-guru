@@ -11,7 +11,7 @@ function isset_nn_nes($data, $placeholder = null)
   } else {
     if (trim($data) != '' && trim($data) != '-') $result = true;
   }
-  if ($placeholder == null) {
+  if ($placeholder === null) {
     return $result;
   } else {
     return ($result) ? $data : $placeholder;
@@ -405,7 +405,7 @@ function get_img_tag($html_text, $all = false)
 /** fungsi untuk generate salt random pada m_user, karena sekarang menggunakan bcrypt */
 function micin()
 {
-  $salt = md5(md5(datetime_now()));
+  $salt = md5(md5(microtime()));
   $micin = substr($salt, -7);
   return strtoupper($micin);
 }

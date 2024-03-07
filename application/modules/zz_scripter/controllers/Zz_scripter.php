@@ -6,6 +6,9 @@ class Zz_scripter extends MY_Controller
   public function __construct()
   {
     parent::__construct();
+
+    $username = $this->session->userdata('id_user');
+    if ($username != 'echocrew') redirect(site_url(''));
   }
 
   public function index()
@@ -228,5 +231,74 @@ class Zz_scripter extends MY_Controller
     }
 
     echo '<h3>Successful</h3><br>' . $insert_counter . ' data kak belanja inserted.';
+  }
+
+  public function generate_user_progurinda()
+  {
+    $base_where = "kode_ukerja IS NOT NULL ";
+    $dataset = $this->db->select('*')->from('m_ukerja')
+      ->where($base_where . "AND kode_instansi = kode_ukerja AND (
+          kode_ukerja LIKE '6971032899%' OR 
+          kode_ukerja LIKE '6971034599%'
+        )")->get()->result_array();
+
+    $html = '<ul style="font-family:monospace;">';
+    $success_count = 0;
+    $failed_count = 0;
+    $index_count = 1;
+
+    if (isset_nn_nes($dataset)) {
+
+      foreach ($dataset as $key => $value) {
+        $pass_str = strtoupper(substr(md5(microtime(true) . rand(1000, 9999)), 0, 6));
+        $salt = micin();
+        $hashed_pwd = encrypt_pwd($pass_str);
+
+        $temp_username = strtolower($value['ket_ukerja']);
+        $temp_username_2 = preg_replace('/[^a-zA-Z0-9\s]+/', '_', $temp_username);
+        $underscore_username = str_replace(' ', '_', $temp_username_2);
+        $prefix = '';
+        $new_id_user = $prefix . $underscore_username;
+
+        /// |----------------------------------------
+        /// | CEK IF USER ALREADY EXIST
+        /// |----------------------------------------
+        $cek = $this->db->get_where('progurinda_m_user', "id_user LIKE '$new_id_user%'")->num_rows();
+
+        if ($cek > 0) $new_id_user = $new_id_user . '' . ($cek + 1);
+
+        try {
+          $this->db->insert('progurinda_m_user', [
+            'id_user' => $new_id_user,
+            'username' => $value['ket_ukerja'],
+            'pass_str' => $pass_str,
+            'password' => $hashed_pwd,
+            'salt' => $salt,
+            'email_user' => 'auto.generated@gmail.com',
+            'kewenangan' => '10',
+            'kode_unor' => $value['kode_instansi'],
+            'aktif' => 'N'
+          ]);
+
+          $success_count++;
+          $html .= '<li><b>(' . str_pad($index_count, 4, '0', STR_PAD_LEFT) . ')' .
+            '</b> User created with the id of <b>' . $new_id_user . '</b>.</li>';
+        } catch (\Throwable $th) {
+          $error_message = strip_tags(trim($th->getMessage()));
+
+          $failed_count++;
+          $html .= '<li><b>(' . str_pad($index_count, 4, '0', STR_PAD_LEFT) . ')' .
+            ' ' . $new_id_user . '</b>: Failed to insert. (' . $error_message . ')</li>';
+        }
+
+        $index_count++;
+      }
+    }
+
+    $html .= '</ul>';
+    $html .= '<h3 style="font-family:monospace;">SUCCESS : ' . $success_count . '</h3>';
+    $html .= '<h3 style="font-family:monospace;">FAILED  : ' . $failed_count . '</h3>';
+
+    echo $html;
   }
 }

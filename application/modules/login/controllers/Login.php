@@ -27,11 +27,30 @@ class Login extends MY_Controller
   {
     $res = array();
     $post = $this->input->post();
+
+    /// |----------------------------------------
+    /// | CEK USER AKTIF
+    /// |----------------------------------------
     $user = $this->db->get_where('v_progurinda_user', array(
       'id_user' => $post['username'],
       'aktif' => 'Y'
     ));
     $cek_user = $user->num_rows();
+
+    /// |----------------------------------------
+    /// | CEK USER TERDAFTAR
+    /// |----------------------------------------
+    $terdaftar = $this->db->get_where('v_progurinda_user', array(
+      'id_user' => $post['username']
+    ))->num_rows();
+    if ($terdaftar > 0 && $cek_user < 1) {
+      return $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode([
+          'status' => false,
+          'message' => "User terdaftar namun belum diaktifkan oleh admin aplikasi."
+        ]));
+    }
 
     //cek user atasan langsung
     if ($cek_user > 0) {
@@ -65,7 +84,8 @@ class Login extends MY_Controller
       ->set_output(json_encode($res));
   }
 
-  function logout(){
+  function logout()
+  {
     $this->session->sess_destroy();
     redirect(site_url("login"));
   }
