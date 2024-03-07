@@ -31,6 +31,34 @@ function trim_array($data_array)
   return $data_array;
 }
 
+/**
+ * @param string $string The input string to be cleaned.
+ * @return string The cleaned string.
+ * 
+ * Cleans a given string by performing the following steps:
+ * 1. Replaces spaces with underscores.
+ * 2. Removes all characters except alphabetic letters (both uppercase and lowercase),
+ *    numbers, and underscores.
+ * 3. Ensures that consecutive underscores are reduced to a single underscore.
+ */
+function clean_string($string = 'String_ placeholder')
+{
+  if (!is_string($string)) {
+    return "ERROR";
+  }
+
+  // Replace spaces with underscores
+  $replace_space = str_replace(' ', '_', $string);
+
+  // Remove non-alphanumeric characters (including underscores)
+  $cleanedString = preg_replace("/[^a-zA-Z0-9_]/", "", $replace_space);
+
+  // Remove consecutive underscores
+  $cleanedString = preg_replace("/_+/", "_", $cleanedString);
+
+  return $cleanedString;
+}
+
 /** ambil data datetime berdasarkan waktu saat ini (dalam timezone GMT+8 secara default). dengan output berupa string */
 function datetime_now($alphanum = false, $timezone = 'Asia/Hong_Kong')
 {

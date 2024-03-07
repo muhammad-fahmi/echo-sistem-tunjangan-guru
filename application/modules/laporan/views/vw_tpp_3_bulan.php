@@ -62,44 +62,51 @@
         <div class="card-body">
           <h4 class="card-title">Laporan TPP Per 3 Bulan</h4>
 
-          <form id="form_jurnal_bulanan" action="<?= site_url('laporan/get_jurnal_bulanan'); ?>" method="POST" enctype="multipart/form-data">
-            <div class="row mb-4">
-              <div class="col-12 mb-2">
-                <!-- Unit Kerja -->
-                <label for="select_ukerja">Unit Kerja :</label>
-                <select type="text" name="select_ukerja" class="form-select form-select-sm" style="width:100%" id="select_ukerja" value="">
-                <option value="<?= $this->session->userdata("kode_unor") ?>"><?= $this->session->userdata("ket_unor"); ?></option>
-                </select>
-              </div>
+          <div class="row mb-4">
 
-              <div class="col-6">
-                <!-- Triwulan -->
-                <label for="triwulan">Triwulan ke :</label>
-                <select type="text" name="triwulan" class="form-select form-select-sm" style="width:100%" id="triwulan">
-                  <option selected>- - - Pilih Triwulan - - -</option>
-                  <option value="1">I - (JANUARI-MARET)</option>
-                  <option value="2">II - (APRIL-JUNI)</option>
-                  <option value="3">III - (JULI-SEPTEMBER)</option>
-                  <option value="4" selected>IV - (OKTOBER-DESEMBER)</option>
-                </select>
-              </div>
-              <div class="col-6">
-                <!-- Tahun -->
-                <label for="tahun">Tahun :</label>
-                <select type="text" name="tahun" class="form-select form-select-sm" style="width:100%" id="tahun">
-                  <option selected>- - - Pilih Tahun - - - </option>
-                  <option value="2023" selected>2023</option>
-                </select>
-              </div>
+            <div class="col-12 mb-2">
+              <!-- Unit Kerja -->
+              <label for="select_ukerja">Unit Kerja :</label>
+              <select type="text" name="select_ukerja" class="form-select form-select-sm" style="width:100%" id="select_ukerja" value="">
+                <option value="<?= $this->session->userdata("kode_unor") ?>"><?= $this->session->userdata("ket_unor"); ?></option>
+              </select>
             </div>
-            <!-- Button export file -->
-            <a href="<?= site_url('laporan/generate_pdf_jurnal_bulanan'); ?>" id="btn_export_file" class="btn btn-sm btn-success me-2" type="button">
-              <i class="fas fa-upload me-2"></i>Export Laporan TPP
-            </a>
-            <!-- <button id="btn_export_file" class="btn btn-sm btn-success me-2" type="submit" form="form_jurnal_bulanan">
+
+            <div class="col-6">
+              <!-- Triwulan -->
+              <label for="triwulan">Triwulan ke :</label>
+              <select type="text" name="triwulan" class="form-select form-select-sm" style="width:100%" id="triwulan">
+                <option value="" default selected>- Pilih Triwulan -</option>
+                <option value="1">I - (JANUARI-MARET)</option>
+                <option value="2">II - (APRIL-JUNI)</option>
+                <option value="3">III - (JULI-SEPTEMBER)</option>
+                <option value="4">IV - (OKTOBER-DESEMBER)</option>
+              </select>
+            </div>
+
+            <div class="col-6">
+              <!-- Tahun -->
+              <label for="tahun">Tahun :</label>
+              <select type="text" name="tahun" class="form-select form-select-sm" style="width:100%" id="tahun">
+                <option value="" default selected>- Pilih Tahun -</option>
+                <?php
+                $year = (int)em_date('Y');
+                for ($i = $year; $i >= 2023; $i--) {
+                  echo '<option value="' . $i . '">' . $i . '</option>';
+                }
+                ?>
+              </select>
+            </div>
+
+          </div>
+
+          <!-- Button export file -->
+          <a href="<?= site_url('laporan/generate_pdf_jurnal_bulanan'); ?>" target="_blank" id="btn_export_file" class="btn btn-sm btn-success me-2 disabled" type="button">
+            <i class="fas fa-upload me-2"></i>Export Laporan TPP
+          </a>
+          <!-- <button id="btn_export_file" class="btn btn-sm btn-success me-2" type="submit" form="form_jurnal_bulanan">
               <i class="fas fa-upload me-2"></i>Export File Jurnal
             </button> -->
-          </form>
 
           <div class="table-responsive mt-4">
 
@@ -121,7 +128,7 @@
                   <th>Jumlah PPh 15%</th>
                   <th>Jumlah INFAQ 2,5%</th>
                   <th>Jumlah Bersih</th>
-                  
+
                   <!-- <th>Aksi</th> -->
                 </tr>
               </thead>
@@ -143,7 +150,7 @@
 <!-- -------------------------------------------------------------- -->
 
 <script>
-$('#select_ukerja').select2({
+  $('#select_ukerja').select2({
     allowClear: true,
     placeholder: 'Pilih Unit Kerja.',
     //dropdownParent: $('#whole_modal_id .modal-content'),
@@ -156,7 +163,7 @@ $('#select_ukerja').select2({
       data: function(params) {
         return {
           search: params.term,
-          aktif : "Y"
+          aktif: "Y"
         }
       },
       processResults: function(data) {
@@ -168,6 +175,7 @@ $('#select_ukerja').select2({
   }).on('select2:select', function(e) {
     // what to do when option selected
     reload_table();
+    btn_cetak_handler();
     console.log(e);
 
   }).on('select2:close', function(e) {
@@ -175,6 +183,7 @@ $('#select_ukerja').select2({
   }).on('select2:clear', function(e) {
     // what to do when clearing (only if allowClear: true)
     selected_kewenangan = '';
+    btn_cetak_handler();
   });
 
   var urlDatatable = "<?= site_url('laporan/tpp_3_bln_datalist') ?>";
@@ -218,7 +227,7 @@ $('#select_ukerja').select2({
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-start">' + cellData + '<br>'+rowData.nama+'</div>');
+          $(td).html('<div class="text-start">' + cellData + '<br>' + rowData.nama + '</div>');
         },
       },
       // {
@@ -242,7 +251,7 @@ $('#select_ukerja').select2({
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-start">' + cellData + '<br>'+rowData.ket_ukerja+'</div>');
+          $(td).html('<div class="text-start">' + cellData + '<br>' + rowData.ket_ukerja + '</div>');
         },
       },
       {
@@ -300,7 +309,7 @@ $('#select_ukerja').select2({
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-center">' + cellData + '</div>');
         },
-      }      
+      }
     ],
     /* Lakukan fungsi callback pada bracket ini */
     drawCallback: function(settings) {
@@ -328,4 +337,40 @@ $('#select_ukerja').select2({
   function reload_table() {
     tabel_tpp_3_bulan.ajax.reload();
   }
+
+  function btn_cetak_handler() {
+    let val_ukerja = '';
+    let val_tahun = '';
+    let val_triwulan = '';
+    let link_export = $('#btn_export_file');
+    let url = '#';
+
+    val_ukerja = $('[name="select_ukerja"]').val();
+    val_triwulan = $('[name="triwulan"]').val();
+    val_tahun = $('[name="tahun"]').val();
+
+    if (val_ukerja != '' && val_triwulan != '' && val_tahun != '') {
+      link_export.removeClass('disabled');
+      url = '<?= site_url('laporan/cetak_ttp_3_bln') ?>/' + val_ukerja + '/' + val_triwulan + '/' + val_tahun;
+      console.log('url retrieved: ' + url);
+    } else {
+      link_export.addClass('disabled');
+      $url = '#';
+    }
+
+    link_export.attr('href', url);
+    console.log('btn_cetak_handler running');
+  }
+
+  $('[name="triwulan"]').on('change', function() {
+    btn_cetak_handler();
+  });
+
+  $('[name="tahun"]').on('change', function() {
+    btn_cetak_handler();
+  });
+
+  setTimeout(() => {
+    btn_cetak_handler();
+  }, 50);
 </script>

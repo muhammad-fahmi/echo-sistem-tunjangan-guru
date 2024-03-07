@@ -68,6 +68,7 @@
                 <!-- Unit Kerja -->
                 <label for="select_ukerja">Unit Kerja :</label>
                 <select type="text" name="select_ukerja" class="form-select form-select-sm" style="width:100%" id="select_ukerja" value="">
+                  <option value="" default selected>- Pilih Unit Kerja -</option>
                 </select>
               </div>
 
@@ -75,7 +76,7 @@
                 <!-- Bulan -->
                 <label for="bulan">Bulan :</label>
                 <select type="text" name="bulan" class="form-select form-select-sm" style="width:100%" id="bulan" value="">
-                  <option selected>- - - Pilih Bulan - - -</option>
+                  <option value="" default selected>- Pilih Bulan -</option>
                   <option value="1">Januari</option>
                   <option value="2">Februari</option>
                   <option value="3">Maret</option>
@@ -94,7 +95,7 @@
                 <!-- Tahun -->
                 <label for="tahun">Tahun :</label>
                 <select type="text" name="tahun" class="form-select form-select-sm" style="width:100%" id="tahun" value="">
-                  <option selected>- - - Pilih Tahun - - - </option>
+                  <option value="" default selected>-- Pilih Tahun -</option>
                   <option value="2021">2021</option>
                   <option value="2022">2022</option>
                   <option value="2023">2023</option>

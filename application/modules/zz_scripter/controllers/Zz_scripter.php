@@ -255,8 +255,7 @@ class Zz_scripter extends MY_Controller
         $hashed_pwd = encrypt_pwd($pass_str);
 
         $temp_username = strtolower($value['ket_ukerja']);
-        $temp_username_2 = preg_replace('/[^a-zA-Z0-9\s]+/', '_', $temp_username);
-        $underscore_username = str_replace(' ', '_', $temp_username_2);
+        $underscore_username = clean_string($temp_username);
         $prefix = '';
         $new_id_user = $prefix . $underscore_username;
 
