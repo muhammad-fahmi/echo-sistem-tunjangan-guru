@@ -191,10 +191,11 @@
       // },
       tmt_mulai: {
         required: true
-      },
-      tmt_selesai: {
-        required: true
       }
+      //,
+      //tmt_selesai: {
+      //  required: true
+      //}
     },
     errorClass: 'is-invalid',
     validClass: 'mv-valid',
@@ -224,10 +225,10 @@
       // },
       tmt_mulai: {
         required: "Tanggal mulai Tugas Tambahan tidak boleh kosong"
-      },
-      tmt_selesai: {
-        required: "Tanggal selesai Tugas Tambahan tidak boleh kosong"
       }
+      // tmt_selesai: {
+      //   required: "Tanggal selesai Tugas Tambahan tidak boleh kosong"
+      // }
     },
   }));
 </script>
