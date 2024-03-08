@@ -120,7 +120,7 @@
                   <th>Unit Kerja</th>
                   <th>Tidak Apel Pagi</th>
                   <th>% Potongan Kehadiran</th>
-                  <th>Aksi</th>
+                  <!-- <th>Aksi</th> -->
                 </tr>
               </thead>
 
@@ -283,23 +283,23 @@
       //     $(td).html('<div class="text-end">' + cellData + '</div>');
       //   },
       // },
-      {
-        data: 'id',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          let id_entry = cellData;
-          let html_aksi = '<div class="btn-group">' + '<button type="button" class="btn btn-sm btn-light-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">' +
-            'Pilih' +
-            '</button>' +
-            '<ul class="dropdown-menu">' +
-            '<li><a class="dropdown-item" onclick="modal(`' + id_entry + '`, `edit_presensi`)" href="#"><i class="fas fa-edit me-1"></i>Edit</a></li>' +
-            '<li><a class="dropdown-item text-danger" onclick="modal(`' + id_entry + '`, `delete_presensi`)" href="#"><i class="fas fa-trash me-1"></i>Delete</a></li>' +
-            '</ul>' +
-            '</div>';
-          $(td).html('<div class="text-center">' + html_aksi + '</div>');
-        },
-      },
+      // {
+      //   data: 'id',
+      //   orderable: false,
+      //   className: 'vam',
+      //   createdCell: function(td, cellData, rowData, row, col) {
+      //     let id_entry = cellData;
+      //     let html_aksi = '<div class="btn-group">' + '<button type="button" class="btn btn-sm btn-light-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">' +
+      //       'Pilih' +
+      //       '</button>' +
+      //       '<ul class="dropdown-menu">' +
+      //       '<li><a class="dropdown-item" onclick="modal(`' + id_entry + '`, `edit_presensi`)" href="#"><i class="fas fa-edit me-1"></i>Edit</a></li>' +
+      //       '<li><a class="dropdown-item text-danger" onclick="modal(`' + id_entry + '`, `delete_presensi`)" href="#"><i class="fas fa-trash me-1"></i>Delete</a></li>' +
+      //       '</ul>' +
+      //       '</div>';
+      //     $(td).html('<div class="text-center">' + html_aksi + '</div>');
+      //   },
+      // },
     ],
     /* Lakukan fungsi callback pada bracket ini */
     drawCallback: function(settings) {
