@@ -315,11 +315,11 @@
                       TPP Per 3 Bulan
                     </span></a>
                 </li>
-                <li class="sidebar-item">
+                <!-- <li class="sidebar-item">
                   <a href="<?= site_url("laporan/jurnal_bulanan") ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
                       Jurnal Mengajar
                     </span></a>
-                </li>
+                </li> -->
               </ul>
             </li>
             <li class="sidebar-item">
