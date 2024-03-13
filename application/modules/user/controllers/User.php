@@ -62,25 +62,45 @@ class User extends MY_Controller
     $username = $this->input->post('username');
     $type = $this->input->post('type');
 
+    // default response
+    $response = [
+      'status' => false,
+      'message' => 'Maaf, proses ini masih dalam tahap development.',
+      'html' => ''
+    ];
+
     switch ($type) {
       case 'edit': {
-          $data = $this->user->get("v_user", "username = '$username'");
+          $data = $this->user->get("progurinda_m_user", "id_user = '$username'");
           $sent = array('data' => $data);
-          $this->load->view('vw_modal_edit', $sent);
+          // update response
+          $response['status'] = true;
+          $response['message'] = "Proses Edit.";
+          $response['html'] = $this->load->view('vw_modal_edit', $sent, TRUE);
           break;
         }
       case 'hapus': {
-          $data = $this->user->get("m_user", "username = '$username'");
+          $data = $this->user->get("progurinda_m_user", "id_user = '$username'");
           $sent = array('data' => $data);
-          $this->load->view('vw_modal_hapus', $sent);
+          // update response
+          $response['status'] = true;
+          $response['message'] = "Proses Hapus.";
+          $response['html'] = $this->load->view('vw_modal_hapus', $sent, TRUE);
           break;
         }
       default: {
           $sent = array('data' => array());
-          $this->load->view('vw_modal_tambah', $sent);
+          // update response
+          $response['status'] = true;
+          $response['message'] = "Proses Tambah.";
+          $response['html'] = $this->load->view('vw_modal_tambah', $sent, TRUE);
           break;
         }
     }
+
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($response));
   }
 
   /** fungsi untuk menambah data user (ADD) */

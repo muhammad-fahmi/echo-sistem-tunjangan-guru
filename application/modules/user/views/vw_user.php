@@ -11,9 +11,9 @@
       <li class="breadcrumb-item active">Manajemen User</li>
     </ol>
   </div>
-<!-- ============================================================== -->
-<!-- End Bread crumb and right sidebar toggle -->
-<!-- ============================================================== -->
+  <!-- ============================================================== -->
+  <!-- End Bread crumb and right sidebar toggle -->
+  <!-- ============================================================== -->
 </div>
 <!-- -------------------------------------------------------------- -->
 <!-- Container fluid  -->
@@ -39,13 +39,13 @@
 
               <thead class="bg-info text-white">
                 <tr class="text-center">
-                <th scope="col">No.</th>
-              <th scope="col">Username</th>
-              <th scope="col">Nama Lengkap</th>
-              <th scope="col">Kewenangan</th>
-              <th scope="col">Unit Kerja</th>
-              <th scope="col">Aktif</th>
-              <th scope="col">Aksi</th>
+                  <th scope="col">No.</th>
+                  <th scope="col">Username</th>
+                  <th scope="col">Nama Lengkap</th>
+                  <th scope="col">Kewenangan</th>
+                  <th scope="col">Unit Kerja</th>
+                  <th scope="col">Aktif</th>
+                  <th scope="col">Aksi</th>
                 </tr>
               </thead>
 
@@ -155,14 +155,16 @@
         orderable: false,
         className: '',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' +
-            '<a href="<?= site_url('user/menu_management/'); ?>' + cellData + '" class="badge bg-secondary clickable me-1" title="Menu Management">' +
-            '<i class="fas fa-list"></i></a>' +
-            '<a onclick="modal(`' + cellData + '`, `edit`)" class="badge bg-primary clickable me-1" title="Edit">' +
-            '<i class="fas fa-edit"></i></a>' +
-            '<a onclick="modal(`' + cellData + '`, `hapus`)" class="badge bg-danger clickable" title="Hapus">' +
-            '<i class="fas fa-trash"></i></a>' +
-            '</div>');
+          let btn_user_management = '<a href="<?= site_url('user/menu_management/'); ?>' + cellData + '" class="badge bg-secondary clickable me-1" title="Menu Management">' +
+            '<i class="fas fa-list"></i></a>';
+
+          let btn_edit = '<div onclick="modal(`' + cellData + '`, `edit`)" class="badge bg-primary clickable me-1" title="Edit">' +
+            '<i class="fas fa-edit"></i></div>';
+
+          let btn_delete = '<div onclick="modal(`' + cellData + '`, `hapus`)" class="badge bg-danger clickable" title="Hapus">' +
+            '<i class="fas fa-trash"></i></div>';
+
+          $(td).html('<div class="text-center">' + btn_edit + btn_delete + '</div>');
         }
       },
     ],
@@ -195,6 +197,24 @@
     tabel_user.ajax.reload();
   }
 
+  // OLD FUNCTION
+  // function modal(id, type) {
+  //   var url = "<?= site_url('user/modal') ?>";
+  //   $.ajax({
+  //     type: "POST",
+  //     url: url,
+  //     data: {
+  //       username: id,
+  //       type: type
+  //     },
+  //     success: function(res) {
+  //       console.log(res);
+  //       $("#whole_modal_id").html(res).show();
+  //       $("#modal_content_id").modal("show");
+  //     }
+  //   });
+  // }
+
   function modal(id, type) {
     var url = "<?= site_url('user/modal') ?>";
     $.ajax({
@@ -205,8 +225,12 @@
         type: type
       },
       success: function(res) {
-        $("#modal").html(res).show();
-        $("#my_modal").modal("show");
+        if (res.status) {
+          $("#modal_content_id").html(res.html).show();
+          $("#whole_modal_id").modal("show");
+        } else {
+          toaster('info', 'Unknown error on modal calls.\n- ' + res.message);
+        }
       }
     });
   }

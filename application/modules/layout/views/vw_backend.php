@@ -252,13 +252,13 @@
             <li class="nav-small-cap">
               <i class="mdi mdi-dots-horizontal"></i>
               <span class="hide-menu">Menu Sistem</span>
-            </li> 
+            </li>
             <?php if ($this->session->userdata("kewenangan") == "00") { ?>
               <li class="sidebar-item">
                 <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("dashboard"); ?>" aria-expanded="false"><i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Dashboard Monitoring</span></a>
               </li>
             <?php } ?>
-            
+
             <li class="sidebar-item">
               <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-settings"></i><span class="hide-menu">Setup</span></a>
               <ul aria-expanded="false" class="collapse first-level">
@@ -378,15 +378,18 @@
       <div id="modal_content_id" class="modal-content">
       </div>
     </div>
-    <div class="modal fade" id="bs-modal-lg" tabindex="-1" aria-labelledby="bs-modal-lg" data-bs-focus="false" data-bs-backdrop="static" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div id="modal-content-lg" class="modal-content-lg">
+  </div>
 
-        </div>
-        <!-- /.modal-content -->
+  <div class="modal fade" id="bs-modal-lg" tabindex="-1" aria-labelledby="bs-modal-lg" data-bs-focus="false" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div id="modal-content-lg" class="modal-content-lg">
+
       </div>
-      <!-- /.modal-dialog -->
+      <!-- /.modal-content -->
     </div>
+    <!-- /.modal-dialog -->
+  </div>
+
 </body>
 
 </html>

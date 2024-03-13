@@ -57,4 +57,26 @@ label.is-invalid {
 
 .sidebar-footer {
   display: none !important;
+}
+
+.select2-container {
+  display: block !important;
+}
+
+.select2-dropdown {
+  z-index: 1100 !important;
+}
+
+.clickable {
+  cursor: pointer !important;
+  opacity: 0.9 !important;
+  transform: scale(0.95);
+}
+.clickable:hover {
+  transform: scale(1);
+  opacity: 1 !important;
+}
+
+.non-editable {
+  background-color: #e9e9e9 !important;
 }/*# sourceMappingURL=style.css.map */

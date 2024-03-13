@@ -68,7 +68,7 @@ class Mdl_user extends CI_Model
       /// |----------------------------------------------------------------------
       $data_result[$index]['no'] = $no;
       $data_result[$index]['username'] = $row->username;
-      $data_result[$index]['id_user'] = $row->username;
+      $data_result[$index]['id_user'] = $row->id_user;
       $data_result[$index]['nama_lengkap'] = $row->nama_lengkap;
       $data_result[$index]['kewenangan'] = $ket_kewenangan[$row->kewenangan];
       $data_result[$index]['ket_ukerja'] = $row->ket_ukerja; //tambah keterangan unit kerja

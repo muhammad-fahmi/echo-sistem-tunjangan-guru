@@ -1,79 +1,86 @@
-<div class="row g-2">
-  <div class="col-12">
-    <form action="<?= site_url('user/edit_user'); ?>" method="POST" id="edit_user">
-      <div class="panel">
-        <div class="header space-between">
-          <div class="header">Edit User Data</div>
-          <i class="fas fa-window-close clickable float right" data-bs-dismiss="modal"></i>
-          </h5>
-        </div>
-        <div class="separator"></div>
-        <div class="body">
-          <input type="hidden" name="username_lama" value="<?= $data['username'] ?>">
-          <div class="col-12 mb-1">
-            <label for="username">Username</label>
-            <input type="text" class="form-control form-control-sm" id="username" name="username" value="<?= $data['username'] ?>">
-          </div>
-          <!-- <div class="col-12 mb-1">
+<form action="<?= site_url('user/edit_user'); ?>" method="POST" id="edit_user">
+  <input type="hidden" name="id_user" value="<?= $data['id_user'] ?>">
+
+  <div class="modal-header d-flex align-items-center">
+    <div>
+      <h3 class="mb-0">Edit Data User</h3>
+    </div>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+
+  <div class="modal-body">
+    <div class="row g-2">
+
+      <div class="col-12 mb-1">
+        <label for="id_user">Username</label>
+        <div id="id_user" class="form-control form-control-sm non-editable"><?= $data['id_user'] ?></div>
+      </div>
+
+      <div class="col-12 mb-1">
+        <label for="username">Nama User / Nama Unit Kerja</label>
+        <input type="text" class="form-control form-control-sm" id="username" name="username" value="<?= $data['username'] ?>" placeholder="Nama User / Nama Unit Kerja">
+      </div>
+      <!-- <div class="col-12 mb-1">
             <label for="password1">Current Password</label>
             <input type="password" class="form-control form-control-sm" id="password1" name="password1" placeholder="Password lama dari user">
           </div> -->
-          <div class="col-12 mb-1">
-            <label for="password2">New Password</label>
-            <input type="password" class="form-control form-control-sm" id="password2" name="password2" placeholder="Password baru untuk user, kosongkan jika tidak ada perubahan">
-          </div>
-          <div class="col-12 mb-1">
-            <label for="nama_lengkap">Nama Lengkap</label>
-            <input type="text" class="form-control form-control-sm" id="nama_lengkap" name="nama_lengkap" value="<?= $data['nama_lengkap'] ?>">
-          </div>
-          <div class="col-12 mb-1">
-            <label for="kewenangan">Kewenangan</label>
-            <select type="text" class="form-select form-select-sm kewenangan select2" name="kewenangan" id="kewenangan">
-              <?php
-              $temp = $data['kewenangan'];
-              $ket_temp = $data['ket_kewenangan'];
-              if ($temp != '') {
-                echo '<option value="' . $temp . '" default selected>' . $ket_temp . '</option>';
-              }
-              ?>
-            </select>
-          </div>
-          <div class="col-12 mb-1">
-            <label for="kewenangan">Unit Kerja</label>
-            <select type="text" class="form-select form-select-sm ukerja select2" name="kode_ukerja" id="kode_ukerja">
-              <?php
-              $temp = $data['kode_ukerja'];
-              $ket_temp = $data['kode_ukerja'] . " - " . $data['ket_ukerja'];
-              if ($temp != '') {
-                echo '<option value="' . $temp . '" default selected>' . $ket_temp . '</option>';
-              }
-              ?>
-            </select>
-          </div>
-          <div class="col-12 mb-1">
-            <label for="no_hp">No. HP</label>
-            <input type="number" class="form-control form-control-sm" id="no_hp" name="no_hp" value="<?= $data['no_hp'] ?>">
-          </div>
-          <div class="col-12 mb-1">
-            <div class="form-check">
-              <?php
-              $checked = ($data['aktif'] == 'Y') ? 'checked' : '';
-              ?>
-              <input id="aktif" class="form-check-input form-check-input-sm" type="checkbox" value="<?= $data['aktif'] ?>" name="aktif" <?= $checked ?>>
-              <label class="form-check-label form-check-label-sm" for="aktif">Aktif</label>
-            </div>
-          </div>
-          <div class="mb-1"></div>
-        </div>
-        <div class="separator"></div>
-        <div class="body text-end">
-          <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-sm btn-primary">Apply</button>
+      <div class="col-12 mb-1">
+        <label for="password2">New Password</label>
+        <input type="password" class="form-control form-control-sm" id="password2" name="password2" placeholder="Password baru untuk user, kosongkan jika tidak ada perubahan">
+      </div>
+      <div class="col-12 mb-1">
+        <label for="nama_lengkap">Nama Lengkap</label>
+        <input type="text" class="form-control form-control-sm" id="nama_lengkap" name="nama_lengkap" value="<?= $data['nama_lengkap'] ?>">
+      </div>
+      <div class="col-12 mb-1">
+        <label for="kewenangan">Kewenangan</label>
+        <select type="text" class="form-select form-select-sm kewenangan select2" name="kewenangan" id="kewenangan">
+          <?php
+          $temp = $data['kewenangan'];
+          $ket_temp = $data['ket_kewenangan'];
+          if ($temp != '') {
+            echo '<option value="' . $temp . '" default selected>' . $ket_temp . '</option>';
+          }
+          ?>
+        </select>
+      </div>
+      <div class="col-12 mb-1">
+        <label for="kewenangan">Unit Kerja</label>
+        <select type="text" class="form-select form-select-sm ukerja select2" name="kode_ukerja" id="kode_ukerja">
+          <?php
+          $temp = $data['kode_ukerja'];
+          $ket_temp = $data['kode_ukerja'] . " - " . $data['ket_ukerja'];
+          if ($temp != '') {
+            echo '<option value="' . $temp . '" default selected>' . $ket_temp . '</option>';
+          }
+          ?>
+        </select>
+      </div>
+      <div class="col-12 mb-1">
+        <label for="no_hp">No. HP</label>
+        <input type="number" class="form-control form-control-sm" id="no_hp" name="no_hp" value="<?= $data['no_hp'] ?>">
+      </div>
+      <div class="col-12 mb-1">
+        <div class="form-check">
+          <?php
+          $checked = ($data['aktif'] == 'Y') ? 'checked' : '';
+          ?>
+          <input id="aktif" class="form-check-input form-check-input-sm" type="checkbox" value="<?= $data['aktif'] ?>" name="aktif" <?= $checked ?>>
+          <label class="form-check-label form-check-label-sm" for="aktif">Aktif</label>
         </div>
       </div>
-    </form>
+
+    </div>
+    <!-- end of row -->
   </div>
-</div>
+  <!-- end of modal-body -->
+
+  <div class="modal-footer text-end">
+    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
+    <button type="submit" class="btn btn-sm btn-primary">Update</button>
+  </div>
+
+</form>
 
 <script>
   // select2 kewenangan

@@ -1,58 +1,59 @@
-<div class="row g-2">
-  <div class="col-12">
-    <form action="<?= site_url('user/add_user'); ?>" method="POST" id="add_user">
-      <div class="panel">
-        <div class="header space-between">
-          <div class="header">Tambah Data User</div>
-          <i class="fas fa-window-close float right clickable" data-bs-dismiss="modal"></i>
-        </div>
-        <div class="separator"></div>
-        <div class="body">
-          <div class="col-12 mb-1">
-            <label for="username">Username</label>
-            <input type="text" class="form-control form-control-sm" id="username" name="username" placeholder="Username untuk user baru">
-          </div>
-          <div class="col-12 mb-1">
-            <label for="password">Password</label>
-            <input type="password" class="form-control form-control-sm" id="password" name="password" placeholder="Password untuk user baru">
-          </div>
-          <div class="col-12 mb-1">
-            <label for="nama_lengkap">Nama Lengkap</label>
-            <input type="text" class="form-control form-control-sm" id="nama_lengkap" name="nama_lengkap" placeholder="Nama lengkap user baru">
-          </div>
-          <div class="col-12 mb-1">
-            <label for="kewenangan">Kewenangan</label>
-            <select type="text" class="form-select form-select-sm kewenangan select2" name="kewenangan" id="kewenangan">
-            </select>
-          </div>
-          <div class="col-12 mb-1">
-            <label for="kewenangan">Unit Kerja</label>
-            <select type="text" class="form-select form-select-sm ukerja select2" name="kode_ukerja" id="kode_ukerja">
-            </select>
-          </div>
-          <div class="col-12 mb-1">
-            <label for="no_hp">No. HP</label>
-            <input type="number" class="form-control form-control-sm" id="no_hp" name="no_hp" placeholder="No. hp user baru">
-          </div>
-          <div class="col-12 mb-1">
-            <div class="form-check">
-              <input class="form-check-input form-check-input-sm" type="checkbox" name="aktif" id="aktif">
-              <label class="form-check-label form-check-label-sm" for="aktif">
-                Aktif
-              </label>
-            </div>
-          </div>
-          <div class="mb-1"></div>
-        </div>
-        <div class="separator"></div>
-        <div class="body text-end">
-          <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-sm btn-primary">Tambah</button>
+<form action="<?= site_url('user/add_user'); ?>" method="POST" id="add_user">
+  <div class="modal-header d-flex align-items-center">
+    <div>
+      <h3 class="mb-0">Tambah Data User</h3>
+    </div>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+
+  <div class="modal-body">
+    <div class="row g-2">
+
+      <div class="col-12 mb-1">
+        <label for="username">Username</label>
+        <input type="text" class="form-control form-control-sm" id="username" name="username" placeholder="Username untuk user baru">
+      </div>
+      <div class="col-12 mb-1">
+        <label for="password">Password</label>
+        <input type="password" class="form-control form-control-sm" id="password" name="password" placeholder="Password untuk user baru">
+      </div>
+      <div class="col-12 mb-1">
+        <label for="nama_lengkap">Nama Lengkap</label>
+        <input type="text" class="form-control form-control-sm" id="nama_lengkap" name="nama_lengkap" placeholder="Nama lengkap user baru">
+      </div>
+      <div class="col-12 mb-1">
+        <label for="kewenangan">Kewenangan</label>
+        <select type="text" class="form-select form-select-sm kewenangan select2" name="kewenangan" id="kewenangan">
+        </select>
+      </div>
+      <div class="col-12 mb-1">
+        <label for="kewenangan">Unit Kerja</label>
+        <select type="text" class="form-select form-select-sm ukerja select2" name="kode_ukerja" id="kode_ukerja">
+        </select>
+      </div>
+      <div class="col-12 mb-1">
+        <label for="no_hp">No. HP</label>
+        <input type="number" class="form-control form-control-sm" id="no_hp" name="no_hp" placeholder="No. hp user baru">
+      </div>
+      <div class="col-12 mb-1">
+        <div class="form-check">
+          <input class="form-check-input form-check-input-sm" type="checkbox" name="aktif" id="aktif">
+          <label class="form-check-label form-check-label-sm" for="aktif">
+            Aktif
+          </label>
         </div>
       </div>
-    </form>
+
+    </div>
+    <!-- end of row -->
   </div>
-</div>
+  <!-- end of modal-body -->
+
+  <div class="modal-footer text-end">
+    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
+    <button type="submit" class="btn btn-sm btn-primary">Tambah</button>
+  </div>
+</form>
 
 <script>
   // select2 kewenangan
