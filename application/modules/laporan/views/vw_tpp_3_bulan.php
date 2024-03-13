@@ -101,8 +101,13 @@
           </div>
 
           <!-- Button export file -->
-          <a href="<?= site_url('laporan/generate_pdf_jurnal_bulanan'); ?>" target="_blank" id="btn_export_file" class="btn btn-sm btn-success me-2 disabled" type="button">
-            <i class="fas fa-upload me-2"></i>Export Laporan TPP
+          <a href="<?= site_url('laporan/cetak_ttp_3_bln'); ?>" target="_blank" id="btn_export_file" class="btn btn-sm btn-success me-2 disabled" type="button">
+            <i class="fas fa-upload me-2"></i>Export Laporan TPP Per Triwulan
+          </a>
+
+          <!-- Button export file rekapitulasi (TESTING) -->
+          <a href="<?= site_url('laporan/cetak_rekapitulasi_mengajar'); ?>" target="_blank" id="btn_export_rekapitulasi_file" class="btn btn-sm btn-primary me-2 disabled d-none" type="button">
+            <i class="fas fa-upload me-2"></i>Export Laporan Rekapitulasi Jurnal Mengajar
           </a>
           <!-- <button id="btn_export_file" class="btn btn-sm btn-success me-2" type="submit" form="form_jurnal_bulanan">
               <i class="fas fa-upload me-2"></i>Export File Jurnal
@@ -362,15 +367,42 @@
     console.log('btn_cetak_handler running');
   }
 
+  function btn_cetak_rekapitulasi_handler() {
+    let val_ukerja = '';
+    let val_tahun = '';
+    let val_triwulan = '';
+    let link_export = $('#btn_export_rekapitulasi_file');
+    let url = '#';
+
+    val_ukerja = $('[name="select_ukerja"]').val();
+    val_triwulan = $('[name="triwulan"]').val();
+    val_tahun = $('[name="tahun"]').val();
+
+    if (val_ukerja != '' && val_triwulan != '' && val_tahun != '') {
+      link_export.removeClass('disabled');
+      url = '<?= site_url('laporan/cetak_rekapitulasi_mengajar') ?>/' + val_ukerja + '/' + val_triwulan + '/' + val_tahun;
+      console.log('url retrieved: ' + url);
+    } else {
+      link_export.addClass('disabled');
+      $url = '#';
+    }
+
+    link_export.attr('href', url);
+    console.log('btn_cetak_rekapitulasi_handler running');
+  }
+
   $('[name="triwulan"]').on('change', function() {
     btn_cetak_handler();
+    btn_cetak_rekapitulasi_handler();
   });
 
   $('[name="tahun"]').on('change', function() {
     btn_cetak_handler();
+    btn_cetak_rekapitulasi_handler();
   });
 
   setTimeout(() => {
     btn_cetak_handler();
+    btn_cetak_rekapitulasi_handler();
   }, 50);
 </script>

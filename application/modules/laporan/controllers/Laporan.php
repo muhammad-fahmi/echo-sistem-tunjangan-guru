@@ -362,26 +362,31 @@ class Laporan extends MY_Controller
 
     $start_date = '9999';
     $end_date = '9999';
+    $triwulanTitle = 'I';
 
     switch ($triwulan) {
       case '1': {
           $start_date = $tahun . '-01';
           $end_date = $tahun . '-03';
+          $triwulanTitle = 'I';
           break;
         }
       case '2': {
           $start_date = $tahun . '-04';
           $end_date = $tahun . '-06';
+          $triwulanTitle = 'II';
           break;
         }
       case '3': {
           $start_date = $tahun . '-07';
           $end_date = $tahun . '-09';
+          $triwulanTitle = 'III';
           break;
         }
       case '4': {
           $start_date = $tahun . '-10';
           $end_date = $tahun . '-12';
+          $triwulanTitle = 'IV';
           break;
         }
 
@@ -449,85 +454,144 @@ class Laporan extends MY_Controller
 
     // kalau mau bikin warna styling table bikin terpisah
     // misalkan style utk header
-    $style_header = 'color:black; background-color:#d9d9d9; font-size:9px; text-align: center;';
-    $style_content_1 =  "color:green; font-size: 7px; text-align: right;";
-    $style_content_2 =  "color:black; font-size: 7px; text-align: justify;";
+    $style_header = 'color: black; background-color: #d9d9d9; font-size: 9px; text-align: center;';
+
+    $style_content_1 =  "color: green; font-size: 7px; text-align: right;";
+    $style_content_2 =  "color: black; font-size: 7px; text-align: justify;";
+    $style_content_3 =  "color: black; font-size: 7px; text-align: left;";
+    $style_content_4 =  "color: black; font-size: 7px; text-align: right;";
+
+    $w50 = "width: 50px;";
+    $w75 = "width: 75px;";
+    $w100 = "width: 100px;";
+    $w125 = "width: 125px;";
+    $w150 = "width: 150px;";
+    $w175 = "width: 175px;";
+    $w200 = "width: 200px;";
+    $w225 = "width: 225px;";
+    $w250 = "width: 250px;";
+    $w275 = "width: 275px;";
+    $w300 = "width: 300px;";
+    $w325 = "width: 325px;";
+    $w350 = "width: 350px;";
+    $w375 = "width: 375px;";
+    $w400 = "width: 400px;";
+
     $width_num =  "width: 30px";
     $border_thin = "border: 1px solid #999696;";
-    $tebel = "font-weight: 700;";
+    $tebel = "font-weight: bold;";
 
+    /// |----------------------------------------
+    /// | #1ST TABLE OPENER
+    /// |----------------------------------------
     // untuk heading sama pembukaan tabel
     $html_table_open = '<table border="1" cellpadding="6">' .
       '<thead>' .
       '<tr>' .
-      '<th style="' . $style_header . $border_thin . $width_num . '">No</th>' .
-      '<th style="' . $style_header . $border_thin . '">NAMA</th>' .
-      '<th style="' . $style_header . $border_thin . '">NIP</th>' .
-      '<th style="' . $style_header . $border_thin . '">GOL</th>' .
-      '<th style="' . $style_header . $border_thin . '">UNIT KERJA</th>' .
-      '<th style="' . $style_header . $border_thin . '">INSENTIF</th>' .
-      '<th style="' . $style_header . $border_thin . '">JUMLAH BULAN</th>' .
-      '<th style="' . $style_header . $border_thin . '">JUMLAH KOTOR</th>' .
-      '<th style="' . $style_header . $border_thin . '">JUMLAH PPh 5%</th>' .
-      '<th style="' . $style_header . $border_thin . '">JUMLAH PPh 15%</th>' .
-      '<th style="' . $style_header . $border_thin . '">JUMLAH INFAQ 2,5%</th>' .
-      '<th style="' . $style_header . $border_thin . '">JUMLAH BERSIH</th>' .
-      '<th style="' . $style_header . $border_thin . '">NO REKENING</th>' .
-      '<th style="' . $style_header . $border_thin . '">NIK</th>' .
-      '<th style="' . $style_header . $border_thin . '">NPWP</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . $width_num . '">No.</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . '">NAMA</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . '">NIP</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . '">GOL</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . '">UNIT KERJA</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . '">(TPP) 1 BULAN</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . '">JUMLAH BULAN</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . '">JUMLAH KOTOR</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . '">JUMLAH PPh 5%</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . '">JUMLAH PPh 15%</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . '">JUMLAH INFAQ 2,5%</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . '">JUMLAH BERSIH</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . '">NO. REKENING</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . '">NIK</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . '">NPWP</th>' .
       '</tr>' .
       '</thead>' .
       '<tbody>';
 
+    /// |----------------------------------------
+    /// | #1ST TABLE CLOSER
+    /// |----------------------------------------
     $html_table_close = '</tbody>' .
       '</table>';
+
+    /// |----------------------------------------
+    /// | #1ST TABLE CONTENT LOOP
+    /// |----------------------------------------
     $html_content = '';
-
-    // sebagai contoh pake for aja dulu ya karena datanya kosong
     for ($i = 0; $i < 10; $i++) {
-      $no = $i + 1;
-      $randomText = strtoupper(md5($i . rand(1000, 9999)));
-      $content2 = substr($randomText, 2, 8);
-      $content3 = substr($randomText, 4, 10);
-      $content4 = substr($randomText, 6, 12);
-      $content5 = substr($randomText, 8, 14);
-
       $html_content .= '<tr>' .
-        '<td style="' . $style_content_1 . $border_thin . $width_num . '">' . $no . '</td>' .
-        '<td style="' . $style_content_2 . $border_thin . '">' . $content2 . '</td>' .
-        '<td style="' . $style_content_2 . $border_thin . '">' . $content3 . '</td>' .
-        '<td style="' . $style_content_2 . $border_thin . '">' . $content4 . '</td>' .
-        '<td style="' . $style_content_2 . $border_thin . '">' . $content5 . '</td>' .
-        '<td style="' . $style_content_2 . $border_thin . '">' . $content5 . '</td>' .
-        '<td style="' . $style_content_2 . $border_thin . '">' . $content5 . '</td>' .
-        '<td style="' . $style_content_2 . $border_thin . '">' . $content5 . '</td>' .
-        '<td style="' . $style_content_2 . $border_thin . '">' . $content5 . '</td>' .
-        '<td style="' . $style_content_2 . $border_thin . '">' . $content5 . '</td>' .
-        '<td style="' . $style_content_2 . $border_thin . '">' . $content5 . '</td>' .
-        '<td style="' . $style_content_2 . $border_thin . '">' . $content5 . '</td>' .
-        '<td style="' . $style_content_2 . $border_thin . '">' . $content5 . '</td>' .
-        '<td style="' . $style_content_2 . $border_thin . '">' . $content5 . '</td>' .
-        '<td style="' . $style_content_2 . $border_thin . '">' . $content5 . '</td>' .
+        '<td style="' . $style_content_3 . $border_thin . $width_num . '">XXX</td>' .
+        '<td style="' . $style_content_3 . $border_thin . '">XXX</td>' .
+        '<td style="' . $style_content_3 . $border_thin . '">XXX</td>' .
+        '<td style="' . $style_content_3 . $border_thin . '">XXX</td>' .
+        '<td style="' . $style_content_3 . $border_thin . '">XXX</td>' .
+        '<td style="' . $style_content_3 . $border_thin . '">XXX</td>' .
+        '<td style="' . $style_content_3 . $border_thin . '">XXX</td>' .
+        '<td style="' . $style_content_3 . $border_thin . '">XXX</td>' .
+        '<td style="' . $style_content_3 . $border_thin . '">XXX</td>' .
+        '<td style="' . $style_content_3 . $border_thin . '">XXX</td>' .
+        '<td style="' . $style_content_3 . $border_thin . '">XXX</td>' .
+        '<td style="' . $style_content_3 . $border_thin . '">XXX</td>' .
+        '<td style="' . $style_content_3 . $border_thin . '">XXX</td>' .
+        '<td style="' . $style_content_3 . $border_thin . '">XXX</td>' .
+        '<td style="' . $style_content_3 . $border_thin . '">XXX</td>' .
         '</tr>';
     }
 
-    // Jumlah Final (Last Row)
-    $html_content_2 = '<tr style="' . $style_header . '">' .
-      '<td colspan="5" style="' . $border_thin . '">JUMLAH </td>' .
-      '<td style="' . $border_thin . '"> </td>' .
-      '<td style="' . $border_thin . '"> </td>' .
-      '<td style="' . $border_thin . '"> </td>' .
-      '<td style="' . $border_thin . '"> </td>' .
-      '<td style="' . $border_thin . '"> </td>' .
-      '<td style="' . $border_thin . '"> </td>' .
-      '<td style="' . $border_thin . '"> </td>' .
-      '<td style="' . $border_thin . '"> </td>' .
-      '<td style="' . $border_thin . '"> </td>' .
-      '<td style="' . $border_thin . '"> </td>' .
-      '</tr>';
+    /// |----------------------------------------
+    /// | #2ND TABLE OPENER
+    /// |----------------------------------------
+    // untuk heading sama pembukaan tabel
+    $html_table_open_2 = '<table border="1" cellpadding="6">' .
+      '<thead>' .
+      '<tr>' .
+      '<th style="' . $style_header . $w150 . $tebel . $border_thin . '">NAMA</th>' .
+      '<th style="' . $style_header . $w100 . $tebel . $border_thin . '">GOL</th>' .
+      '<th style="' . $style_header . $w200 . $tebel . $border_thin . '">INSENTIF (TPP) 1 BULAN</th>' .
+      '</tr>' .
+      '</thead>' .
+      '<tbody>';
 
+    /// |----------------------------------------
+    /// | #2ND TABLE CLOSER
+    /// |----------------------------------------
+    $html_table_close_2 = '</tbody>' .
+      '</table>';
+
+    /// |----------------------------------------
+    /// | #2ND TABLE CONTENT LOOP
+    /// |----------------------------------------
+    $html_content_2 = '';
+    for ($i = 0; $i < 6; $i++) {
+      $html_content_2 .= '<tr>' .
+        '<td style="' . $style_content_3 . $w150 . $border_thin . '">XXX</td>' .
+        '<td style="' . $style_content_3 . $w100 . $border_thin . '">XXX</td>' .
+        '<td style="' . $style_content_3 . $w200 . $border_thin . '">XXX</td>' .
+        '</tr>';
+    }
+
+    /// |----------------------------------------
+    /// | #2ND TABLE NOTES
+    /// |----------------------------------------
+    $html_keterangan = '<h6> </h6>' .
+      '<span>' .
+      'Catatan : ' .
+      '<ul>' .
+      '<li style="' . $style_content_3 . '">Golongan : II A, B, C, D TERIMA PER BULAN Rp. 800.000 TIDAK ADA POTONGAN PAJAK, POTONGAN INFAQ BAGI YANG MUSLIM</li>' .
+      '<li style="' . $style_content_3 . '">Golongan : III A, B TERIMA PER BULAN Rp. 850.000 POTONGAN PAJAK 5%, DAN POTONGAN INFAQ BAGI YANG MUSLIM</li>' .
+      '<li style="' . $style_content_3 . '">Golongan : III C, D TERIMA PER BULAN Rp. 900.000 POTONGAN PAJAK 5%, DAN POTONGAN INFAQ BAGI YANG MUSLIM</li>' .
+      '<li style="' . $style_content_3 . '">Golongan : IV A, B, C, D TERIMA PER BULAN Rp. 1.000.000 POTONGAN PAJAK 15%, DAN POTONGAN INFAQ BAGI YANG MUSLIM</li>' .
+      '</ul>' .
+      '</span>';
+
+    /// |----------------------------------------
+    /// | COMPILE ALL HTML
+    /// |----------------------------------------
     // jadikan satu semuanya
-    $html_full_table = $html_table_open . $html_content . $html_content_2 . $html_table_close;
+    // $html_full_table = $html_table_open . $html_content . $html_table_close . '<h5> </h5>' .
+    //   '<span>Keterangan : </span><span>' . $html_table_open_2 . $html_content_2 . $html_table_close_2 . '</span>' .
+    //   $html_keterangan;
+    // ga isi tabel keterangan dan catatan katanya
+    $html_full_table = $html_table_open . $html_content . $html_table_close;
 
     // output the HTML content
     $pdf->writeHTML($html_full_table, true, false, true, false, '');
@@ -535,7 +599,202 @@ class Laporan extends MY_Controller
     // reset pointer to the last page
     $pdf->lastPage();
 
+    /// |----------------------------------------
+    /// | OUTPUT TO THE PAGE
+    /// |----------------------------------------
     //Close and output PDF document
-    $pdf->Output('laporan_tunjangan_produktifitas_guru_triwulan_IV_2023.pdf', 'I');
+    $pdf->Output('laporan_tunjangan_produktifitas_guru_triwulan_' . $triwulanTitle . '_' . $tahun . '.pdf', 'I');
+  }
+
+  public function cetak_rekapitulasi_mengajar($unit_kerja, $triwulan, $tahun)
+  {
+    $unit_kerja = clean_string($unit_kerja);
+    $triwulan = clean_string($triwulan);
+    $tahun = clean_string($tahun);
+
+    // echo "UNIT KERJA: $unit_kerja // TRIWULAN: $triwulan // TAHUN: $tahun";
+    // return;
+
+    $start_date = '9999';
+    $end_date = '9999';
+    $triwulanTitle = 'I';
+
+    switch ($triwulan) {
+      case '1': {
+          $start_date = $tahun . '-01';
+          $end_date = $tahun . '-03';
+          $triwulanTitle = 'I';
+          break;
+        }
+      case '2': {
+          $start_date = $tahun . '-04';
+          $end_date = $tahun . '-06';
+          $triwulanTitle = 'II';
+          break;
+        }
+      case '3': {
+          $start_date = $tahun . '-07';
+          $end_date = $tahun . '-09';
+          $triwulanTitle = 'III';
+          break;
+        }
+      case '4': {
+          $start_date = $tahun . '-10';
+          $end_date = $tahun . '-12';
+          $triwulanTitle = 'IV';
+          break;
+        }
+
+      default:
+        echo '<h4>ERROR: Triwulan tidak valid / belum di-set.</h4>';
+        return;
+        break;
+    }
+
+    $cek_ukerja = $this->db->get_where('v_ukerja', ['kode_ukerja' => $unit_kerja]);
+    if ($cek_ukerja->num_rows() < 1) {
+      echo '<h4>ERROR: Unit Kerja tidak valid / belum di-set.</h4>';
+      return;
+    }
+
+    $data_ukerja = $cek_ukerja->row_array();
+
+    // create new PDF document
+    $pdf = new Tcpdf_lib('L', PDF_UNIT, 'F4', true, 'UTF-8', false);
+
+    // set document information
+    $pdf->SetCreator(PDF_CREATOR);
+    $pdf->SetAuthor($data_ukerja['ket_ukerja']);
+    $pdf->SetTitle('Laporan Rekapitulasi Jurnal Mengajar Guru Triwulan');
+    $pdf->SetSubject('TCPDF Tutorial');
+    $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+
+    // $logo_samarinda = base_url("theme/assets/images/logo/logo_pemkot.png");
+    $logo_path = FCPATH . 'theme\assets\images\logo\logo_pemkot.jpg';
+    // set default header data
+    $pdf->SetHeaderData($logo_path, 19, 'DINAS PENDIDIKAN DAN KEBUDAYAAN PEMERINTAH KOTA SAMARINDA', "$data_ukerja[ket_ukerja]\nRekapitulasi Jurnal Mengajar Guru Triwulan IV Tahun 2023");
+
+    // set header and footer fonts
+    $pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+    $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+    // set default monospaced font
+    $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+    // set margins
+    $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+    $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+    $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+    // set auto page breaks
+    $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+    // set image scale factor
+    $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+    // ---------------------------------------------------------
+
+    // set font
+    $pdf->SetFont('dejavusans', '', 8);
+
+    // add a page
+    $pdf->AddPage();
+
+    // create some HTML content
+    $html = '<h4>THIS IS JUST A TEST!</h4>';
+
+    /// |----------------------------------------
+    /// | DISINI BUAT FORMAT HTML
+    /// |----------------------------------------
+
+    // kalau mau bikin warna styling table bikin terpisah
+    // misalkan style utk header
+    $style_header = 'color: black; background-color: #d9d9d9; font-size: 9px; text-align: center;';
+
+    $style_content_1 =  "color: green; font-size: 7px; text-align: right;";
+    $style_content_2 =  "color: black; font-size: 7px; text-align: justify;";
+    $style_content_3 =  "color: black; font-size: 7px; text-align: left;";
+    $style_content_4 =  "color: black; font-size: 7px; text-align: right;";
+    $style_content_5 =  "color: black; font-size: 7px; text-align: center;";
+
+    $w50 = "width: 50px;";
+    $w75 = "width: 75px;";
+    $w100 = "width: 100px;";
+    $w125 = "width: 125px;";
+    $w150 = "width: 150px;";
+    $w175 = "width: 175px;";
+    $w200 = "width: 200px;";
+    $w225 = "width: 225px;";
+    $w250 = "width: 250px;";
+    $w275 = "width: 275px;";
+    $w300 = "width: 300px;";
+    $w325 = "width: 325px;";
+    $w350 = "width: 350px;";
+    $w375 = "width: 375px;";
+    $w400 = "width: 400px;";
+
+    $width_num =  "width: 30px";
+    $border_thin = "border: 1px solid #999696;";
+    $tebel = "font-weight: bold;";
+
+    /// |----------------------------------------
+    /// | #1ST TABLE OPENER
+    /// |----------------------------------------
+    // untuk heading sama pembukaan tabel
+    $html_table_open = '<table border="1" cellpadding="6">' .
+      '<thead>' .
+      '<tr>' .
+      '<th style="' . $style_header . $tebel . $border_thin . $width_num . '">No.</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . $w225 . '">NAMA GURU</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . $w150 . '">TUGAS YANG DIAMPU</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . $w100 . '">JURNAL JAM/BULAN</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . $w100 . '">KETIDAKHADIRAN DALAM JAM</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . $w100 . '">JUMLAH JAM MINIMAL/BULAN</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . $w250 . '">VALIDASI KEPSEK</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . $w100 . '">KETERANGAN</th>' .
+      '</tr>' .
+      '</thead>' .
+      '<tbody>';
+
+    /// |----------------------------------------
+    /// | #1ST TABLE CLOSER
+    /// |----------------------------------------
+    $html_table_close = '</tbody>' .
+      '</table>';
+
+    /// |----------------------------------------
+    /// | #1ST TABLE CONTENT LOOP
+    /// |----------------------------------------
+    $html_content = '';
+    for ($i = 0; $i < 15; $i++) {
+      $html_content .= '<tr>' .
+        '<td style="' . $style_content_5 . $border_thin . $width_num . '">XXX</td>' .
+        '<td style="' . $style_content_3 . $border_thin . $w225 . '">XXX</td>' .
+        '<td style="' . $style_content_3 . $border_thin . $w150 . '">XXX</td>' .
+        '<td style="' . $style_content_5 . $border_thin . $w100 . '">XXX</td>' .
+        '<td style="' . $style_content_5 . $border_thin . $w100 . '">XXX</td>' .
+        '<td style="' . $style_content_5 . $border_thin . $w100 . '">XXX</td>' .
+        '<td style="' . $style_content_3 . $border_thin . $w250 . '">XXX</td>' .
+        '<td style="' . $style_content_5 . $border_thin . $w100 . '">XXX</td>' .
+        '</tr>';
+    }
+
+    /// |----------------------------------------
+    /// | COMPILE ALL HTML
+    /// |----------------------------------------
+    // jadikan satu semuanya
+    $html_full_table = $html_table_open . $html_content . $html_table_close;
+
+    // output the HTML content
+    $pdf->writeHTML($html_full_table, true, false, true, false, '');
+
+    // reset pointer to the last page
+    $pdf->lastPage();
+
+    /// |----------------------------------------
+    /// | OUTPUT TO THE PAGE
+    /// |----------------------------------------
+    //Close and output PDF document
+    $pdf->Output('laporan_rekapitulasi_jurnal_mengajar_triwulan_' . $triwulanTitle . '_' . $tahun . '.pdf', 'I');
   }
 }
