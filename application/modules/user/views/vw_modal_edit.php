@@ -17,39 +17,30 @@
       </div>
 
       <div class="col-12 mb-1">
+        <label for="password2">Password</label>
+        <input type="password" class="form-control form-control-sm" id="password" name="password" placeholder="Password baru untuk user, kosongkan jika tidak ada perubahan">
+      </div>
+
+      <div class="col-12 mb-1">
         <label for="username">Nama User / Nama Unit Kerja</label>
         <input type="text" class="form-control form-control-sm" id="username" name="username" value="<?= $data['username'] ?>" placeholder="Nama User / Nama Unit Kerja">
       </div>
-      <!-- <div class="col-12 mb-1">
-            <label for="password1">Current Password</label>
-            <input type="password" class="form-control form-control-sm" id="password1" name="password1" placeholder="Password lama dari user">
-          </div> -->
-      <div class="col-12 mb-1">
-        <label for="password2">New Password</label>
-        <input type="password" class="form-control form-control-sm" id="password2" name="password2" placeholder="Password baru untuk user, kosongkan jika tidak ada perubahan">
-      </div>
-      <div class="col-12 mb-1">
-        <label for="nama_lengkap">Nama Lengkap</label>
-        <input type="text" class="form-control form-control-sm" id="nama_lengkap" name="nama_lengkap" value="<?= $data['nama_lengkap'] ?>">
-      </div>
+
       <div class="col-12 mb-1">
         <label for="kewenangan">Kewenangan</label>
-        <select type="text" class="form-select form-select-sm kewenangan select2" name="kewenangan" id="kewenangan">
-          <?php
-          $temp = $data['kewenangan'];
-          $ket_temp = $data['ket_kewenangan'];
-          if ($temp != '') {
-            echo '<option value="' . $temp . '" default selected>' . $ket_temp . '</option>';
-          }
-          ?>
+        <select type="text" class="form-select form-select-sm" name="kewenangan" id="kewenangan">
+          <option value="" default hidden>-- Pilih Kewenangan --</option>
+          <option value="00" <?= ($data['kewenangan'] == '00') ? 'default selected' : ''; ?>>Super Admin</option>
+          <option value="01" <?= ($data['kewenangan'] == '01') ? 'default selected' : ''; ?>>Administrator</option>
+          <option value="10" <?= ($data['kewenangan'] == '10') ? 'default selected' : ''; ?>>Admin OPD / Unit Kerja</option>
         </select>
       </div>
       <div class="col-12 mb-1">
         <label for="kewenangan">Unit Kerja</label>
-        <select type="text" class="form-select form-select-sm ukerja select2" name="kode_ukerja" id="kode_ukerja">
+        <select type="text" class="form-select form-select-sm ukerja select2" name="kode_unor" id="kode_unor">
           <?php
-          $temp = $data['kode_ukerja'];
-          $ket_temp = $data['kode_ukerja'] . " - " . $data['ket_ukerja'];
+          $temp = $data['kode_unor'];
+          $ket_temp = $data['kode_unor'] . " - " . $data['ket_ukerja'];
           if ($temp != '') {
             echo '<option value="' . $temp . '" default selected>' . $ket_temp . '</option>';
           }
@@ -57,15 +48,16 @@
         </select>
       </div>
       <div class="col-12 mb-1">
-        <label for="no_hp">No. HP</label>
-        <input type="number" class="form-control form-control-sm" id="no_hp" name="no_hp" value="<?= $data['no_hp'] ?>">
+        <label for="email_user">E-mail</label>
+        <input type="text" class="form-control form-control-sm" id="email_user" name="email_user" value="<?= $data['email_user'] ?>" placeholder="E-mail aktif User / Unit Kerja">
       </div>
+
       <div class="col-12 mb-1">
         <div class="form-check">
           <?php
           $checked = ($data['aktif'] == 'Y') ? 'checked' : '';
           ?>
-          <input id="aktif" class="form-check-input form-check-input-sm" type="checkbox" value="<?= $data['aktif'] ?>" name="aktif" <?= $checked ?>>
+          <input id="aktif" name="aktif" class="form-check-input form-check-input-sm" type="checkbox" <?= $checked ?>>
           <label class="form-check-label form-check-label-sm" for="aktif">Aktif</label>
         </div>
       </div>
@@ -161,14 +153,18 @@
         success: function(e) {
           if (e.status) {
             // what to do when the response status = true
-            $('#my_modal').modal('hide');
-            $.notify('<b><i class="fas fa-check-square me-1"></i>Sukses!</b><br>' + e.message, 'success');
+            $('#whole_modal_id').modal('hide');
+            toaster('success', e.message);
             reload_table();
           } else {
             // what to do when the response status = false
             submit.attr('disabled', false);
-            $.notify('<b><i class="fas fa-exclamation-triangle me-1"></i>Gagal!</b><br>' + e.message, 'error');
+            toaster('danger', 'Maaf, terjadi kesalahan pada proses penyimpanan user baru. ' + e.message);
           }
+        },
+        error: function(xhr, status, error) {
+          submit.attr('disabled', false);
+          toaster('danger', 'Maaf, terjadi kesalahan pada proses penyimpanan user baru. ' + error);
         },
         dataType: 'json'
       });

@@ -155,14 +155,17 @@
         orderable: false,
         className: '',
         createdCell: function(td, cellData, rowData, row, col) {
+          let kewenangan_user = '<?= $this->session->userdata('kewenangan'); ?>';
           let btn_user_management = '<a href="<?= site_url('user/menu_management/'); ?>' + cellData + '" class="badge bg-secondary clickable me-1" title="Menu Management">' +
             '<i class="fas fa-list"></i></a>';
 
           let btn_edit = '<div onclick="modal(`' + cellData + '`, `edit`)" class="badge bg-primary clickable me-1" title="Edit">' +
             '<i class="fas fa-edit"></i></div>';
 
-          let btn_delete = '<div onclick="modal(`' + cellData + '`, `hapus`)" class="badge bg-danger clickable" title="Hapus">' +
-            '<i class="fas fa-trash"></i></div>';
+          let btn_delete = (kewenangan_user == '00') ?
+            '<div onclick="modal(`' + cellData + '`, `hapus`)" class="badge bg-danger clickable" title="Hapus">' +
+            '<i class="fas fa-trash"></i></div>' :
+            '';
 
           $(td).html('<div class="text-center">' + btn_edit + btn_delete + '</div>');
         }

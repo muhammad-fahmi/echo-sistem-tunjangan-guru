@@ -71,7 +71,7 @@ class User extends MY_Controller
 
     switch ($type) {
       case 'edit': {
-          $data = $this->user->get("progurinda_m_user", "id_user = '$username'");
+          $data = $this->user->get("v_progurinda_user", "id_user = '$username'");
           $sent = array('data' => $data);
           // update response
           $response['status'] = true;
@@ -80,7 +80,7 @@ class User extends MY_Controller
           break;
         }
       case 'hapus': {
-          $data = $this->user->get("progurinda_m_user", "id_user = '$username'");
+          $data = $this->user->get("v_progurinda_user", "id_user = '$username'");
           $sent = array('data' => $data);
           // update response
           $response['status'] = true;
@@ -106,12 +106,12 @@ class User extends MY_Controller
   /** fungsi untuk menambah data user (ADD) */
   public function add_user()
   {
-    $this->form_validation->set_rules('username', 'Username', 'required|trim');
-    $this->form_validation->set_rules('password', 'Password', 'required|trim|min_length[3]|max_length[12]');
-    $this->form_validation->set_rules('nama_lengkap', 'Nama Lengkap', 'required|trim');
+    $this->form_validation->set_rules('id_user', 'Username', 'required|trim');
+    $this->form_validation->set_rules('password', 'Password', 'required|trim|min_length[3]');
+    $this->form_validation->set_rules('username', 'Nama User', 'required|trim');
     $this->form_validation->set_rules('kewenangan', 'Kewenangan', 'required');
-    $this->form_validation->set_rules('kode_ukerja', 'Kode Unit Kerja', 'required');
-    $this->form_validation->set_rules('no_hp', 'NO. HP', 'required');
+    $this->form_validation->set_rules('kode_unor', 'Unit Kerja', 'required');
+    $this->form_validation->set_rules('email_user', 'NO. HP', 'required');
 
     $response = array();
 
@@ -119,9 +119,20 @@ class User extends MY_Controller
       $response['status'] = false;
       $response['message'] = "Form Validasi Error!";
     } else {
+      // DEBUG
+      // $post = $this->input->post();
+      // return $this->output
+      //   ->set_content_type('application/json')
+      //   ->set_output(json_encode([
+      //     'status' => false,
+      //     'message' => 'Maaf, proses ini masih dalam tahap development.',
+      //     'dara' => $post
+      //   ]));
+
       $response = $this->user->add_userdata();
     }
-    $this->output
+
+    return $this->output
       ->set_content_type('application/json')
       ->set_output(json_encode($response));
   }
@@ -129,15 +140,11 @@ class User extends MY_Controller
   /** fungsi untuk mengubah data user (EDIT) */
   public function edit_user()
   {
-    $this->form_validation->set_rules('username', 'Username', 'required|trim');
-    /* $this->form_validation->set_rules('password1', 'Password', 'required|trim', array(
-      'required' => 'Mohon diisi kolom password',
-    )); */
-    $this->form_validation->set_rules('password2', 'Password', 'trim');
-    $this->form_validation->set_rules('nama_lengkap', 'Nama Lengkap', 'required|trim');
-    $this->form_validation->set_rules('kewenangan', 'Kewenangan', 'required|trim');
-    $this->form_validation->set_rules('kode_ukerja', 'Kode Unit Kerja', 'required|trim');
-    $this->form_validation->set_rules('no_hp', 'No. HP', 'required|trim');
+    $this->form_validation->set_rules('id_user', 'Username', 'required|trim');
+    $this->form_validation->set_rules('username', 'Nama User', 'required|trim');
+    $this->form_validation->set_rules('kewenangan', 'Kewenangan', 'required');
+    $this->form_validation->set_rules('kode_unor', 'Unit Kerja', 'required');
+    $this->form_validation->set_rules('email_user', 'NO. HP', 'required');
 
     $response = array();
 
@@ -145,6 +152,16 @@ class User extends MY_Controller
       $response['status'] = false;
       $response['message'] = "Form Validasi Error!";
     } else {
+      // DEBUG
+      // $post = $this->input->post();
+      // return $this->output
+      //   ->set_content_type('application/json')
+      //   ->set_output(json_encode([
+      //     'status' => false,
+      //     'message' => "Maaf, proses masih dalam tahap development.",
+      //     'data' => $post
+      //   ]));
+
       $response = $this->user->edit_userdata();
     }
     $this->output
@@ -155,8 +172,8 @@ class User extends MY_Controller
   /** fungsi untuk menghapus data user (DELETE) */
   public function delete_user()
   {
-    $username = $this->input->post('username');
-    $response = $this->user->delete_userdata($username);
+    $id_user = $this->input->post('id_user');
+    $response = $this->user->delete_userdata($id_user);
 
     $this->output
       ->set_content_type('application/json')
