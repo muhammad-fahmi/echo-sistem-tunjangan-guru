@@ -1,6 +1,21 @@
 <?php
 $style_col = 'style="font-size: 12px; font-weight: bold; min-width: 180px;"';
 $style_val = 'style="width: 100%;"';
+
+$ket_kewenangan = '';
+switch ($data['kewenangan']) {
+  case '00':
+    $ket_kewenangan = 'Super Admin';
+    break;
+
+  case '01':
+    $ket_kewenangan = 'Administrator';
+    break;
+
+  default:
+    $ket_kewenangan = 'Admin OPD / Unit Kerja';
+    break;
+}
 ?>
 
 <form action="<?= site_url('user/delete_user') ?>" method="POST" id="delete_user">
@@ -27,7 +42,11 @@ $style_val = 'style="width: 100%;"';
         </tr>
         <tr>
           <td <?= $style_col ?>>Kewenangan</td>
-          <td <?= $style_val ?> class="ps-2"><?= $data['kewenangan'] ?></td>
+          <td <?= $style_val ?> class="ps-2"><?= $ket_kewenangan ?></td>
+        </tr>
+        <tr>
+          <td <?= $style_col ?>>Unit Kerja</td>
+          <td <?= $style_val ?> class="ps-2"><?= isset_nn_nes($data['ket_ukerja'], '-') ?></td>
         </tr>
         <tr>
           <td <?= $style_col ?>>E-mail</td>
@@ -62,16 +81,18 @@ $style_val = 'style="width: 100%;"';
           if (e.status) {
             // what to do when the response status = true
             // modal dismiss
-            $('#my_modal').modal('hide');
-            $.notify('<b><i class="fas fa-check-square me-1"></i>Sukses!</b><br>' +
-              e.message, 'success');
+            $('#whole_modal_id').modal('hide');
+            toaster('success', e.message);
             reload_table();
           } else {
             // what to do when the response status = false
             submit.attr('disabled', false);
-            $.notify('<b><i class="fas fa-exclamation-triangle me-1"></i>Gagal!</b><br>' +
-              e.message, 'error');
+            toaster('danger', 'Maaf, terjadi kesalahan pada proses penyimpanan user baru. ' + e.message);
           }
+        },
+        error: function(xhr, status, error) {
+          submit.attr('disabled', false);
+          toaster('danger', 'Maaf, terjadi kesalahan pada proses penyimpanan user baru. ' + error);
         },
         dataType: 'json'
       });
