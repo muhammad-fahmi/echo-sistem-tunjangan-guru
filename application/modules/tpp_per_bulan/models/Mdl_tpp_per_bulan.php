@@ -28,7 +28,7 @@ class Mdl_tpp_per_bulan extends CI_Model
     return $result;
   }
 
-  public function get_data_tpp($con){
+  public function get_data_tpp($param){
     //----------=========----------------------------------------//
     // START - query untuk dapat list pegawainya di periode itu //
     //-------------------=========-----------------------------//
@@ -36,8 +36,11 @@ class Mdl_tpp_per_bulan extends CI_Model
     //init nama temp table
     $name_temp_pegawai_jab = "temp_pegawai_jab".time();
     $name_temp_pegawai_pensiun = "temp_pegawai_pensiun".time();
+    $name_temp_pegawai_gol = "temp_pegawai_gol".time();
     $name_temp_pegawai_aktif = "temp_pegawai_aktif".time();
     $name_temp_presensi_pegawai = "temp_presensi_pegawai".time();
+
+
    
     $where_q = "kode_instansi = '" . $param["kode_ukerja"] . "'";
     //$index = $this->input->post("order[0][column]");
@@ -45,10 +48,6 @@ class Mdl_tpp_per_bulan extends CI_Model
     //sorting data pegawai
     //$order_by = " ORDER BY pns.kode_eselon,pns.kode_ukerja asc,pns.kode_jab asc, " . $index . " " . $dir;
     $order_by = " ORDER BY pns.kode_eselon,pns.kode_ukerja asc,pns.kode_jab asc ";
-    $limit = "";
-    if ($param["length"] != "-1") {
-      $limit = " LIMIT " . $param["start"] . "," . $param['length'];
-    }
 
     if ($param["search"] != "") {
       $where_q .= " AND (nama LIKE \"%" . $param["search"] . "%\" OR nip LIKE \"%" . $param["search"] . "%\")";
@@ -59,11 +58,11 @@ class Mdl_tpp_per_bulan extends CI_Model
     $filter_guru = 'UPPER(LEFT(r_jab.ket_jab, 4)) = "GURU" OR r_jab.ket_jab LIKE "% GURU%" OR r_jab.ket_jab LIKE "%GURU %" OR LEFT(r_jab.ket_jab, 16) = "PENGAWAS SEKOLAH" OR LEFT(r_jab.ket_jab,8) = "PENGAWAS" ';
 
     //mulai query untuk presensi
-    $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_jab);
-    $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_gol);
-    $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_pensiun);
-    $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_aktif);
-    $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_presensi_pegawai);
+    // $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_jab);
+    // $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_gol);
+    // $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_pensiun);
+    // $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_aktif);
+    // $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_presensi_pegawai);
     $this->db->query("CREATE TEMPORARY TABLE ".$name_temp_pegawai_jab." 
     (PRIMARY KEY pktemp (nip),
     INDEX idx_temp (nip),
@@ -122,6 +121,7 @@ class Mdl_tpp_per_bulan extends CI_Model
        id int(11),
        nip varchar(18),
        nama varchar(255),
+       kode_status varchar(1),
        kode_jab varchar(20),
        kode_ukerja varchar(20),
        ket_jab varchar(100),
@@ -146,19 +146,22 @@ class Mdl_tpp_per_bulan extends CI_Model
       //tanggal maximum dibulan filter
       $periode_filter = $param["filter_thn"]."-".$param["filter_bln"]."-".date("t");
 
+
+      //f_get_gol_per_period(".$name_temp_pegawai_aktif.".nip,'".$periode_filter."') AS kode_gol,
+
       //query untuk mendapat list data pegawai
       $this->db->query("INSERT INTO ".$name_temp_presensi_pegawai." SELECT 
       r_presensi.id as id,
       ".$name_temp_pegawai_aktif.".nip as nip,
-      m_pegawai.nama AS nama,
+      CONCAT_WS(IF(m_pegawai.gelar_dpn IS NOT NULL,CONCAT(m_pegawai.gelar_dpn,\",\"),\"\"),m_pegawai.nama,IF(m_pegawai.gelar_blk IS NOT NULL,CONCAT(\",\",m_pegawai.gelar_blk),\"\")) AS nama,
+      m_pegawai.kode_status,
       r_jab.kode_jab AS kode_jab,
       r_jab.kode_ukerja AS kode_ukerja,
       r_jab.ket_jab AS ket_jab,
       r_jab.ket_uorg AS ket_uorg,
       r_jab.ket_ukerja AS ket_ukerja,
       r_jab.jns_jab AS jns_jab,
-      r_jab.kode_eselon AS kode_eselon,
-      f_get_gol_per_period(".$name_temp_pegawai_aktif.".nip,'".$periode_filter."') AS kode_gol,
+      r_jab.kode_eselon AS kode_eselon,      
       r_presensi.tahun AS tahun,
       r_presensi.bulan AS bulan,
       r_presensi.terlambat AS terlambat,
@@ -188,23 +191,85 @@ class Mdl_tpp_per_bulan extends CI_Model
                 AND ( LEFT ( m_ukerja.unit_kepeg, 8 ) = '".$param["kode_ukerja"]."' OR m_ukerja.kode_instansi = '".$param["kode_ukerja"]."' )
       ");
                 
-      $data["jml"] = $this->db->query("SELECT * FROM ".$name_temp_presensi_pegawai)->num_rows();
-      $list = $this->db->query("SELECT * FROM ".$name_temp_presensi_pegawai." ORDER BY ".$name_temp_presensi_pegawai.".kode_eselon,".$name_temp_presensi_pegawai.".kode_ukerja asc,".$name_temp_presensi_pegawai.".kode_jab asc ".$limit)->result_array();
-
+      //$data["jml"] = $this->db->query("SELECT * FROM ".$name_temp_presensi_pegawai)->num_rows();
+      $list = $this->db->query("SELECT * FROM ".$name_temp_presensi_pegawai." ORDER BY ".$name_temp_presensi_pegawai.".kode_eselon,".$name_temp_presensi_pegawai.".kode_ukerja asc,".$name_temp_presensi_pegawai.".kode_jab asc")->result_array();
+      
+      // echo $name_temp_pegawai_jab;
+      // echo "<br>".$name_temp_pegawai_pensiun;
+      // echo "<br>".$name_temp_pegawai_gol;
+      // echo "<br>".$name_temp_pegawai_aktif;
+      // echo "<br>".$name_temp_presensi_pegawai;
       $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_jab);
       $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_pensiun);
+      $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_gol);
       $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_aktif);
       $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_presensi_pegawai);
 
     //----------=========---------------------------------------//
    //   END - query untuk dapat list pegawainya di periode itu //
   //-----------------=--=========-----------------------------//
+      //ambil data presensi 
+      $list_presensi = $this->db->where(
+        "kode_ukerja LIKE '".$param["kode_ukerja"]."%' AND tahun = '".$param["filter_thn"]."' AND bulan = '".$param["filter_bln"]."'"
+      )->get("progurinda_r_data_presensi")->result_array();
+      $list_capaian = $this->db->where(
+        "kode_ukerja LIKE '".$param["kode_ukerja"]."' AND tahun = '".$param["filter_thn"]."' AND bulan = '".$param["filter_bln"]."'"
+      )->get("progurinda_r_jurnal_mengajar")->result_array();
+      $counter = 0;
+      $max_jam_mengajar = 96;
+      $bayar_penuh = false;
+      //cek apakah ada pengecualian dimana dibayar penuh
+      $check_bayar_penuh = $this->db->where(["tahun" => $param["filter_thn"],"bulan" => $param["filter_bln"]])->get("progurinda_r_full_pay");
+      if ($check_bayar_penuh->num_rows() > 0){
+        $bayar_penuh = true;
+      }
       //loop lengkapi field2 nya
-      //tentukan nilai tpp berdasarkan golongan
-      //tentukan potongannya
-      //potongan dari disiplin
-      //potongan dari jurnal mengajar
-      //susun list untuk ditampilkan di front end
+      foreach ($list as $key => $value) {
+        $potongan_disiplin = 0;
+        $capaian_produktivitas = 0;
+        //cocokan data presensi
+        foreach ($list_presensi as $key2 => $value2) {
+          if ($value["nip"] == $value2["nip"]){
+            $potongan_disiplin = $value2["potongan_persen"];
+            break;
+          }
+        }
+        //cocokan data capaian
+        foreach ($list_presensi as $key3 => $value3) {
+          if ($value["nip"] == $value3["nip"]){
+            $jam_mengajar = $value3["jam_mengajar"];
+            $capaian_produktivitas = $jam_mengajar / $max_jam_mengajar;
+            break;
+          }
+        }
+        
+        if($bayar_penuh){
+          $capaian_produktivitas = 1;
+          $jam_mengajar = $max_jam_mengajar;
+        }
+        //tentukan nilai tpp berdasarkan golongan/jenjnag jabatan (ahli muda, ahli pertama, ahli madya) / tentukan pns/cpns atau pppk
+        $basic_tpp = $this->progurinda_lib->get_basic_tpp($value);
+        $list[$counter]["besaran_tpp"] = $basic_tpp["respons_nominal"];
+        $list[$counter]["jenjang"] = $basic_tpp["jenjang"];
+        //tentukan potongannya
+        //potongan dari disiplin - START
+        $list[$counter]["tpp_disiplin_kerja"] = (float)($list[$counter]["besaran_tpp"] * 40 / 100);
+        $list[$counter]["total_potongan_disiplin"] =  ($bayar_penuh) ? 0 : $list[$counter]["tpp_disiplin_kerja"] * (float)$potongan_disiplin / 100;  
+        $list[$counter]["penghasilan_tpp_disiplin"] = (float)$list[$counter]["tpp_disiplin_kerja"] - (float)$list[$counter]["total_potongan_disiplin"];
+        //potongan dari disiplin - END
+
+        //potongan dari jurnal mengajar - START
+        $list[$counter]["tpp_produktivitas"] = (float)($list[$counter]["besaran_tpp"] * 60 / 100);
+        $list[$counter]["capaian_produktivitas"] = (float)($capaian_produktivitas * 100);
+        $list[$counter]["jam_mengajar"] = (float)($jam_mengajar);
+        $list[$counter]["max_jam_mengajar"] = (float)($max_jam_mengajar);
+        $list[$counter]["nilai_capaian"] = (float)($list[$counter]["tpp_produktivitas"] * $capaian_produktivitas);
+        //potongan jurnal mengajar - END
+        $list[$counter]["total_tpp_guru"] = $list[$counter]["nilai_capaian"] + $list[$counter]["penghasilan_tpp_disiplin"];
+        //susun list untuk ditampilkan di front end
+        $counter++;
+    }
+    return $list;
   }
 
   public function get_data_tpp_copy($con)

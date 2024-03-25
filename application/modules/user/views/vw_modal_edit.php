@@ -34,7 +34,10 @@
       </div>
       <div class="col-12 mb-1">
         <label for="kewenangan">Kewenangan</label>
-        <select type="text" class="form-select form-select-sm kewenangan select2" name="kewenangan" id="kewenangan">
+        <select type="text" class="form-select form-select-sm kewenangan" name="kewenangan" id="kewenangan">
+          <option value="00">Super Admin</option>
+          <option value="01" <?php echo ($data['kewenangan'] == "01") ? "selected": ""; ?>>Admin Disdik</option>
+          <option value="10" <?php echo ($data['kewenangan'] == "10") ? "selected": ""; ?>>Admin Sekolah</option>
           <?php
           $temp = $data['kewenangan'];
           $ket_temp = $data['ket_kewenangan'];
@@ -83,39 +86,6 @@
 </form>
 
 <script>
-  // select2 kewenangan
-  var select2_kewenangan = $('.kewenangan.select2');
-  $('.kewenangan.select2').select2({
-    allowClear: true,
-    placeholder: '-- Pilih kewenangan --',
-    ajax: {
-      type: 'POST',
-      dataType: 'json',
-      url: '<?= site_url('config/select2_kewenangan') ?>',
-      delay: 800,
-      /* delay before sending ajax request */
-      data: function(params) {
-        return {
-          search: params.term
-        }
-      },
-      processResults: function(data) {
-        return {
-          results: data
-        };
-      },
-    }
-  }).on('select2:select', function(e) {
-    // what to do when option selected
-    var val = $('.kewenangan.select2').val();
-  }).on('select2:close', function(e) {
-    // what to do when selection closed
-    select2_kewenangan.valid();
-  }).on('select2:clear', function(e) {
-    // what to do when clearing (only if allowClear: true)
-    select2_kewenangan.empty();
-  });
-
   var select2_unit_kerja = $('.ukerja.select2');
   $('.ukerja.select2').select2({
     allowClear: true,

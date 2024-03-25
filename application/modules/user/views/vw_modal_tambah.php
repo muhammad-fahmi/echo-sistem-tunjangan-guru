@@ -23,7 +23,10 @@
       </div>
       <div class="col-12 mb-1">
         <label for="kewenangan">Kewenangan</label>
-        <select type="text" class="form-select form-select-sm kewenangan select2" name="kewenangan" id="kewenangan">
+        <select type="text" class="form-select form-select-sm select2" name="kewenangan" id="kewenangan">
+          <option value="00">Super Admin</option>
+          <option value="01">Admin Disdik</option>
+          <option value="10">Admin Sekolah</option>
         </select>
       </div>
       <div class="col-12 mb-1">

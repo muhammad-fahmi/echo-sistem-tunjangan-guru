@@ -11,39 +11,6 @@
       <li class="breadcrumb-item active">List TPP Per Bulan</li>
     </ol>
   </div>
-
-  <!-- <div class="col-md-8 col-12 align-self-center d-none d-md-block">
-    <div class="d-flex mt-2 justify-content-end">
-      <div class="d-flex me-3 ms-2">
-        <div class="chart-text me-2">
-          <h6 class="mb-0"><small>Pagu Anggaran</small></h6>
-          <h4 class="mt-0 text-info"><?= to_rp($data['anggaran']) ?></h4>
-        </div>
-        <div class="spark-chart">
-          <div id="monthchart"></div>
-        </div>
-      </div>
-      <div class="d-flex ms-2">
-        <div class="chart-text me-2">
-          <h6 class="mb-0"><small>Realisasi</small></h6>
-          <h4 class="mt-0 text-primary"><?= to_rp($data['real_keu']) ?></h4>
-        </div>
-        <div class="spark-chart">
-          <div id="lastmonthchart"></div>
-        </div>
-      </div>
-      <div class="d-flex ms-2">
-        <div class="chart-text me-2">
-          <h6 class="mb-0"><small>Fisik</small></h6>
-          <h4 class="mt-0 text-success"><?= to_rp($data['real_fisik'], false) ?>%</h4>
-        </div>
-        <div class="spark-chart">
-          <div id="nextmonthchart"></div>
-        </div>
-      </div>
-    </div>
-  </div> -->
-
 </div>
 <!-- ============================================================== -->
 <!-- End Bread crumb and right sidebar toggle -->
@@ -62,7 +29,7 @@
         <div class="card-body">
           <h4 class="card-title">List TPP Per Bulan</h4>
 
-          <form id="form_jurnal_bulanan" action="<?= site_url('tpp_per_bulan'); ?>" method="POST" enctype="multipart/form-data">
+          <!-- <form id="form_jurnal_bulanan" action="<?= site_url('tpp_per_bulan'); ?>" method="POST" enctype="multipart/form-data"> -->
             <div class="row mb-4">
               <div class="col-12 mb-2">
                 <!-- Unit Kerja -->
@@ -93,7 +60,7 @@
               <div class="col-3">
                 <!-- Tahun -->
                 <label for="tahun">Tahun :</label>
-                <select type="text" name="tahun" class="form-select form-select-sm" style="width:100%" id="tahun" >
+                <select type="text" name="thn_filter" class="form-select form-select-sm" style="width:100%" id="thn_filter" >
                   <?php for($y = 2023; $y <= date("Y"); $y++){ ?>
                     <option value="<?= $y ?>" <?php echo ($y == $thn_filter ) ? "selected" : ""; ?>><?= $y ?></option>
                   <?php } ?>                  
@@ -102,7 +69,7 @@
             </div>
             <div class="row">
                 <div class="col-3">
-                  <button class="btn btn-primary" onclick="reload_table()"><i class="fa fa-refresh"></i> Refresh </button>
+                  <button class="btn btn-primary" onclick="generate_table()"><i class="fa fa-refresh"></i> Tampilkan </button>
                   <br>
                   <br>
                 </div>
@@ -113,29 +80,22 @@
                 <a href="<?= site_url('laporan/generate_pdf_tpp_triwulan'); ?>" id="btn_export_file" class="btn btn-sm btn-primary me-2" type="button">
                   <i class="fas fa-upload me-2"></i>Cetak DRAFT Daftar TPP
                 </a>
-                <a href="<?= site_url('laporan/generate_pdf_tpp_triwulan'); ?>" id="btn_export_file" class="btn btn-sm btn-success me-2" type="button">
+                <a href="<?= site_url('laporan/finalisasi'); ?>" id="btn_finalisasi" class="btn btn-sm btn-success me-2" type="button">
                   <i class="fas fa-upload me-2"></i>Finalkan Daftar TPP
                 </a>
               </div>
             </div>
-            
-            <!-- <button id="btn_export_file" class="btn btn-sm btn-success me-2" type="submit" form="form_jurnal_bulanan">
-              <i class="fas fa-upload me-2"></i>Export File Jurnal
-            </button> -->
-          </form>
+          <!-- </form> -->
           <br>
           <div class="alert alert-primary">
             <b>PERHATIAN!!</b> Nilai Total TPP pada tabel adalah TPP sebelum dipotong pajak dan infaq bagi yang muslim
           </div>
 
           <div class="table-responsive mt-4">
-
             <div class="_loading loading_tabel_tpp_3_bulan">
               <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>
             </div>
-
             <table id="table_tpp_3_bulan" class="table table-bordered table-hover fs-3" style="width:100%;">
-
               <tr style="text-align: center;font-size: 10px;">
                 <th rowspan="2" style="vertical-align: middle;">No</th>
                 <th rowspan="2" style="vertical-align: middle;">Nama Jabatan</th>
@@ -179,7 +139,7 @@
                 </tr>
               </thead> -->
 
-              <tbody style="font-size: 11px;"></tbody>
+              <tbody style="font-size: 11px;" id="tabel-body"></tbody>
 
             </table>
           </div>
@@ -231,6 +191,21 @@ $('#select_ukerja').select2({
   });
 
   function generate_table(){
-
+    var url = "<?php echo site_url("tpp_per_bulan/gen_tabel_tpp"); ?>";
+    var bln_filter = $("[name=bln_filter]").val();
+    var thn_filter = $("[name=thn_filter]").val();
+    var select_ukerja = $("[name=select_ukerja]").val();
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: {
+        filter_bln: bln_filter,
+        filter_thn: thn_filter,
+        kode_ukerja: select_ukerja
+      },
+      success: function(res) {
+        $("#tabel-body").html(res);
+      }
+    });
   }
 </script>

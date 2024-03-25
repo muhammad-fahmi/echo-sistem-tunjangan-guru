@@ -93,30 +93,30 @@ class Mdl_user extends CI_Model
     $response = array();
 
     // Check apakah username sudah ada ..
-    $cek = $this->db->get_where('m_user', array(
-      'username' => $this->input->post('username')
+    $cek = $this->db->get_where('progurinda_m_user', array(
+      'username' => $this->input->post('id_user')
     ))->num_rows();
-    if ($cek > 0 || $this->input->post('username') == 'system') {
+    if ($cek > 0 || $this->input->post('id_user') == 'system') {
       // Kalau sudah, kembalikan error message
       $response['status'] = false;
       $response['message'] = "Username sudah terdaftar dalam database!";
     } else {
       // Kalau belum, insert data
       $data = [
-        'username' => htmlspecialchars($this->input->post('username', TRUE)),
+        'id_user' => htmlspecialchars($this->input->post('id_user', TRUE)),
         'password' => encrypt_pwd($this->input->post('password')),
-        'nama_lengkap' => $this->input->post('nama_lengkap'),
+        'username' => $this->input->post('username'),
         'kewenangan' => $this->input->post('kewenangan'),
         'kode_ukerja' => $this->input->post('kode_ukerja'),
         'salt' => micin(),
         'no_hp' => $this->input->post('no_hp'),
         'tgl_daftar' => datetime_now(),
-        'aktif' => $this->input->post('aktif') ? 'Y' : 'N'
+        'aktif' => ($this->input->post('aktif') == 'on') ? 'Y' : 'N'
       ];
 
       $this->db->trans_start();
       // do your db process here
-      $this->db->insert('m_user', $data);
+      $this->db->insert('progurinda_m_user', $data);
       log_generator(
         $this->session->userdata('username'),
         '|m_user|',
@@ -139,13 +139,13 @@ class Mdl_user extends CI_Model
   /** fungsi untuk edit data user */
   public function edit_userdata()
   {
-    $password1 = $this->input->post('password1');
-    $username_lama = $this->input->post('username_lama');
+    $password = $this->input->post('password');
+    $username_lama = $this->input->post('id_user_lama');
     $response = array();
 
     //Cek jika ada username sebelum edit
-    $cek_user = $this->db->get_where('m_user', array(
-      'username' => $this->input->post('username'),
+    $cek_user = $this->db->get_where('progurinda_m_user', array(
+      'id_user' => $this->input->post('id_user'),
       'username <>' => $username_lama
     ))->num_rows();
 

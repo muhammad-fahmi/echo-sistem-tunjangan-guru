@@ -5,129 +5,39 @@
   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 <div class="modal-body">
-
-  
+  <button class="btn btn-primary" id="loading-button" type="button" disabled><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> " Proses Integrasi Berjalan! Harap Tunggu "</button>
+  <div id="result"></div>
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-sm btn-light-secondary" data-bs-dismiss="modal">Batal</button>
-  <button id="saveMapelbtn" type="submit" form="saveMapel" class="btn btn-sm btn-light-success">Simpan</button>
 </div>
 
 <script>
-  $('#nip').select2({
-    allowClear: true,
-    placeholder: 'Pilih Pegawai yang akan disetup.',
-    dropdownParent: $('#whole_modal_id .modal-content'),
-    ajax: {
-      type: 'POST',
-      dataType: 'json',
-      url: '<?= site_url('config/select2_pegawai') ?>',
-      delay: 800,
-      /* delay before sending ajax request */
-      data: function(params) {
-        return {
-          search: params.term
-        }
-      },
-      processResults: function(data) {
-        return {
-          results: data
-        };
-      },
-    }
-  }).on('select2:select', function(e) {
-    // what to do when option selected
-    console.log(e);
-    selected_kewenangan = $('#select2_kewenangan').val();
-    $("#nama_lengkap").val(e.params.data.nama_lengkap);
-    $("#ket_jab").val(e.params.data.ket_jab);
-    $("#kode_jab").val(e.params.data.kode_jab);
-    $("#ket_ukerja").val(e.params.data.ket_ukerja);
-    $("#kode_ukerja").val(e.params.data.kode_ukerja);
-
-  }).on('select2:close', function(e) {
-    // what to do when selection closed
-  }).on('select2:clear', function(e) {
-    // what to do when clearing (only if allowClear: true)
-    selected_kewenangan = '';
+  $(document).ready(function(){
+    //jalankan proses integrasi
   });
 
-
-  $('#saveMapel').validate($.extend({
-    submitHandler: function(form, event) {
-      // declare element that will be affected
-      // by every state of the form submission
-      // right here
-      var submit = $('#saveMapelbtn');
-      // declare button submit disabling right here if needed
-      submit.attr('disabled', true);
-      $(form).ajaxSubmit({
-        error: function(e) {
-          toaster('danger', 'Unknown error, check console.');
-          console.log(e);
-          submit.attr('disabled', false);
-        },
-        success: function(e) {
-          if (e.status) {
-            // what to do when the response status = true
-            reload_table();
-            toaster('success', e.message);
-            setTimeout(() => {
-              // modal dismiss
-              $('#whole_modal_id').modal('hide');
-            }, 350);
-          } else {
-            // what to do when the response status = false
-            toaster('info', e.message);
-            submit.attr('disabled', false);
-          }
-        },
-        dataType: 'json'
-      });
-    },
-    rules: {
-      nip: {
-        required: true
+  function start_integrasi(){
+    var url = "<?= site_url('presensi/integrasi_presensi') ?>";
+    var filter_thn = $("#filter_thn").val(); 
+    var filter_bln = $("#filter_bln").val(); 
+    var kode_ukerja = $("#select_ukerja").val(); 
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: {
+        filter_thn: filter_thn,
+        filter_bln: filter_bln,
+        kode_ukerja: kode_ukerja,
       },
-      nama_lengkap: {
-        required: true
-      },
-      ket_jab: {
-        required: true
-      },
-      ket_ukerja: {
-        required: true
-      },
-      mapel: {
-        required: true
+      success: function(res) {
+        if (res.status) {
+          $("#result").html(res.html);
+          $("#loading-button").hide();
+        } else {
+          toaster('warning', 'Error saat integrasi presensi.\n- ' + res.message);
+        }
       }
-    },
-    errorClass: 'is-invalid',
-    validClass: 'mv-valid',
-    /* if there's select2 element, please use this errorPlacement */
-    errorPlacement: function(error, element) {
-      if (element.hasClass('select2') && element.next('.select2-container').length) {
-        error.insertAfter(element.next('.select2-container'));
-      } else {
-        error.insertAfter(element);
-      }
-    },
-    messages: {
-      nip: {
-        required: "NIP tidak boleh kosong"
-      },
-      nama_lengkap: {
-        required: "Nama Lengkap tidak boleh kosong"
-      },
-      ket_jab: {
-        required: "Keterangan Jabatan tidak boleh kosong"
-      },
-      ket_ukerja: {
-        required: "Keterangan unit kerja tidak boleh kosong"
-      },
-      mapel: {
-        required: "Mata Pelajaran tidak boleh kosong"
-      }
-    },
-  }));
+    });
+  }
 </script>

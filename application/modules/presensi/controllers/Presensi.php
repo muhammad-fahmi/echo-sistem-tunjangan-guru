@@ -123,8 +123,8 @@ class Presensi extends MY_Controller
     ];
     $res = [
       'status' => true,
-      'message' => "Modal Tambah Mapel Guru",
-      'html' => $this->load->view('vw_mapel_integrasi_presensi', $data, true)
+      'message' => "Proses Integrasi Presensi",
+      'html' => $this->load->view('vw_modal_integrasi_presensi', $data, true)
     ];
     
     return $this->output
@@ -133,16 +133,21 @@ class Presensi extends MY_Controller
   }
 
   //Fungsi untuk menarik data presensi dari aplikasi absensi_web_samarinda
-  function integrasi_presensi($kode_ukerja = "", $bulan = "", $tahun = "")
+  function integrasi_presensi()
   {
+    $post = $this->input->post();
+    $kode_ukerja = $post["kode_ukerja"];
+    $filter_thn = $post["filter_thn"];
+    $filter_bln = $post["filter_bln"];
     //cek apakah sudah difinalkan klo sudah tidak usah integrasi
-    if (isFinal($kode_ukerja, (int)$bulan, $tahun)) {
+    $check_final = isFinal($kode_ukerja, (int)$bulan, $tahun);
+    if ($check_final) {
       echo "<div class='row'><div class='col-md-12'><h4>Integrasi gagal! DATA SUDAH FINAL!</h4></div></div>";
     } else {
       // Create a client with a base URI
       //$client = new GuzzleHttp\Client(['base_uri' => 'http://[::1]/absensi_samarinda_web/index.php/api/']);
-      $client = new GuzzleHttp\Client(['base_uri' => 'http://localhost/absensi_samarinda_web/index.php/api/', 'verify' => false]);
-      $response = $client->request('GET', 'export_ringkasan_opd/' . $kode_ukerja . '/' . $bulan . '/' . $tahun);
+      $client = new GuzzleHttp\Client(['base_uri' => 'http://36.66.236.83/absensi_samarinda_web/index.php/api/', 'verify' => false]);
+      $response = $client->request('GET', 'export_ringkasan_opd/' . $kode_ukerja . '/' . $bulan . '/' . $tahun.'/true');
       //using response
       $code = $response->getStatusCode();
       $reason = $response->getReasonPhrase();
@@ -183,7 +188,8 @@ class Presensi extends MY_Controller
                 "tahun" => $tahun,
                 "bulan" => (int)$bulan,
                 "username_input" => $this->session->userdata("username"),
-                "potongan_persen" => $persen_potongan
+                "potongan_persen" => $persen_potongan,
+                "last_update" => date("Y-m-d H:i:s"),
               );
               /* $message = "NIP : " . $value->pegawai->nip;
               if (isset($arr_data_presensi[$data_presensi["nip"]])) {

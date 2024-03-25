@@ -63,7 +63,7 @@
           <h4 class="card-title">Daftar Presensi Guru</h4>
 
           <!-- Form untuk get data presensi pegawai -->
-          <form id="formPresensi" action="<?= site_url('presensi/get_presensi'); ?>" method="POST" enctype="multipart/form-data">
+          <!--<form id="formPresensi" action="<?= site_url('presensi/get_presensi'); ?>" method="POST" enctype="multipart/form-data"> -->
             <div class="row mb-4">
               <div class="col-12 mb-2">
                 <!-- Unit Kerja -->
@@ -99,10 +99,10 @@
               </div>
             </div>
             <!-- Button integrasi presensi -->
-            <button id="cekPresensi" class="btn btn-sm btn-success me-2" type="submit" form="formPresensi">
+            <button id="cekPresensi" class="btn btn-sm btn-success me-2" onclick="modal_integrasi()">
               <i class="fas fa-sync me-2"></i>Integrasi Presensi
             </button>
-          </form>
+          <!-- </form> -->
 
           <div class="table-responsive mt-4">
 
@@ -329,6 +329,26 @@
   }
 
   function modal(id, type) {
+    var url = "<?= site_url('presensi/modal') ?>";
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: {
+        id: id,
+        type: type
+      },
+      success: function(res) {
+        if (res.status) {
+          $("#modal_content_id").html(res.html).show();
+          $("#whole_modal_id").modal("show");
+        } else {
+          toaster('info', 'Unknown error on modal calls.\n- ' + res.message);
+        }
+      }
+    });
+  }
+
+  function modal_integrasi() {
     var url = "<?= site_url('presensi/modal') ?>";
     $.ajax({
       type: "POST",

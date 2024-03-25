@@ -8,9 +8,9 @@ class Progurinda_lib
         $guru = false;
         $pengawas = false;
         //cek status apakah guru atau pegawas sekolah
-        if (strpos($pegawai["ket_jab"],"Guru")){
+        if (strpos(strtoupper($pegawai["ket_jab"]),"GURU") !== false){
             $guru = true;
-        }elseif(strpos($pegawai["ket_jab"],"Pengawas Sekolah")){
+        }elseif(strpos(strtoupper($pegawai["ket_jab"]),"PENGAWAS SEKOLAH") !== false){
             $pengawas = true;
         }
         
@@ -21,39 +21,62 @@ class Progurinda_lib
                     "MDA" => 1200000, //1.200.000
                     "MDY" => 1300000, //1.300.000
                     "FUN" => 1050000, //1.050.000
+                    "XX"  => 0
                 ),
                 "PPPK" => array(
-                    "PTM" => 1000000 //1.000.000
+                    "PTM" => 1000000, //1.000.000
+                    "XX"  => 0
                 )
             ),
             "pengawas" => array(
                 "PNS" => array(
-                    "MDY" => 1300000 //1.300.000
+                    "MDY" => 1300000, //1.300.000
+                    "XX"  => 0
                 ),
                 "PPPK" => array(
-                    "MDY" => 0
+                    "MDY" => 0,
+                    "XX"  => 0
                 )
             ) 
         );
 
-        if ($guru){
+        $jenjang = $this->get_jenjang($pegawai);
+
+        if ($guru){            
             if($pegawai["kode_status"] <= 2){
                 //PNS/CPNS
-                $respons_nominal = $nominal["guru"]["PNS"][$pegawai["jenjang"]];
+                $respons_nominal = $nominal["guru"]["PNS"][$jenjang];
             }else{
                 //PPPK
-                $respons_nominal = $nominal["guru"]["PPPK"][$pegawai["jenjang"]];
+                $respons_nominal = $nominal["guru"]["PPPK"][$jenjang];
             }
         }elseif($pengawas){
             if($pegawai["kode_status"] <= 2){
                 //PNS/CPNS
-                $respons_nominal = $nominal["pengawas"]["PNS"][$pegawai["jenjang"]];
+                $respons_nominal = $nominal["pengawas"]["PNS"][$jenjang];
             }else{
                 //PPPK
-                $respons_nominal = $nominal["pengawas"]["PPPK"][$pegawai["jenjang"]];
+                $respons_nominal = $nominal["pengawas"]["PPPK"][$jenjang];
             }
         }
+        $respons["respons_nominal"] = $respons_nominal;
+        $respons["jenjang"] = $jenjang;
+        return $respons;
+    }
 
-        return $respons_nominal;
+    function get_jenjang($pegawai){
+        //cek jenjang jabatan
+        $jenjang = "XX";
+        if (strpos(strtoupper($pegawai["ket_jab"]),"PERTAMA") !== false){
+            $jenjang = "PTM";
+        }elseif(strpos(strtoupper($pegawai["ket_jab"]),"MUDA") !== false){
+            $jenjang = "MDA";
+        }elseif(strpos(strtoupper($pegawai["ket_jab"]),"MADYA") !== false){
+            $jenjang = "MDY";
+        }elseif(strpos(strtoupper($pegawai["ket_jab"]),"GURU") !== false){
+            $jenjang = "FUN";
+        }
+
+        return $jenjang;
     }
 }

@@ -131,7 +131,7 @@ class Config extends MY_Controller
     $result = $this->db->query("SELECT * FROM v_ukerja 
       WHERE kode_ukerja IS NOT NULL $where_admin $aktif $where_search 
       ORDER BY kode_instansi ASC 
-      LIMIT 10")->result_array();
+      LIMIT 20")->result_array();
     $data = array();
     $index = 0;
     if (isset_nn_nes($result)) {
