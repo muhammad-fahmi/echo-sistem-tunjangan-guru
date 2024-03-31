@@ -576,10 +576,11 @@ class Laporan extends MY_Controller
       '<span>' .
       'Catatan : ' .
       '<ul>' .
-      '<li style="' . $style_content_3 . '">Golongan : II A, B, C, D TERIMA PER BULAN Rp. 800.000 TIDAK ADA POTONGAN PAJAK, POTONGAN INFAQ BAGI YANG MUSLIM</li>' .
-      '<li style="' . $style_content_3 . '">Golongan : III A, B TERIMA PER BULAN Rp. 850.000 POTONGAN PAJAK 5%, DAN POTONGAN INFAQ BAGI YANG MUSLIM</li>' .
-      '<li style="' . $style_content_3 . '">Golongan : III C, D TERIMA PER BULAN Rp. 900.000 POTONGAN PAJAK 5%, DAN POTONGAN INFAQ BAGI YANG MUSLIM</li>' .
-      '<li style="' . $style_content_3 . '">Golongan : IV A, B, C, D TERIMA PER BULAN Rp. 1.000.000 POTONGAN PAJAK 15%, DAN POTONGAN INFAQ BAGI YANG MUSLIM</li>' .
+      '<li style="' . $style_content_3 . '">Guru TERIMA PER BULAN Rp. 1.050.000 TIDAK ADA POTONGAN PAJAK, POTONGAN INFAQ BAGI YANG MUSLIM</li>' .
+      '<li style="' . $style_content_3 . '">Guru Pertama / PPPK TERIMA PER BULAN Rp. 1.000.000 TIDAK ADA POTONGAN PAJAK DAN POTONGAN INFAQ BAGI YANG MUSLIM</li>' .
+      '<li style="' . $style_content_3 . '">Guru Ahli Pertama TERIMA PER BULAN Rp. 1.100.000 POTONGAN PAJAK PPh 21 5%, DAN POTONGAN INFAQ BAGI YANG MUSLIM</li>' .
+      '<li style="' . $style_content_3 . '">Guru Ahli Muda TERIMA PER BULAN Rp. 1.200.000 POTONGAN PAJAK PPh 21 5%, DAN POTONGAN INFAQ BAGI YANG MUSLIM</li>' .
+      '<li style="' . $style_content_3 . '">Guru Ahli Madya/ Pengawas Ahli Madya TERIMA PER BULAN Rp. 1.300.000 POTONGAN PAJAK PPh 21 15%, DAN POTONGAN INFAQ BAGI YANG MUSLIM</li>' .
       '</ul>' .
       '</span>';
 

@@ -69,7 +69,7 @@
             </div>
             <div class="row">
                 <div class="col-3">
-                  <button class="btn btn-primary" onclick="generate_table()"><i class="fa fa-refresh"></i> Tampilkan </button>
+                  <button class="btn btn-primary" onclick="generate_table()" id="gen_table"><i class="fa-solid fa-rotate-right"></i> Tampilkan </button>
                   <br>
                   <br>
                 </div>
@@ -77,12 +77,14 @@
             <div class="row">
               <div class="col-12">
                 <!-- Button export file -->
-                <a href="<?= site_url('laporan/generate_pdf_tpp_triwulan'); ?>" id="btn_export_file" class="btn btn-sm btn-primary me-2" type="button">
-                  <i class="fas fa-upload me-2"></i>Cetak DRAFT Daftar TPP
-                </a>
-                <a href="<?= site_url('laporan/finalisasi'); ?>" id="btn_finalisasi" class="btn btn-sm btn-success me-2" type="button">
+                <button class="btn btn-sm btn-primary me-2" onclick="cetak_daftar()" id="btn_print_file"><i class="fas fa-print"></i> Cetak Daftar TPP</button>
+                <!-- <a href="<?= site_url('tpp_per_bulan/'); ?>" target="_blank" id="btn_print_file" class="btn btn-sm btn-primary me-2" type="button">
+                  <i class="fas fa-print me-2"></i>Cetak DRAFT Daftar TPP
+                </a> -->
+                <button class="btn btn-sm btn-success me-2" onclick="finalkan()" id="btn_finalisasi"><i class="fas fa-check"></i> Finalkan Daftar TPP</button>
+                <!-- <a href="<?= site_url('tpp_per_bulan/finalkan'); ?>" id="btn_finalisasi" class="btn btn-sm btn-success me-2" type="button">
                   <i class="fas fa-upload me-2"></i>Finalkan Daftar TPP
-                </a>
+                </a> -->
               </div>
             </div>
           <!-- </form> -->
@@ -98,7 +100,7 @@
             <table id="table_tpp_3_bulan" class="table table-bordered table-hover fs-3" style="width:100%;">
               <tr style="text-align: center;font-size: 10px;">
                 <th rowspan="2" style="vertical-align: middle;">No</th>
-                <th rowspan="2" style="vertical-align: middle;">Nama Jabatan</th>
+                <th rowspan="2" style="vertical-align: middle;">Nama Jabatan/Golongan</th>
                 <th rowspan="2" style="vertical-align: middle;">Nama/NIP</th>
                 <th rowspan="2" style="vertical-align: middle;">Besaran TPP</th>
                 <th colspan="3">TPP Disiplin Kerja</th>
@@ -195,6 +197,8 @@ $('#select_ukerja').select2({
     var bln_filter = $("[name=bln_filter]").val();
     var thn_filter = $("[name=thn_filter]").val();
     var select_ukerja = $("[name=select_ukerja]").val();
+    $("#gen_table").attr("disabled");
+    $("#gen_table").html(" . . . Proses tabel");
     $.ajax({
       type: "POST",
       url: url,
@@ -204,8 +208,42 @@ $('#select_ukerja').select2({
         kode_ukerja: select_ukerja
       },
       success: function(res) {
+        $("#gen_table").removeAttr("disabled");
+        $("#gen_table").html("Tampilkan");
         $("#tabel-body").html(res);
       }
     });
+  }
+
+  function finalkan(){
+    var url = "<?php echo site_url("tpp_per_bulan/gen_tabel_tpp"); ?>";
+    var bln_filter = $("[name=bln_filter]").val();
+    var thn_filter = $("[name=thn_filter]").val();
+    var select_ukerja = $("[name=select_ukerja]").val();
+    $("#gen_table").attr("disabled");
+    $("#gen_table").html(" . . . Proses tabel");
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: {
+        filter_bln: bln_filter,
+        filter_thn: thn_filter,
+        kode_ukerja: select_ukerja
+      },
+      success: function(res) {
+        $("#gen_table").removeAttr("disabled");
+        $("#gen_table").html("Tampilkan");
+        $("#tabel-body").html(res);
+      }
+    });
+  }
+
+  function cetak_daftar(){
+    var url = "<?php echo site_url("tpp_per_bulan/cetak_list_tpp"); ?>";
+    var bln_filter = $("[name=bln_filter]").val();
+    var thn_filter = $("[name=thn_filter]").val();
+    var select_ukerja = $("[name=select_ukerja]").val();
+    url = url +"/" + select_ukerja + "/" + bln_filter + "/" + thn_filter;
+    window.open(url, '_blank').focus();
   }
 </script>

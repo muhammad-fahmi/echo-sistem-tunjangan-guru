@@ -57,6 +57,9 @@ class Mdl_tpp_per_bulan extends CI_Model
 
     $filter_guru = 'UPPER(LEFT(r_jab.ket_jab, 4)) = "GURU" OR r_jab.ket_jab LIKE "% GURU%" OR r_jab.ket_jab LIKE "%GURU %" OR LEFT(r_jab.ket_jab, 16) = "PENGAWAS SEKOLAH" OR LEFT(r_jab.ket_jab,8) = "PENGAWAS" ';
 
+    $filter_ukerja = "(m_ukerja.kode_instansi = '".$param["kode_ukerja"]."')";
+    //$filter_ukerja = "( LEFT ( m_ukerja.unit_kepeg, 8 ) = '".$param["kode_ukerja"]."' OR m_ukerja.kode_instansi = '".$param["kode_ukerja"]."' )";
+
     //mulai query untuk presensi
     // $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_jab);
     // $this->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_gol);
@@ -84,7 +87,7 @@ class Mdl_tpp_per_bulan extends CI_Model
               OR LEFT ( r_jab.ket_jab, 16 ) = \"PENGAWAS SEKOLAH\" 
               OR LEFT ( r_jab.ket_jab, 8 ) = \"PENGAWAS\" 
               )
-              AND ( LEFT ( m_ukerja.unit_kepeg, 8 ) = '".$param["kode_ukerja"]."' OR m_ukerja.kode_instansi = '".$param["kode_ukerja"]."' ) 
+              AND ".$filter_ukerja." 
               AND (
                 m_pegawai.tgl_keluar IS NULL 
               OR ( m_pegawai.tgl_keluar > '".$param["filter_thn"]."-".$param["filter_bln"]."-01' OR m_pegawai.s_aktif = \"-1\" ))
@@ -121,6 +124,7 @@ class Mdl_tpp_per_bulan extends CI_Model
        id int(11),
        nip varchar(18),
        nama varchar(255),
+       kode_gol varchar(5),
        kode_status varchar(1),
        kode_jab varchar(20),
        kode_ukerja varchar(20),
@@ -145,7 +149,7 @@ class Mdl_tpp_per_bulan extends CI_Model
      );
       //tanggal maximum dibulan filter
       $periode_filter = $param["filter_thn"]."-".$param["filter_bln"]."-".date("t");
-
+      $periode_filter_awal = $param["filter_thn"]."-".$param["filter_bln"]."-01";
 
       //f_get_gol_per_period(".$name_temp_pegawai_aktif.".nip,'".$periode_filter."') AS kode_gol,
 
@@ -154,6 +158,7 @@ class Mdl_tpp_per_bulan extends CI_Model
       r_presensi.id as id,
       ".$name_temp_pegawai_aktif.".nip as nip,
       CONCAT_WS(IF(m_pegawai.gelar_dpn IS NOT NULL,CONCAT(m_pegawai.gelar_dpn,\",\"),\"\"),m_pegawai.nama,IF(m_pegawai.gelar_blk IS NOT NULL,CONCAT(\",\",m_pegawai.gelar_blk),\"\")) AS nama,
+      f_get_gol_per_period(".$name_temp_pegawai_aktif.".nip,\"".$periode_filter_awal."\") AS kode_gol,
       m_pegawai.kode_status,
       r_jab.kode_jab AS kode_jab,
       r_jab.kode_ukerja AS kode_ukerja,
@@ -188,11 +193,11 @@ class Mdl_tpp_per_bulan extends CI_Model
                 OR LEFT ( r_jab.ket_jab, 16 ) = \"PENGAWAS SEKOLAH\" 
                 OR LEFT ( r_jab.ket_jab, 8 ) = \"PENGAWAS\" 
                 )
-                AND ( LEFT ( m_ukerja.unit_kepeg, 8 ) = '".$param["kode_ukerja"]."' OR m_ukerja.kode_instansi = '".$param["kode_ukerja"]."' )
+                AND ".$filter_ukerja."
       ");
                 
       //$data["jml"] = $this->db->query("SELECT * FROM ".$name_temp_presensi_pegawai)->num_rows();
-      $list = $this->db->query("SELECT * FROM ".$name_temp_presensi_pegawai." ORDER BY ".$name_temp_presensi_pegawai.".kode_eselon,".$name_temp_presensi_pegawai.".kode_ukerja asc,".$name_temp_presensi_pegawai.".kode_jab asc")->result_array();
+      $list = $this->db->query("SELECT *,m_gol.ket_gol AS ket_gol,m_gol.ket_gol_pppk AS ket_gol_pppk FROM ".$name_temp_presensi_pegawai." LEFT JOIN m_gol ON ".$name_temp_presensi_pegawai.".kode_gol = m_gol.kode_gol ORDER BY ".$name_temp_presensi_pegawai.".kode_eselon,".$name_temp_presensi_pegawai.".kode_ukerja asc,".$name_temp_presensi_pegawai.".kode_jab asc")->result_array();
       
       // echo $name_temp_pegawai_jab;
       // echo "<br>".$name_temp_pegawai_pensiun;
