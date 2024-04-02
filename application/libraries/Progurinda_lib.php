@@ -67,14 +67,25 @@ class Progurinda_lib
     function get_jenjang($pegawai){
         //cek jenjang jabatan
         $jenjang = "XX";
-        if (strpos(strtoupper($pegawai["ket_jab"]),"PERTAMA") !== false){
-            $jenjang = "PTM";
-        }elseif(strpos(strtoupper($pegawai["ket_jab"]),"MUDA") !== false){
-            $jenjang = "MDA";
-        }elseif(strpos(strtoupper($pegawai["ket_jab"]),"MADYA") !== false){
-            $jenjang = "MDY";
-        }elseif(strpos(strtoupper($pegawai["ket_jab"]),"GURU") !== false){
-            $jenjang = "FUN";
+        // if (strpos(strtoupper($pegawai["ket_jab"]),"PERTAMA") !== false){
+        //     $jenjang = "PTM";
+        // }elseif(strpos(strtoupper($pegawai["ket_jab"]),"MUDA") !== false){
+        //     $jenjang = "MDA";
+        // }elseif(strpos(strtoupper($pegawai["ket_jab"]),"MADYA") !== false){
+        //     $jenjang = "MDY";
+        // }elseif(strpos(strtoupper($pegawai["ket_jab"]),"GURU") !== false){
+        //     $jenjang = "FUN";
+        // }
+        if ($pegawai["kode_gol"] == 31 || $pegawai["kode_gol"] == 32){
+          $jenjang = "PTM"; // Pertama
+        }elseif($pegawai["kode_gol"] == 33 || $pegawai["kode_gol"] == 34){
+          $jenjang = "MDA"; // Muda
+        }elseif($pegawai["kode_gol"] >= 41){
+          $jenjang = "MDY"; // Madya
+        }elseif($pegawai["kode_gol"] < 31){
+          $jenjang = "FUN"; // gol II ke bawah
+        }else{
+          $jenjang = "PTM";
         }
 
         return $jenjang;
