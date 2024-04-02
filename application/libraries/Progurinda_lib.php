@@ -59,6 +59,10 @@ class Progurinda_lib
                 $respons_nominal = $nominal["pengawas"]["PPPK"][$jenjang];
             }
         }
+        //menanggulangi jika PPPK tanpa riwayat golongan
+        if ($respons_nominal == 0 && $pegawai["kode_status"] == 3){
+          $respons_nominal = 1000000;
+        }
         $respons["respons_nominal"] = $respons_nominal;
         $respons["jenjang"] = $jenjang;
         return $respons;
