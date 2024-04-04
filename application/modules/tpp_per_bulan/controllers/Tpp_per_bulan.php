@@ -51,6 +51,7 @@ class Tpp_per_bulan extends MY_Controller
     //$con["perwali22"]  = check_periode($con["filter_thn"], $con["filter_bln"]);
     $pegawai = $this->mpp->get_data_tpp($con);
     $tabel = "";
+    $no = 1;
     foreach ($pegawai as $key => $value) {
       // store semua data yang ditampilkan menjadi 1 value untuk di pass ke modul laporan nantinya
       $ket_jab                  = $value["ket_jab"];
@@ -98,7 +99,7 @@ class Tpp_per_bulan extends MY_Controller
       
         $tabel .= '
         <tr>
-          <td><input type="checkbox" class="cetakCheckBox" attr-enc="' . $encData . '"></td>
+          <td>'.$no.'</td>
           <td>' . $ket_jab . '<br>Golongan : ( <b> '.$display_gol.' </b> )'. '<br>Status : ( <b> '.$display_status.' </b> )</td>
           <td>' . $nama_lengkap . '<br>'.$nip.'</td>
           <td>' . $besaran_tpp  .'</td>
@@ -111,6 +112,7 @@ class Tpp_per_bulan extends MY_Controller
           <td align="right">' . $total_tpp_guru . '</td>
         </tr>
       ';
+      $no++;
     }
 
     echo $tabel;

@@ -3,7 +3,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 class Progurinda_lib
 {
     //mencari nilai basic TPP guru/pengawas sekolah
-    public function get_basic_tpp($pegawai){
+    public function get_basic_tpp($pegawai,$list_tambahan){
         $respons_nominal = 0;
         $guru = false;
         $pengawas = false;
@@ -30,10 +30,14 @@ class Progurinda_lib
             ),
             "pengawas" => array(
                 "PNS" => array(
+                    "PTM" => 1300000, //1.300.000
+                    "MDA" => 1300000, //1.300.000
                     "MDY" => 1300000, //1.300.000
                     "XX"  => 0
                 ),
                 "PPPK" => array(
+                    "PTM" => 0,
+                    "MDA" => 0,
                     "MDY" => 0,
                     "XX"  => 0
                 )
@@ -62,6 +66,16 @@ class Progurinda_lib
         //menanggulangi jika PPPK tanpa riwayat golongan
         if ($respons_nominal == 0 && $pegawai["kode_status"] == 3){
           $respons_nominal = 1000000;
+        }
+        //kalau ada list tambahan
+        if ($list_tambahan !== false){
+          foreach ($list_tambahan as $key => $value) {
+            if ($value["nip"] == $pegawai["nip"]){
+              //nilai basic ditambahkan
+              $respons_nominal += $value["nominal"];
+              break;
+            }
+          }
         }
         $respons["respons_nominal"] = $respons_nominal;
         $respons["jenjang"] = $jenjang;
@@ -107,6 +121,7 @@ class Progurinda_lib
         $name_temp_pegawai_gol = "temp_pegawai_gol".time();
         $name_temp_pegawai_aktif = "temp_pegawai_aktif".time();
         $name_temp_presensi_pegawai = "temp_presensi_pegawai".time();
+        $name_temp_pegawai_out = "temp_pegawai_out".time();
     
     
        
@@ -265,9 +280,25 @@ class Progurinda_lib
                     )
                     AND ".$filter_ukerja."
           ");
+
+          $CI->db->query("CREATE TEMPORARY TABLE ".$name_temp_pegawai_out." 
+          (PRIMARY KEY pktemp (id),
+          INDEX idx_temp (nip_out),
+          id int(11),
+          nip_out varchar(18),
+          tmt_out varchar(255),
+          keterangan_out varchar(50)
+          )");
+
+          $CI->db->query(
+            "INSERT INTO ".$name_temp_pegawai_out." SELECT id,nip,tmt_out,keterangan_out FROM progurinda_pegawai_out WHERE progurinda_pegawai_out.tmt_out <= '".$periode_filter_awal."'"
+          );
                     
           //$data["jml"] = $CI->db->query("SELECT * FROM ".$name_temp_presensi_pegawai)->num_rows();
-          $list = $CI->db->query("SELECT *,m_gol.ket_gol AS ket_gol,m_gol.ket_gol_pppk AS ket_gol_pppk FROM ".$name_temp_presensi_pegawai." LEFT JOIN m_gol ON ".$name_temp_presensi_pegawai.".kode_gol = m_gol.kode_gol ORDER BY ".$name_temp_presensi_pegawai.".kode_eselon,".$name_temp_presensi_pegawai.".kode_ukerja asc,".$name_temp_presensi_pegawai.".kode_jab asc")->result_array();
+          $list = $CI->db->query("SELECT *,m_gol.ket_gol AS ket_gol,m_gol.ket_gol_pppk AS ket_gol_pppk FROM ".$name_temp_presensi_pegawai." LEFT JOIN m_gol ON ".$name_temp_presensi_pegawai.".kode_gol = m_gol.kode_gol
+          LEFT JOIN ".$name_temp_pegawai_out." ON ".$name_temp_presensi_pegawai.".nip = ".$name_temp_pegawai_out.".nip_out
+          WHERE ".$name_temp_pegawai_out.".id IS NULL
+          ORDER BY ".$name_temp_presensi_pegawai.".kode_eselon,".$name_temp_presensi_pegawai.".kode_ukerja asc,".$name_temp_presensi_pegawai.".kode_jab asc")->result_array();
           
           // echo $name_temp_pegawai_jab;
           // echo "<br>".$name_temp_pegawai_pensiun;
@@ -278,52 +309,66 @@ class Progurinda_lib
           $CI->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_pensiun);
           $CI->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_gol);
           $CI->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_aktif);
-          $CI->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_presensi_pegawai);
+          $CI->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_presensi_pegawai);          
+          $CI->db->query("DROP TEMPORARY TABLE IF EXISTS ".$name_temp_pegawai_out);
     
         //----------=========---------------------------------------//
        //   END - query untuk dapat list pegawainya di periode itu //
       //-----------------=--=========-----------------------------//
-          //ambil data presensi 
-          $list_presensi = $CI->db->where(
-            "kode_ukerja LIKE '".$param["kode_ukerja"]."%' AND tahun = '".$param["filter_thn"]."' AND bulan = '".$param["filter_bln"]."'"
-          )->get("progurinda_r_data_presensi")->result_array();
-          $list_capaian = $CI->db->where(
-            "kode_ukerja LIKE '".$param["kode_ukerja"]."' AND tahun = '".$param["filter_thn"]."' AND bulan = '".$param["filter_bln"]."'"
-          )->get("progurinda_r_jurnal_mengajar")->result_array();
+          
           $counter = 0;
           $max_jam_mengajar = 96;
           $bayar_penuh = false;
+          $list_presensi = array();
+          $list_capaian = array();
           //cek apakah ada pengecualian dimana dibayar penuh
           $check_bayar_penuh = $CI->db->where(["tahun" => $param["filter_thn"],"bulan" => $param["filter_bln"]])->get("progurinda_r_full_pay");
           if ($check_bayar_penuh->num_rows() > 0){
             $bayar_penuh = true;
+          }else{
+            //ambil data presensi 
+            $list_presensi = $CI->db->where(
+            "kode_ukerja LIKE '".$param["kode_ukerja"]."%' AND tahun = '".$param["filter_thn"]."' AND bulan = '".$param["filter_bln"]."'"
+            )->get("progurinda_r_data_presensi")->result_array();
+            $list_capaian = $CI->db->where(
+            "kode_ukerja LIKE '".$param["kode_ukerja"]."' AND tahun = '".$param["filter_thn"]."' AND bulan = '".$param["filter_bln"]."'"
+            )->get("progurinda_r_jurnal_mengajar")->result_array();
           }
           //loop lengkapi field2 nya
           foreach ($list as $key => $value) {
             $potongan_disiplin = 0;
             $capaian_produktivitas = 0;
             //cocokan data presensi
-            foreach ($list_presensi as $key2 => $value2) {
-              if ($value["nip"] == $value2["nip"]){
-                $potongan_disiplin = $value2["potongan_persen"];
-                break;
-              }
-            }
-            //cocokan data capaian
-            foreach ($list_presensi as $key3 => $value3) {
-              if ($value["nip"] == $value3["nip"]){
-                $jam_mengajar = $value3["jam_mengajar"];
-                $capaian_produktivitas = $jam_mengajar / $max_jam_mengajar;
-                break;
-              }
-            }
-            
             if($bayar_penuh){
               $capaian_produktivitas = 1;
               $jam_mengajar = $max_jam_mengajar;
+              $potongan_disiplin = 0;
+            }else{
+              foreach ($list_presensi as $key2 => $value2) {
+                if ($value["nip"] == $value2["nip"]){
+                  $potongan_disiplin = $value2["potongan_persen"];
+                  break;
+                }
+              }
+              //cocokan data capaian
+              foreach ($list_capaian as $key3 => $value3) {
+                if ($value["nip"] == $value3["nip"]){
+                  $jam_mengajar = $value3["jam_mengajar"];
+                  $capaian_produktivitas = $jam_mengajar / $max_jam_mengajar;
+                  break;
+                }
+              }
+            }
+            //cari daftar tambahan tpp
+            $q_list_tambahan_tpp = $CI->db->where("tmt_mulai <= '".$periode_filter_awal."' AND tmt_selesai >= '".$periode_filter_awal."'")->get("progurinda_tambahan_tpp");
+            if($q_list_tambahan_tpp->num_rows() > 0){
+              $list_tambahan_tpp = $q_list_tambahan_tpp->result_array();
+            }else{
+              $list_tambahan_tpp = false;
             }
             //tentukan nilai tpp berdasarkan golongan/jenjnag jabatan (ahli muda, ahli pertama, ahli madya) / tentukan pns/cpns atau pppk
-            $basic_tpp = $this->get_basic_tpp($value);
+            $basic_tpp = $this->get_basic_tpp($value,$list_tambahan_tpp);
+            
             $list[$counter]["besaran_tpp"] = $basic_tpp["respons_nominal"];
             $list[$counter]["jenjang"] = $basic_tpp["jenjang"];
             //tentukan potongannya
@@ -332,7 +377,7 @@ class Progurinda_lib
             $list[$counter]["total_potongan_disiplin"] =  ($bayar_penuh) ? 0 : $list[$counter]["tpp_disiplin_kerja"] * (float)$potongan_disiplin / 100;  
             $list[$counter]["penghasilan_tpp_disiplin"] = (float)$list[$counter]["tpp_disiplin_kerja"] - (float)$list[$counter]["total_potongan_disiplin"];
             //potongan dari disiplin - END
-    
+            
             //potongan dari jurnal mengajar - START
             $list[$counter]["tpp_produktivitas"] = (float)($list[$counter]["besaran_tpp"] * 60 / 100);
             $list[$counter]["capaian_produktivitas"] = (float)($capaian_produktivitas * 100);

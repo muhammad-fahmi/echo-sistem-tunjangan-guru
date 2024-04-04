@@ -99,7 +99,7 @@
             </div>
 
           </div>
-
+          <!-- <button class="btn btn-primary" onclick="generate_tabel_tpp_triwulan()" id="gen_table"><i class="fa-solid fa-rotate-right"></i> Tampilkan </button> -->
           <!-- Button export file -->
           <a href="<?= site_url('laporan/cetak_ttp_3_bln'); ?>" target="_blank" id="btn_export_file" class="btn btn-sm btn-success me-2 disabled" type="button">
             <i class="fas fa-upload me-2"></i>Export Laporan TPP Per Triwulan
@@ -191,152 +191,31 @@
     btn_cetak_handler();
   });
 
-  var urlDatatable = "<?= site_url('laporan/tpp_3_bln_datalist') ?>";
+  
   var init_btn_export = false;
-  var tabel_tpp_3_bulan = $("#table_tpp_3_bulan").DataTable({
-    responsive: true,
-    processing: true,
-    serverSide: true,
-    orderCellsTop: true,
-    // scrollX: true,
-    dom: '<"row g-1"' +
-      '<"col-12 col-sm-6 init_btn_container"><"col-12 col-sm-6 vam"f>' +
-      '<"col-12"tr>' +
-      '<"col-12 col-sm-6"li><"col-12 col-sm-6"p>' +
-      '>',
-    /* set kolom yang di sortir secara default */
-    order: [
-      [0, "asc"],
-    ],
-    /* set placeholder dari input search */
-    language: {
-      searchPlaceholder: "Keyword"
-    },
-    ajax: {
-      url: urlDatatable,
-      /* parameter yang dikirimkan ke controller */
+  
+  function generate_tabel_tpp_triwulan(){
+    var urlDatatable = "<?= site_url('laporan/tpp_3_bln_datalist') ?>";
+    var triwulan = $("[name=triwulan]").val();
+    var thn_filter = $("[name=tahun]").val();
+    var select_ukerja = $("[name=select_ukerja]").val();
+    $("#gen_table").prop("disabled",true);
+    $("#gen_table").html(" . . . Proses tabel");
+    $.ajax({
+      type: "POST",
+      url: url,
       data: {
-        param1: function() {
-          return $('#id_atau_class_element').val();
-        },
+        triwulan: triwulan,
+        tahun: tahun,
+        kode_ukerja: kode_ukerja
       },
-      type: 'POST',
-      beforeSend: function() {
-        // lakukan sesuatu sebelum mulai ajax process
-        $('.loading_tabel_tpp_3_bulan').addClass('show');
-      },
-    },
-    /* Sesuaikan jumlah kolom dengan id table yang digunakan */
-    columns: [{
-        data: 'nip',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-start">' + cellData + '<br>' + rowData.nama + '</div>');
-        },
-      },
-      // {
-      //   data: 'nama_lengkap',
-      //   orderable: false,
-      //   className: 'vam',
-      //   createdCell: function(td, cellData, rowData, row, col) {
-      //     $(td).html('<div class="text-start">' + cellData + '</div>');
-      //   },
-      // },
-      {
-        data: 'ket_gol',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'ket_jab',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-start">' + cellData + '<br>' + rowData.ket_ukerja + '</div>');
-        },
-      },
-      {
-        data: 'tpp_per_bln',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-start">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'jumlah_bln',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'jumlah_kotor',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'pph5',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-end">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'pph15',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-end">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'infaq',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-end">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'jumlah_bersih',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
+      success: function(res) {
+        $("#gen_table").prop("disabled",false);
+        $("#gen_table").html("Tampilkan");
+        $("#tabel-body").html(res);
       }
-    ],
-    /* Lakukan fungsi callback pada bracket ini */
-    drawCallback: function(settings) {
-      /* gunakan code ini utk mengambil data response ke dalam drawCallback */
-      let api = this.api();
-      let json = api.ajax.json();
-      if (json.status == false) {
-        /* jalankan apabila return false */
-      }
-      /* parameter callback untuk kostumisasi fungsi */
-      $('.loading_tabel_tpp_3_bulan').removeClass('show');
-
-      // let btn_export = '<a class="btn btn-sm btn-success me-2" href="'+ <?= base_url('laporan/generate_pdf_jurnal_bulanan') ?> +'">' +
-      //   '<i class="fas fa-plus me-1"></i>Tambah TPP' +
-      //   '</a>';
-
-      // if (!init_btn_export) {
-      //   $('.init_btn_container').append(btn_export);
-      //   init_btn_export = true;
-      // }
-    }
-  });
+    });
+  }
 
   /* fungsi untuk reload datatable ajax */
   function reload_table() {

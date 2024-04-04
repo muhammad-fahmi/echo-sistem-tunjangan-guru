@@ -294,6 +294,11 @@
                       Jurnal Mengajar
                     </span></a>
                 </li>
+                <li class="sidebar-item">
+                  <a href="<?= site_url("pegawai_off"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
+                      Non Aktifkan Pegawai
+                    </span></a>
+                </li>
               </ul>
             </li>
             <li class="sidebar-item">
