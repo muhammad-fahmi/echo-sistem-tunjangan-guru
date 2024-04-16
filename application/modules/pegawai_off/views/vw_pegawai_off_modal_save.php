@@ -46,6 +46,11 @@
          <option value="meninggal" <?php echo ($keterangan_out == "meninggal") ? "selected" : ""; ?>>Meninggal Dunia</option>
          <option value="mutasi" <?php echo ($keterangan_out == "mutasi") ? "selected" : ""; ?>>Mutasi Keluar Pemkot</option>
          <option value="pensiun" <?php echo ($keterangan_out == "pensiun") ? "selected" : ""; ?>>Pensiun</option>
+         <option value="cltn" <?php echo ($keterangan_out == "cltn") ? "selected" : ""; ?>>Cuti diluar tanggungan negara</option>
+         <option value="tugas_belajar" <?php echo ($keterangan_out == "tugas_belajar") ? "selected" : ""; ?>>Tugas Belajar</option>
+         <option value="tanpa_kabar" <?php echo ($keterangan_out == "tanpa_kabar") ? "selected" : ""; ?>>Tanpa Kabar</option>
+         <option value="hukuman_disiplin" <?php echo ($keterangan_out == "hukuman_disiplin") ? "selected" : ""; ?>>Hukuman Disiplin</option>
+         <option value="sakit" <?php echo ($keterangan_out == "sakit") ? "selected" : ""; ?>>Sakit</option>
         </select>
       </div>
       <div class="col-12 col-lg-12 form_mapel">
