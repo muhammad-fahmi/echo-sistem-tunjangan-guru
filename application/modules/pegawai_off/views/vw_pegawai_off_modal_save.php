@@ -54,8 +54,8 @@
         </select>
       </div>
       <div class="col-12 col-lg-12 form_mapel">
-        <label for="tmt_out">Tmt Non Aktif</label>
-        <input type="date" name="tmt_out" id="tmt_out" class="form-control form-control-sm" value="<?= $data['tmt_mulai'] ?>">
+        <label for="tmt_out">Tmt Non Aktif <i>(format: Y-m-d)</i></label>
+        <input type="text" name="tmt_out" id="tmt_out" class="form-control form-control-sm" value="<?php echo $data["tmt_out"]; ?>">
       </div>
     </div>
   </form>
@@ -102,6 +102,16 @@
   }).on('select2:clear', function(e) {
     // what to do when clearing (only if allowClear: true)
     selected_kewenangan = '';
+  });
+
+  $("document").ready(function(){
+    $('#tmt_out').datepicker({
+    format:'yyyy-mm-dd',
+    startView: 'days',
+    minViewMode: 'days',
+    orientation: 'bottom',
+    autoclose: true
+  });
   });
 
   // Select2 utk Tugas Tambahan

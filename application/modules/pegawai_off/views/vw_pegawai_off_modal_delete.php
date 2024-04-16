@@ -52,6 +52,21 @@
                 case 'pensiun':
                   $keterangan = "Pensiun";
                   break;
+                case 'cltn':
+                  $keterangan = "Cuti diluar tanggungan negara";
+                  break;
+                case 'tugas_belajar':
+                  $keterangan = "Tugas Belajar";
+                  break;       
+                case 'tanpa_kabar':
+                  $keterangan = "Tanpa Kabar";
+                  break; 
+                case 'hukuman_disiplin':
+                  $keterangan = "Hukuman Disiplin";
+                  break; 
+                case 'sakit':
+                  $keterangan = "Sakit";
+                  break; 
                 default:
                   $keterangan = "-";
                   break;
