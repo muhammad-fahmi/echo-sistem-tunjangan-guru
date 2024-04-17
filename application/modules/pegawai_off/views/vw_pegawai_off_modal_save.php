@@ -17,7 +17,7 @@
         <select name="nip" id="nip" class="form-control form-control-sm" style="width:100%">
           <?php $selected = ($data["nip"] != "") ? "selected" : ""; ?>
           <option value=""> - - - Pilih Pegawai - - - </option>
-          <option value="<?php echo $data["nip"]; ?>" <?php echo $selected ?>><?php echo $data["nip"]; ?></option>
+          <option value="<?php echo $data["nip"]; ?>" <?php echo $selected ?>><?php echo $data["nip"]." - ".$data["nama_lengkap"]; ?></option>
         </select>
       </div>
 
@@ -43,19 +43,23 @@
         <label for="keterangan_out">Alasan Non Aktif</label>
         <br>
         <select name="keterangan_out" id="keterangan_out" class="form-control form-control-sm" style="width:100%">
-         <option value="meninggal" <?php echo ($keterangan_out == "meninggal") ? "selected" : ""; ?>>Meninggal Dunia</option>
-         <option value="mutasi" <?php echo ($keterangan_out == "mutasi") ? "selected" : ""; ?>>Mutasi Keluar Pemkot</option>
-         <option value="pensiun" <?php echo ($keterangan_out == "pensiun") ? "selected" : ""; ?>>Pensiun</option>
-         <option value="cltn" <?php echo ($keterangan_out == "cltn") ? "selected" : ""; ?>>Cuti diluar tanggungan negara</option>
-         <option value="tugas_belajar" <?php echo ($keterangan_out == "tugas_belajar") ? "selected" : ""; ?>>Tugas Belajar</option>
-         <option value="tanpa_kabar" <?php echo ($keterangan_out == "tanpa_kabar") ? "selected" : ""; ?>>Tanpa Kabar</option>
-         <option value="hukuman_disiplin" <?php echo ($keterangan_out == "hukuman_disiplin") ? "selected" : ""; ?>>Hukuman Disiplin</option>
-         <option value="sakit" <?php echo ($keterangan_out == "sakit") ? "selected" : ""; ?>>Sakit</option>
+         <option value="meninggal" <?php echo ($data["keterangan_out"] == "meninggal") ? "selected" : ""; ?>>Meninggal Dunia</option>
+         <option value="mutasi" <?php echo ($data["keterangan_out"] == "mutasi") ? "selected" : ""; ?>>Mutasi Keluar Pemkot</option>
+         <option value="pensiun" <?php echo ($data["keterangan_out"] == "pensiun") ? "selected" : ""; ?>>Pensiun</option>
+         <option value="cltn" <?php echo ($data["keterangan_out"] == "cltn") ? "selected" : ""; ?>>Cuti diluar tanggungan negara</option>
+         <option value="tugas_belajar" <?php echo ($data["keterangan_out"] == "tugas_belajar") ? "selected" : ""; ?>>Tugas Belajar</option>
+         <option value="tanpa_kabar" <?php echo ($data["keterangan_out"] == "tanpa_kabar") ? "selected" : ""; ?>>Tanpa Kabar</option>
+         <option value="hukuman_disiplin" <?php echo ($data["keterangan_out"] == "hukuman_disiplin") ? "selected" : ""; ?>>Hukuman Disiplin</option>
+         <option value="sakit" <?php echo ($data["keterangan_out"] == "sakit") ? "selected" : ""; ?>>Sakit</option>
         </select>
       </div>
       <div class="col-12 col-lg-12 form_mapel">
         <label for="tmt_out">Tmt Non Aktif <i>(format: Y-m-d)</i></label>
         <input type="text" name="tmt_out" id="tmt_out" class="form-control form-control-sm" value="<?php echo $data["tmt_out"]; ?>">
+      </div>
+      <div class="col-12 col-lg-12 form_mapel">
+        <label for="tmt_out">Tmt Aktif Kembali<i>(format: Y-m-d)</i></label>
+        <input type="text" name="tmt_aktif_kembali" id="tmt_aktif_kembali" class="form-control form-control-sm" value="<?php echo $data["tmt_aktif_kembali"]; ?>">
       </div>
     </div>
   </form>

@@ -349,13 +349,11 @@
   }
 
   function modal_integrasi() {
-    var url = "<?= site_url('presensi/modal') ?>";
+    var url = "<?= site_url('presensi/modal_integrasi') ?>";
     $.ajax({
       type: "POST",
       url: url,
       data: {
-        id: id,
-        type: type
       },
       success: function(res) {
         if (res.status) {

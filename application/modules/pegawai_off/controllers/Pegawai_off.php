@@ -123,6 +123,7 @@ class Pegawai_off extends MY_Controller
           'ket_ukerja' => '',
           'keterangan_out' => '',
           'tmt_out' => '',
+          'tmt_aktif_kembali' => '',
           'id' => $id
         ];
         $data = [
@@ -198,7 +199,8 @@ class Pegawai_off extends MY_Controller
         'id' => $post['id'],
         'nip' => $post['nip'],
         'keterangan_out' => $post['keterangan_out'],
-        'tmt_out' => $post['tmt_out']
+        'tmt_out' => $post['tmt_out'],
+        'tmt_aktif_kembali' => $post['tmt_aktif_kembali']
       );
       if ($id == 0) {
         unset($data_to_save["id"]);

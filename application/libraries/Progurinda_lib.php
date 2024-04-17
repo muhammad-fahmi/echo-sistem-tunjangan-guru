@@ -355,6 +355,9 @@ class Progurinda_lib
                 if ($value["nip"] == $value3["nip"]){
                   $jam_mengajar = $value3["jam_mengajar"];
                   $capaian_produktivitas = $jam_mengajar / $max_jam_mengajar;
+                  if ($capaian_produktivitas > 1){
+                    $capaian_produktivitas = 1;
+                  }
                   break;
                 }
               }

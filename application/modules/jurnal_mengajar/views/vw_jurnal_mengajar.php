@@ -111,7 +111,7 @@
 
               <thead class="bg-info text-white">
                 <tr class="text-center">
-                  <th>NIP</th>
+                  <th>NIP / Nama</th>
                   <th>Jabatan</th>
                   <th>Unit Kerja</th>
                   <th>Bulan</th>
