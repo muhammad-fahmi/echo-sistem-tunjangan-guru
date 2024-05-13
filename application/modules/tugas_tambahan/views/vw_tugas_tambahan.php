@@ -145,7 +145,7 @@
         },
       },
       {
-        data: 'nama',
+        data: 'nama_lengkap',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {

@@ -43,7 +43,7 @@
                   <th>Nama</th>
                   <th>Jabatan</th>
                   <th>Unit Kerja</th>
-                  <th>Tgl Keluar</th>
+                  <th>TMT Non Aktif / TMT Aktif Kembali</th>
                   <th>Keterangan</th>
                   <th>Aksi</th>
                 </tr>
@@ -139,7 +139,11 @@
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-end">' + cellData + '</div>');
+          var display = "";
+          if (rowData.tmt_aktif_kembali != "" && rowData.tmt_aktif_kembali != null){
+            display = "<br> s/d <br>"+rowData.tmt_aktif_kembali;
+          }
+          $(td).html('<div class="text-end">' + cellData + display + '</div>');
         },
       },
       {

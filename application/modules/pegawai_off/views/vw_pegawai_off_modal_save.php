@@ -42,7 +42,7 @@
       <div class="col-12 form_mapel">
         <label for="keterangan_out">Alasan Non Aktif</label>
         <br>
-        <select name="keterangan_out" id="keterangan_out" class="form-control form-control-sm" style="width:100%">
+        <select name="keterangan_out" id="keterangan_out" class="form-control form-control-sm" onchange="hide_tmt_aktif_kembali()" style="width:100%">
          <option value="meninggal" <?php echo ($data["keterangan_out"] == "meninggal") ? "selected" : ""; ?>>Meninggal Dunia</option>
          <option value="mutasi" <?php echo ($data["keterangan_out"] == "mutasi") ? "selected" : ""; ?>>Mutasi Keluar Pemkot</option>
          <option value="pensiun" <?php echo ($data["keterangan_out"] == "pensiun") ? "selected" : ""; ?>>Pensiun</option>
@@ -57,8 +57,8 @@
         <label for="tmt_out">Tmt Non Aktif <i>(format: Y-m-d)</i></label>
         <input type="text" name="tmt_out" id="tmt_out" class="form-control form-control-sm" value="<?php echo $data["tmt_out"]; ?>">
       </div>
-      <div class="col-12 col-lg-12 form_mapel">
-        <label for="tmt_out">Tmt Aktif Kembali<i>(format: Y-m-d)</i></label>
+      <div class="col-12 col-lg-12 form_mapel" id="wrapper_tmt_aktif_kembali">
+        <label for="tmt_aktif_kembali">Tmt Aktif Kembali<i>(format: Y-m-d)</i></label>
         <input type="text" name="tmt_aktif_kembali" id="tmt_aktif_kembali" class="form-control form-control-sm" value="<?php echo $data["tmt_aktif_kembali"]; ?>">
       </div>
     </div>
@@ -116,7 +116,25 @@
     orientation: 'bottom',
     autoclose: true
   });
+  $('#tmt_aktif_kembali').datepicker({
+    format:'yyyy-mm-dd',
+    startView: 'days',
+    minViewMode: 'days',
+    orientation: 'top',
+    autoclose: true
   });
+  });
+
+  function hide_tmt_aktif_kembali(){
+    var jns_off = $("#keterangan_out").val();
+    console.log("selected jns out : "+jns_off+"\n");
+    if (jns_off == "meninggal" || jns_off == "mutasi" || jns_off == "pensiun"){
+      $("#wrapper_tmt_aktif_kembali").addClass("hidden");
+      $("#tmt_aktif_kembali").val("");
+    }else{
+      $("#wrapper_tmt_aktif_kembali").removeClass("hidden");
+    }
+  }
 
   // Select2 utk Tugas Tambahan
   $('#kode_tgs_tambahan').select2({

@@ -15,6 +15,7 @@
 <script>
   $(document).ready(function(){
     //jalankan proses integrasi
+    start_integrasi();
   });
 
   function start_integrasi(){
@@ -32,8 +33,9 @@
       },
       success: function(res) {
         if (res.status) {
-          $("#result").html(res.html);
+          $("#result").html(res.message);
           $("#loading-button").hide();
+          reload_table();
         } else {
           toaster('warning', 'Error saat integrasi presensi.\n- ' + res.message);
         }

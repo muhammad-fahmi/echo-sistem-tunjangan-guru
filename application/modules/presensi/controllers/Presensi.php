@@ -140,14 +140,18 @@ class Presensi extends MY_Controller
     $filter_thn = $post["filter_thn"];
     $filter_bln = $post["filter_bln"];
     //cek apakah sudah difinalkan klo sudah tidak usah integrasi
-    $check_final = isFinal($kode_ukerja, (int)$bulan, $tahun);
-    if ($check_final) {
-      echo "<div class='row'><div class='col-md-12'><h4>Integrasi gagal! DATA SUDAH FINAL!</h4></div></div>";
+    $check_final = isFinal($kode_ukerja, (int)$filter_bln, $filter_thn);
+    $result["status"] = false;
+    $result["message"] = "";
+    if ($check_final["val"]) {
+      //var_dump($check_final);
+      $result["status"] = false;
+      $result["message"] = "<div class='row'><div class='col-md-12'><h4>Integrasi gagal! DATA SUDAH FINAL!</h4></div></div>";
     } else {
       // Create a client with a base URI
       //$client = new GuzzleHttp\Client(['base_uri' => 'http://[::1]/absensi_samarinda_web/index.php/api/']);
       $client = new GuzzleHttp\Client(['base_uri' => 'http://36.66.236.83/absensi_samarinda_web/index.php/api/', 'verify' => false]);
-      $response = $client->request('GET', 'export_ringkasan_opd/' . $kode_ukerja . '/' . $bulan . '/' . $tahun.'/true');
+      $response = $client->request('GET', 'export_ringkasan_opd/' . $kode_ukerja . '/' . (int)$filter_bln . '/' . $filter_thn.'/true');
       //using response
       $code = $response->getStatusCode();
       $reason = $response->getReasonPhrase();
@@ -169,7 +173,7 @@ class Presensi extends MY_Controller
             } else {
               $where_ukerja = "kode_instansi = '" . $kode_ukerja . "'";
             }
-            $q_list_sudah_masuk = $this->db->where($where_ukerja . " AND tahun = '" . $tahun . "' AND bulan ='" . (int)$bulan . "'")->get("v_data_presensi");
+            $q_list_sudah_masuk = $this->db->where($where_ukerja . " AND tahun = '" . $filter_thn . "' AND bulan ='" . (int)$filter_bln . "'")->get("v_progurinda_data_presensi");
             if ($q_list_sudah_masuk->num_rows() > 0) {
               $list_sudah_masuk = $q_list_sudah_masuk->result_array();
               foreach ($list_sudah_masuk as $key => $value) {
@@ -177,6 +181,7 @@ class Presensi extends MY_Controller
               }
             }
             //var_dump($arr_data_presensi);
+            //var_dump($body->attlog);
             foreach ($body->attlog as $key => $value) {
               //echo $value->pegawai->nip . " - " . $value->pegawai->nama . " : " . $value->potongan . "<br>";
               //siapkan data presensi
@@ -185,8 +190,8 @@ class Presensi extends MY_Controller
                 "nip" => $value->pegawai->nip,
                 "kode_jab" => $value->pegawai->kode_jab,
                 "kode_ukerja" => $value->pegawai->kode_ukerja,
-                "tahun" => $tahun,
-                "bulan" => (int)$bulan,
+                "tahun" => $filter_thn,
+                "bulan" => (int)$filter_bln,
                 "username_input" => $this->session->userdata("username"),
                 "potongan_persen" => $persen_potongan,
                 "last_update" => date("Y-m-d H:i:s"),
@@ -204,7 +209,7 @@ class Presensi extends MY_Controller
 
               if ($data_exist) {
                 //jika sudah ada maka update
-                $this->db->where(["nip" => $data_presensi["nip"], "tahun" => $tahun, "bulan" => (int)$bulan])->update("progurinda_r_data_presensi", $data_presensi);
+                $this->db->where(["nip" => $data_presensi["nip"], "tahun" => $filter_thn, "bulan" => (int)$filter_bln])->update("progurinda_r_data_presensi", $data_presensi);
                 $update++;
               } else {
                 //jika belum maka insert data presensi
@@ -213,16 +218,22 @@ class Presensi extends MY_Controller
               }
               $total++;
             }
-            echo "<div class='row'><div class='col-md-12'><h4>Integrasi Data Berhasil!</h4><br>Data diproses : " . $total . " | Diupdate : " . $update . " | Ditambah : " . $insert . "</div></div>";
+            $result["status"] = true;
+            $result["message"] = "<div class='row'><div class='col-md-12'><h4>Integrasi Data Berhasil!</h4><br>Data diproses : " . $total . " | Diupdate : " . $update . " | Ditambah : " . $insert . "</div></div>";
           } catch (\Throwable $th) {
             //throw $th;
-            echo "ERROR!Process Message : " . $th->getMessage();
+            $result["status"] = false;
+            $result["message"] = "ERROR!Process Message : " . $th->getMessage(); 
           }
         } else {
           //jika gagal
-          echo "<div class='row'><div class='col-md-12'><h4>Integrasi gagal! " . $body->message . "</h4></div></div>";
+          $result["status"] = false;
+          $result["message"] = "<div class='row'><div class='col-md-12'><h4>Integrasi gagal! " . $body->message . "</h4></div></div>";
         }
       }
     }
+    $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($result));
   }
 }

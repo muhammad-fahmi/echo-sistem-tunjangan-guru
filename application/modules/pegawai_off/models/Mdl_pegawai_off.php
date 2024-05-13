@@ -97,6 +97,7 @@ class Mdl_pegawai_off extends CI_Model
       $data_result[$index]['ket_ukerja'] = isset_nn_nes($row['ket_ukerja'], '-');
       $data_result[$index]['keterangan_out'] = $keterangan;
       $data_result[$index]['tmt_out'] = tglFormat(isset_nn_nes($row['tmt_out'], '-'),"d M yyyy");
+      $data_result[$index]['tmt_aktif_kembali'] = tglFormat(isset_nn_nes($row['tmt_aktif_kembali'], '-'),"d M yyyy");
       $data_result[$index]['id'] = isset_nn_nes($row['id'], '-');
       $no += 1;
       $index += 1;

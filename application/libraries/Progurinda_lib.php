@@ -291,7 +291,9 @@ class Progurinda_lib
           )");
 
           $CI->db->query(
-            "INSERT INTO ".$name_temp_pegawai_out." SELECT id,nip,tmt_out,keterangan_out FROM progurinda_pegawai_out WHERE progurinda_pegawai_out.tmt_out <= '".$periode_filter_awal."'"
+            "INSERT INTO ".$name_temp_pegawai_out." SELECT id,nip,tmt_out,keterangan_out FROM progurinda_pegawai_out WHERE progurinda_pegawai_out.tmt_out <= '".$periode_filter_awal."' AND (progurinda_pegawai_out.tmt_aktif_kembali IS NULL OR progurinda_pegawai_out.tmt_aktif_kembali = \"\" OR 
+            progurinda_pegawai_out.tmt_aktif_kembali >= '".$periode_filter."'
+            )"
           );
                     
           //$data["jml"] = $CI->db->query("SELECT * FROM ".$name_temp_presensi_pegawai)->num_rows();
