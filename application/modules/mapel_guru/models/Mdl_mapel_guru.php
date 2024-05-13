@@ -49,7 +49,7 @@ class Mdl_mapel_guru extends CI_Model
       ORDER BY $data[order_column] $data[order_sort]
       LIMIT $data[start], $data[length]");
     $query_total = $this->db->query("SELECT * FROM v_progurinda_mapel 
-      $where_search");
+      WHERE $where_ukerja $where_search");
     // cari total hasil
     $total_count = $query_total->num_rows();
     // cari data result + penomoran
