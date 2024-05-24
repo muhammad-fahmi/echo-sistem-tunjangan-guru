@@ -238,8 +238,8 @@
             'Pilih' +
             '</button>' +
             '<ul class="dropdown-menu">' +
-            '<li><a class="dropdown-item" onclick="modal(`' + id_entry + '`, `edit_jurnal_mengajar`)" href="#"><i class="fas fa-edit me-1"></i>Edit</a></li>' +
-            '<li><a class="dropdown-item text-danger" onclick="modal(`' + id_entry + '`, `delete_jurnal_mengajar`)" href="#"><i class="fas fa-trash me-1"></i>Delete</a></li>' +
+            '<li><a class="dropdown-item" onclick="modal(\'' + id_entry + '\', \'edit_jurnal_mengajar\')" href="#"><i class="fas fa-edit me-1"></i>Edit</a></li>' +
+            '<li><a class="dropdown-item text-danger" onclick="modal(\'' + id_entry + '\', \'delete_jurnal_mengajar\')" href="#"><i class="fas fa-trash me-1"></i>Delete</a></li>' +
             '</ul>' +
             '</div>';
           $(td).html('<div class="text-center">' + html_aksi + '</div>');
