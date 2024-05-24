@@ -128,6 +128,7 @@ class Jurnal_mengajar extends MY_Controller
             'modal_title' => "Hapus Jurnal Mengajar Guru",
             'data' => $dataset,
           ];
+          
           $res = [
             'status' => true,
             'message' => "Modal Hapus Jurnal Mengajar Guru",
