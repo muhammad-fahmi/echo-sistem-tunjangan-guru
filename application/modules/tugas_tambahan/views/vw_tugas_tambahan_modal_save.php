@@ -45,7 +45,7 @@
         <select name="kode_tgs_tambahan" id="kode_tgs_tambahan" class="form-control form-control-sm" style="width:100%">
           <?php $selected = ($data["kode_tgs_tambahan"] != "") ? "selected" : ""; ?>
           <option value=""> - - - Pilih Tugas Tambahan - - - </option>
-          <option value="<?php echo $data["kode_tgs_tambahan"]; ?>" <?php echo $selected ?>><?php echo $data["kode_tgs_tambahan"]; ?></option>
+          <option value="<?php echo $data["kode_tgs_tambahan"]; ?>" <?php echo $selected ?>><?php echo $data["kode_tgs_tambahan"]." - ".$data["ket_tugas_tambahan"]; ?></option>
         </select>
       </div>
 

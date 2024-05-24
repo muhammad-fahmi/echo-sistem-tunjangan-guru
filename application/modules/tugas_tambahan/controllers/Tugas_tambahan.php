@@ -117,6 +117,7 @@ class Tugas_tambahan extends MY_Controller
           'kode_jab' => '',
           'kode_ukerja' => '',
           'kode_tgs_tambahan' => '',
+          'ket_tugas_tambahan' => '',
           'tmt_mulai' => '',
           'tmt_selesai' => '',
           'id' => $id
