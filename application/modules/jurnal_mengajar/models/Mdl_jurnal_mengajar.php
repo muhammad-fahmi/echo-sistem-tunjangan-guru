@@ -69,7 +69,7 @@ class Mdl_jurnal_mengajar extends CI_Model
       $data_result[$index]['bulan'] = isset_nn_nes($row['bulan'], '-');
       $data_result[$index]['tahun'] = isset_nn_nes($row['tahun'], '-');
       $data_result[$index]['jam_mengajar'] = isset_nn_nes($row['jam_mengajar'], '-');
-      $data_result[$index]['id'] = to_rp(isset_nn_nes($row['id'], '-'), false);
+      $data_result[$index]['id'] = isset_nn_nes($row['id']);
       $no += 1;
       $index += 1;
     }
