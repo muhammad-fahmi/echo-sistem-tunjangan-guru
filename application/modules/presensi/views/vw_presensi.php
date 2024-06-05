@@ -45,11 +45,12 @@
                 <label for="bulan">Bulan :</label>
                 <select type="text" name="filter_bln" class="form-select form-select-sm" style="width:100%" id="filter_bln" >
                   <?php 
-                  $bln_now = date("n");
+                  $bln_now = date("m");
                   for($i = 1;$i <= 12;$i++){
-                    $selected = ($i == $bln_now) ? "selected" : "";
+                    $kode_bulan = ($i < 10) ? "0".$i : $i;
+                    $selected = ($kode_bulan == $bln_now) ? "selected" : "";
                   ?>
-                    <option value="<?= $i ?>" <?= $selected ?>><?= getBulan($i) ?></option>
+                    <option value="<?= $kode_bulan ?>" <?= $selected ?>><?= getBulan($i) ?></option>
                   <?php } ?>
                 </select>
               </div>

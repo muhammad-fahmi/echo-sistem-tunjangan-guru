@@ -151,11 +151,12 @@ class Presensi extends MY_Controller
       // Create a client with a base URI
       //$client = new GuzzleHttp\Client(['base_uri' => 'http://[::1]/absensi_samarinda_web/index.php/api/']);
       $client = new GuzzleHttp\Client(['base_uri' => 'http://36.66.236.83/absensi_samarinda_web/index.php/api/', 'verify' => false]);
-      $response = $client->request('GET', 'export_ringkasan_opd/' . $kode_ukerja . '/' . (int)$filter_bln . '/' . $filter_thn.'/true');
+      $response = $client->request('GET', 'export_ringkasan_opd/' . $kode_ukerja . '/' . $filter_bln . '/' . $filter_thn.'/true');
       //using response
       $code = $response->getStatusCode();
       $reason = $response->getReasonPhrase();
       $body = json_decode($response->getBody());
+      //var_dump($body);
       if ($code == '200') {
         //jika sukses
         if ($body->success) {
@@ -196,12 +197,12 @@ class Presensi extends MY_Controller
                 "potongan_persen" => $persen_potongan,
                 "last_update" => date("Y-m-d H:i:s"),
               );
-              /* $message = "NIP : " . $value->pegawai->nip;
-              if (isset($arr_data_presensi[$data_presensi["nip"]])) {
-                $message .= "Array Index " . $data_presensi["nip"] . " is NOT EXIST <br>";
-              } else {
-                $message .= "Array Index " . $data_presensi["nip"] . " is NOT EXIST <br>";
-              } */
+              // $message = "NIP : " . $value->pegawai->nip;
+              // if (isset($arr_data_presensi[$data_presensi["nip"]])) {
+              //   $message .= "Array Index " . $data_presensi["nip"] . " is NOT EXIST <br>";
+              // } else {
+              //   $message .= "Array Index " . $data_presensi["nip"] . " is NOT EXIST <br>";
+              // } 
               //echo $message;
               //cek riwayat presensi
               //$q_cek_presensi = $this->db->where(["nip" => $data_presensi["nip"], "tahun" => $tahun, "bulan" => (int)$bulan])->get("r_data_presensi");
