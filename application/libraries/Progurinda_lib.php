@@ -184,7 +184,7 @@ class Progurinda_lib
           tgl_pensiun date
          )");
                 
-         $CI->db->query("INSERT INTO ".$name_temp_pegawai_pensiun." SELECT ".$name_temp_pegawai_jab.".nip,f_get_tgl_pensiun( m_pegawai.tgl_lahir, m_jab.jns_jab, m_pegawai.kode_gol, m_pegawai.kode_eselon,m_pegawai.sk_jabfung)
+         $CI->db->query("INSERT INTO ".$name_temp_pegawai_pensiun." SELECT ".$name_temp_pegawai_jab.".nip,f_get_tgl_pensiun( m_pegawai.tgl_lahir, m_jab.jns_jab, m_pegawai.kode_gol, m_pegawai.kode_eselon,m_pegawai.sk_jabfung) 
          FROM ".$name_temp_pegawai_jab." JOIN m_pegawai ON m_pegawai.nip = ".$name_temp_pegawai_jab.".nip 
          JOIN m_jab ON m_pegawai.kode_ukerja = m_jab.kode_ukerja AND m_pegawai.kode_jab = m_jab.kode_jab"); 
          
