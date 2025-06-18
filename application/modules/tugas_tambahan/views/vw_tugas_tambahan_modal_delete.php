@@ -40,7 +40,7 @@
             <tr>
               <td style="min-width: 120px;">Tugas Tambahan</td>
               <td style="min-width: 10px;">:</td>
-              <td style="width: 100%;"><?= $data['kode_tgs_tambahan'] ?></td>
+              <td style="width: 100%;"><?= $data['ket_tugas_tambahan'] ?></td>
             </tr>
             <tr>
               <td style="min-width: 120px;">Tgl Mulai Tugas Tambahan</td>

@@ -64,13 +64,6 @@
 
           <form id="form_arsip_tpp" action="<?= site_url('laporan/get_jurnal_bulanan'); ?>" method="POST" enctype="multipart/form-data">
             <div class="row mb-4">
-              <div class="col-12 mb-2">
-                <!-- Unit Kerja -->
-                <label for="select_ukerja">Unit Kerja :</label>
-                <select type="text" name="select_ukerja" class="form-select form-select-sm" style="width:100%" id="select_ukerja" value="">
-                </select>
-              </div>
-
               <div class="col-6">
                 <!-- Bulan -->
                 <label for="bulan">Masa TPP :</label>
@@ -87,7 +80,7 @@
                   <option value="9">September</option>
                   <option value="10">Oktober</option>
                   <option value="11">November</option>
-                  <option value="12">Desember</option>
+                  <option value="12" selected>Desember</option>
                 </select>
               </div>
               <div class="col-6">
@@ -95,16 +88,14 @@
                 <label for="tahun">Tahun :</label>
                 <select type="text" name="tahun" class="form-select form-select-sm" style="width:100%" id="tahun" value="">
                   <option selected>- - - Pilih Tahun - - - </option>
-                  <option value="2021">2021</option>
-                  <option value="2022">2022</option>
-                  <option value="2023">2023</option>
+                  <option value="2023" selected>2023</option>
                 </select>
               </div>
             </div>
             <!-- Button export file -->
-            <button id="btn_export_file" class="btn btn-sm btn-success me-2" type="submit" form="form_arsip_tpp">
+            <!-- <button id="btn_export_file" class="btn btn-sm btn-success me-2" type="submit" form="form_arsip_tpp">
               <i class="fas fa-upload me-2"></i>Buat Arsip
-            </button>
+            </button> -->
 
             <!-- <button id="btn_export_file" class="btn btn-sm btn-success me-2" type="submit" form="form_jurnal_bulanan">
               <i class="fas fa-upload me-2"></i>Export File Jurnal
@@ -128,9 +119,7 @@
                   <th style="width: 15%;">Aksi</th>
                 </tr>
               </thead>
-
               <tbody style="font-size: 11px;"></tbody>
-
             </table>
           </div>
         </div>
@@ -138,7 +127,6 @@
     </div>
   </div>
 </div>
-
 <div class="toast_container"></div>
 
 <!-- -------------------------------------------------------------- -->
@@ -146,7 +134,7 @@
 <!-- -------------------------------------------------------------- -->
 
 <script>
-  var urlDatatable = "<?= site_url('laporan/datalist') ?>";
+  var urlDatatable = "<?= site_url('dashboard/get_data_list') ?>";
   var init_btn_add = false;
   var tabel_arsip_tpp = $("#table_arsip_tpp").DataTable({
     responsive: true,
@@ -182,36 +170,32 @@
     },
     /* Sesuaikan jumlah kolom dengan id table yang digunakan */
     columns: [
-    //   {
-    //     data: no,
-    //     orderable: false,
-    //     className: 'vam',
-    //     createdCell: function(td, cellData, rowData, row, col) {
-    //       $(td).html('<div class="text-center">' + cellData + '</div>');
-    //     },
-    //   },
       {
         data: 'ket_ukerja',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
+          $(td).html('<div><b>' + cellData + '</b></div>');
         },
       },
       {
-        data: 'bulan',
+        data: 'tgl_arsip',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-end">' + cellData + '</div>');
+          $(td).html('<div>' + cellData + '</div>');
         },
       },
       {
-        data: 'tahun',
+        data: 'status',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-end">' + cellData + '</div>');
+          var keterangan = "<div class='btn btn-success'><b>Sudah</b></div>";
+          if (cellData == 0){
+            keterangan = "<div class='btn btn-danger'><b>Belum</b></div>";
+          }
+          $(td).html('<div class="text-center">' + keterangan + '</div>');
         },
       },
       {

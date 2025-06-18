@@ -39,6 +39,9 @@
 <script>
   $('#form-login').validate($.extend({
     submitHandler: function(form, event) {
+      // declare element that will be affected
+      // by every state of the form submission
+      // right here
       var msgc = $('#msgbox-container');
       var msg = $('#msgbox');
       var submit = $('[type="submit"]');
@@ -47,22 +50,27 @@
       $(form).ajaxSubmit({
         success: function(e) {
           if (e.status) {
-            // tampilkan feedback
+            // what to do when the response status = true
             msgc.removeClass('d-none');
             msg.removeClass('alert-danger');
             msg.addClass('alert-success');
             msg.html(e.message);
             setTimeout(() => {
-              window.location.href = '<?= site_url('mapel_guru') ?>';
+              window.location.href = '<?= site_url('portal') ?>';
             }, 2000);
           } else {
-            // tampilkan feedback
+            // what to do when the response status = false
             msgc.removeClass('d-none');
             msg.removeClass('alert-success');
             msg.addClass('alert-danger');
             msg.html(e.message);
             submit.attr('disabled', false);
           }
+        },
+        error: function(xhr, status, error) {
+          show_notify('error', error);
+          console.error(error);
+          submit.attr('disabled', false);
         },
         dataType: 'json'
       });
@@ -76,8 +84,16 @@
         minlength: 6
       }
     },
-    errorClass: 'is-invalid',
-    validClass: 'is-valid',
+    errorClass: 'mv-error',
+    validClass: 'mv-valid',
+    /* if there's select2 element, please use this errorPlacement */
+    errorPlacement: function(error, element) {
+      if (element.hasClass('select2') && element.next('.select2-container').length) {
+        error.insertAfter(element.next('.select2-container'));
+      } else {
+        error.insertAfter(element);
+      }
+    },
     messages: {
       username: {
         required: "Username tidak boleh kosong!",
@@ -88,4 +104,56 @@
       }
     },
   }));
+
+  // $('#form-login').validate($.extend({
+  //   submitHandler: function(form, event) {
+  //     var msgc = $('#msgbox-container');
+  //     var msg = $('#msgbox');
+  //     var submit = $('[type="submit"]');
+  //     // declare button submit disabling right here if needed
+  //     submit.attr('disabled', true);
+  //     $(form).ajaxSubmit({
+  //       success: function(e) {
+  //         if (e.status) {
+  //           // tampilkan feedback
+  //           msgc.removeClass('d-none');
+  //           msg.removeClass('alert-danger');
+  //           msg.addClass('alert-success');
+  //           msg.html(e.message);
+  //           setTimeout(() => {
+  //             window.location.href = '<?= site_url('mapel_guru') ?>';
+  //           }, 2000);
+  //         } else {
+  //           // tampilkan feedback
+  //           msgc.removeClass('d-none');
+  //           msg.removeClass('alert-success');
+  //           msg.addClass('alert-danger');
+  //           msg.html(e.message);
+  //           submit.attr('disabled', false);
+  //         }
+  //       },
+  //       dataType: 'json'
+  //     });
+  //   },
+  //   rules: {
+  //     username: {
+  //       required: true
+  //     },
+  //     password: {
+  //       required: true,
+  //       minlength: 6
+  //     }
+  //   },
+  //   errorClass: 'is-invalid',
+  //   validClass: 'is-valid',
+  //   messages: {
+  //     username: {
+  //       required: "Username tidak boleh kosong!",
+  //     },
+  //     password: {
+  //       required: "Password tidak boleh kosong!",
+  //       minlength: "Password minimal 6 karakter!"
+  //     }
+  //   },
+  // }));
 </script>

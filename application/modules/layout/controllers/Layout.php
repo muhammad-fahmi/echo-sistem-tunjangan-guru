@@ -39,6 +39,16 @@ class Layout extends MY_Controller
     }
   }
 
+  public function portal_menu($data = null)
+  {
+    $new_data = $this->data_check($data);
+    if ($new_data) {
+      $this->load->view('vw_portal_menu', $new_data);
+    } else {
+      show_404();
+    }
+  }
+
   public function frontend($data = null)
   {
     $new_data = $this->data_check($data);

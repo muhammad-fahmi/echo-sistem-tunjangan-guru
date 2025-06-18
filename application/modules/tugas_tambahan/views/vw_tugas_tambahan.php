@@ -145,7 +145,7 @@
         },
       },
       {
-        data: 'nama',
+        data: 'nama_lengkap',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -189,7 +189,12 @@
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-end">' + cellData + '</div>');
+          if (cellData == "0000-00-00"){
+            $(td).html('<div class="text-end"> - </div>');
+          }else{
+            $(td).html('<div class="text-end">' + cellData + '</div>');
+          }
+          
         },
       },
       {

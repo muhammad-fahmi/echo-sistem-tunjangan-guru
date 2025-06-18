@@ -34,19 +34,22 @@ class Mdl_jurnal_mengajar extends CI_Model
     // lakukan filtering data
     // deklarasi where condition
     $where_search = (isset_nn_nes($data['search']))
-      ? "WHERE (ket_jab LIKE '%$data[search]%' 
+      ? " AND (ket_jab LIKE '%$data[search]%' 
       OR jam_mengajar LIKE '%$data[search]%'
-      OR nip LIKE '$data[search]%')"
+      OR nip LIKE '$data[search]%') "
       : "";
-
+    $where_unit_kerja = "";
+    $kode_unit_kerja = $this->session->userdata("kode_unor");
+    $where_periode = "WHERE v_progurinda_jurnal_mengajar.bulan = ".$data['filter_bln']." AND v_progurinda_jurnal_mengajar.tahun = ".$data['filter_thn']." ";
+    $where_unit_kerja = " AND v_progurinda_jurnal_mengajar.kode_instansi LIKE '".$kode_unit_kerja."%' ";
     /* kalau ada tambahan where condition bisa add lagi di atas */
     // deklarasi query yang digunakan
     $query_result = $this->db->query("SELECT * FROM v_progurinda_jurnal_mengajar
-      $where_search
+      $where_periode $where_unit_kerja $where_search 
       ORDER BY $data[order_column] $data[order_sort]
       LIMIT $data[start], $data[length]");
     $query_total = $this->db->query("SELECT * FROM v_progurinda_jurnal_mengajar 
-      $where_search");
+       $where_periode $where_unit_kerja $where_search");
     // cari total hasil
     $total_count = $query_total->num_rows();
     // cari data result + penomoran
@@ -66,7 +69,7 @@ class Mdl_jurnal_mengajar extends CI_Model
       $data_result[$index]['bulan'] = isset_nn_nes($row['bulan'], '-');
       $data_result[$index]['tahun'] = isset_nn_nes($row['tahun'], '-');
       $data_result[$index]['jam_mengajar'] = isset_nn_nes($row['jam_mengajar'], '-');
-      $data_result[$index]['id'] = to_rp(isset_nn_nes($row['id'], '-'), false);
+      $data_result[$index]['id'] =$row['id'];
       $no += 1;
       $index += 1;
     }

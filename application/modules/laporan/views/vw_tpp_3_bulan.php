@@ -62,45 +62,56 @@
         <div class="card-body">
           <h4 class="card-title">Laporan TPP Per 3 Bulan</h4>
 
-          <form id="form_tpp_triwulan" action="<?= site_url('laporan/get_tpp_triwulan'); ?>" method="POST" enctype="multipart/form-data">
-            <div class="row mb-4">
-              <div class="col-12 mb-2">
-                <!-- Unit Kerja -->
-                <label for="select_ukerja">Unit Kerja :</label>
-                <select type="text" name="select_ukerja" class="form-select form-select-sm" style="width:100%" id="select_ukerja" value="">
-                </select>
-              </div>
+          <div class="row mb-4">
 
-              <div class="col-6">
-                <!-- Triwulan -->
-                <label for="triwulan">Triwulan ke :</label>
-                <select type="text" name="triwulan" class="form-select form-select-sm" style="width:100%" id="triwulan" value="">
-                  <option selected>- - - Pilih Triwulan - - -</option>
-                  <option value="1">I - (JANUARI-MARET)</option>
-                  <option value="2">II - (APRIL-JUNI)</option>
-                  <option value="3">III - (JULI-SEPTEMBER)</option>
-                  <option value="4">IV - (OKTOBER-DESEMBER)</option>
-                </select>
-              </div>
-              <div class="col-6">
-                <!-- Tahun -->
-                <label for="tahun">Tahun :</label>
-                <select type="text" name="tahun" class="form-select form-select-sm" style="width:100%" id="tahun" value="">
-                  <option selected>- - - Pilih Tahun - - - </option>
-                  <option value="2021">2021</option>
-                  <option value="2022">2022</option>
-                  <option value="2023">2023</option>
-                </select>
-              </div>
+            <div class="col-12 mb-2">
+              <!-- Unit Kerja -->
+              <label for="select_ukerja">Unit Kerja :</label>
+              <select type="text" name="select_ukerja" class="form-select form-select-sm" style="width:100%" id="select_ukerja" value="">
+                <option value="<?= $this->session->userdata("kode_unor") ?>"><?= $this->session->userdata("ket_unor"); ?></option>
+              </select>
             </div>
-            <!-- Button export file -->
-            <a href="<?= site_url('laporan/generate_pdf_tpp_triwulan'); ?>" id="btn_export_file" class="btn btn-sm btn-success me-2" type="button">
-              <i class="fas fa-upload me-2"></i>Export Laporan TPP
-            </a>
-            <!-- <button id="btn_export_file" class="btn btn-sm btn-success me-2" type="submit" form="form_jurnal_bulanan">
+
+            <div class="col-6">
+              <!-- Triwulan -->
+              <label for="triwulan">Triwulan ke :</label>
+              <select type="text" name="triwulan" class="form-select form-select-sm" style="width:100%" id="triwulan">
+                <option value="" default selected>- Pilih Triwulan -</option>
+                <option value="1">I - (JANUARI-MARET)</option>
+                <option value="2">II - (APRIL-JUNI)</option>
+                <option value="3">III - (JULI-SEPTEMBER)</option>
+                <option value="4">IV - (OKTOBER-DESEMBER)</option>
+              </select>
+            </div>
+
+            <div class="col-6">
+              <!-- Tahun -->
+              <label for="tahun">Tahun :</label>
+              <select type="text" name="tahun" class="form-select form-select-sm" style="width:100%" id="tahun">
+                <option value="" default selected>- Pilih Tahun -</option>
+                <?php
+                $year = (int)em_date('Y');
+                for ($i = $year; $i >= 2023; $i--) {
+                  echo '<option value="' . $i . '">' . $i . '</option>';
+                }
+                ?>
+              </select>
+            </div>
+
+          </div>
+          <!-- <button class="btn btn-primary" onclick="generate_tabel_tpp_triwulan()" id="gen_table"><i class="fa-solid fa-rotate-right"></i> Tampilkan </button> -->
+          <!-- Button export file -->
+          <a href="<?= site_url('laporan/cetak_ttp_3_bln'); ?>" target="_blank" id="btn_export_file" class="btn btn-sm btn-success me-2 disabled" type="button">
+            <i class="fas fa-upload me-2"></i>Export Laporan TPP Per Triwulan
+          </a>
+
+          <!-- Button export file rekapitulasi (TESTING) -->
+          <a href="<?= site_url('laporan/cetak_rekapitulasi_mengajar'); ?>" target="_blank" id="btn_export_rekapitulasi_file" class="btn btn-sm btn-primary me-2 disabled d-none" type="button">
+            <i class="fas fa-upload me-2"></i>Export Laporan Rekapitulasi Jurnal Mengajar
+          </a>
+          <!-- <button id="btn_export_file" class="btn btn-sm btn-success me-2" type="submit" form="form_jurnal_bulanan">
               <i class="fas fa-upload me-2"></i>Export File Jurnal
             </button> -->
-          </form>
 
           <div class="table-responsive mt-4">
 
@@ -112,21 +123,18 @@
 
               <thead class="bg-info text-white">
                 <tr class="text-center">
-                  <th>Nama</th>
-                  <th>NIP</th>
+                  <th>NIP/Nama</th>
                   <th>Gol</th>
                   <th>Jabatan</th>
-                  <th>Unit Kerja</th>
-                  <th>Insentif</th>
-                  <th>Bulan</th>
+                  <th>TPP/Bulan</th>
+                  <th>Jumlah Bulan</th>
                   <th>Jumlah Kotor</th>
                   <th>Jumlah PPh 5%</th>
                   <th>Jumlah PPh 15%</th>
                   <th>Jumlah INFAQ 2,5%</th>
                   <th>Jumlah Bersih</th>
-                  <th>No Rekening</th>
-                  <th>NIK</th>
-                  <th>NPWP</th>
+
+                  <!-- <th>Aksi</th> -->
                 </tr>
               </thead>
 
@@ -147,146 +155,133 @@
 <!-- -------------------------------------------------------------- -->
 
 <script>
-  var urlDatatable = "<?= site_url('laporan/datalist') ?>";
-  var init_btn_export = false;
-  var tabel_tpp_3_bulan = $("#table_tpp_3_bulan").DataTable({
-    responsive: true,
-    processing: true,
-    serverSide: true,
-    orderCellsTop: true,
-    // scrollX: true,
-    dom: '<"row g-1"' +
-      '<"col-12 col-sm-6 init_btn_container"><"col-12 col-sm-6 vam"f>' +
-      '<"col-12"tr>' +
-      '<"col-12 col-sm-6"li><"col-12 col-sm-6"p>' +
-      '>',
-    /* set kolom yang di sortir secara default */
-    order: [
-      [0, "asc"],
-    ],
-    /* set placeholder dari input search */
-    language: {
-      searchPlaceholder: "Keyword"
-    },
+  $('#select_ukerja').select2({
+    allowClear: true,
+    placeholder: 'Pilih Unit Kerja.',
+    //dropdownParent: $('#whole_modal_id .modal-content'),
     ajax: {
-      url: urlDatatable,
-      /* parameter yang dikirimkan ke controller */
-      data: {
-        param1: function() {
-          return $('#id_atau_class_element').val();
-        },
-      },
       type: 'POST',
-      beforeSend: function() {
-        // lakukan sesuatu sebelum mulai ajax process
-        $('.loading_tabel_tpp_3_bulan').addClass('show');
+      dataType: 'json',
+      url: '<?= site_url('config/select2_instansi') ?>',
+      delay: 800,
+      /* delay before sending ajax request */
+      data: function(params) {
+        return {
+          search: params.term,
+          aktif: "Y"
+        }
       },
-    },
-    /* Sesuaikan jumlah kolom dengan id table yang digunakan */
-    columns: [{
-        data: 'nip',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-start">' + cellData + '</div>');
-        },
+      processResults: function(data) {
+        return {
+          results: data
+        };
       },
-      {
-        data: 'kode_jab',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-start">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'kode_ukerja',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'bulan',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'tahun',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'jam_mengajar',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'kode_instansi',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'jns_jab',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'ket_jab',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'ket_uorg',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'ket_ukerja',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-    ],
-    /* Lakukan fungsi callback pada bracket ini */
-    drawCallback: function(settings) {
-      /* gunakan code ini utk mengambil data response ke dalam drawCallback */
-      let api = this.api();
-      let json = api.ajax.json();
-      if (json.status == false) {
-        /* jalankan apabila return false */
-      }
-      /* parameter callback untuk kostumisasi fungsi */
-      $('.loading_tabel_tpp_3_bulan').removeClass('show');
     }
+  }).on('select2:select', function(e) {
+    // what to do when option selected
+    reload_table();
+    btn_cetak_handler();
+    console.log(e);
+
+  }).on('select2:close', function(e) {
+    // what to do when selection closed
+  }).on('select2:clear', function(e) {
+    // what to do when clearing (only if allowClear: true)
+    selected_kewenangan = '';
+    btn_cetak_handler();
   });
+
+
+  var init_btn_export = false;
+
+  function generate_tabel_tpp_triwulan() {
+    var urlDatatable = "<?= site_url('laporan/tpp_3_bln_datalist') ?>";
+    var triwulan = $("[name=triwulan]").val();
+    var thn_filter = $("[name=tahun]").val();
+    var select_ukerja = $("[name=select_ukerja]").val();
+    $("#gen_table").prop("disabled", true);
+    $("#gen_table").html(" . . . Proses tabel");
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: {
+        triwulan: triwulan,
+        tahun: tahun,
+        kode_ukerja: kode_ukerja
+      },
+      success: function(res) {
+        $("#gen_table").prop("disabled", false);
+        $("#gen_table").html("Tampilkan");
+        $("#tabel-body").html(res);
+      }
+    });
+  }
 
   /* fungsi untuk reload datatable ajax */
   function reload_table() {
     tabel_tpp_3_bulan.ajax.reload();
   }
+
+  function btn_cetak_handler() {
+    let val_ukerja = '';
+    let val_tahun = '';
+    let val_triwulan = '';
+    let link_export = $('#btn_export_file');
+    let url = '#';
+
+    val_ukerja = $('[name="select_ukerja"]').val();
+    val_triwulan = $('[name="triwulan"]').val();
+    val_tahun = $('[name="tahun"]').val();
+
+    if (val_ukerja != '' && val_triwulan != '' && val_tahun != '') {
+      link_export.removeClass('disabled');
+      url = '<?= site_url('laporan/cetak_ttp_3_bln') ?>/' + val_ukerja + '/' + val_triwulan + '/' + val_tahun;
+      console.log('url retrieved: ' + url);
+    } else {
+      link_export.addClass('disabled');
+      $url = '#';
+    }
+
+    link_export.attr('href', url);
+    console.log('btn_cetak_handler running');
+  }
+
+  function btn_cetak_rekapitulasi_handler() {
+    let val_ukerja = '';
+    let val_tahun = '';
+    let val_triwulan = '';
+    let link_export = $('#btn_export_rekapitulasi_file');
+    let url = '#';
+
+    val_ukerja = $('[name="select_ukerja"]').val();
+    val_triwulan = $('[name="triwulan"]').val();
+    val_tahun = $('[name="tahun"]').val();
+
+    if (val_ukerja != '' && val_triwulan != '' && val_tahun != '') {
+      link_export.removeClass('disabled');
+      url = '<?= site_url('laporan/cetak_rekapitulasi_mengajar') ?>/' + val_ukerja + '/' + val_triwulan + '/' + val_tahun;
+      console.log('url retrieved: ' + url);
+    } else {
+      link_export.addClass('disabled');
+      $url = '#';
+    }
+
+    link_export.attr('href', url);
+    console.log('btn_cetak_rekapitulasi_handler running');
+  }
+
+  $('[name="triwulan"]').on('change', function() {
+    btn_cetak_handler();
+    btn_cetak_rekapitulasi_handler();
+  });
+
+  $('[name="tahun"]').on('change', function() {
+    btn_cetak_handler();
+    btn_cetak_rekapitulasi_handler();
+  });
+
+  setTimeout(() => {
+    btn_cetak_handler();
+    btn_cetak_rekapitulasi_handler();
+  }, 50);
 </script>

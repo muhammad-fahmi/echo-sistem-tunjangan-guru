@@ -117,7 +117,7 @@ class Config extends MY_Controller
   public function select2_instansi()
   {
     //session userdata
-    $session_ukerja = $this->session->userdata("kode_ukerja");
+    $session_ukerja = $this->session->userdata("kode_unor");
     $session_kewenangan = $this->session->userdata("kewenangan");
     // ambil data post
     $search = $this->input->post('search');
@@ -125,13 +125,13 @@ class Config extends MY_Controller
     //kondisi apakah menampilkan yang aktif saja
     $aktif = ($this->input->post('aktif') != "Y") ? "" : " AND s_ukerja = '-1' ";
     // kondisi where
-    $where_search = ($search != '') ? "AND (ket_ukerja LIKE '%$search%' OR kode_ukerja LIKE '%$search%' OR ket_uorg LIKE '%$search%')" : "";
-    $where_admin = ($session_kewenangan != '00') ? "AND kode_ukerja = kode_instansi AND (LEFT(kode_instansi," . strlen($session_ukerja) . ") = '" . $session_ukerja . "' OR unit_kepeg = '" . $session_ukerja . "') " : "AND kode_ukerja = kode_instansi";
+    $where_search = ($search != '') ? "AND (ket_ukerja LIKE '%$search%' OR kode_ukerja LIKE '%$search%' OR ket_uorg LIKE '%$search%' OR kode_ukerja LIKE '%$search%')" : "";
+    $where_admin = ($session_kewenangan != '00') ? "AND kode_ukerja = kode_instansi AND (LEFT(kode_instansi," . strlen($session_ukerja) . ") = '" . $session_ukerja . "' OR unit_kepeg = '" . $session_ukerja . "') AND (kode_ukerja LIKE '69710328%' OR kode_ukerja LIKE '69710345%')" : "AND kode_ukerja = kode_instansi AND (kode_ukerja LIKE '69710328%' OR kode_ukerja LIKE '69710345%')";
     // query searching
     $result = $this->db->query("SELECT * FROM v_ukerja 
       WHERE kode_ukerja IS NOT NULL $where_admin $aktif $where_search 
       ORDER BY kode_instansi ASC 
-      LIMIT 10")->result_array();
+      LIMIT 20")->result_array();
     $data = array();
     $index = 0;
     if (isset_nn_nes($result)) {
@@ -148,6 +148,8 @@ class Config extends MY_Controller
       ->set_content_type('application/json')
       ->set_output(json_encode($data));
   }
+
+
 
   public function select2_shift()
   {
@@ -193,16 +195,16 @@ class Config extends MY_Controller
     $where_aktif = "";
     $where_instansi = "";
     if ($this->session->userdata("kewenangan") != "00") {
-      $kode_instansi = $this->session->userdata("kode_instansi");
+      $kode_instansi = $this->session->userdata("kode_unor");
       $where_instansi = " AND (kode_instansi LIKE '" . $kode_instansi . "%' OR unit_kepeg LIKE '" . $kode_instansi . "%') ";
     } else {
       $kode_instansi = (isset_nn_nes($kode_instansi))
         ? $kode_instansi
-        : $this->session->userdata("kode_instansi");
+        : $this->session->userdata("kode_unor");
       $where_instansi = " AND (kode_instansi LIKE '" . $kode_instansi . "%' OR unit_kepeg LIKE '" . $kode_instansi . "%')";
     }
     // query searching
-    $result = $this->db->query("SELECT nip, nama_lengkap, kode_ukerja, ket_ukerja FROM v_pns 
+    $result = $this->db->query("SELECT nip, nama_lengkap, kode_ukerja,kode_jab,ket_jab, ket_ukerja FROM v_pns 
       WHERE nip IS NOT NULL $where_search $where_aktif $where_instansi 
       ORDER BY 'nip' ASC 
       LIMIT 10")->result_array();
@@ -214,8 +216,11 @@ class Config extends MY_Controller
         $nama_lengkap = trim($r['nama_lengkap']);
         $data[$index]['id'] = $nip;
         $data[$index]['text'] = "$nip - $nama_lengkap";
-        $data[$index]['kode_ukerja'] = $r['kode_ukerja'];
+        $data[$index]['ket_jab'] = $r['ket_jab'];
+        $data[$index]['kode_jab'] = $r['kode_jab'];
         $data[$index]['ket_ukerja'] = $r['ket_ukerja'];
+        $data[$index]['kode_ukerja'] = $r['kode_ukerja'];
+        $data[$index]['nama_lengkap'] = $r['nama_lengkap'];
         $index++;
       }
     } else {
@@ -242,7 +247,7 @@ class Config extends MY_Controller
     } else {
       $kode_instansi = (isset_nn_nes($kode_instansi))
         ? $kode_instansi
-        : $this->session->userdata("kode_instansi");
+        : $this->session->userdata("kode_unor");
       $where_instansi = " AND (kode_instansi LIKE '" . $kode_instansi . "%' OR unit_kepeg LIKE '" . $kode_instansi . "%')";
     }
     // query searching

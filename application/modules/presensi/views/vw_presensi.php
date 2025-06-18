@@ -11,39 +11,6 @@
       <li class="breadcrumb-item active">Daftar Presensi Guru</li>
     </ol>
   </div>
-
-  <!-- <div class="col-md-8 col-12 align-self-center d-none d-md-block">
-    <div class="d-flex mt-2 justify-content-end">
-      <div class="d-flex me-3 ms-2">
-        <div class="chart-text me-2">
-          <h6 class="mb-0"><small>Pagu Anggaran</small></h6>
-          <h4 class="mt-0 text-info"><?= to_rp($data['anggaran']) ?></h4>
-        </div>
-        <div class="spark-chart">
-          <div id="monthchart"></div>
-        </div>
-      </div>
-      <div class="d-flex ms-2">
-        <div class="chart-text me-2">
-          <h6 class="mb-0"><small>Realisasi</small></h6>
-          <h4 class="mt-0 text-primary"><?= to_rp($data['real_keu']) ?></h4>
-        </div>
-        <div class="spark-chart">
-          <div id="lastmonthchart"></div>
-        </div>
-      </div>
-      <div class="d-flex ms-2">
-        <div class="chart-text me-2">
-          <h6 class="mb-0"><small>Fisik</small></h6>
-          <h4 class="mt-0 text-success"><?= to_rp($data['real_fisik'], false) ?>%</h4>
-        </div>
-        <div class="spark-chart">
-          <div id="nextmonthchart"></div>
-        </div>
-      </div>
-    </div>
-  </div> -->
-
 </div>
 <!-- ============================================================== -->
 <!-- End Bread crumb and right sidebar toggle -->
@@ -63,50 +30,47 @@
           <h4 class="card-title">Daftar Presensi Guru</h4>
 
           <!-- Form untuk get data presensi pegawai -->
-          <form id="formPresensi" action="<?= site_url('presensi/get_presensi'); ?>" method="POST" enctype="multipart/form-data">
+          <!--<form id="formPresensi" action="<?= site_url('presensi/get_presensi'); ?>" method="POST" enctype="multipart/form-data"> -->
             <div class="row mb-4">
               <div class="col-12 mb-2">
                 <!-- Unit Kerja -->
                 <label for="select_ukerja">Unit Kerja :</label>
-                <select type="text" name="select_ukerja" class="form-select form-select-sm" style="width:100%" id="select_ukerja" value="">
+                <select type="text" name="select_ukerja" class="form-select form-select-sm" style="width:100%" id="select_ukerja">
+                <option value="<?= $this->session->userdata("kode_unor"); ?>"><?= $this->session->userdata("ket_unor"); ?></option>
                 </select>
               </div>
 
               <div class="col-6">
                 <!-- Bulan -->
                 <label for="bulan">Bulan :</label>
-                <select type="text" name="bulan" class="form-select form-select-sm" style="width:100%" id="bulan" value="">
-                  <option selected>- - - Pilih Bulan - - -</option>
-                  <option value="1">Januari</option>
-                  <option value="2">Februari</option>
-                  <option value="3">Maret</option>
-                  <option value="4">April</option>
-                  <option value="5">Mei</option>
-                  <option value="6">Juni</option>
-                  <option value="7">Juli</option>
-                  <option value="8">Agustus</option>
-                  <option value="9">September</option>
-                  <option value="10">Oktober</option>
-                  <option value="11">November</option>
-                  <option value="12">Desember</option>
+                <select type="text" name="filter_bln" class="form-select form-select-sm" style="width:100%" id="filter_bln" >
+                  <?php 
+                  $bln_now = date("m");
+                  for($i = 1;$i <= 12;$i++){
+                    $kode_bulan = ($i < 10) ? "0".$i : $i;
+                    $selected = ($kode_bulan == $bln_now) ? "selected" : "";
+                  ?>
+                    <option value="<?= $kode_bulan ?>" <?= $selected ?>><?= getBulan($i) ?></option>
+                  <?php } ?>
                 </select>
               </div>
               <div class="col-6">
                 <!-- Tahun -->
                 <label for="tahun">Tahun :</label>
-                <select type="text" name="tahun" class="form-select form-select-sm" style="width:100%" id="tahun" value="">
-                  <option selected>- - - Pilih Tahun - - - </option>
-                  <option value="2021">2021</option>
-                  <option value="2022">2022</option>
-                  <option value="2023">2023</option>
-                </select>
+                <select type="text" name="filter_thn" class="form-select form-select-sm" style="width:100%" id="filter_thn">
+                  <?php for($i = 2023;$i <= date("Y");$i++){ 
+                    $selected = ($i == date('Y')) ? "selected" : "";
+                    ?>
+                    <option value="<?= $i; ?>" <?= $selected; ?>><?= $i; ?></option>    
+                    <?php } ?>
+                  </select>
               </div>
             </div>
             <!-- Button integrasi presensi -->
-            <button id="cekPresensi" class="btn btn-sm btn-success me-2" type="submit" form="formPresensi">
+            <button id="cekPresensi" class="btn btn-sm btn-success me-2" onclick="modal_integrasi()">
               <i class="fas fa-sync me-2"></i>Integrasi Presensi
             </button>
-          </form>
+          <!-- </form> -->
 
           <div class="table-responsive mt-4">
 
@@ -122,15 +86,9 @@
                   <th>Nama</th>
                   <th>Jabatan</th>
                   <th>Unit Kerja</th>
-                  <th>Tahun</th>
-                  <th>Bulan</th>
-                  <th>Terlambat</th>
-                  <th>Pulang Cepat</th>
-                  <th>Tidak Hadir</th>
                   <th>Tidak Apel Pagi</th>
                   <th>% Potongan Kehadiran</th>
-                  <!-- <th>Mata Pelajaran yang diampu</th> -->
-                  <th>Aksi</th>
+                  <!-- <th>Aksi</th> -->
                 </tr>
               </thead>
 
@@ -151,6 +109,51 @@
 <!-- -------------------------------------------------------------- -->
 
 <script>
+  $('#select_ukerja').select2({
+    allowClear: true,
+    placeholder: 'Pilih Unit Kerja.',
+    //dropdownParent: $('#whole_modal_id .modal-content'),
+    ajax: {
+      type: 'POST',
+      dataType: 'json',
+      url: '<?= site_url('config/select2_instansi') ?>',
+      delay: 800,
+      /* delay before sending ajax request */
+      data: function(params) {
+        return {
+          search: params.term
+        }
+      },
+      processResults: function(data) {
+        return {
+          results: data
+        };
+      },
+    }
+  }).on('select2:select', function(e) {
+    // what to do when option selected
+    reload_table();
+    console.log(e);
+
+  }).on('select2:close', function(e) {
+    // what to do when selection closed
+  }).on('select2:clear', function(e) {
+    // what to do when clearing (only if allowClear: true)
+    selected_kewenangan = '';
+  });
+
+  $('[name=filter_bln]').change(function() {
+    //var data = e.params.data;
+    //console.log(data);
+    reload_table();
+  });
+  $('[name=filter_thn]').change(function() {
+    //var data = e.params.data;
+    //console.log(data);
+    reload_table();
+  });
+
+
   var urlDatatable = "<?= site_url('presensi/datalist') ?>";
   // var init_btn_add = false;
   var tabel_presensi = $("#table_presensi").DataTable({
@@ -164,9 +167,9 @@
       '<"col-12 col-sm-6"li><"col-12 col-sm-6"p>' +
       '>',
     /* set kolom yang di sortir secara default */
-    order: [
-      [0, "asc"],
-    ],
+    // order: [
+    //   ["nip", "asc"],
+    // ],
     /* set placeholder dari input search */
     language: {
       searchPlaceholder: "Keyword"
@@ -175,8 +178,14 @@
       url: urlDatatable,
       /* parameter yang dikirimkan ke controller */
       data: {
-        param1: function() {
-          return $('#id_atau_class_element').val();
+        kode_ukerja: function() {
+          return $('#select_ukerja').val();
+        },
+        filter_bln: function() {
+          return $('#filter_bln').val();
+        },
+        filter_thn: function() {
+          return $('#filter_thn').val();
         },
       },
       type: 'POST',
@@ -219,46 +228,6 @@
         },
       },
       {
-        data: 'tahun',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'bulan',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'terlambat',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'pulang_cepat',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'tidak_masuk',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        },
-      },
-      {
         data: 'tidak_apel',
         orderable: false,
         className: 'vam',
@@ -267,7 +236,7 @@
         },
       },
       {
-        data: 'potongan_persen_kehadiran',
+        data: 'potongan_persen',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -282,23 +251,23 @@
       //     $(td).html('<div class="text-end">' + cellData + '</div>');
       //   },
       // },
-      {
-        data: 'id',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          let id_entry = cellData;
-          let html_aksi = '<div class="btn-group">' + '<button type="button" class="btn btn-sm btn-light-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">' +
-            'Pilih' +
-            '</button>' +
-            '<ul class="dropdown-menu">' +
-            '<li><a class="dropdown-item" onclick="modal(`' + id_entry + '`, `edit_presensi`)" href="#"><i class="fas fa-edit me-1"></i>Edit</a></li>' +
-            '<li><a class="dropdown-item text-danger" onclick="modal(`' + id_entry + '`, `delete_presensi`)" href="#"><i class="fas fa-trash me-1"></i>Delete</a></li>' +
-            '</ul>' +
-            '</div>';
-          $(td).html('<div class="text-center">' + html_aksi + '</div>');
-        },
-      },
+      // {
+      //   data: 'id',
+      //   orderable: false,
+      //   className: 'vam',
+      //   createdCell: function(td, cellData, rowData, row, col) {
+      //     let id_entry = cellData;
+      //     let html_aksi = '<div class="btn-group">' + '<button type="button" class="btn btn-sm btn-light-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">' +
+      //       'Pilih' +
+      //       '</button>' +
+      //       '<ul class="dropdown-menu">' +
+      //       '<li><a class="dropdown-item" onclick="modal(`' + id_entry + '`, `edit_presensi`)" href="#"><i class="fas fa-edit me-1"></i>Edit</a></li>' +
+      //       '<li><a class="dropdown-item text-danger" onclick="modal(`' + id_entry + '`, `delete_presensi`)" href="#"><i class="fas fa-trash me-1"></i>Delete</a></li>' +
+      //       '</ul>' +
+      //       '</div>';
+      //     $(td).html('<div class="text-center">' + html_aksi + '</div>');
+      //   },
+      // },
     ],
     /* Lakukan fungsi callback pada bracket ini */
     drawCallback: function(settings) {
@@ -335,6 +304,24 @@
       data: {
         id: id,
         type: type
+      },
+      success: function(res) {
+        if (res.status) {
+          $("#modal_content_id").html(res.html).show();
+          $("#whole_modal_id").modal("show");
+        } else {
+          toaster('info', 'Unknown error on modal calls.\n- ' + res.message);
+        }
+      }
+    });
+  }
+
+  function modal_integrasi() {
+    var url = "<?= site_url('presensi/modal_integrasi') ?>";
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: {
       },
       success: function(res) {
         if (res.status) {

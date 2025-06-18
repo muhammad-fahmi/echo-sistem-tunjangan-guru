@@ -155,7 +155,7 @@
             <!-- ============================================================== -->
             <!-- Profile -->
             <!-- ============================================================== -->
-            <li class="nav-item dropdown">
+            <!-- <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle waves-effect waves-dark" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img src="<?= base_url("theme/assets/images/users/1.jpg") ?>" alt="user" width="30" class="profile-pic rounded-circle" />
               </a>
@@ -184,10 +184,7 @@
                 </div>
                 <a class="dropdown-item" href="#"><i data-feather="user" class="feather-sm text-info me-1 ms-1"></i>
                   My Profile</a>
-                <!-- <a class="dropdown-item" href="#"><i data-feather="credit-card" class="feather-sm text-info me-1 ms-1"></i>
-                  My Balance</a> -->
-                <!-- <a class="dropdown-item" href="#"><i data-feather="mail" class="feather-sm text-success me-1 ms-1"></i>
-                  Inbox</a> -->
+               
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#"><i data-feather="settings" class="feather-sm text-warning me-1 ms-1"></i>
                   Account Setting</a>
@@ -195,11 +192,9 @@
                 <a class="dropdown-item" href="#"><i data-feather="log-out" class="feather-sm text-danger me-1 ms-1"></i>
                   Logout</a>
                 <div class="dropdown-divider"></div>
-                <!-- <div class="pl-4 p-2">
-                  <a href="#" class="btn d-block w-100 btn-info rounded-pill">View Profile</a>
-                </div> -->
+                
               </div>
-            </li>
+            </li> -->
           </ul>
         </div>
       </nav>
@@ -257,10 +252,13 @@
             <li class="nav-small-cap">
               <i class="mdi mdi-dots-horizontal"></i>
               <span class="hide-menu">Menu Sistem</span>
-            </li> 
-            <li class="sidebar-item">
-              <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("dashboard"); ?>" aria-expanded="false"><i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Dashboard Monitoring</span></a>
             </li>
+            <?php if ($this->session->userdata("kewenangan") == "00") { ?>
+              <li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("dashboard"); ?>" aria-expanded="false"><i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Dashboard Monitoring</span></a>
+              </li>
+            <?php } ?>
+
             <li class="sidebar-item">
               <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-settings"></i><span class="hide-menu">Setup</span></a>
               <ul aria-expanded="false" class="collapse first-level">
@@ -296,14 +294,19 @@
                       Jurnal Mengajar
                     </span></a>
                 </li>
+                <li class="sidebar-item">
+                  <a href="<?= site_url("pegawai_off"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
+                      Non Aktifkan Pegawai
+                    </span></a>
+                </li>
               </ul>
             </li>
             <li class="sidebar-item">
               <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("tpp_per_bulan") ?>" aria-expanded="false"><i class="mdi mdi-directions"></i><span class="hide-menu">List TPP Per Bulan</span></a>
             </li>
-            <li class="sidebar-item">
+            <!-- <li class="sidebar-item">
               <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("tpp_per_bulan") ?>" aria-expanded="false"><i class="mdi mdi-directions"></i><span class="hide-menu">Cuti</span></a>
-            </li>
+            </li> -->
             <li class="sidebar-item">
               <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-file-document"></i><span class="hide-menu">Laporan</span></a>
               <ul aria-expanded="false" class="collapse first-level">
@@ -312,11 +315,11 @@
                       TPP Per 3 Bulan
                     </span></a>
                 </li>
-                <li class="sidebar-item">
+                <!-- <li class="sidebar-item">
                   <a href="<?= site_url("laporan/jurnal_bulanan") ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
                       Jurnal Mengajar
                     </span></a>
-                </li>
+                </li> -->
               </ul>
             </li>
             <li class="sidebar-item">
@@ -380,15 +383,18 @@
       <div id="modal_content_id" class="modal-content">
       </div>
     </div>
-    <div class="modal fade" id="bs-modal-lg" tabindex="-1" aria-labelledby="bs-modal-lg" data-bs-focus="false" data-bs-backdrop="static" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div id="modal-content-lg" class="modal-content-lg">
+  </div>
 
-        </div>
-        <!-- /.modal-content -->
+  <div class="modal fade" id="bs-modal-lg" tabindex="-1" aria-labelledby="bs-modal-lg" data-bs-focus="false" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div id="modal-content-lg" class="modal-content-lg">
+
       </div>
-      <!-- /.modal-dialog -->
+      <!-- /.modal-content -->
     </div>
+    <!-- /.modal-dialog -->
+  </div>
+
 </body>
 
 </html>

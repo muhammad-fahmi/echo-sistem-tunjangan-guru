@@ -1,58 +1,63 @@
-<div class="row g-2">
-  <div class="col-12">
-    <form action="<?= site_url('user/add_user'); ?>" method="POST" id="add_user">
-      <div class="panel">
-        <div class="header space-between">
-          <div class="header">Tambah Data User</div>
-          <i class="fas fa-window-close float right clickable" data-bs-dismiss="modal"></i>
-        </div>
-        <div class="separator"></div>
-        <div class="body">
-          <div class="col-12 mb-1">
-            <label for="username">Username</label>
-            <input type="text" class="form-control form-control-sm" id="username" name="username" placeholder="Username untuk user baru">
-          </div>
-          <div class="col-12 mb-1">
-            <label for="password">Password</label>
-            <input type="password" class="form-control form-control-sm" id="password" name="password" placeholder="Password untuk user baru">
-          </div>
-          <div class="col-12 mb-1">
-            <label for="nama_lengkap">Nama Lengkap</label>
-            <input type="text" class="form-control form-control-sm" id="nama_lengkap" name="nama_lengkap" placeholder="Nama lengkap user baru">
-          </div>
-          <div class="col-12 mb-1">
-            <label for="kewenangan">Kewenangan</label>
-            <select type="text" class="form-select form-select-sm kewenangan select2" name="kewenangan" id="kewenangan">
-            </select>
-          </div>
-          <div class="col-12 mb-1">
-            <label for="kewenangan">Unit Kerja</label>
-            <select type="text" class="form-select form-select-sm ukerja select2" name="kode_ukerja" id="kode_ukerja">
-            </select>
-          </div>
-          <div class="col-12 mb-1">
-            <label for="no_hp">No. HP</label>
-            <input type="number" class="form-control form-control-sm" id="no_hp" name="no_hp" placeholder="No. hp user baru">
-          </div>
-          <div class="col-12 mb-1">
-            <div class="form-check">
-              <input class="form-check-input form-check-input-sm" type="checkbox" name="aktif" id="aktif">
-              <label class="form-check-label form-check-label-sm" for="aktif">
-                Aktif
-              </label>
-            </div>
-          </div>
-          <div class="mb-1"></div>
-        </div>
-        <div class="separator"></div>
-        <div class="body text-end">
-          <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-sm btn-primary">Tambah</button>
+<form action="<?= site_url('user/add_user'); ?>" method="POST" id="add_user">
+  <div class="modal-header d-flex align-items-center">
+    <div>
+      <h3 class="mb-0">Tambah Data User</h3>
+    </div>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+
+  <div class="modal-body">
+    <div class="row g-2">
+
+      <div class="col-12 mb-1">
+        <label for="username">Username</label>
+        <input type="text" class="form-control form-control-sm" id="id_user" name="id_user" placeholder="Username untuk user baru">
+      </div>
+      <div class="col-12 mb-1">
+        <label for="password">Password</label>
+        <input type="password" class="form-control form-control-sm" id="password" name="password" placeholder="Password untuk user baru">
+      </div>
+      <div class="col-12 mb-1">
+        <label for="nama_lengkap">Nama User / Nama Unit Kerja</label>
+        <input type="text" class="form-control form-control-sm" id="username" name="username" placeholder="Nama User Baru / Nama Unit Kerja">
+      </div>
+      <div class="col-12 mb-1">
+        <label for="kewenangan">Kewenangan</label>
+        <select type="text" class="form-select form-select-sm" name="kewenangan" id="kewenangan">
+          <option value="" default selected hidden>-- Pilih Kewenangan --</option>
+          <option value="00">Super Admin</option>
+          <option value="01">Administrator</option>
+          <option value="10">Admin OPD / Unit Kerja</option>
+        </select>
+      </div>
+      <div class="col-12 mb-1">
+        <label for="kewenangan">Unit Kerja</label>
+        <select type="text" class="form-select form-select-sm ukerja select2" name="kode_unor" id="kode_unor">
+        </select>
+      </div>
+      <div class="col-12 mb-1">
+        <label for="email_user">E-mail</label>
+        <input type="text" class="form-control form-control-sm" id="email_user" name="email_user" placeholder="E-mail aktif Anda / Unit Kerja">
+      </div>
+      <div class="col-12 mb-1">
+        <div class="form-check">
+          <input class="form-check-input form-check-input-sm" type="checkbox" name="aktif" id="aktif">
+          <label class="form-check-label form-check-label-sm" for="aktif">
+            Aktif
+          </label>
         </div>
       </div>
-    </form>
+
+    </div>
+    <!-- end of row -->
   </div>
-</div>
+  <!-- end of modal-body -->
+
+  <div class="modal-footer text-end">
+    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
+    <button type="submit" class="btn btn-sm btn-primary">Tambah</button>
+  </div>
+</form>
 
 <script>
   // select2 kewenangan
@@ -131,14 +136,18 @@
         success: function(e) {
           if (e.status) {
             // what to do when the response status = true
-            $('#my_modal').modal('hide');
-            $.notify('<b><i class="fas fa-check-square me-1"></i>Sukses!</b><br>' + e.message, 'success');
+            $('#whole_modal_id').modal('hide');
+            toaster('success', e.message);
             reload_table();
           } else {
             // what to do when the response status = false
             submit.attr('disabled', false);
-            $.notify('<b><i class="fas fa-exclamation-triangle me-1"></i>Gagal!</b><br>' + e.message, 'error');
+            toaster('danger', e.message);
           }
+        },
+        error: function(xhr, status, error) {
+          submit.attr('disabled', false);
+          toaster('danger', 'Maaf, terjadi kesalahan pada proses penyimpanan user baru. ' + error);
         },
         dataType: 'json'
       });

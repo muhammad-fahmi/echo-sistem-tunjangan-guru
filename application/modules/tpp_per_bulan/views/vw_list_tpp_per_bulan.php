@@ -11,39 +11,6 @@
       <li class="breadcrumb-item active">List TPP Per Bulan</li>
     </ol>
   </div>
-
-  <!-- <div class="col-md-8 col-12 align-self-center d-none d-md-block">
-    <div class="d-flex mt-2 justify-content-end">
-      <div class="d-flex me-3 ms-2">
-        <div class="chart-text me-2">
-          <h6 class="mb-0"><small>Pagu Anggaran</small></h6>
-          <h4 class="mt-0 text-info"><?= to_rp($data['anggaran']) ?></h4>
-        </div>
-        <div class="spark-chart">
-          <div id="monthchart"></div>
-        </div>
-      </div>
-      <div class="d-flex ms-2">
-        <div class="chart-text me-2">
-          <h6 class="mb-0"><small>Realisasi</small></h6>
-          <h4 class="mt-0 text-primary"><?= to_rp($data['real_keu']) ?></h4>
-        </div>
-        <div class="spark-chart">
-          <div id="lastmonthchart"></div>
-        </div>
-      </div>
-      <div class="d-flex ms-2">
-        <div class="chart-text me-2">
-          <h6 class="mb-0"><small>Fisik</small></h6>
-          <h4 class="mt-0 text-success"><?= to_rp($data['real_fisik'], false) ?>%</h4>
-        </div>
-        <div class="spark-chart">
-          <div id="nextmonthchart"></div>
-        </div>
-      </div>
-    </div>
-  </div> -->
-
 </div>
 <!-- ============================================================== -->
 <!-- End Bread crumb and right sidebar toggle -->
@@ -62,82 +29,90 @@
         <div class="card-body">
           <h4 class="card-title">List TPP Per Bulan</h4>
 
-          <form id="form_jurnal_bulanan" action="<?= site_url('tpp_per_bulan'); ?>" method="POST" enctype="multipart/form-data">
+          <!-- <form id="form_jurnal_bulanan" action="<?= site_url('tpp_per_bulan'); ?>" method="POST" enctype="multipart/form-data"> -->
             <div class="row mb-4">
               <div class="col-12 mb-2">
                 <!-- Unit Kerja -->
                 <label for="select_ukerja">Unit Kerja :</label>
-                <select type="text" name="select_ukerja" class="form-select form-select-sm" style="width:100%" id="select_ukerja" value="">
+                <select type="text" name="select_ukerja" class="form-select form-select-sm" style="width:100%" id="select_ukerja" >
+                <option value="<?= $this->session->userdata("kode_unor"); ?>"><?= $this->session->userdata("ket_unor"); ?></option>
                 </select>
               </div>
 
-              <div class="col-6">
+              <div class="col-3">
                 <!-- Triwulan -->
-                <label for="triwulan">Masa TPP :</label>
-                <select type="text" name="triwulan" class="form-select form-select-sm" style="width:100%" id="triwulan" value="">
-                  <option selected>- - - Pilih Masa TPP - - -</option>
-                  <option value="1">Januari</option>
-                  <option value="2">Februari</option>
-                  <option value="3">Maret</option>
-                  <option value="4">April</option>
-                  <option value="5">Mei</option>
-                  <option value="6">Juni</option>
-                  <option value="7">Juli</option>
-                  <option value="8">Agustus</option>
-                  <option value="9">September</option>
-                  <option value="10">Oktober</option>
-                  <option value="11">November</option>
-                  <option value="12">Desember</option>
+                <label for="bln_filter">Masa TPP Bulan:</label>
+                <select type="text" name="bln_filter" class="form-select form-select-sm" style="width:100%" id="triwulan" >
+                  <option value="1" <?php echo ($bln_filter == 1) ? "selected" : ""; ?>>Januari</option>
+                  <option value="2" <?php echo ($bln_filter == 2) ? "selected" : ""; ?>>Februari</option>
+                  <option value="3" <?php echo ($bln_filter == 3) ? "selected" : ""; ?>>Maret</option>
+                  <option value="4" <?php echo ($bln_filter == 4) ? "selected" : ""; ?>>April</option>
+                  <option value="5" <?php echo ($bln_filter == 5) ? "selected" : ""; ?>>Mei</option>
+                  <option value="6" <?php echo ($bln_filter == 6) ? "selected" : ""; ?>>Juni</option>
+                  <option value="7" <?php echo ($bln_filter == 7) ? "selected" : ""; ?>>Juli</option>
+                  <option value="8" <?php echo ($bln_filter == 8) ? "selected" : ""; ?>>Agustus</option>
+                  <option value="9" <?php echo ($bln_filter == 9) ? "selected" : ""; ?>>September</option>
+                  <option value="10" <?php echo ($bln_filter == 10) ? "selected" : ""; ?>>Oktober</option>
+                  <option value="11" <?php echo ($bln_filter == 11) ? "selected" : ""; ?>>November</option>
+                  <option value="12" <?php echo ($bln_filter == 12) ? "selected" : ""; ?>>Desember</option>
                 </select>
               </div>
-              <div class="col-6">
+              <div class="col-3">
                 <!-- Tahun -->
                 <label for="tahun">Tahun :</label>
-                <select type="text" name="tahun" class="form-select form-select-sm" style="width:100%" id="tahun" value="">
-                  <option selected>- - - Pilih Tahun - - - </option>
-                  <option value="2021">2021</option>
-                  <option value="2022">2022</option>
-                  <option value="2023">2023</option>
+                <select type="text" name="thn_filter" class="form-select form-select-sm" style="width:100%" id="thn_filter" >
+                  <?php for($y = 2023; $y <= date("Y"); $y++){ ?>
+                    <option value="<?= $y ?>" <?php echo ($y == $thn_filter ) ? "selected" : ""; ?>><?= $y ?></option>
+                  <?php } ?>                  
                 </select>
               </div>
             </div>
-            <!-- Button export file -->
-            <a href="<?= site_url('laporan/generate_pdf_tpp_triwulan'); ?>" id="btn_export_file" class="btn btn-sm btn-primary me-2" type="button">
-              <i class="fas fa-upload me-2"></i>Cetak DRAFT Daftar TPP
-            </a>
-
-            <a href="<?= site_url('laporan/generate_pdf_tpp_triwulan'); ?>" id="btn_export_file" class="btn btn-sm btn-success me-2" type="button">
-              <i class="fas fa-upload me-2"></i>Finalkan Daftar TPP
-            </a>
-            <!-- <button id="btn_export_file" class="btn btn-sm btn-success me-2" type="submit" form="form_jurnal_bulanan">
-              <i class="fas fa-upload me-2"></i>Export File Jurnal
-            </button> -->
-          </form>
+            <div class="row">
+                <div class="col-3">
+                  <button class="btn btn-primary" onclick="generate_table()" id="gen_table"><i class="fa-solid fa-rotate-right"></i> Tampilkan </button>
+                  <br>
+                  <br>
+                </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <!-- Button export file -->
+                <button class="btn btn-sm btn-primary me-2" onclick="cetak_daftar()" id="btn_print_file"><i class="fas fa-print"></i> Cetak Daftar TPP</button>
+                <!-- <a href="<?= site_url('tpp_per_bulan/'); ?>" target="_blank" id="btn_print_file" class="btn btn-sm btn-primary me-2" type="button">
+                  <i class="fas fa-print me-2"></i>Cetak DRAFT Daftar TPP
+                </a> -->
+                <button class="btn btn-sm btn-success me-2" onclick="finalkan()" id="btn_finalisasi"><i class="fas fa-check"></i> Finalkan Daftar TPP</button>
+                <!-- <a href="<?= site_url('tpp_per_bulan/finalkan'); ?>" id="btn_finalisasi" class="btn btn-sm btn-success me-2" type="button">
+                  <i class="fas fa-upload me-2"></i>Finalkan Daftar TPP
+                </a> -->
+              </div>
+            </div>
+          <!-- </form> -->
+          <br>
+          <div class="alert alert-primary">
+            <b>PERHATIAN!!</b> Nilai Total TPP pada tabel adalah TPP sebelum dipotong pajak dan infaq bagi yang muslim
+          </div>
 
           <div class="table-responsive mt-4">
-
             <div class="_loading loading_tabel_tpp_3_bulan">
               <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>
             </div>
-
             <table id="table_tpp_3_bulan" class="table table-bordered table-hover fs-3" style="width:100%;">
-
-              <tr style="text-align: center;">
+              <tr style="text-align: center;font-size: 10px;">
                 <th rowspan="2" style="vertical-align: middle;">No</th>
-                <th rowspan="2" style="vertical-align: middle;">Nama Jabatan</th>
-                <th rowspan="2" style="vertical-align: middle;">Nama PNS</th>
-                <th rowspan="2" style="vertical-align: middle;">NIP</th>
+                <th rowspan="2" style="vertical-align: middle;">Nama Jabatan/Golongan</th>
+                <th rowspan="2" style="vertical-align: middle;">Nama/NIP</th>
                 <th rowspan="2" style="vertical-align: middle;">Besaran TPP</th>
                 <th colspan="3">TPP Disiplin Kerja</th>
                 <th colspan="3">TPP Produktifitas Kerja</th>
                 <th rowspan="2" style="vertical-align: middle;">Total TPP</th>
               </tr>
-              <tr>
+              <tr style="text-align: center;font-size: 10px;">
                 <th style="vertical-align: middle;">Besaran</th>
                 <th style="vertical-align: middle;">Potongan</th>
                 <th style="vertical-align: middle;">Penghasilan</th>
                 <th style="vertical-align: middle;">Besaran</th>
-                <th style="vertical-align: middle;">Capaian Elogbook</th>
+                <th style="vertical-align: middle;">Capaian</th>
                 <th style="vertical-align: middle;">Penghasilan</th>
               </tr>
               <!-- <tr>
@@ -166,7 +141,7 @@
                 </tr>
               </thead> -->
 
-              <tbody style="font-size: 11px;"></tbody>
+              <tbody style="font-size: 11px;" id="tabel-body"></tbody>
 
             </table>
           </div>
@@ -183,188 +158,92 @@
 <!-- -------------------------------------------------------------- -->
 
 <script>
-  // var urlDatatable = "<?= site_url('laporan/datalist_tpp_triwulan') ?>";
-  // var init_btn_export = false;
-  // var tabel_tpp_3_bulan = $("#table_tpp_3_bulan").DataTable({
-  //   responsive: true,
-  //   processing: true,
-  //   serverSide: true,
-  //   orderCellsTop: true,
-  //   // scrollX: true,
-  //   dom: '<"row g-1"' +
-  //     '<"col-12 col-sm-6 init_btn_container"><"col-12 col-sm-6 vam"f>' +
-  //     '<"col-12"tr>' +
-  //     '<"col-12 col-sm-6"li><"col-12 col-sm-6"p>' +
-  //     '>',
-  //   /* set kolom yang di sortir secara default */
-  //   order: [
-  //     [0, "asc"],
-  //   ],
-  //   /* set placeholder dari input search */
-  //   language: {
-  //     searchPlaceholder: "Keyword"
-  //   },
-  //   ajax: {
-  //     url: urlDatatable,
-  //     /* parameter yang dikirimkan ke controller */
-  //     data: {
-  //       param1: function() {
-  //         return $('#id_atau_class_element').val();
-  //       },
-  //     },
-  //     type: 'POST',
-  //     beforeSend: function() {
-  //       // lakukan sesuatu sebelum mulai ajax process
-  //       $('.loading_tabel_tpp_3_bulan').addClass('show');
-  //     },
-  //   },
-  //   /* Sesuaikan jumlah kolom dengan id table yang digunakan */
-  //   columns: [{
-  //       data: 'nip',
-  //       orderable: false,
-  //       className: 'vam',
-  //       createdCell: function(td, cellData, rowData, row, col) {
-  //         $(td).html('<div class="text-start">' + cellData + '</div>');
-  //       },
-  //     },
-  //     // {
-  //     //   data: 'nama_lengkap',
-  //     //   orderable: false,
-  //     //   className: 'vam',
-  //     //   createdCell: function(td, cellData, rowData, row, col) {
-  //     //     $(td).html('<div class="text-start">' + cellData + '</div>');
-  //     //   },
-  //     // },
-  //     {
-  //       data: 'kode_jab',
-  //       orderable: false,
-  //       className: 'vam',
-  //       createdCell: function(td, cellData, rowData, row, col) {
-  //         $(td).html('<div class="text-start">' + cellData + '</div>');
-  //       },
-  //     },
-  //     {
-  //       data: 'kode_ukerja',
-  //       orderable: false,
-  //       className: 'vam',
-  //       createdCell: function(td, cellData, rowData, row, col) {
-  //         $(td).html('<div class="text-center">' + cellData + '</div>');
-  //       },
-  //     },
-  //     {
-  //       data: 'bulan',
-  //       orderable: false,
-  //       className: 'vam',
-  //       createdCell: function(td, cellData, rowData, row, col) {
-  //         $(td).html('<div class="text-center">' + cellData + '</div>');
-  //       },
-  //     },
-  //     {
-  //       data: 'tahun',
-  //       orderable: false,
-  //       className: 'vam',
-  //       createdCell: function(td, cellData, rowData, row, col) {
-  //         $(td).html('<div class="text-center">' + cellData + '</div>');
-  //       },
-  //     },
-  //     {
-  //       data: 'jam_mengajar',
-  //       orderable: false,
-  //       className: 'vam',
-  //       createdCell: function(td, cellData, rowData, row, col) {
-  //         $(td).html('<div class="text-center">' + cellData + '</div>');
-  //       },
-  //     },
-  //     {
-  //       data: 'kode_instansi',
-  //       orderable: false,
-  //       className: 'vam',
-  //       createdCell: function(td, cellData, rowData, row, col) {
-  //         $(td).html('<div class="text-center">' + cellData + '</div>');
-  //       },
-  //     },
-  //     {
-  //       data: 'jns_jab',
-  //       orderable: false,
-  //       className: 'vam',
-  //       createdCell: function(td, cellData, rowData, row, col) {
-  //         $(td).html('<div class="text-center">' + cellData + '</div>');
-  //       },
-  //     },
-  //     {
-  //       data: 'ket_jab',
-  //       orderable: false,
-  //       className: 'vam',
-  //       createdCell: function(td, cellData, rowData, row, col) {
-  //         $(td).html('<div class="text-center">' + cellData + '</div>');
-  //       },
-  //     },
-  //     {
-  //       data: 'ket_uorg',
-  //       orderable: false,
-  //       className: 'vam',
-  //       createdCell: function(td, cellData, rowData, row, col) {
-  //         $(td).html('<div class="text-center">' + cellData + '</div>');
-  //       },
-  //     },
-  //     {
-  //       data: 'ket_ukerja',
-  //       orderable: false,
-  //       className: 'vam',
-  //       createdCell: function(td, cellData, rowData, row, col) {
-  //         $(td).html('<div class="text-center">' + cellData + '</div>');
-  //       },
-  //     },
-      // {
-      //   data: 'mapel',
-      //   orderable: false,
-      //   className: 'vam',
-      //   createdCell: function(td, cellData, rowData, row, col) {
-      //     $(td).html('<div class="text-end">' + cellData + '</div>');
-      //   },
-      // },
-      // {
-      //   data: 'id',
-      //   orderable: false,
-      //   className: 'vam',
-      //   createdCell: function(td, cellData, rowData, row, col) {
-      //     let id_entry = cellData;
-      //     let html_aksi = '<div class="btn-group">' + '<button type="button" class="btn btn-sm btn-light-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">' +
-      //       'Pilih' +
-      //       '</button>' +
-      //       '<ul class="dropdown-menu">' +
-      //       '<li><a class="dropdown-item" onclick="modal(`' + id_entry + '`, `edit_tpp_3_bulan`)" href="#"><i class="fas fa-edit me-1"></i>Edit</a></li>' +
-      //       '<li><a class="dropdown-item text-danger" onclick="modal(`' + id_entry + '`, `delete_tpp_3_bulan`)" href="#"><i class="fas fa-trash me-1"></i>Delete</a></li>' +
-      //       '</ul>' +
-      //       '</div>';
-      //     $(td).html('<div class="text-center">' + html_aksi + '</div>');
-      //   },
-      // },
-    // ],
-    /* Lakukan fungsi callback pada bracket ini */
-    // drawCallback: function(settings) {
-    //   /* gunakan code ini utk mengambil data response ke dalam drawCallback */
-    //   let api = this.api();
-    //   let json = api.ajax.json();
-    //   if (json.status == false) {
-    //     /* jalankan apabila return false */
-    //   }
-    //   /* parameter callback untuk kostumisasi fungsi */
-    //   $('.loading_tabel_tpp_3_bulan').removeClass('show');
+$('#select_ukerja').select2({
+    allowClear: true,
+    placeholder: 'Pilih Unit Kerja.',
+    //dropdownParent: $('#whole_modal_id .modal-content'),
+    ajax: {
+      type: 'POST',
+      dataType: 'json',
+      url: '<?= site_url('config/select2_instansi') ?>',
+      delay: 800,
+      /* delay before sending ajax request */
+      data: function(params) {
+        return {
+          search: params.term,
+          aktif : "Y"
+        }
+      },
+      processResults: function(data) {
+        return {
+          results: data
+        };
+      },
+    }
+  }).on('select2:select', function(e) {
+    // what to do when option selected
+    generate_table();
+    console.log(e);
 
-      // let btn_export = '<a class="btn btn-sm btn-success me-2" href="'+ <?= base_url('laporan/generate_pdf_jurnal_bulanan') ?> +'">' +
-      //   '<i class="fas fa-plus me-1"></i>Tambah TPP' +
-      //   '</a>';
+  }).on('select2:close', function(e) {
+    // what to do when selection closed
+  }).on('select2:clear', function(e) {
+    // what to do when clearing (only if allowClear: true)
+    selected_kewenangan = '';
+  });
 
-      // if (!init_btn_export) {
-      //   $('.init_btn_container').append(btn_export);
-      //   init_btn_export = true;
-      // }
-  //   }
-  // });
+  function generate_table(){
+    var url = "<?php echo site_url("tpp_per_bulan/gen_tabel_tpp"); ?>";
+    var bln_filter = $("[name=bln_filter]").val();
+    var thn_filter = $("[name=thn_filter]").val();
+    var select_ukerja = $("[name=select_ukerja]").val();
+    $("#gen_table").attr("disabled");
+    $("#gen_table").html(" . . . Proses tabel");
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: {
+        filter_bln: bln_filter,
+        filter_thn: thn_filter,
+        kode_ukerja: select_ukerja
+      },
+      success: function(res) {
+        $("#gen_table").removeAttr("disabled");
+        $("#gen_table").html("Tampilkan");
+        $("#tabel-body").html(res);
+      }
+    });
+  }
 
-  /* fungsi untuk reload datatable ajax */
-  // function reload_table() {
-  //   tabel_tpp_3_bulan.ajax.reload();
-  // }
+  function finalkan(){
+    var url = "<?php echo site_url("tpp_per_bulan/gen_tabel_tpp"); ?>";
+    var bln_filter = $("[name=bln_filter]").val();
+    var thn_filter = $("[name=thn_filter]").val();
+    var select_ukerja = $("[name=select_ukerja]").val();
+    $("#gen_table").attr("disabled");
+    $("#gen_table").html(" . . . Proses tabel");
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: {
+        filter_bln: bln_filter,
+        filter_thn: thn_filter,
+        kode_ukerja: select_ukerja
+      },
+      success: function(res) {
+        $("#gen_table").removeAttr("disabled");
+        $("#gen_table").html("Tampilkan");
+        $("#tabel-body").html(res);
+      }
+    });
+  }
+
+  function cetak_daftar(){
+    var url = "<?php echo site_url("tpp_per_bulan/cetak_list_tpp"); ?>";
+    var bln_filter = $("[name=bln_filter]").val();
+    var thn_filter = $("[name=thn_filter]").val();
+    var select_ukerja = $("[name=select_ukerja]").val();
+    url = url +"/" + select_ukerja + "/" + bln_filter + "/" + thn_filter;
+    window.open(url, '_blank').focus();
+  }
 </script>

@@ -35,9 +35,9 @@ class Mdl_user extends CI_Model
     // deklarasi where condition
     $where_search = (isset_nn_nes($data['search']))
       ? "AND (username LIKE '%$data[search]%' 
-      OR nama_lengkap LIKE '%$data[search]%'
+      OR id_user LIKE '%$data[search]%'
       OR kewenangan LIKE '%$data[search]%'
-      OR no_hp LIKE '%$data[search]%'
+      OR ket_ukerja LIKE '%$data[search]%'
       )"
       : "";
     /* kalau ada tambahan where condition bisa add lagi di atas */
@@ -58,16 +58,21 @@ class Mdl_user extends CI_Model
     $index = 0;
     $data_result = array();
     while ($row = $query_result->unbuffered_row()) {
+      $ket_kewenangan = array(
+        "00" => "Super Admin",
+        "01" => "Administrator",
+        "10" => "Admin OPD"
+      );
       /// |----------------------------------------------------------------------
       /// | PENATAAN DATA SEBELUM DIMASUKKAN KE DALAM RESULT_ARRAY
       /// |----------------------------------------------------------------------
       $data_result[$index]['no'] = $no;
       $data_result[$index]['username'] = $row->username;
+      $data_result[$index]['id_user'] = $row->id_user;
       $data_result[$index]['nama_lengkap'] = $row->nama_lengkap;
-      $data_result[$index]['kewenangan'] = $row->ket_kewenangan;
+      $data_result[$index]['kewenangan'] = $ket_kewenangan[$row->kewenangan];
       $data_result[$index]['ket_ukerja'] = $row->ket_ukerja; //tambah keterangan unit kerja
-      $data_result[$index]['no_hp'] = $row->no_hp;
-      $data_result[$index]['tgl_daftar'] = $row->tgl_daftar;
+      //$data_result[$index]['tgl_daftar'] = $row->tgl_daftar;
       $data_result[$index]['aktif'] = $row->aktif;
 
       $no += 1;
@@ -88,36 +93,30 @@ class Mdl_user extends CI_Model
     $response = array();
 
     // Check apakah username sudah ada ..
-    $cek = $this->db->get_where('m_user', array(
-      'username' => $this->input->post('username')
+    $cek = $this->db->get_where('progurinda_m_user', array(
+      'id_user' => $this->input->post('id_user')
     ))->num_rows();
-    if ($cek > 0 || $this->input->post('username') == 'system') {
+    if ($cek > 0 || $this->input->post('id_user') == 'system') {
       // Kalau sudah, kembalikan error message
       $response['status'] = false;
       $response['message'] = "Username sudah terdaftar dalam database!";
     } else {
       // Kalau belum, insert data
       $data = [
-        'username' => htmlspecialchars($this->input->post('username', TRUE)),
+        'id_user' => $this->input->post('id_user'),
+        'username' => $this->input->post('username'),
+        'pass_str' => null,
         'password' => encrypt_pwd($this->input->post('password')),
-        'nama_lengkap' => $this->input->post('nama_lengkap'),
-        'kewenangan' => $this->input->post('kewenangan'),
-        'kode_ukerja' => $this->input->post('kode_ukerja'),
         'salt' => micin(),
-        'no_hp' => $this->input->post('no_hp'),
-        'tgl_daftar' => datetime_now(),
-        'aktif' => $this->input->post('aktif') ? 'Y' : 'N'
+        'email_user' => $this->input->post('email_user'),
+        'kewenangan' => $this->input->post('kewenangan'),
+        'kode_unor' => $this->input->post('kode_unor'),
+        'aktif' => ($this->input->post('aktif') == 'on') ? 'Y' : 'N'
       ];
 
       $this->db->trans_start();
       // do your db process here
-      $this->db->insert('m_user', $data);
-      log_generator(
-        $this->session->userdata('username'),
-        '|m_user|',
-        '|' . $data['username'] . '|',
-        'Melakukan penambahan data pada user admin dengan nama ' . $data['nama_lengkap'] . '.'
-      );
+      $this->db->insert('progurinda_m_user', $data);
       $this->db->trans_complete();
       if ($this->db->trans_status() === FALSE) {
         // do your error handler here
@@ -134,57 +133,41 @@ class Mdl_user extends CI_Model
   /** fungsi untuk edit data user */
   public function edit_userdata()
   {
-    $password1 = $this->input->post('password1');
-    $username_lama = $this->input->post('username_lama');
+    $id_user = $this->input->post('id_user');
     $response = array();
 
-    //Cek jika ada username sebelum edit
-    $cek_user = $this->db->get_where('m_user', array(
-      'username' => $this->input->post('username'),
-      'username <>' => $username_lama
+    // cek apakah user yg akan di-edit exist
+    $cek_user = $this->db->get_where('progurinda_m_user', array(
+      'id_user' => $id_user
     ))->num_rows();
 
-    if ($cek_user > 0) {
-      //Jika sudah ada, tampilkan error message
+    if ($cek_user < 1) {
+      // jika tidak ditemukan tampilkan error
       $response['status'] = false;
-      $response['message'] = "Username sudah terpakai. Gunakan username lain!";
+      $response['message'] = "Data user yang akan di-edit tidak ditemukan.";
 
       return $response;
     }
 
-    /* $data_user = $this->get('m_user', array('username' => $username_lama));
-
-    if ($data_user) {
-      $password_lama = $data_user['password'];
-      if (!verify_pwd($password1, $password_lama)) {
-        $response['status'] = false;
-        $response['message'] = "Password lama tidak sesuai!";
-
-        return $response;
-      }
-    } */
-    $new_pass = $this->input->post('password2');
     $data = [
-      'username' => htmlspecialchars($this->input->post('username', TRUE)),
-      'nama_lengkap' => $this->input->post('nama_lengkap'),
+      'id_user' => $id_user,
+      'username' => $this->input->post('username'),
       'kewenangan' => $this->input->post('kewenangan'),
-      'kode_ukerja' => $this->input->post('kode_ukerja'),
-      'no_hp' => $this->input->post('no_hp'),
-      'aktif' => $this->input->post('aktif') ? 'Y' : 'N'
+      'kode_unor' => $this->input->post('kode_unor'),
+      'email_user' => $this->input->post('email_user'),
+      'aktif' => ($this->input->post('aktif') == 'on') ? 'Y' : 'N'
     ];
-    if ($new_pass != "") {
+
+    // cek apakah ingin mengganti password?
+    $new_pass = $this->input->post('password');
+    if (isset_nn_nes($new_pass)) {
       $data['password'] = encrypt_pwd($new_pass);
     }
 
     $this->db->trans_start();
     // Proses query update ke database
-    $this->db->update('m_user', $data, array('username' => $username_lama));
-    log_generator(
-      $this->session->userdata('username'),
-      '|m_user|',
-      '|' . $data['username'] . '|',
-      'Mengupdate data pada user admin dengan nama ' . $data['nama_lengkap'] . '.'
-    );
+    $this->db->update('progurinda_m_user', $data, array('id_user' => $id_user));
+
     $this->db->trans_complete();
     if ($this->db->trans_status() === FALSE) {
       // Jika proses query gagal
@@ -199,22 +182,28 @@ class Mdl_user extends CI_Model
   }
 
   /** fungsi untuk delete data user */
-  public function delete_userdata($username)
+  public function delete_userdata($id_user)
   {
     $response = array();
 
+    // cek apakah data yang akan di hapus ada dalam database?
+    $queryData = $this->db->get_where('progurinda_m_user', ['id_user' => $id_user]);
+    $cek = $queryData->num_rows();
+    if ($cek < 1) {
+      return [
+        'status' => false,
+        'message' => "Maaf, data yang akan Anda hapus tidak ditemukan dalam database. Mohon untuk refresh halaman."
+      ];
+    }
+
+    $data = $queryData->row_array();
+
     $this->db->trans_start();
-    $data = $this->db->get_where('m_user', "username = '$username'")->row_array();
     // do your db process here
-    $this->db->delete('m_user', array(
-      'username' => $username
+    $this->db->delete('progurinda_m_user', array(
+      'id_user' => $id_user
     ));
-    log_generator(
-      $this->session->userdata('username'),
-      '|m_user|',
-      '|' . $username . '|',
-      'Melakukan penghapusan data pada user admin dengan nama ' . $data['nama_lengkap'] . '.'
-    );
+
     $this->db->trans_complete();
     if ($this->db->trans_status() === FALSE) {
       // do your error handler here
@@ -222,7 +211,7 @@ class Mdl_user extends CI_Model
       $response['message'] = "User ini gagal dihapus!";
     } else {
       $response['status'] = true;
-      $response['message'] = "Data User berhasil terhapus!";
+      $response['message'] = "Data User berhasil dihapus!";
     }
     return $response;
   }

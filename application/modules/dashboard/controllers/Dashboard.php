@@ -69,24 +69,6 @@ class Dashboard extends MY_Controller
       ->set_output(json_encode($data));
   }
 
-  // public function export_attlog_pdf($kode_ukerja = "", $cloud_id = "all", $filter_jnspeg = "all", $filter_tgl = "", $filter_tgl_akhir = "")
-  // {
-  //   $params = array(
-  //     "kode_ukerja" => $kode_ukerja,
-  //     "cloud_id" => $cloud_id,
-  //     "filter_tgl" => $filter_tgl,
-  //     "filter_tgl_akhir" => $filter_tgl_akhir,
-  //     "filter_jnspeg" => $filter_jnspeg
-  //   );
-  //   $data_export["ket_ukerja"] = $this->db->where("kode_ukerja = '" . $kode_ukerja . "'")->get("v_ukerja")->row()->ket_ukerja;
-  //   $data_export["attlog"] = $this->mdl_dashboard->get_export_attlog($params);
-  //   $this->load->view("vw_export_pdf", $data_export);
-  // }
-
-  // public function export_attlog_excel()
-  // {
-  // }
-
   public function modal()
   {
     $type = $this->input->post('type');
@@ -104,66 +86,66 @@ class Dashboard extends MY_Controller
     /// | COMMANDS
     /// |----------------------------------------
     switch ($type) {
-      // case 'tambah_mapel_guru': {
-      //   /// |----------------------------------------
-      //   /// | INSERT DATA
-      //   /// |----------------------------------------
-      //   $dataset = [
-      //     'nip' => '',
-      //     'nama_lengkap' => '',
-      //     'ket_jab' => '',
-      //     'unit_kerja' => '',
-      //     'mapel' => '',
-      //     'id' => $id
-      //   ];
-      //   $data = [
-      //     'modal_title' => "Tambah Mapel Guru",
-      //     'data' => $dataset,
-      //   ];
-      //   $res = [
-      //     'status' => true,
-      //     'message' => "Modal Tambah Mapel Guru",
-      //     'html' => $this->load->view('vw_mapel_guru_modal_save', $data, true)
-      //   ];
-      //   break;
-      // }
-      // case 'edit_mapel_guru': {
-      //   /// |----------------------------------------
-      //   /// | EDIT DATA
-      //   /// |----------------------------------------
-      //   $dataset = $this->mmpg->get('v_progurinda_mapel', "id = '$id'");
-      //   $data = [
-      //     'modal_title' => "Edit Mapel Guru",
-      //     'data' => $dataset,
-      //   ];
-      //   $res = [
-      //     'status' => true,
-      //     'message' => "Modal Edit Mapel Guru",
-      //     'html' => $this->load->view('vw_mapel_guru_modal_save', $data, true)
-      //   ];
-      //   break;
-      // }
+        // case 'tambah_mapel_guru': {
+        //   /// |----------------------------------------
+        //   /// | INSERT DATA
+        //   /// |----------------------------------------
+        //   $dataset = [
+        //     'nip' => '',
+        //     'nama_lengkap' => '',
+        //     'ket_jab' => '',
+        //     'unit_kerja' => '',
+        //     'mapel' => '',
+        //     'id' => $id
+        //   ];
+        //   $data = [
+        //     'modal_title' => "Tambah Mapel Guru",
+        //     'data' => $dataset,
+        //   ];
+        //   $res = [
+        //     'status' => true,
+        //     'message' => "Modal Tambah Mapel Guru",
+        //     'html' => $this->load->view('vw_mapel_guru_modal_save', $data, true)
+        //   ];
+        //   break;
+        // }
+        // case 'edit_mapel_guru': {
+        //   /// |----------------------------------------
+        //   /// | EDIT DATA
+        //   /// |----------------------------------------
+        //   $dataset = $this->mmpg->get('v_progurinda_mapel', "id = '$id'");
+        //   $data = [
+        //     'modal_title' => "Edit Mapel Guru",
+        //     'data' => $dataset,
+        //   ];
+        //   $res = [
+        //     'status' => true,
+        //     'message' => "Modal Edit Mapel Guru",
+        //     'html' => $this->load->view('vw_mapel_guru_modal_save', $data, true)
+        //   ];
+        //   break;
+        // }
       case 'delete_arsip_tpp': {
-        /// |----------------------------------------
-        /// | DELETE DATA
-        /// |----------------------------------------
-        $dataset = $this->mdbo->get('v_progurinda_jurnal_mengajar', "id = '$id'");
-        if (isset_nn_nes($dataset)) {
-          $data = [
-            'modal_title' => "Batalkan Arsip TPP",
-            'data' => $dataset,
-          ];
-          $res = [
-            'status' => true,
-            'message' => "Modal Batalkan Arsip TPP",
-            'html' => $this->load->view('vw_arsip_tpp_modal_delete', $data, true)
-          ];
+          /// |----------------------------------------
+          /// | DELETE DATA
+          /// |----------------------------------------
+          $dataset = $this->mdbo->get('v_progurinda_jurnal_mengajar', "id = '$id'");
+          if (isset_nn_nes($dataset)) {
+            $data = [
+              'modal_title' => "Batalkan Arsip TPP",
+              'data' => $dataset,
+            ];
+            $res = [
+              'status' => true,
+              'message' => "Modal Batalkan Arsip TPP",
+              'html' => $this->load->view('vw_arsip_tpp_modal_delete', $data, true)
+            ];
+          }
+          break;
         }
-        break; 
-      }
       default: {
-        break;
-      }
+          break;
+        }
     }
 
     return $this->output
@@ -171,18 +153,46 @@ class Dashboard extends MY_Controller
       ->set_output(json_encode($res));
   }
 
-  public function delete()
+  public function get_data_list()
   {
-    $res = [
-      'status' => false,
-      'message' => "Maaf, proses pembatalan arsip TPP gagal dilakukan!"
-    ];
-
-    $data["id"] = $this->input->post('id');
-    $res = $this->mdbo->delete($data);
-
-    return $this->output
+    $dummy_data = array(
+      [
+        "id" => "0",
+        "kode_ukerja" => "",
+        "ket_ukerja" => "SD N 016 Samarinda Seberang",
+        "tgl_arsip" => null,
+        "status" => 0
+      ],
+      [
+        "id" => "1",
+        "kode_ukerja" => "",
+        "ket_ukerja" => "UPT SMP N 01",
+        "tgl_arsip" => "2023-12-07",
+        "status" => 1
+      ],
+      [
+        "id" => "2",
+        "kode_ukerja" => "",
+        "ket_ukerja" => "UPT SMP N 02",
+        "tgl_arsip" => "2023-12-05",
+        "status" => 1
+      ],
+      [
+        "id" => "3",
+        "kode_ukerja" => "",
+        "ket_ukerja" => "UPT SMP N 03",
+        "tgl_arsip" => null,
+        "status" => 0
+      ],
+    );
+    $response = array(
+      "draw" => "1",
+      "data" => $dummy_data,
+      "recordTotal" => 4,
+      "recordFiltered" => 4
+    );
+    $this->output
       ->set_content_type('application/json')
-      ->set_output(json_encode($res));
+      ->set_output(json_encode($response));
   }
 }

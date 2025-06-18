@@ -1,49 +1,71 @@
-<div class="row g-2">
-  <div class="col-12">
-    <form action="<?= site_url('user/delete_user') ?>" method="POST" id="delete_user">
-      <input type="hidden" name="username" value="<?= $data['username'] ?>">
-      <div class="panel">
-        <div class="header space-between">
-          <div class="header">Delete User</div>
-          <i class="fas fa-window-close float-right clickable" data-bs-dismiss="modal"></i>
-        </div>
-        <div class="separator"></div>
-        <div class="body">
-          Apakah Anda yakin ingin menghapus data User ini?
-          <div class="smalltext mt-2 mb-1">
-            <table>
-              <tr>
-                <td>Username</td>
-                <td class="ps-2"><?= $data['username'] ?></td>
-              </tr>
-              <tr>
-                <td>Nama Lengkap</td>
-                <td class="ps-2"><?= $data['nama_lengkap'] ?></td>
-              </tr>
-              <tr>
-                <td>Kewenangan</td>
-                <td class="ps-2"><?= $data['kewenangan'] ?></td>
-              </tr>
-              <tr>
-                <td>No. HP</td>
-                <td class="ps-2"><?= $data['no_hp'] ?></td>
-              </tr>
-              <tr>
-                <td>Status</td>
-                <td class="ps-2"><?= $data['aktif'] ?></td>
-              </tr>
-            </table>
-          </div>
-        </div>
-        <div class="separator"></div>
-        <div class="body text-end">
-          <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Batal</button>
-          <button type="submit" class="ms-1 btn btn-sm btn-danger">Hapus</button>
-        </div>
-      </div>
-    </form>
+<?php
+$style_col = 'style="font-size: 12px; font-weight: bold; min-width: 180px;"';
+$style_val = 'style="width: 100%;"';
+
+$ket_kewenangan = '';
+switch ($data['kewenangan']) {
+  case '00':
+    $ket_kewenangan = 'Super Admin';
+    break;
+
+  case '01':
+    $ket_kewenangan = 'Administrator';
+    break;
+
+  default:
+    $ket_kewenangan = 'Admin OPD / Unit Kerja';
+    break;
+}
+?>
+
+<form action="<?= site_url('user/delete_user') ?>" method="POST" id="delete_user">
+  <input type="hidden" name="id_user" value="<?= $data['id_user'] ?>">
+
+  <div class="modal-header d-flex align-items-center">
+    <div>
+      <h3 class="mb-0">Delete Data User</h3>
+    </div>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>
-</div>
+
+  <div class="modal-body">
+    Apakah Anda yakin ingin menghapus data User ini?
+    <div class="smalltext mt-2 mb-1">
+      <table class="table table-sm table-hover">
+        <tr>
+          <td <?= $style_col ?>>Username</td>
+          <td <?= $style_val ?> class="ps-2"><?= $data['id_user'] ?></td>
+        </tr>
+        <tr>
+          <td <?= $style_col ?>>Nama User /<br>Nama Unit Kerja</td>
+          <td class="ps-2"><?= $data['username'] ?></td>
+        </tr>
+        <tr>
+          <td <?= $style_col ?>>Kewenangan</td>
+          <td <?= $style_val ?> class="ps-2"><?= $ket_kewenangan ?></td>
+        </tr>
+        <tr>
+          <td <?= $style_col ?>>Unit Kerja</td>
+          <td <?= $style_val ?> class="ps-2"><?= isset_nn_nes($data['ket_ukerja'], '-') ?></td>
+        </tr>
+        <tr>
+          <td <?= $style_col ?>>E-mail</td>
+          <td <?= $style_val ?> class="ps-2"><?= $data['email_user'] ?></td>
+        </tr>
+        <tr>
+          <td <?= $style_col ?>>Status</td>
+          <td <?= $style_val ?> class="ps-2"><?= ($data['aktif'] == 'Y') ? '<span class="badge bg-success mx-1">AKTIF</span>' : '<span class="badge bg-danger mx-1">NON-AKTIF</span>' ?></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="modal-footer text-end">
+    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Batal</button>
+    <button type="submit" class="ms-1 btn btn-sm btn-danger">Hapus</button>
+  </div>
+
+</form>
 
 <script>
   $('#delete_user').validate($.extend({
@@ -59,16 +81,18 @@
           if (e.status) {
             // what to do when the response status = true
             // modal dismiss
-            $('#my_modal').modal('hide');
-            $.notify('<b><i class="fas fa-check-square me-1"></i>Sukses!</b><br>' +
-              e.message, 'success');
+            $('#whole_modal_id').modal('hide');
+            toaster('success', e.message);
             reload_table();
           } else {
             // what to do when the response status = false
             submit.attr('disabled', false);
-            $.notify('<b><i class="fas fa-exclamation-triangle me-1"></i>Gagal!</b><br>' +
-              e.message, 'error');
+            toaster('danger', 'Maaf, terjadi kesalahan pada proses penyimpanan user baru. ' + e.message);
           }
+        },
+        error: function(xhr, status, error) {
+          submit.attr('disabled', false);
+          toaster('danger', 'Maaf, terjadi kesalahan pada proses penyimpanan user baru. ' + error);
         },
         dataType: 'json'
       });

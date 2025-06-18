@@ -61,7 +61,7 @@ $autoload['packages'] = array();
 /// |----------------------------------------------------------------------
 /// | FIRST SETTINGS : USE DATABASE LIBRARY IF TABLE IS CONFIGURED
 /// |----------------------------------------------------------------------
-$autoload['libraries'] = array('database', 'email', 'session', 'form_validation');
+$autoload['libraries'] = array('database', 'email', 'session', 'form_validation','progurinda_lib');
 // $autoload['libraries'] = array('session');
 
 /*
@@ -93,7 +93,7 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array('url', 'form', 'echo', 'common');
+$autoload['helper'] = array('url', 'form', 'echo', 'common','progurinda');
 
 /*
 | -------------------------------------------------------------------

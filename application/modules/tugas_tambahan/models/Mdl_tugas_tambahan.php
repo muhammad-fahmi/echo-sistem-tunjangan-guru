@@ -34,19 +34,21 @@ class Mdl_tugas_tambahan extends CI_Model
     // lakukan filtering data
     // deklarasi where condition
     $where_search = (isset_nn_nes($data['search']))
-      ? "WHERE (id LIKE '%$data[search]%' 
+      ? " AND (id LIKE '%$data[search]%' 
       OR kode_tgs_tambahan LIKE '%$data[search]%'
       OR nip LIKE '$data[search]%')"
       : "";
-
+    $where_unit_kerja = "";
+    $kode_unit_kerja = $this->session->userdata("kode_unor");
+    $where_unit_kerja = " WHERE (v_progurinda_tugas_tambahan.kode_instansi LIKE '".$kode_unit_kerja."%' OR v_progurinda_tugas_tambahan.unit_kepeg LIKE '".$kode_unit_kerja."%') ";
     /* kalau ada tambahan where condition bisa add lagi di atas */
     // deklarasi query yang digunakan
     $query_result = $this->db->query("SELECT * FROM v_progurinda_tugas_tambahan
-      $where_search
+      $where_unit_kerja $where_search
       ORDER BY $data[order_column] $data[order_sort]
       LIMIT $data[start], $data[length]");
     $query_total = $this->db->query("SELECT * FROM v_progurinda_tugas_tambahan 
-      $where_search");
+      $where_unit_kerja $where_search");
     // cari total hasil
     $total_count = $query_total->num_rows();
     // cari data result + penomoran

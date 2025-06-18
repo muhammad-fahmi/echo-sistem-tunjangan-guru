@@ -45,7 +45,7 @@
         <select name="kode_tgs_tambahan" id="kode_tgs_tambahan" class="form-control form-control-sm" style="width:100%">
           <?php $selected = ($data["kode_tgs_tambahan"] != "") ? "selected" : ""; ?>
           <option value=""> - - - Pilih Tugas Tambahan - - - </option>
-          <option value="<?php echo $data["kode_tgs_tambahan"]; ?>" <?php echo $selected ?>><?php echo $data["kode_tgs_tambahan"]; ?></option>
+          <option value="<?php echo $data["kode_tgs_tambahan"]; ?>" <?php echo $selected ?>><?php echo $data["kode_tgs_tambahan"]." - ".$data["ket_tugas_tambahan"]; ?></option>
         </select>
       </div>
 
@@ -74,7 +74,7 @@
     ajax: {
       type: 'POST',
       dataType: 'json',
-      url: '<?= site_url('config/select2_pegawai_jab') ?>',
+      url: '<?= site_url('config/select2_pegawai') ?>',
       delay: 800,
       /* delay before sending ajax request */
       data: function(params) {
@@ -191,10 +191,11 @@
       // },
       tmt_mulai: {
         required: true
-      },
-      tmt_selesai: {
-        required: true
       }
+      //,
+      //tmt_selesai: {
+      //  required: true
+      //}
     },
     errorClass: 'is-invalid',
     validClass: 'mv-valid',
@@ -224,10 +225,10 @@
       // },
       tmt_mulai: {
         required: "Tanggal mulai Tugas Tambahan tidak boleh kosong"
-      },
-      tmt_selesai: {
-        required: "Tanggal selesai Tugas Tambahan tidak boleh kosong"
       }
+      // tmt_selesai: {
+      //   required: "Tanggal selesai Tugas Tambahan tidak boleh kosong"
+      // }
     },
   }));
 </script>
