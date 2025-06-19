@@ -19,15 +19,13 @@ class Portal extends MY_Controller
   public function index()
   {
     $this->session->set_userdata('menu', 'user');
-    $sent_data = array(
-      'm_user' => $this->user->get('m_user'),
-    );
+    $sent_data = [];
     $data = array(
-      'page_title' => "Portal PROGURINDA",
+      'page_title' => "Portal | PROGURINDA",
       'module' => "portal",
       'view' => "vw_portal_",
       'data' => $sent_data
     );
-    echo Modules::run('layout/portal', $data);
+    echo Modules::run('layout/portal_menu', $data);
   }
 }

@@ -23,7 +23,7 @@ class Pangkalan_data extends MY_Controller
   /// |----------------------------------------------------------------------
   /// | >> PRIVATE FUNCTION
   /// |----------------------------------------------------------------------
-  private function list_ks()
+  private function display_list_ks()
   {
     $this->session->set_userdata('menu', 'pangkalan_data/ks');
     // TODO : 
@@ -38,7 +38,7 @@ class Pangkalan_data extends MY_Controller
     echo Modules::run('layout/backend', $data);
   }
 
-  private function list_ptk()
+  private function display_list_ptk()
   {
     $this->session->set_userdata('menu', 'pangkalan_data/ptk');
     // TODO : 

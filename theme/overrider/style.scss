@@ -85,3 +85,34 @@ label.is-invalid {
 .non-editable {
 	background-color: #e9e9e9 !important;
 }
+
+.portal-container {
+	display: flex;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	/* align-content: center; */
+	justify-content: center;
+	align-items: center;
+	z-index: 200;
+
+	&.bg {
+		z-index: 100;
+
+		img {
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: cover;
+		}
+	}
+}
+
+.portal-menu {
+	min-height: 320px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
