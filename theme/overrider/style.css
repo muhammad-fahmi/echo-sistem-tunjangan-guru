@@ -63,6 +63,12 @@ label.is-invalid {
   display: block !important;
 }
 
+.card-title.space-between {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 .select2-dropdown {
   z-index: 1100 !important;
 }
