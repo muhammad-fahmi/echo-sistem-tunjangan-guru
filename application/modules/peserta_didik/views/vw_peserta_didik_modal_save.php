@@ -6,48 +6,56 @@
 </div>
 <div class="modal-body">
 
-  <form id="saveMapel" action="<?= site_url('mapel_guru/save'); ?>" method="POST" enctype="multipart/form-data">
+  <form id="savePesertaDidik" action="<?= site_url('peserta_didik/save'); ?>" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="type" value="<?= $data['type'] ?>">
-    <input type="hidden" name="id" value="<?= $data['id'] ?>">
+    <input type="hidden" name="id_siswa" value="<?= $data['id_siswa'] ?>">
 
     <div class="row g-2">
       <div class="col-12 form_mapel">
-        <label for="i_tahun">NIP</label>
+        <label for="nisn">NISN</label>
         <br>
-        <select name="nip" id="nip" class="form-control form-control-sm" style="width:100%">
-          <?php $selected = ($data["nip"] != "") ? "selected" : ""; ?>
-          <option value=""> - - - Pilih Pegawai - - - </option>
-          <option value="<?php echo $data["nip"]; ?>" <?php echo $selected ?>><?php echo $data["nip"]; ?></option>
+        <select name="nisn" id="nisn" class="form-control form-control-sm" style="width:100%">
+          <?php $selected = ($data["nisn"] != "") ? "selected" : ""; ?>
+          <option value=""> - - - Pilih NISN - - - </option>
+          <option value="<?php echo $data["nisn"]; ?>" <?php echo $selected ?>><?php echo $data["nisn"]; ?></option>
         </select>
       </div>
 
       <div class="col-12 form_mapel">
-        <label for="i_kode_standar">Nama Lengkap</label>
-        <input type="text" name="nama_lengkap" id="nama_lengkap" class="form-control form-control-sm" value="<?= $data['nama_lengkap']; ?>" readonly=true>
+        <label for="nama">Nama Lengkap</label>
+        <input type="text" name="nama" id="nama" class="form-control form-control-sm" value="<?= $data['nama']; ?>" readonly=true>
+        <div class="invalid-feedback"></div>
+      </div>
+
+      <div class="col-12 form_mapel">
+        <label for="nia">NIA</label>
+        <input type="text" name="nia" id="nia" class="form-control form-control-sm" value="<?= $data['nia']; ?>" readonly=true>
         <div class="invalid-feedback"></div>
       </div>
 
       <div class="col-12 col-lg-12 form_mapel">
-        <label for="ket_jab">Jabatan</label>
-        <input type="text" name="ket_jab" id="ket_jab" class="form-control form-control-sm" value="<?= $data['ket_jab']; ?>" readonly=true>
-        <input type="hidden" name="kode_jab" id="kode_jab" class="form-control form-control-sm" value="<?= $data['kode_jab']; ?>" readonly=true>
-      </div>
-      <div class="col-12 col-lg-12 form_mapel">
-        <label for="ket_ukerja">Unit Kerja</label>
-        <input type="text" name="ket_ukerja" id="ket_ukerja" class="form-control form-control-sm" value="<?= $data['ket_ukerja']; ?>" readonly=true>
-        <input type="hidden" name="kode_ukerja" id="kode_ukerja" class="form-control form-control-sm" value="<?= $data['kode_ukerja']; ?>" readonly=true>
+        <label for="jenis_kelamin">Jenis Kelamin</label>
+        <input type="text" name="jenis_kelamin" id="jenis_kelamin" class="form-control form-control-sm" value="<?= $data['jenis_kelamin']; ?>" readonly=true>
+        <input type="hidden" name="jenis_kelamin" id="jenis_kelamin" class="form-control form-control-sm" value="<?= $data['jenis_kelamin']; ?>" readonly=true>
       </div>
 
       <div class="col-12 col-lg-12 form_mapel">
-        <label for="mapel">Mata Pelajaran</label>
-        <input type="text" name="mapel" id="mapel" class="form-control form-control-sm" value="<?= $data['mapel'] ?>">
+        <label for="kode_agama">Agama</label>
+        <input type="text" name="kode_agama" id="kode_agama" class="form-control form-control-sm" value="<?= $data['kode_agama']; ?>" readonly=true>
+        <input type="hidden" name="kode_agama" id="kode_agama" class="form-control form-control-sm" value="<?= $data['kode_agama']; ?>" readonly=true>
       </div>
+
+      <div class="col-12 col-lg-12 form_mapel">
+        <label for="alamat">Alamat</label>
+        <input type="text" name="alamat" id="alamat" class="form-control form-control-sm" value="<?= $data['alamat'] ?>">
+      </div>
+
     </div>
   </form>
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-sm btn-light-secondary" data-bs-dismiss="modal">Batal</button>
-  <button id="saveMapelbtn" type="submit" form="saveMapel" class="btn btn-sm btn-light-success">Simpan</button>
+  <button id="savePesertaDidikbtn" type="submit" form="savePesertaDidik" class="btn btn-sm btn-light-success">Simpan</button>
 </div>
 
 <script>
@@ -90,12 +98,12 @@
   });
 
 
-  $('#saveMapel').validate($.extend({
+  $('#savePesertaDidik').validate($.extend({
     submitHandler: function(form, event) {
       // declare element that will be affected
       // by every state of the form submission
       // right here
-      var submit = $('#saveMapelbtn');
+      var submit = $('#savePesertaDidikbtn');
       // declare button submit disabling right here if needed
       submit.attr('disabled', true);
       $(form).ajaxSubmit({
@@ -123,19 +131,19 @@
       });
     },
     rules: {
-      nip: {
+      nisn: {
         required: true
       },
-      nama_lengkap: {
+      nama: {
         required: true
       },
-      ket_jab: {
+      jenis_kelamin: {
         required: true
       },
-      ket_ukerja: {
+      kode_agama: {
         required: true
       },
-      mapel: {
+      alamat: {
         required: true
       }
     },
@@ -150,20 +158,20 @@
       }
     },
     messages: {
-      nip: {
-        required: "NIP tidak boleh kosong"
+      nisn: {
+        required: "NISN tidak boleh kosong"
       },
-      nama_lengkap: {
+      nama: {
         required: "Nama Lengkap tidak boleh kosong"
       },
-      ket_jab: {
-        required: "Keterangan Jabatan tidak boleh kosong"
+      jenis_kelamin: {
+        required: "Jenis Kelamin tidak boleh kosong"
       },
-      ket_ukerja: {
-        required: "Keterangan unit kerja tidak boleh kosong"
+      kode_agama: {
+        required: "Agama tidak boleh kosong"
       },
-      mapel: {
-        required: "Mata Pelajaran tidak boleh kosong"
+      alamat: {
+        required: "Alamat tidak boleh kosong"
       }
     },
   }));
