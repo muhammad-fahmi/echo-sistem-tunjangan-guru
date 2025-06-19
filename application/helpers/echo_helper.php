@@ -633,6 +633,41 @@ function log_generator($username = '-', $table = '-', $object = '-', $message = 
   $CI->db->insert('r_log', $data);
 }
 
+/** fungsi utk ngecek data apa aja yang diganti / diupdate dengan membandingkan data original dan data yang diupdate, return array ['before' => [], 'after' => []] */
+function get_changed_data($original_array, $update_array)
+{
+  $before = [];
+  $after = [];
+
+  foreach ($update_array as $key => $newValue) {
+    // Only compare keys that exist in the original record
+    if (array_key_exists($key, $original_array)) {
+      $oldValue = $original_array[$key];
+
+      // Optional: normalize both values for fair comparison (e.g., trim, cast types)
+      if ($oldValue != $newValue) {
+        $before[$key] = $oldValue;
+        $after[$key] = $newValue;
+      }
+    }
+  }
+
+  return [
+    'before' => $before,
+    'after' => $after
+  ];
+}
+
+/** fungsi untuk format result array jadi readable string menggunakan `|` sebagai separator */
+function format_log_view($array_data)
+{
+  $parts = [];
+  foreach ($array_data as $k => $v) {
+    $parts[] = "`{$k}` : `{$v}`";
+  }
+  return implode(" | ", $parts);
+}
+
 /** fungsi untuk generate no dokumen */
 function generate_no_dok()
 {
