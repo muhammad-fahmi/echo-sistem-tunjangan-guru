@@ -21,7 +21,7 @@ class Peserta_didik extends MY_Controller
     // lakukan proses init halaman
     $sent_data = array();
     $this->session->set_userdata('menu', 'peserta_didik');
-    // $sent_data = $this->db->get_where('progurinda_r_mapel', 'nip IS NOT NULL')->row_array();
+    // $sent_data = $this->db->get_where('progurinda_r_siswa', 'nisn IS NOT NULL')->row_array();
     $data = array(
       'page_title' => "Manajemen Peserta Didik",
       'module' => "peserta_didik",
@@ -61,7 +61,7 @@ class Peserta_didik extends MY_Controller
   public function modal()
   {
     $type = $this->input->post('type');
-    $id = $this->input->post('id');
+    $id_siswa = $this->input->post('id_siswa');
 
     /// |----------------------------------------
     /// | DEFAULT VALUE
@@ -80,13 +80,16 @@ class Peserta_didik extends MY_Controller
           /// | INSERT DATA
           /// |----------------------------------------
           $dataset = [
+            'nama' => '',
             'nisn' => '',
-            'nama_lengkap' => '',
-            'sekolah' => '',
-            'kelas' => '',
-            'konsentrasi' => '',
-            'agama' => '',
-            'id' => $id
+            'nia' => '',
+            'jenis_kelamin' => '',
+            'kode_agama' => '',
+            'nama_ayah' => '',
+            'nama_ibu' => '',
+            'no_kk' => '',
+            'alamat' => '',
+            'id_siswa' => $id_siswa
           ];
           $data = [
             'modal_title' => "Tambah Peserta Didik",
@@ -103,7 +106,7 @@ class Peserta_didik extends MY_Controller
           /// |----------------------------------------
           /// | EDIT DATA
           /// |----------------------------------------
-          $dataset = $this->mpd->get('v_progurinda_peserta_didik', "id = '$id'");
+          $dataset = $this->mpd->get('progurinda_r_siswa', "id_siswa = '$id_siswa'");
           $data = [
             'modal_title' => "Edit Peserta Didik",
             'data' => $dataset,
@@ -119,7 +122,7 @@ class Peserta_didik extends MY_Controller
           /// |----------------------------------------
           /// | DELETE DATA
           /// |----------------------------------------
-          $dataset = $this->mpd->get('v_progurinda_peserta_didik', "id = '$id'");
+          $dataset = $this->mpd->get('progurinda_r_siswa', "id_siswa = '$id_siswa'");
           if (isset_nn_nes($dataset)) {
             $data = [
               'modal_title' => "Hapus Peserta Didik",
@@ -150,16 +153,20 @@ class Peserta_didik extends MY_Controller
     /// |----------------------------------------
     $post = $this->input->post();
     $data_to_save = array(
-      'id' => $post['id'],
-      'nisn' => $post['nisn'],
+      'id_siswa' => $post['id_siswa'],
       'nama_lengkap' => $post['nama_lengkap'],
-      'sekolah' => $post['sekolah'],
-      'kelas' => $post['kelas'],
-      'konsentrasi' => $post['konsentrasi'],
-      'agama' => $post['agama']
+      'nisn' => $post['nisn'],
+      'nia' => $post['nia'],
+      'jenis_kelamin' => $post['jenis_kelamin'],
+      'kode_agama' => $post['kode_agama'],
+      'nama_ayah' => $post['nama_ayah'],
+      'nama_ibu' => $post['nama_ibu'],
+      'no_kk' => $post['no_kk'],
+      'alamat' => $post['alamat'],
+      's_aktif' => 'Y'
     );
 
-    $res = $this->mmpg->save($data_to_save);
+    $res = $this->mpd->save($data_to_save);
 
     return $this->output
       ->set_content_type('application/json')
@@ -173,7 +180,7 @@ class Peserta_didik extends MY_Controller
       'message' => "Maaf, proses penghapusan data peserta didik gagal dilakukan!"
     ];
 
-    $data["id"] = $this->input->post('id');
+    $data["id_siswa"] = $this->input->post('id_siswa');
     $res = $this->mpd->delete($data);
 
     return $this->output

@@ -31,7 +31,7 @@
 
           <div class="table-responsive mt-4">
 
-            <div class="_loading loading_tabel_user">
+            <div class="_loading loading_tabel_pd">
               <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>
             </div>
 
@@ -40,11 +40,13 @@
               <thead class="bg-info text-white">
                 <tr class="text-center">
                   <th scope="col">No.</th>
-                  <th scope="col">Nama Lengkap / NISN</th>
-                  <th scope="col">Sekolah</th>
-                  <th scope="col">Kelas</th>
-                  <th scope="col">Konsentrasi</th>
+                  <th scope="col">Nama Lengkap</th>
+                  <th scope="col">NISN</th>
+                  <th scope="col">NIA</th>
+                  <th scope="col">Jenis Kelamin</th>
                   <th scope="col">Agama</th>
+                  <th scope="col">Alamat</th>
+                  <th scope="col">Aktif</th>
                   <th scope="col">Aksi</th>
                 </tr>
               </thead>
@@ -68,7 +70,7 @@
 
 <script>
   var init_btn_add = false;
-  let urlDatatable = "<?= site_url('user/get_data') ?>";
+  let urlDatatable = "<?= site_url('peserta_didik/datalist') ?>";
   var tabel_pd = $("#table_pd").DataTable({
     responsive: true,
     processing: false,
@@ -111,7 +113,7 @@
         }
       },
       {
-        data: 'id_user',
+        data: 'nama',
         orderable: true,
         className: '',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -119,7 +121,7 @@
         }
       },
       {
-        data: 'username',
+        data: 'nisn',
         orderable: false,
         className: '',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -127,7 +129,15 @@
         }
       },
       {
-        data: 'kewenangan',
+        data: 'nia',
+        orderable: false,
+        className: '',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-start">' + cellData + '</div>');
+        }
+      },
+      {
+        data: 'jenis_kelamin',
         orderable: false,
         className: '',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -135,7 +145,7 @@
         }
       },
       {
-        data: 'ket_ukerja',
+        data: 'kode_agama',
         orderable: false,
         className: '',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -143,7 +153,15 @@
         }
       },
       {
-        data: 'aktif',
+        data: 'alamat',
+        orderable: false,
+        className: '',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-start">' + cellData + '</div>');
+        }
+      },
+      {
+        data: 's_aktif',
         orderable: false,
         className: '',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -151,13 +169,13 @@
         }
       },
       {
-        data: 'id_user',
+        data: 'id_siswa',
         orderable: false,
         className: '',
         createdCell: function(td, cellData, rowData, row, col) {
           let kewenangan_user = '<?= $this->session->userdata('kewenangan'); ?>';
-          let btn_user_management = '<a href="<?= site_url('user/menu_management/'); ?>' + cellData + '" class="badge bg-secondary clickable me-1" title="Menu Management">' +
-            '<i class="fas fa-list"></i></a>';
+          // let btn_user_management = '<a href="<?= site_url('user/menu_management/'); ?>' + cellData + '" class="badge bg-secondary clickable me-1" title="Menu Management">' +
+          //   '<i class="fas fa-list"></i></a>';
 
           let btn_edit = '<div onclick="modal(`' + cellData + '`, `edit`)" class="badge bg-primary clickable me-1" title="Edit">' +
             '<i class="fas fa-edit"></i></div>';
@@ -182,7 +200,7 @@
       /* parameter callback untuk kostumisasi fungsi */
       $('.loading_tabel_pd').removeClass('show');
 
-      let btn_add = '<button class="btn btn-sm btn-success me-2" onclick="modal(`0`,`tambah_pd`)">' +
+      let btn_add = '<button class="btn btn-sm btn-success me-2" onclick="modal(`0`,`tambah_peserta_didik`)">' +
         '<i class="fas fa-plus me-1"></i>Tambah Peserta Didik' +
         '</button>';
 
@@ -200,13 +218,13 @@
     tabel_pd.ajax.reload();
   }
 
-  function modal(id, type) {
+  function modal(id_siswa, type) {
     var url = "<?= site_url('peserta_didik/modal') ?>";
     $.ajax({
       type: "POST",
       url: url,
       data: {
-        username: id,
+        id_siswa: id_siswa,
         type: type
       },
       success: function(res) {
