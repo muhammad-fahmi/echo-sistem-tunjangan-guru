@@ -250,82 +250,89 @@
         <!-- Sidebar navigation-->
         <nav class="sidebar-nav">
           <ul id="sidebarnav">
-            <li class="nav-small-cap">
-              <i class="mdi mdi-dots-horizontal"></i>
-              <span class="hide-menu">Menu Sistem</span>
-            </li>
-            <?php if ($this->session->userdata("kewenangan") == "00") { ?>
-              <li class="sidebar-item">
-                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("dashboard"); ?>" aria-expanded="false"><i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Dashboard Monitoring</span></a>
+            <?php
+            $cur_menu = $this->session->userdata('menu');
+            if (substr($cur_menu, 0, 3) == 'PDT') {
+              /// |----------------------------------------
+              /// | LOAD MENU FROM DB USING HELPER
+              /// |----------------------------------------
+              menu_loader();
+            } else {
+              /// |----------------------------------------
+              /// | HARDCODED MENU
+              /// |----------------------------------------
+            ?>
+              <li class="nav-small-cap">
+                <i class="mdi mdi-dots-horizontal"></i>
+                <span class="hide-menu">Menu Sistem</span>
               </li>
-            <?php } ?>
+              <?php if ($this->session->userdata("kewenangan") == "00") { ?>
+                <li class="sidebar-item">
+                  <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("dashboard"); ?>" aria-expanded="false"><i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Dashboard Monitoring</span></a>
+                </li>
+              <?php } ?>
 
-            <li class="sidebar-item">
-              <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-settings"></i><span class="hide-menu">Setup</span></a>
-              <ul aria-expanded="false" class="collapse first-level">
-                <?php if ($this->session->userdata("kewenangan") == "00") { ?>
+              <li class="sidebar-item">
+                <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-settings"></i><span class="hide-menu">Setup</span></a>
+                <ul aria-expanded="false" class="collapse first-level">
+                  <?php if ($this->session->userdata("kewenangan") == "00") { ?>
+                    <li class="sidebar-item">
+                      <a href="<?= site_url("user"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
+                          User
+                        </span></a>
+                    </li>
+                  <?php } ?>
                   <li class="sidebar-item">
-                    <a href="<?= site_url("user"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
-                        User
+                    <a href="<?= site_url("mapel_guru"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
+                        Mapel Guru
                       </span></a>
                   </li>
-                <?php } ?>
-                <li class="sidebar-item">
-                  <a href="<?= site_url("mapel_guru"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
-                      Mapel Guru
-                    </span></a>
-                </li>
-                <li class="sidebar-item">
-                  <a href="<?= site_url("tugas_tambahan"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
-                      Tugas Tambahan Guru
-                    </span></a>
-                </li>
-              </ul>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-pencil"></i><span class="hide-menu">Input Data</span></a>
-              <ul aria-expanded="false" class="collapse first-level">
-                <li class="sidebar-item">
-                  <a href="<?= site_url("presensi"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
-                      Presensi Pegawai
-                    </span></a>
-                </li>
-                <li class="sidebar-item">
-                  <a href="<?= site_url("jurnal_mengajar"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
-                      Jurnal Mengajar
-                    </span></a>
-                </li>
-                <li class="sidebar-item">
-                  <a href="<?= site_url("pegawai_off"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
-                      Non Aktifkan Pegawai
-                    </span></a>
-                </li>
-              </ul>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("tpp_per_bulan") ?>" aria-expanded="false"><i class="mdi mdi-directions"></i><span class="hide-menu">List TPP Per Bulan</span></a>
-            </li>
-            <!-- <li class="sidebar-item">
-              <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("tpp_per_bulan") ?>" aria-expanded="false"><i class="mdi mdi-directions"></i><span class="hide-menu">Cuti</span></a>
-            </li> -->
-            <li class="sidebar-item">
-              <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-file-document"></i><span class="hide-menu">Laporan</span></a>
-              <ul aria-expanded="false" class="collapse first-level">
-                <li class="sidebar-item">
-                  <a href="<?= site_url("laporan/tpp_3_bln") ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
-                      TPP Per 3 Bulan
-                    </span></a>
-                </li>
-                <!-- <li class="sidebar-item">
-                  <a href="<?= site_url("laporan/jurnal_bulanan") ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
-                      Jurnal Mengajar
-                    </span></a>
-                </li> -->
-              </ul>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("login/logout") ?>" aria-expanded="false"><i class="mdi mdi-directions"></i><span class="hide-menu">Log Out</span></a>
-            </li>
+                  <li class="sidebar-item">
+                    <a href="<?= site_url("tugas_tambahan"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
+                        Tugas Tambahan Guru
+                      </span></a>
+                  </li>
+                </ul>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-pencil"></i><span class="hide-menu">Input Data</span></a>
+                <ul aria-expanded="false" class="collapse first-level">
+                  <li class="sidebar-item">
+                    <a href="<?= site_url("presensi"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
+                        Presensi Pegawai
+                      </span></a>
+                  </li>
+                  <li class="sidebar-item">
+                    <a href="<?= site_url("jurnal_mengajar"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
+                        Jurnal Mengajar
+                      </span></a>
+                  </li>
+                  <li class="sidebar-item">
+                    <a href="<?= site_url("pegawai_off"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
+                        Non Aktifkan Pegawai
+                      </span></a>
+                  </li>
+                </ul>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("tpp_per_bulan") ?>" aria-expanded="false"><i class="mdi mdi-directions"></i><span class="hide-menu">List TPP Per Bulan</span></a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-file-document"></i><span class="hide-menu">Laporan</span></a>
+                <ul aria-expanded="false" class="collapse first-level">
+                  <li class="sidebar-item">
+                    <a href="<?= site_url("laporan/tpp_3_bln") ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
+                        TPP Per 3 Bulan
+                      </span></a>
+                  </li>
+                </ul>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("login/logout") ?>" aria-expanded="false"><i class="mdi mdi-directions"></i><span class="hide-menu">Log Out</span></a>
+              </li>
+            <?php
+            }
+            ?>
           </ul>
         </nav>
         <!-- End Sidebar navigation -->
