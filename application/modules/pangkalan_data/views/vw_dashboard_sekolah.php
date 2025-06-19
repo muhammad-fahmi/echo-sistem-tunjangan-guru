@@ -215,7 +215,12 @@
               </table>
             </div>
           </div>
+
+          <div class="row">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.659744381474!2d117.1386300758696!3d-0.5108356352720974!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2df67fbb2d3ac943%3A0xf8018e7d7a7a8af2!2sSMP%20Negeri%203%20Samarinda!5e0!3m2!1sid!2sid!4v1750324897367!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
         </div>
+
       </div>
     </div>
 
