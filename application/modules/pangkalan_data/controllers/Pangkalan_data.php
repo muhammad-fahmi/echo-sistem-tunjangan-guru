@@ -9,8 +9,6 @@ class Pangkalan_data extends MY_Controller
   {
     parent::__construct();
     $log = $this->session->userdata('logged_in');
-    $user = $this->session->userdata('username');
-    $kewenangan = $this->session->userdata('kewenangan');
     // TODO : 
     // masih menunggu design kewenangan utk pangakalan data
     if ($log != true) {
@@ -23,62 +21,69 @@ class Pangkalan_data extends MY_Controller
   /// |----------------------------------------------------------------------
   /// | >> PRIVATE FUNCTION
   /// |----------------------------------------------------------------------
-  private function display_list_ks()
-  {
-    $this->session->set_userdata('menu', 'pangkalan_data/ks');
-    // TODO : 
-    // array kosong aja dulu, belum ada static data yg diperlukan
-    $sent_data = [];
-    $data = array(
-      'page_title' => "Data Kepala Sekolah | PROGURINDA",
-      'module' => "pangkalan_data",
-      'view' => "vw_list_ks",
-      'data' => $sent_data
-    );
-    echo Modules::run('layout/backend', $data);
-  }
-
-  private function display_list_ptk()
-  {
-    $this->session->set_userdata('menu', 'pangkalan_data/ptk');
-    // TODO : 
-    // array kosong aja dulu, belum ada static data yg diperlukan
-    $sent_data = [];
-    $data = array(
-      'page_title' => "Data Sekolah | PROGURINDA",
-      'module' => "pangkalan_data",
-      'view' => "vw_list_ks",
-      'data' => $sent_data
-    );
-    echo Modules::run('layout/backend', $data);
-  }
 
   /// |----------------------------------------------------------------------
   /// | >> PAGE LOAD FUNCTION
   /// |----------------------------------------------------------------------
-  public function index($default_route = 'list_ks')
+  public function index()
   {
-    $route = sanitize_string($default_route);
-    $perm = null; // nanti ditentukan akses ke route yg dtuju, nunggu design DB dari dharma
-
-    switch ($route) {
-      case 'list_ks':
-        $this->display_list_ks();
-        break;
-
-      case 'list_ptk':
-        $this->display_list_ptk();
-        break;
-
-      default:
-        $this->display_list_ks();
-        break;
+    $this->session->set_userdata('menu', 'pangkalan_data');
+    $cur_kewenangan = $this->session->userdata('kewenangan');
+    if (in_array($cur_kewenangan, ['00', '02'])) {
+      $view = 'vw_dashboard_admin';
+      $sent_data = [];
+    } else {
+      $view = 'vw_dashboard_sekolah';
+      $kode_unor = $this->session->userdata('kode_unor');
+      $ukerja_simpeg = fetch_row_data('m_ukerja', ['kode_ukerja' => $kode_unor], false);
+      $ukerja_profil = fetch_row_data('m_profil_sekolah', ['kode_ukerja' => $kode_unor], false);
+      $sent_data = [];
+      if ($ukerja_profil !== false) {
+        $sent_data = $ukerja_profil;
+      } else if ($ukerja_simpeg !== false) {
+        $sent_data = $ukerja_simpeg;
+      }
     }
+
+    $data = array(
+      'page_title' => "Dashboard Pangkalan Data | PROGURINDA",
+      'module' => "pangkalan_data",
+      'view' => $view,
+      'data' => $sent_data
+    );
+    echo Modules::run('layout/backend', $data);
   }
 
   /// |----------------------------------------------------------------------
   /// | >> AJAX REQUEST FUNCTIONS
   /// |----------------------------------------------------------------------
+  public function datatable_sekolah()
+  {
+    // get index value
+    $index = $this->input->post("order[0][column]");
+    // insert datatable param to transfer
+    $param = array(
+      'start' => $this->input->post("start"),
+      'length' => $this->input->post("length"),
+      'order_column' => $this->input->post("columns[$index][data]"),
+      'order_sort' => $this->input->post("order[0][dir]"),
+      'search' => $this->input->post("search[value]"),
+      'draw' => $this->input->post("draw"),
+      /* additional data can be declared here */
+    );
+    // move the db operation to the designated models
+    $result = $this->mdl_pkldata->get_datatable_sekolah($param);
+    // return the data back to the views
+    $data["recordsTotal"] = $result['total'];
+    $data["recordsFiltered"] = $result['filtered'];
+    $data["data"] = $result['data'];
+    $data["draw"] = $result['draw'];
+    // using common_helper function
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
   public function modal()
   {
     $username = $this->input->post('username');

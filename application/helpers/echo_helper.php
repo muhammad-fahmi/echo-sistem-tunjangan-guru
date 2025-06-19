@@ -18,6 +18,60 @@ function isset_nn_nes($data, $placeholder = null)
   }
 }
 
+/**
+ * Checks if a variable has a valid value (not empty).
+ * 
+ * @param mixed $data The variable to check
+ * @param string|int|null $key_to_check If $data is an array/object, check this specific key/property
+ * @param mixed $placeholder_if_not_valid Value to return if check fails
+ * @return mixed Returns boolean result of check or placeholder/original value based on parameters
+ */
+function check_var($data, $key_to_check = null, $placeholder_if_not_valid = null)
+{
+  // Special handling for $placeholder_if_not_valid parameter
+  $use_placeholder = func_num_args() > 2;
+
+  // First, get the target data to check
+  if ($key_to_check !== null) {
+    if (is_array($data) && array_key_exists($key_to_check, $data)) {
+      $data = $data[$key_to_check];
+      $exists = true;
+    } elseif (is_object($data) && property_exists($data, $key_to_check)) {
+      $data = $data->$key_to_check;
+      $exists = true;
+    } else {
+      $exists = false;
+    }
+  } else {
+    $exists = true;
+  }
+
+  // If the key doesn't exist, return false or the placeholder
+  if (!$exists) {
+    return $use_placeholder ? $placeholder_if_not_valid : false;
+  }
+
+  // Check if the value is valid (not empty)
+  $is_valid = false;
+
+  if (is_array($data)) {
+    $is_valid = count($data) > 0;
+  } elseif (is_object($data)) {
+    $is_valid = true; // Objects are always considered valid, unless null
+  } elseif (is_numeric($data) || $data === '0' || $data === 0) {
+    $is_valid = true; // Fix: Numeric values (including 0) are considered valid
+  } else {
+    $is_valid = trim((string)$data) !== '';
+  }
+
+  // Return appropriate value based on validity and placeholder setting
+  if ($use_placeholder) {
+    return $is_valid ? $data : $placeholder_if_not_valid;
+  }
+
+  return $is_valid;
+}
+
 /** hapus / unset array key yang memiliki nilai berupa string kosong / null */
 function trim_array($data_array)
 {
@@ -371,6 +425,44 @@ function short_num($num, $decimals = 2, $lang = 'en',  $caps = false)
   }
 
   return $result;
+}
+
+/** fungsi untuk ngambil data yang ada di field tertentu pada tabel sesuai dengan kondisi `where` */
+function fetch_single_data($table_name, $field_name, $where = null, $placeholder = '')
+{
+  $CI = &get_instance();
+  if ($where == null) return $placeholder;
+  $q = $CI->db->get_where($table_name, $where);
+  $count = $q->num_rows();
+  if ($count < 1) return $placeholder;
+  $data = $q->row_array();
+  if (!isset($data[$field_name])) return $placeholder;
+
+  return $data[$field_name];
+}
+
+/** fungsi untuk ngambil 1 row dari tabel dengan kondisi yang ditentukan */
+function fetch_row_data($table_name, $where = null, $placeholder = '')
+{
+  $CI = &get_instance();
+  if ($where == null) return $placeholder;
+  $q = $CI->db->get_where($table_name, $where);
+  $count = $q->num_rows();
+  if ($count < 1) return $placeholder;
+  $data = $q->row_array();
+
+  return $data;
+}
+
+/** fungsi untuk ngambil nilai apakah ada atau tidak di DB */
+function fetch_num_rows($table_name, $where = null)
+{
+  $CI = &get_instance();
+  if ($where == null) return 0;
+  $q = $CI->db->get_where($table_name, $where);
+  $count = $q->num_rows();
+
+  return $count;
 }
 
 /** lakukan enkripsi bcrypt pada string password yang diisi sebagai parameter. output berupa hashed password */
