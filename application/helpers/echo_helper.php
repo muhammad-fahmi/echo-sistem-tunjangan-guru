@@ -622,6 +622,7 @@ function menu_loader($echo = true)
     ->order_by('order', 'asc')->get()->result_array();
 
   $html = '';
+  $cur_parent_dropdown = false;
   if (isset_nn_nes($data)) {
     foreach ($data as $v) {
       if ($v['id_menu'] == '-') {
@@ -631,13 +632,58 @@ function menu_loader($echo = true)
         // output menu
         $active = ($cur_menu == $v['id_menu']) ? 'selected' : '';
         $icon = check_var($v, 'icon', 'mdi mdi-view-dashboard');
+        $subs = (check_var($v, 'menu_sub', false) === false)
+          ? ''
+          : '<div class="sub">' . $v['menu_sub'] . '</div>';
 
-        // $html .= '<li class="sidebar-item ' . $active . '"><a class="sidebar-link waves-effect waves-dark sidebar-link" href="' . site_url(check_var($v, 'url', 'pangkalan_data')) . '" aria-expanded="false"><i class="' . $icon . '"></i><span class="hide-menu">' . check_var($v, 'menu_title', 'UNKNOWN') . '</span></a></li>';
+        if ($cur_parent_dropdown && $v['is_child'] == 'NO') {
+          /// |----------------------------------------
+          /// | CLOSE THE DROPDOWN
+          /// |----------------------------------------
+          $html .= '</ul></li>';
+          $cur_parent_dropdown = false;
+        }
 
-        $html .= '<li class="sidebar-item ' . $active . '">
-            <a href="' . site_url(check_var($v, 'url', '#')) . '" class="sidebar-link">
-              <i class="' . $icon . '"></i>
-              <span class="hide-menu">' . check_var($v, 'menu_title', 'UNKNOWN') . '</span>
+        if (
+          !$cur_parent_dropdown &&
+          $v['is_parent'] == 'YES'
+          && $v['is_child'] == 'NO'
+        ) {
+          /// |----------------------------------------
+          /// | BUATKAN OPENER UNTUK DROPDOWN
+          /// |----------------------------------------
+          $cur_parent_dropdown = true;
+          if (strpos($cur_menu, $v['id_menu']) !== false) {
+            $parent_active = 'selected';
+            $a_expand = 'true';
+            $c_open = 'expand';
+          } else {
+            $parent_active = '';
+            $a_expand = 'false';
+            $c_open = 'collapse';
+          }
+          $html .= '<li class="bz_sidebar_item parent_item ' . $v['id_menu'] . ' ' . $parent_active . '">
+            <a class="sidebar_link" href="javascript:void(0)" aria-expanded="' . $a_expand . '">
+              <div class="icon"><i class="' . $icon . '"></i></div>
+              <div class="menu_title">
+                <div class="main">' . check_var($v, 'menu_title', 'UNKNOWN') . '</div>
+                ' . $subs . '
+              </div>
+              <ul aria-expanded="' . $a_expand . '" class="' . $c_open . ' first-level">';
+
+          continue;
+        }
+
+        /// |----------------------------------------
+        /// | OUTPUT MENU NORMALLY
+        /// |----------------------------------------
+        $html .= '<li class="bz_sidebar_item ' . $v['id_menu'] . ' ' . $active . '">
+            <a href="' . site_url(check_var($v, 'url', '#')) . '" class="sidebar_link">
+              <div class="icon"><i class="' . $icon . '"></i></div>
+              <div class="menu_title">
+                <div class="main">' . check_var($v, 'menu_title', 'UNKNOWN') . '</div>
+                ' . $subs . '
+              </div>
             </a>
           </li>';
       }

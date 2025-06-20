@@ -52,7 +52,7 @@
   <!--Wave Effects -->
   <script src="<?= base_url("theme/dist/js/waves.js"); ?>"></script>
   <!--Menu sidebar -->
-  <script src="<?= base_url("theme/dist/js/sidebarmenu.js"); ?>"></script>
+  <script src="<?= base_url("theme/dist/js/sidebarmenu.js?v=2"); ?>"></script>
   <!--Custom JavaScript -->
   <script src="<?= base_url("theme/dist/js/feather.min.js"); ?>"></script>
   <script src="<?= base_url("theme/dist/js/custom.min.js"); ?>"></script>

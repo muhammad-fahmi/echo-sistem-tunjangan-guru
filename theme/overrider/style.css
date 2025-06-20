@@ -114,4 +114,75 @@ label.is-invalid {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+
+#main-wrapper nav.sidebar-nav .bz_sidebar_item {
+  width: 100%;
+  padding: 8px 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+#main-wrapper nav.sidebar-nav .bz_sidebar_item a {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-decoration: none;
+  color: gray;
+}
+#main-wrapper nav.sidebar-nav .bz_sidebar_item a .icon {
+  position: relative;
+  min-width: 30px;
+  text-align: center;
+}
+#main-wrapper nav.sidebar-nav .bz_sidebar_item a .menu_title {
+  position: relative;
+  width: 100%;
+}
+#main-wrapper nav.sidebar-nav .bz_sidebar_item a .menu_title .main {
+  position: relative;
+}
+#main-wrapper nav.sidebar-nav .bz_sidebar_item a .menu_title .sub {
+  position: relative;
+}
+#main-wrapper nav.sidebar-nav .bz_sidebar_item ul {
+  background-color: transparent !important;
+  padding: 5px;
+}
+#main-wrapper nav.sidebar-nav .bz_sidebar_item ul li {
+  margin-bottom: 5px;
+}
+#main-wrapper nav.sidebar-nav .bz_sidebar_item ul li:last-child {
+  margin-bottom: 0px;
+}
+#main-wrapper nav.sidebar-nav .bz_sidebar_item ul li:hover {
+  background-color: white;
+}
+#main-wrapper nav.sidebar-nav .bz_sidebar_item ul li:hover a {
+  color: #2c90ce;
+}
+#main-wrapper nav.sidebar-nav .bz_sidebar_item ul li.selected {
+  background-color: white;
+}
+#main-wrapper nav.sidebar-nav .bz_sidebar_item ul li.selected a {
+  color: #1582c6;
+}
+#main-wrapper nav.sidebar-nav .bz_sidebar_item:hover {
+  background-color: #2c90ce;
+}
+#main-wrapper nav.sidebar-nav .bz_sidebar_item:hover a {
+  color: white;
+}
+#main-wrapper nav.sidebar-nav .bz_sidebar_item.selected {
+  background-color: #1582c6;
+}
+#main-wrapper nav.sidebar-nav .bz_sidebar_item.selected a {
+  color: white;
+}
+#main-wrapper.mini-sidebar nav.sidebar-nav .menu_title {
+  display: none !important;
+}
+#main-wrapper.mini-sidebar li.parent_item ul {
+  display: none !important;
 }/*# sourceMappingURL=style.css.map */
