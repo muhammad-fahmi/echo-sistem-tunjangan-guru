@@ -597,6 +597,34 @@ function sanitize_string($string)
   return $string;
 }
 
+/** fungsi untuk ngecek permission ke database langsung, output true/false
+ * @param $menu: id_menu yang diakses, cek tabel m_menu
+ * @param $action: aksi yang akan dilakukan (read/ insert/ update/ delete/ verif)
+ * @return boolean
+ */
+function check_perm($action)
+{
+  $CI = &get_instance();
+  $cur_kewenangan = $CI->session->userdata('kewenangan');
+  $cur_menu = $CI->session->userdata('menu');
+
+  $valid_action = ['read', 'insert', 'update', 'delete', 'verif'];
+
+  if (!in_array($action, $valid_action)) return false;
+
+  $dataset = $CI->db->select($action)
+    ->from('v_kewenangan_menu')
+    ->group_start()
+    ->where(['id_kewenangan' => $cur_kewenangan])
+    ->or_where(['id_kewenangan' => 'OK'])
+    ->group_end()
+    ->where(['id_menu' => $cur_menu])
+    ->get()->row_array();
+
+  return ($dataset[$action] == 'YES') ? true : false;
+}
+
+
 /** fungsi untuk mencetak menu sidebar pada sistem cuti */
 function menu_loader($echo = true)
 {
@@ -695,6 +723,16 @@ function menu_loader($echo = true)
   } else {
     return $html;
   }
+}
+
+/** fungsi utk output array sebagai json response, parameter kedua merupakan response code (default: 200) */
+function output_json($response_array, $status_code = 200)
+{
+  $CI = &get_instance();
+  $CI->output
+    ->set_content_type('application/json')
+    ->set_status_header($status_code)
+    ->set_output(json_encode($response_array));
 }
 
 /** fungsi untuk pengecekan akses menu sistem cuti, return true kalau boleh mengakses */

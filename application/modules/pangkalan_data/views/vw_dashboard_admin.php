@@ -24,6 +24,7 @@
             <h4 class="card-title">SESSION DATA (DEBUG)</h4>
             <small>
               <?php highlight_string("<?php\nOUTPUT = " . var_export($this->session->userdata(), true) . ";\n?>"); ?>
+              <?php highlight_string("<?php\nOUTPUT = " . var_export(check_perm('insert'), true) . ";\n?>"); ?>
             </small>
           </div>
         </div>
