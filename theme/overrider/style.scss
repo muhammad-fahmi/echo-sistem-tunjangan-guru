@@ -54,6 +54,14 @@
 	}
 }
 
+.vat {
+	vertical-align: top;
+}
+
+.vam {
+	vertical-align: middle;
+}
+
 label.is-invalid {
 	color: #fc4b6c;
 	font-size: 9px;
@@ -144,11 +152,12 @@ label.is-invalid {
 
 				.icon {
 					position: relative;
-					min-width: 30px;
+					min-width: 21px;
 					text-align: center;
 				}
 
 				.menu_title {
+					padding-left: 8px;
 					position: relative;
 					width: 100%;
 
