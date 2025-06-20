@@ -598,7 +598,7 @@ function sanitize_string($string)
 }
 
 /** fungsi untuk mencetak menu sidebar pada sistem cuti */
-function menu_loader($privilege = '200', $menu = 'dashboard')
+function menu_loader($echo = true)
 {
   /// |----------------------------------------------------------------------
   /// | NOTE BEFORE USING
@@ -607,30 +607,47 @@ function menu_loader($privilege = '200', $menu = 'dashboard')
   // dan pastikan ada permission tag (privilege dipisah dengan koma)
   // dan pastikan ada order, untuk mengurutkan menunya
   $CI = &get_instance();
-  $table = 'm_menu';
+  $table = 'v_kewenangan_menu';
+
+  $cur_kewenangan = $CI->session->userdata('kewenangan');
+  $cur_menu = $CI->session->userdata('menu');
+
   // query untuk tarik data menu
   $data = $CI->db->select('*')->from($table)
-    ->where('id <> 0')
     ->group_start()
-    ->like('permission', 'all')
-    ->or_like('permission', $privilege)
+    ->where(['id_kewenangan' => $cur_kewenangan])
+    ->or_where(['id_kewenangan' => 'OK'])
     ->group_end()
+    ->where(['read' => 'YES'])
     ->order_by('order', 'asc')->get()->result_array();
+
+  $html = '';
   if (isset_nn_nes($data)) {
     foreach ($data as $v) {
-      if ($v['module'] == '-') {
+      if ($v['id_menu'] == '-') {
         // output hr separator
-        echo '<hr>';
+        $html .= '<hr>';
       } else {
         // output menu
-        $active = ($menu == $v['module']) ? 'active' : '';
-        echo '' .
-          '<a href="' . site_url($v['link']) . '" class="item ' . $active . '">
-            <div class="bg"></div>
-            <i class="fa ' . $v['icon'] . ' fa-fw"></i> ' . $v['name'] . '
-          </a>';
+        $active = ($cur_menu == $v['id_menu']) ? 'selected' : '';
+        $icon = check_var($v, 'icon', 'mdi mdi-view-dashboard');
+
+        // $html .= '<li class="sidebar-item ' . $active . '"><a class="sidebar-link waves-effect waves-dark sidebar-link" href="' . site_url(check_var($v, 'url', 'pangkalan_data')) . '" aria-expanded="false"><i class="' . $icon . '"></i><span class="hide-menu">' . check_var($v, 'menu_title', 'UNKNOWN') . '</span></a></li>';
+
+        $html .= '<li class="sidebar-item ' . $active . '">
+            <a href="' . site_url(check_var($v, 'url', '#')) . '" class="sidebar-link">
+              <i class="' . $icon . '"></i>
+              <span class="hide-menu">' . check_var($v, 'menu_title', 'UNKNOWN') . '</span>
+            </a>
+          </li>';
       }
     }
+  }
+
+  if ($echo) {
+    echo $html;
+  } else {
+    return $html;
   }
 }
 

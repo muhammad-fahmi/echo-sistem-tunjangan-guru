@@ -15,7 +15,7 @@
   <div class="row">
 
     <?php
-    $show_debug = false;
+    $show_debug = true;
     if ($show_debug) {
     ?>
       <div class="col-12">

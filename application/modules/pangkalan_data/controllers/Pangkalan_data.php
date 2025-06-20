@@ -27,7 +27,7 @@ class Pangkalan_data extends MY_Controller
   /// |----------------------------------------------------------------------
   public function index()
   {
-    $this->session->set_userdata('menu', 'pangkalan_data');
+    $this->session->set_userdata('menu', 'PDT_Dashboard');
     $cur_kewenangan = $this->session->userdata('kewenangan');
     if (in_array($cur_kewenangan, ['00', '02'])) {
       $view = 'vw_dashboard_admin';
