@@ -5,7 +5,7 @@
       <li class="breadcrumb-item">
         <a href="javascript:void(0)">Pangkalan Data</a>
       </li>
-      <li class="breadcrumb-item">Update Profil Sekolah</li>
+      <li class="breadcrumb-item">Form Profil Sekolah</li>
     </ol>
   </div>
 </div>
@@ -18,7 +18,7 @@
       <div class="card">
         <div class="card-header">
           <h4 class="card-title space-between">
-            <div>PROFIL SEKOLAH</div>
+            <div>FORM PROFIL SEKOLAH</div>
           </h4>
         </div>
         <!-- Form Update Profil Sekolah -->

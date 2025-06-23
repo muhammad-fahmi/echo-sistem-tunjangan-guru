@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
-class Peserta_didik extends MY_Controller
+class Pdt_peserta_didik extends MY_Controller
 {
   public function __construct()
   {
@@ -12,7 +12,7 @@ class Peserta_didik extends MY_Controller
     if ($log != true) {
       redirect(site_url('login'));
     } else {
-      $this->load->model('mdl_peserta_didik', 'mpd');
+      $this->load->model('mdl_pdt_peserta_didik', 'mpd');
     }
   }
 
@@ -20,11 +20,9 @@ class Peserta_didik extends MY_Controller
   {
     // lakukan proses init halaman
     $sent_data = array();
-    $this->session->set_userdata('menu', 'peserta_didik');
-    // $sent_data = $this->db->get_where('progurinda_r_siswa', 'nisn IS NOT NULL')->row_array();
     $data = array(
-      'page_title' => "Manajemen Peserta Didik",
-      'module' => "peserta_didik",
+      'page_title' => "Peserta Didik | Pangkalan Data Progurinda",
+      'module' => "pdt_peserta_didik",
       'view' => "vw_peserta_didik_list",
       'data' => $sent_data
     );

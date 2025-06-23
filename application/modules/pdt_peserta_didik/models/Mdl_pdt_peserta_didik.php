@@ -1,6 +1,6 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Mdl_peserta_didik extends CI_Model
+class Mdl_pdt_peserta_didik extends CI_Model
 {
   /** fungsi untuk menarik data dari database */
   public function get($table, $where = null, $result_array = false)
