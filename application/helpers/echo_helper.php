@@ -597,16 +597,37 @@ function sanitize_string($string)
   return $string;
 }
 
+/** simple function to get default periode bln array */
+function array_periode_bulan()
+{
+  return [
+    '01' => '01 - Januari',
+    '02' => '01 - Februari',
+    '03' => '01 - Maret',
+    '04' => '01 - April',
+    '05' => '01 - Mei',
+    '06' => '01 - Juni',
+    '07' => '01 - Juli',
+    '08' => '01 - Agustus',
+    '09' => '01 - September',
+    '10' => '01 - Oktober',
+    '11' => '01 - November',
+    '12' => '01 - Desember',
+  ];
+}
+
 /** fungsi untuk ngecek permission ke database langsung, output true/false
  * @param $menu: id_menu yang diakses, cek tabel m_menu
  * @param $action: aksi yang akan dilakukan (read/ insert/ update/ delete/ verif)
  * @return boolean
  */
-function check_perm($action)
+function check_perm($action, $menu = null)
 {
   $CI = &get_instance();
   $cur_kewenangan = $CI->session->userdata('kewenangan');
-  $cur_menu = $CI->session->userdata('menu');
+  $cur_menu = ($menu === null)
+    ? $CI->session->userdata('menu')
+    : $menu;
 
   $valid_action = ['read', 'insert', 'update', 'delete', 'verif'];
 

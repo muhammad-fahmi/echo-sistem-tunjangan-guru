@@ -50,6 +50,14 @@
   opacity: 1;
 }
 
+.vat {
+  vertical-align: top;
+}
+
+.vam {
+  vertical-align: middle;
+}
+
 label.is-invalid {
   color: #fc4b6c;
   font-size: 9px;
@@ -133,10 +141,11 @@ label.is-invalid {
 }
 #main-wrapper nav.sidebar-nav .bz_sidebar_item a .icon {
   position: relative;
-  min-width: 30px;
+  min-width: 21px;
   text-align: center;
 }
 #main-wrapper nav.sidebar-nav .bz_sidebar_item a .menu_title {
+  padding-left: 8px;
   position: relative;
   width: 100%;
 }
