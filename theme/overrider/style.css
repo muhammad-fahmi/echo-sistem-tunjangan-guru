@@ -194,4 +194,8 @@ label.is-invalid {
 }
 #main-wrapper.mini-sidebar li.parent_item ul {
   display: none !important;
+}
+
+.notifyjs-corner {
+  z-index: 12840 !important;
 }/*# sourceMappingURL=style.css.map */

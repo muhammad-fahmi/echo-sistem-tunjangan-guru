@@ -465,6 +465,28 @@ function fetch_num_rows($table_name, $where = null)
   return $count;
 }
 
+/**
+ * Securely get POST input with optional XSS filtering.
+ */
+function post_safe($key = null, $default = null)
+{
+  $CI = &get_instance();
+  $value = $CI->input->post($key, TRUE); // TRUE enables XSS filtering
+
+  return $value !== null ? $value : $default;
+}
+
+/**
+ * Securely get GET input with optional XSS filtering.
+ */
+function get_safe($key = null, $default = null)
+{
+  $CI = &get_instance();
+  $value = $CI->input->get($key, TRUE);
+
+  return $value !== null ? $value : $default;
+}
+
 /** lakukan enkripsi bcrypt pada string password yang diisi sebagai parameter. output berupa hashed password */
 function encrypt_pwd($pwd)
 {
@@ -602,17 +624,17 @@ function array_periode_bulan()
 {
   return [
     '01' => '01 - Januari',
-    '02' => '01 - Februari',
-    '03' => '01 - Maret',
-    '04' => '01 - April',
-    '05' => '01 - Mei',
-    '06' => '01 - Juni',
-    '07' => '01 - Juli',
-    '08' => '01 - Agustus',
-    '09' => '01 - September',
-    '10' => '01 - Oktober',
-    '11' => '01 - November',
-    '12' => '01 - Desember',
+    '02' => '02 - Februari',
+    '03' => '03 - Maret',
+    '04' => '04 - April',
+    '05' => '05 - Mei',
+    '06' => '06 - Juni',
+    '07' => '07 - Juli',
+    '08' => '08 - Agustus',
+    '09' => '09 - September',
+    '10' => '10 - Oktober',
+    '11' => '11 - November',
+    '12' => '12 - Desember',
   ];
 }
 
@@ -726,8 +748,15 @@ function menu_loader($echo = true)
         /// |----------------------------------------
         /// | OUTPUT MENU NORMALLY
         /// |----------------------------------------
+        if (check_var($v, 'on_dev', 'NO') == 'YES') {
+          $href = 'href="#"';
+          $onclick = 'onclick="on_dev()"';
+        } else {
+          $href = 'href="' . site_url(check_var($v, 'url', '#')) . '"';
+          $onclick = '';
+        }
         $html .= '<li class="bz_sidebar_item ' . $v['id_menu'] . ' ' . $active . '">
-            <a href="' . site_url(check_var($v, 'url', '#')) . '" class="sidebar_link">
+            <a ' . $href . ' ' . $onclick . ' class="sidebar_link">
               <div class="icon"><i class="' . $icon . '"></i></div>
               <div class="menu_title">
                 <div class="main">' . check_var($v, 'menu_title', 'UNKNOWN') . '</div>

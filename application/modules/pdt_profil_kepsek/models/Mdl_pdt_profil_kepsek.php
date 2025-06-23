@@ -154,4 +154,111 @@ class Mdl_pdt_profil_kepsek extends CI_Model
       'draw' => (int)$data['draw']
     );
   }
+
+  /// |----------------------------------------------------------------------
+  /// | >> FUNGSI CRUD
+  /// |----------------------------------------------------------------------
+  public function tambah_profil_kepsek($post)
+  {
+    // FORM VALIDATION
+    $this->load->library('form_validation');
+
+    // Define validation rules
+    $this->form_validation->set_rules('nip', 'NIP', 'required|numeric');
+    $this->form_validation->set_rules('kode_ukerja', 'Kode Unit Kerja', 'required|numeric');
+    $this->form_validation->set_rules('periode_bln', 'Periode (Bulan)', 'required|numeric');
+    $this->form_validation->set_rules('periode_thn', 'Periode (Tahun)', 'required|numeric');
+
+    // Validate the input data
+    if ($this->form_validation->run() === FALSE) {
+      // Collect errors
+      $errors = validation_errors('<li>', '</li>'); // This will return a string with errors formatted as HTML
+
+      // Build error list
+      $error_list = '<ul class="mb-0">';
+      $error_list .= $errors;
+      $error_list .= '</ul>';
+
+      // Return response with error details
+      return [
+        'status' => false,
+        'message' => 'Proses tidak bisa dilanjutkan karena form tidak valid.<br>' . $error_list
+      ];
+    }
+
+    // TARIK DATA PEGAWAI YG DIPILIH
+    $data_pegawai = fetch_row_data('v_pns', ['nip' => $post['nip']], false);
+    if ($data_pegawai === false) return [
+      'status' => false,
+      'message' => 'Maaf, NIP yang dipilih tidak valid lagi.'
+    ];
+
+    // NORMALISASI DATA DARI V_PNS KE FORMAT M_PROFIL
+    $cur_user = $this->session->userdata('id_user');
+    $data_to_save = [
+      'periode_bln' => $post['periode_bln'],
+      'periode_thn' => $post['periode_thn'],
+      'create_on' => em_date('Y-m-d H:i:s'),
+      'create_by' => $cur_user,
+      'status_dokumen' => 'DRAFT',
+      'kode_ukerja' => $post['kode_ukerja'],
+      'nip' => $post['nip'],
+      'nama' => trim($data_pegawai['nama_lengkap']),
+      'nuptr' => null, /* sumber di v_pns (?) */
+      'nurs' => null, /* sumber di v_pns (?) */
+      'nrg' => null, /* sumber di v_pns (?) */
+      'nik' => check_var($data_pegawai, 'nik', null),
+      'tgl_lahir' => check_var($data_pegawai, 'tgl_lahir', null),
+      'jenis_kelamin' => check_var($data_pegawai, 'j_kelamin', null),
+      'alamat_saat_ini' => check_var($data_pegawai, 'tt_alamat', null),
+      'status_pernikahan' => check_var($data_pegawai, 'ket_kawin', null),
+
+      /* belum di re-check */
+      'kode_didik' => check_var($data_pegawai, 'kode_didik', null),
+      'pendidikan' => check_var($data_pegawai, 'pendidikan', null),
+      'no_sertifikat_pendidik' => check_var($data_pegawai, 'no_sertifikat_pendidik', null),
+      'no_sertifikat_gp' => check_var($data_pegawai, 'no_sertifikat_gp', null),
+      'no_sertifikat_crs' => check_var($data_pegawai, 'no_sertifikat_crs', null),
+      'no_rek_bank' => check_var($data_pegawai, 'no_rek_bank', null),
+      'npwp' => check_var($data_pegawai, 'no_npwp', null),
+      'menerima_ttp_insentif' => null, /* sumber di v_pns (?) */
+    ];
+
+    // DEBUG
+    return [
+      'status' => false,
+      'message' => 'DEBUG MDL : tambah_profil_kepsek',
+      'data' => $post
+    ];
+  }
+
+  public function edit_profil_kepsek($data)
+  {
+    // DEBUG
+    return [
+      'status' => false,
+      'message' => 'DEBUG MDL : edit_profil_kepsek',
+      'data' => $data
+    ];
+  }
+
+  public function update_profil_kepsek($data)
+  {
+    // DEBUG
+    return [
+      'status' => false,
+      'message' => 'DEBUG MDL : update_profil_kepsek',
+      'data' => $data
+    ];
+  }
+
+  public function delete_profil_kepsek($data)
+  {
+    // DEBUG
+    return [
+      'status' => false,
+      'message' => 'DEBUG MDL : delete_profil_kepsek',
+      'data' => $data
+    ];
+  }
 }
