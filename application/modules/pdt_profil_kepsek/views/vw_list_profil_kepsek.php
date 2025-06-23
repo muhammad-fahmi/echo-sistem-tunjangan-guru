@@ -89,7 +89,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
             </div>
 
             <div>
-              <div class="btn btn-sm btn-success me-1" onclick="on_dev()">
+              <div class="btn btn-sm btn-success me-1" onclick="modal(`tambah_usulan_profil`)">
                 <i class="fas fa-plus-square me-2"></i>Tambah Profil Baru
               </div>
             </div>
@@ -120,6 +120,29 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
 </div>
 
 <script>
+  function modal(d_action, d_id) {
+    var url = "<?= site_url('pdt_profil_kepsek/modal') ?>";
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: {
+        action: d_action,
+        id: d_id
+      },
+      success: function(res) {
+        if (res.status) {
+          $("#modal_content_id").html(res.html).show();
+          $("#whole_modal_id").modal("show");
+        } else {
+          show_notify('error', res.message);
+        }
+      },
+      error: function(xhr, status, error) {
+        show_notify('error', xhr.status + ' : ' + error);
+      }
+    });
+  }
+
   $(document).ready(function() {
     // do something on document ready
     /// |----------------------------------------------------------------------
