@@ -101,7 +101,7 @@ class Mdl_pdt_profil_kepsek extends CI_Model
     $cur_unor = $this->session->userdata('kode_unor');
 
     // declare table
-    $this->db->from('r_profil_kepsek');
+    $this->db->from('vr_profil_kepsek');
 
     // where condition
     if (check_var($data, 'search')) {
@@ -141,9 +141,54 @@ class Mdl_pdt_profil_kepsek extends CI_Model
     // RE-ARRANGE RESULT DATA
     $no = $data['start'] + 1;
     $data_result = [];
+
+    $cur_kewenangan = $this->session->userdata('kewenangan');
+    $cur_unor = $this->session->userdata('kode_unor');
+
     foreach ($query_result as $row) {
       $row['no'] = $no++;
-      $row['something'] = 'something'; // Add your custom column
+
+      // encrypt ID dokumen
+      $row['id_dokumen'] = encrypt_id($row['id_dokumen']);
+
+      // tampilan periode
+      $row['periode_display'] = $row['periode_bln'] . '/' . $row['periode_thn'];
+
+      // tampilan dibuat pada
+      $row['create_on_display'] =  em_date('j M Y, H:i:s', 'set', $row['create_on']);
+
+      // tampilan sekolah
+      $kode_sekolah = '<div><small style="opacity: 0.65;">' . $row['kode_ukerja'] . '</small></div>';
+      $nama_sekolah = '<div>' . $row['ket_ukerja'] . '</div>';
+      $row['sekolah_display'] = $kode_sekolah . $nama_sekolah;
+
+      // tampilan kepsek
+      $nip = '<div><small style="opacity: 0.65;">' . $row['nip'] . '</small></div>';
+      $nama = '<div>' . $row['nama'] . '</div>';
+      $row['kepsek_display'] = $nip . $nama;
+
+      // tampilan status
+      $row['status_display'] = '<div class="badge bg-' . $row['col_status_dokumen'] . '">' . $row['ket_status_dokumen'] . '</div>';
+
+      // penentuan kondisi
+      $is_draft = ($row['status_dokumen'] == 'DRAFT');
+      $is_admin = ($cur_kewenangan == '00' || $cur_kewenangan == '02');
+      $same_ukerja = ($row['kode_ukerja'] == $cur_unor);
+      $is_allowed = ($is_admin || $same_ukerja);
+
+      // tampilan tombol aksi
+      $tombol_edit =  ($is_draft && $is_allowed)
+        ? '<a href="' . site_url('pdt_profil_kepsek/edit/' . $row['id_dokumen']) . 'S" class="clickable badge bg-primary"><i class="fas fa-edit me-1"></i>Edit</a>'
+        : '';
+      // $tombol_detail = '<a href="' . site_url('pdt_profil_kepsek/detail/' . $row['id_dokumen']) . '" class="clickable badge bg-secondary"><i class="fas fa-file me-1"></i>Detail</a>';
+      $tombol_detail = '<a href="#" onclick="on_dev()" class="clickable badge bg-secondary"><i class="fas fa-file me-1"></i>Detail</a>';
+      $tombol_delete = ($is_draft && $is_allowed)
+        ? '<span class="clickable badge bg-danger" onclick="modal(`hapus_usulan_profil`, `' . $row['id_dokumen'] . '`)"><i class="fas fa-trash me-1"></i>Hapus</span>'
+        : '';
+      $row['aksi_display'] = '<div class="d-grid gap-1">' .
+        $tombol_edit . $tombol_detail . $tombol_delete .
+        '</div>';
+
       $data_result[] = $row;
     }
 
@@ -165,7 +210,7 @@ class Mdl_pdt_profil_kepsek extends CI_Model
 
     // Define validation rules
     $this->form_validation->set_rules('nip', 'NIP', 'required|numeric');
-    $this->form_validation->set_rules('kode_ukerja', 'Kode Unit Kerja', 'required|numeric');
+    $this->form_validation->set_rules('kode_ukerja', 'Sekolah', 'required|numeric');
     $this->form_validation->set_rules('periode_bln', 'Periode (Bulan)', 'required|numeric');
     $this->form_validation->set_rules('periode_thn', 'Periode (Tahun)', 'required|numeric');
 
@@ -212,17 +257,75 @@ class Mdl_pdt_profil_kepsek extends CI_Model
       'jenis_kelamin' => check_var($data_pegawai, 'j_kelamin', null),
       'alamat_saat_ini' => check_var($data_pegawai, 'tt_alamat', null),
       'status_pernikahan' => check_var($data_pegawai, 'ket_kawin', null),
-
-      /* belum di re-check */
       'kode_didik' => check_var($data_pegawai, 'kode_didik', null),
-      'pendidikan' => check_var($data_pegawai, 'pendidikan', null),
-      'no_sertifikat_pendidik' => check_var($data_pegawai, 'no_sertifikat_pendidik', null),
-      'no_sertifikat_gp' => check_var($data_pegawai, 'no_sertifikat_gp', null),
-      'no_sertifikat_crs' => check_var($data_pegawai, 'no_sertifikat_crs', null),
-      'no_rek_bank' => check_var($data_pegawai, 'no_rek_bank', null),
+      'pendidikan' => check_var($data_pegawai, 'ket_didik', null),
+      'no_sertifikat_pendidik' => null, /* sumber di v_pns (?) */
+      'no_sertifikat_gp' => null, /* sumber di v_pns (?) */
+      'no_sertifikat_crs' => null, /* sumber di v_pns (?) */
+      'no_rek_bank' => null, /* sumber di v_pns (?) */
       'npwp' => check_var($data_pegawai, 'no_npwp', null),
       'menerima_ttp_insentif' => null, /* sumber di v_pns (?) */
+      'status' => check_var($data_pegawai, 'kode_status', null),
+      'email' => check_var($data_pegawai, 'email', null),
+      'no_hp' => check_var($data_pegawai, 'no_hp', null),
+      'kode_agama' => check_var($data_pegawai, 'kode_agama', null),
+      'periode_ke' => null, /* sumber di v_pns (?) */
+      'masa_penugasan_mulai' => null, /* sumber di v_pns (?) */
+      'masa_penugasan_selesai' => null, /* sumber di v_pns (?) */
+      's_aktif' => null /* sumber di v_pns (?) */
     ];
+
+    try {
+      // START DB OPERATION
+      $this->db->trans_begin();
+
+      // SIMPAN DATA BASELINE DOKUMEN USULAN KEPSEK BARU
+      $proc = 1;
+      $this->db->insert('r_profil_kepsek', $data_to_save);
+      $insert_id = $this->db->insert_id();
+
+      // BUAT LOG (KEPERLUAN SISTEM)
+      $proc = 2;
+      log_generator(
+        $cur_user,
+        'r_profil_kepsek',
+        $insert_id,
+        "Melakukan penambahan usulan profil kepsek dengan data sebagai berikut :\n\n{$data_to_save}"
+      );
+
+      // BUAT LOG DOKUMEN (HISTORY YG DITAMPILKAN SAAT VERIFIKASI / HALAMAN DETAIL)
+      $proc = 3;
+      $this->db->insert('r_log_dokumen', [
+        'jenis_dokumen' => 'PROFIL_KEPSEK',
+        'id_dokumen' => $insert_id,
+        'id_user' => $cur_user,
+        'datetime' => em_date('Y-m-d H:i:s'),
+        'message' => "Menambahkan Usulan Profil Kepsek dengan NIP : {$data_to_save['nip']} a/n {$data_to_save['nama']} untuk periode {$data_to_save['periode_bln']}/{$data_to_save['periode_thn']}."
+      ]);
+
+      if ($this->db->trans_status() === FALSE) {
+        // do your error handler here
+        $this->db->trans_rollback();
+        return [
+          'status' => false,
+          'message' => "Maaf, proses mengalami error.\nROLLBACK ISSUE #{$proc}"
+        ];
+      } else {
+        // do your success handler here
+        $this->db->trans_commit();
+        return [
+          'status' => true,
+          'message' => "Proses tambah usulan profil kepala sekolah berhasil disimpan dengan status DRAFT. Anda akan di re-direct ke halaman dokumen form usulan profil kepala sekolah.",
+          'ID' => encrypt_id($insert_id)
+        ];
+      }
+    } catch (\Throwable $th) {
+      $catch_error = sanitize_string($th->getMessage());
+      return [
+        'status' => false,
+        'message' => "Maaf, proses mengalami error.\n{$catch_error}"
+      ];
+    }
 
     // DEBUG
     return [
