@@ -8,31 +8,13 @@
 
   <form id="savePesertaDidik" action="<?= site_url('pdt_peserta_didik/save'); ?>" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="type" value="<?= $data['type'] ?>">
-    <!-- <input type="hidden" name="id_siswa" value="<?= $data['id_siswa'] ?>"> -->
+    <input type="hidden" name="id_siswa" value="<?= $data['id_siswa'] ?>">
 
     <div class="row g-2">
       <div class="col-12 form_mapel">
-        <label for="id_siswa">ID Siswa</label>
-        <br>
-        <select name="id_siswa" id="id_siswa" class="form-select form-select" style="width:100%">
-          <?php $selected = ($data["id_siswa"] != "") ? "selected" : ""; ?>
-          <option value=""> - - - Pilih ID Siswa - - - </option>
-          <option value="<?php echo $data["id_siswa"]; ?>" <?php echo $selected ?>><?php echo $data["id_siswa"]; ?></option>
-          <option value="1234567890">Jonah</option>
-          <option value="9123456789">Jontor</option>
-        </select>
-      </div>
-
-      <div class="col-12 form_mapel">
         <label for="nisn">NISN</label>
-        <br>
-        <select name="nisn" id="nisn" class="form-select form-select" style="width:100%">
-          <?php $selected = ($data["nisn"] != "") ? "selected" : ""; ?>
-          <option value=""> - - - Pilih NISN - - - </option>
-          <option value="<?php echo $data["nisn"]; ?>" <?php echo $selected ?>><?php echo $data["nisn"]; ?></option>
-          <option value="1234567890">1234567890</option>
-          <option value="9123456789">9123456789</option>
-        </select>
+        <input type="text" name="nisn" id="nisn" class="form-control form-control-sm" value="<?= $data['nisn']; ?>">
+        <div class="invalid-feedback"></div>
       </div>
 
       <div class="col-12 form_mapel">
@@ -63,7 +45,7 @@
         <br>
         <select name="kode_agama" id="kode_agama" class="form-select form-select" style="width:100%">
           <?php $selected = ($data["kode_agama"] != "") ? "selected" : ""; ?>
-          <option value=""> - - - Pilih Jenis Kelamin - - - </option>
+          <option value=""> - - - Pilih Agama - - - </option>
           <option value="00">Islam</option>
           <option value="01">Hindu</option>
           <option value="02">Kristen - Protestan</option>
@@ -91,10 +73,28 @@
         <div class="invalid-feedback"></div>
       </div>
 
-      <div class="col-12 col-lg-12 form_mapel">
+      <div class="col-12 col-lg-12 form_mapel mb-2">
         <label for="alamat">Alamat</label>
         <input type="text" name="alamat" id="alamat" class="form-control form-control-sm" value="<?= $data['alamat'] ?>">
       </div>
+
+      <div class="col-12 col-lg-12 form_mapel">
+        <input type="checkbox" name="pdpd" id="pdpd" onchange="toggleDisabilitySelect()"> PD Penyandang Disabilitas?
+      </div>
+
+      <div id="pdpd_options" class="col-12 col-lg-12 form_mapel" style="display: none; margin-top: 10px;">
+        <label for="pdpd_options">Ragam Disabilitas</label>
+        <select id="pdpd_options" name="pdpd_options" class="form-select form-select">
+          <option>-- Pilih Ragam Disabilitas --</option>
+          <option value="pd_intelek">Peserta Didik Intelektual / Grahita</option>
+          <option value="pd_netra">Peserta Didik Netra</option>
+          <option value="pd_wicara">Peserta Didik Wicara</option>
+          <option value="pd_rungu">Peserta Didik Rungu</option>
+          <option value="pd_daksa">Peserta Didik Fisik / Daksa</option>
+          <option value="pd_mental">Peserta Didik Mental</option>
+        </select>
+      </div>
+
     </div>
   </form>
 </div>
@@ -104,6 +104,39 @@
 </div>
 
 <script>
+  function toggleDisabilitySelect() {
+    const checkbox = document.getElementById('pdpd');
+    const selectDiv = document.getElementById('pdpd_options');
+    selectDiv.style.display = checkbox.checked ? 'block' : 'none';
+  }
+
+  $('#kode_agama').select2({
+    allowClear: true,
+    placeholder: '--- Pilih agama ---',
+    ajax: {
+      type: 'POST',
+      dataType: 'json',
+      url: '<?= site_url('pdt_peserta_didik/select2_agama'); ?>',
+      delay: 800,
+      /* delay before sending ajax request */
+      data: function(params) {
+        return {
+          search: params.term,
+        }
+      },
+      processResults: function(data) {
+        return {
+          results: data
+        };
+      },
+    }
+  }).on('select2:select', function(e) {
+    // what to do when option selected
+  }).on('select2:close', function(e) {
+    // what to do when selection closed
+  }).on('select2:clear', function(e) {
+    // what to do when clearing (only if allowClear: true)
+  });
   // $('#nip').select2({
   //   allowClear: true,
   //   placeholder: 'Pilih Pegawai yang akan disetup.',

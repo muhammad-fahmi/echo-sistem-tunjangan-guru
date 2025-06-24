@@ -56,6 +56,38 @@ class Pdt_peserta_didik extends MY_Controller
       ->set_output(json_encode($data));
   }
 
+  public function select2_agama()
+  {
+    // ambil data post
+    $search = $this->input->post('search');
+    // kondisi where
+    $where_search = ($search != '')
+      ? "AND (ket_agama LIKE '%$search%' 
+      OR kode_agama LIKE '%$search%')"
+      : "";
+    // query searching
+    $result = $this->db->query("SELECT * FROM m_agama WHERE kode_agama IS NOT NULL $where_search 
+      ORDER BY ket_agama DESC")->result_array();
+    $data = array();
+    $index = 0;
+    if (isset_nn_nes($result)) {
+      foreach ($result as $r) {
+        $data[$index]['id'] = $r['kode_agama'];
+        $data[$index]['text'] = trim($r['ket_agama']);
+
+        // additional param to send back
+        $data[$index]['kode_agama'] = $r['kode_agama'];
+        $data[$index]['ket_agama'] = trim($r['ket_agama']);
+        $index++;
+      }
+    } else {
+      $data = $result;
+    }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
   public function modal()
   {
     $type = $this->input->post('type');
@@ -88,6 +120,7 @@ class Pdt_peserta_didik extends MY_Controller
             'nama_ibu' => '',
             'no_kk' => '',
             'alamat' => '',
+            'pdpd' => '',
             // 'id_siswa' => $id_siswa
           ];
           $data = [
@@ -163,6 +196,7 @@ class Pdt_peserta_didik extends MY_Controller
       'no_kk' => $post['no_kk'],
       'alamat' => $post['alamat'],
       's_aktif' => 1,
+      'pdpd' => $post['pdpd_options'],
     );
 
     $res = $this->mdl_peserta_didik->save($data_to_save);
