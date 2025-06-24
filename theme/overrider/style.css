@@ -219,4 +219,40 @@ a.badge.text-white:hover {
 
 .scroll-sidebar .user-profile {
   background-size: cover;
+}
+
+.desc_block {
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+}
+.desc_block label {
+  opacity: 0.65;
+  font-size: 0.75rem;
+  margin-bottom: -4px;
+}
+
+.input_block {
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+}
+.input_block label {
+  opacity: 0.65;
+  font-size: 0.75rem;
+  margin-bottom: -4px;
+}
+
+.img_profil_md {
+  width: 100%;
+  max-width: 250px;
+  height: auto;
+  overflow: hidden;
+  padding: 10px;
+}
+.img_profil_md img {
+  width: 100%;
+  height: auto;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }/*# sourceMappingURL=style.css.map */

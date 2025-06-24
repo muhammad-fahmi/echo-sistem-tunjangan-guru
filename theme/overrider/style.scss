@@ -264,3 +264,42 @@ a.badge.text-white {
 		background-size: cover;
 	}
 }
+
+.desc_block {
+	border-bottom: 1px solid #e9ecef;
+	padding-bottom: 5px;
+	margin-bottom: 5px;
+
+	label {
+		opacity: 0.65;
+		font-size: 0.75rem;
+		margin-bottom: -4px;
+	}
+}
+
+.input_block {
+	padding-bottom: 5px;
+	margin-bottom: 5px;
+
+	label {
+		opacity: 0.65;
+		font-size: 0.75rem;
+		margin-bottom: -4px;
+	}
+}
+
+.img_profil_md {
+	width: 100%;
+	max-width: 250px;
+	height: auto;
+	overflow: hidden;
+	padding: 10px;
+
+	img {
+		width: 100%;
+		height: auto;
+		background-size: cover;
+		background-repeat: no-repeat;
+		background-position: center;
+	}
+}

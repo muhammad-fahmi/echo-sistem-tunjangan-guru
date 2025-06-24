@@ -830,6 +830,12 @@ function check_perm($action, $menu = null)
   return ($dataset[$action] == 'YES') ? true : false;
 }
 
+/** fungsi untuk menghapus semua karakter pada string yang bukan alphanumeric atau spasi */
+function str_alphanumeric_space($string)
+{
+  $filtered = preg_replace("/[^a-zA-Z0-9 ]/", "", $string);
+  return $filtered;
+}
 
 /** fungsi untuk mencetak menu sidebar pada sistem cuti */
 function menu_loader($echo = true)
