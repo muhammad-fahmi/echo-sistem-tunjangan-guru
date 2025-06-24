@@ -42,9 +42,13 @@ switch ($type) {
         <div class="modal-body">
           <div class="row g-2">
 
-            <div class="col-12">
+            <!-- <div class="col-12">
               <label for="nip_select2">NIP / Nama</label>
               <select name="nip" id="nip_select2" class="form-select form-select-sm nip_select2"></select>
+            </div> -->
+            <div class="col-12">
+              <label for="kode_ukerja">Unit Kerja</label>
+              <select name="kode_ukerja" id="kode_ukerja" class="form-select form-select-sm select2_ukerja"></select>
             </div>
 
             <?php
@@ -99,7 +103,7 @@ switch ($type) {
       <script>
         // ADD TYPE SCRIPT
         $(document).ready(function() {
-          init_select2('#nip_select2', 'Cari NIP / Nama...', '<?= site_url('config/select2_pegawai') ?>');
+          // init_select2('#nip_select2', 'Cari NIP / Nama...', '<?= site_url('config/select2_pegawai') ?>');
           init_select2('#kode_ukerja', 'Pilih Kode Unit Kerja...', '<?= site_url('config/select2_instansi') ?>');
 
           $('#form_add_usulan_profil_sekolah').validate($.extend({
