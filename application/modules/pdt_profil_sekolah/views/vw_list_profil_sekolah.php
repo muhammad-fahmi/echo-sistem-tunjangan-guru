@@ -46,22 +46,22 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
           <h4 class="card-title mb-2">Daftar Profil Sekolah</h4>
 
           <div class="table-responsive mt-4">
-            <div class="_loading loading_tabel_m_profil_sekolah">
+            <div class="_loading loading_m_profil_sekolah">
               <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>
             </div>
 
-            <table id="tabel_m_profil_sekolah" class="table table-bordered table-hover fs-3" style="width:100%;">
+            <table id="m_profil_sekolah" class="table table-bordered table-hover fs-3" style="width:100%;">
               <thead>
                 <tr class="text-center">
-                  <th class="vam" rowspan="2" style="min-width: 40px;">#</th>
+                  <th class="vam" style="min-width: 40px;">#</th>
                   <!-- nama / nip dll -->
-                  <th class="vam" rowspan="2" style="width: 50%;">Sekolah</th>
+                  <th class="vam" style="width: 50%;">Sekolah</th>
                   <!-- nama sekolah / alamat / jenjang -->
-                  <th class="vam" rowspan="2" style="width: 50%;">NPSN</th>
-                  <th class="vam" rowspan="2" style="width: 50%;">NSS</th>
-                  <th class="vam" colspan="2" style="min-width: 180px;">Akreditasi</th>
-                  <th class="vam" colspan="2" style="min-width: 180px;">Alamat</th>
-                  <th class="vam" rowspan="2" style="min-width: 60px;">Aksi</th>
+                  <th class="vam" style="width: 50%;">NPSN</th>
+                  <th class="vam" style="width: 50%;">NSS</th>
+                  <th class="vam" style="min-width: 180px;">Akreditasi</th>
+                  <th class="vam" style="min-width: 180px;">Alamat</th>
+                  <th class="vam" style="min-width: 60px;">Aksi</th>
                 </tr>
                 <!-- <tr class="text-center vam">
                   <th class="vam">Mulai</th>
@@ -91,7 +91,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
             </div>
 
             <div>
-              <div class="btn btn-sm btn-success me-1" href="<?= site_url('pdt_profil_sekolah/crud_profil_sekolah') ?>">
+              <div class="btn btn-sm btn-success me-1" onclick="modal(`tambah_usulan_profil`)">
                 <i class="fas fa-plus-square me-2"></i>Tambah Profil Baru
               </div>
             </div>
@@ -122,12 +122,34 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
 </div>
 
 <script>
+  function modal(d_action, d_id) {
+    var url = "<?= site_url('pdt_profil_sekolah/modal') ?>";
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: {
+        action: d_action,
+        id: d_id
+      },
+      success: function(res) {
+        if (res.status) {
+          $("#modal_content_id").html(res.html).show();
+          $("#whole_modal_id").modal("show");
+        } else {
+          show_notify('error', res.message);
+        }
+      },
+      error: function(xhr, status, error) {
+        show_notify('error', xhr.status + ' : ' + error);
+      }
+    });
+  }
   $(document).ready(function() {
     // do something on document ready
     /// |----------------------------------------------------------------------
     /// | >> MASTER PROFIL SEKOLAH
     /// |----------------------------------------------------------------------
-    var m_profil_sekolah = $("#tabel_m_profil_sekolah").DataTable({
+    var m_profil_sekolah = $("#m_profil_sekolah").DataTable({
       responsive: true,
       processing: false,
       serverSide: true,
@@ -156,7 +178,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
         type: 'POST',
         beforeSend: function() {
           // lakukan sesuatu sebelum mulai ajax process
-          $('.loading_tabel_m_profil_sekolah').addClass('show');
+          $('.loading_m_profil_sekolah').addClass('show');
         },
         error: function(xhr, status, error) {
           show_notify('error', xhr.status + ' : ' + error);
@@ -229,7 +251,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
           /* jalankan apabila return false */
         }
 
-        $('.loading_tabel_m_profil_sekolah').removeClass('show');
+        $('.loading_m_profil_sekolah').removeClass('show');
         /* parameter callback untuk kostumisasi fungsi */
       }
     });
