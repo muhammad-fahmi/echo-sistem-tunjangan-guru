@@ -90,7 +90,7 @@ class Config extends MY_Controller
   public function select2_user()
   {
     // ambil data post
-    $search = $this->input->post('search');
+    $search = post_safe('search');
     // kondisi where
     $where_search = ($search != '') ? "AND nama_lengkap LIKE '%$search%'" : "";
     // query searching
@@ -114,16 +114,51 @@ class Config extends MY_Controller
       ->set_output(json_encode($data));
   }
 
+  public function select2_sekolah()
+  {
+    //session userdata
+    $session_ukerja = $this->session->userdata("kode_unor");
+    $session_kewenangan = $this->session->userdata("kewenangan");
+    // ambil data post
+    $search = post_safe('search');
+
+    // kondisi where
+    $where_search = ($search != '') ? "AND (ket_ukerja LIKE '%$search%' OR kode_ukerja LIKE '%$search%' OR ket_uorg LIKE '%$search%' OR kode_ukerja LIKE '%$search%')" : "";
+    $where_admin = ($session_kewenangan != '00')
+      ? "AND kode_ukerja = kode_instansi AND (LEFT(kode_instansi," . strlen($session_ukerja) . ") = '" . $session_ukerja . "' OR unit_kepeg = '" . $session_ukerja . "') AND (kode_ukerja LIKE '69710328%' OR kode_ukerja LIKE '69710345%')"
+      : "AND kode_ukerja = kode_instansi AND (kode_ukerja LIKE '69710328%' OR kode_ukerja LIKE '69710345%')";
+    // query searching
+    $result = $this->db->query("SELECT * FROM v_ukerja 
+      WHERE kode_ukerja IS NOT NULL $where_admin $where_search AND s_ukerja = '-1' 
+      ORDER BY kode_instansi ASC 
+      LIMIT 20")->result_array();
+    $data = array();
+    $index = 0;
+    if (isset_nn_nes($result)) {
+      foreach ($result as $r) {
+        $s_aktif = ($r["s_ukerja"] == 0) ? "[NON-AKTIF]" : "";
+        $data[$index]['id'] = $r['kode_instansi'];
+        $data[$index]['text'] = $s_aktif . " " . $r['ket_ukerja'] . ' [' . $r['kode_instansi'] . ']';
+        $index++;
+      }
+    } else {
+      $data = $result;
+    }
+    $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
   public function select2_instansi()
   {
     //session userdata
     $session_ukerja = $this->session->userdata("kode_unor");
     $session_kewenangan = $this->session->userdata("kewenangan");
     // ambil data post
-    $search = $this->input->post('search');
+    $search = post_safe('search');
 
     //kondisi apakah menampilkan yang aktif saja
-    $aktif = ($this->input->post('aktif') != "Y") ? "" : " AND s_ukerja = '-1' ";
+    $aktif = (post_safe('aktif') != "Y") ? "" : " AND s_ukerja = '-1' ";
     // kondisi where
     $where_search = ($search != '') ? "AND (ket_ukerja LIKE '%$search%' OR kode_ukerja LIKE '%$search%' OR ket_uorg LIKE '%$search%' OR kode_ukerja LIKE '%$search%')" : "";
     $where_admin = ($session_kewenangan != '00') ? "AND kode_ukerja = kode_instansi AND (LEFT(kode_instansi," . strlen($session_ukerja) . ") = '" . $session_ukerja . "' OR unit_kepeg = '" . $session_ukerja . "') AND (kode_ukerja LIKE '69710328%' OR kode_ukerja LIKE '69710345%')" : "AND kode_ukerja = kode_instansi AND (kode_ukerja LIKE '69710328%' OR kode_ukerja LIKE '69710345%')";
@@ -154,8 +189,8 @@ class Config extends MY_Controller
   public function select2_shift()
   {
     // ambil data post
-    $search = $this->input->post('search');
-    $instansi = $this->input->post('instansi');
+    $search = post_safe('search');
+    $instansi = post_safe('instansi');
     // kondisi where
     $where_search = isset(($search)) ? "AND keterangan LIKE '%$search%'" : "";
     $where_instansi = (isset($instansi)) ? "AND kode_instansi = '$instansi'" : "";
@@ -187,8 +222,8 @@ class Config extends MY_Controller
   public function select2_pegawai()
   {
     // ambil data post
-    $search = $this->input->post('search');
-    $kode_instansi = $this->input->post('kode_instansi');
+    $search = post_safe('search');
+    $kode_instansi = post_safe('kode_instansi');
     // kondisi where
     $where_search = isset(($search)) ? "AND (nip LIKE '%$search%' OR nama_lengkap LIKE '%$search%')" : "";
     // $where_aktif = "AND s_aktif = '-1'";
@@ -234,8 +269,8 @@ class Config extends MY_Controller
   public function select2_pegawai_jab()
   {
     // ambil data post
-    $search = $this->input->post('search');
-    $kode_instansi = $this->input->post('kode_instansi');
+    $search = post_safe('search');
+    $kode_instansi = post_safe('kode_instansi');
     // kondisi where
     $where_search = isset(($search)) ? "AND (nip LIKE '%$search%' OR nama_lengkap LIKE '%$search%')" : "";
     // $where_aktif = "AND s_aktif = '-1'";
@@ -282,9 +317,9 @@ class Config extends MY_Controller
   {
     //session userdata
     $session_ukerja = $this->session->userdata("kode_ukerja");
-    $kode_ukerja = $this->input->post("kode_ukerja");
+    $kode_ukerja = post_safe("kode_ukerja");
     // ambil data post
-    $search = $this->input->post('search');
+    $search = post_safe('search');
     // kondisi where
     $where_search = ($search != '') ? "AND (ket_ukerja LIKE '%$search%' OR kode_ukerja LIKE '%$search%' OR nama_mesin LIKE '%$search%')" : "";
     // query searching
@@ -326,10 +361,10 @@ class Config extends MY_Controller
     } else {
       $simpegdb_name = "simpegdbv2_samarinda";
     }
-    $kode_ukerja = $this->input->post("kode_ukerja_sumber");
+    $kode_ukerja = post_safe("kode_ukerja_sumber");
     // ambil data post
-    $search = $this->input->post('search');
-    $jns_peg = $this->input->post('jns_peg');
+    $search = post_safe('search');
+    $jns_peg = post_safe('jns_peg');
     // kondisi where
     $where_search = ($search != '') ? " AND (pin LIKE '%$search%' OR nama LIKE '%$search%')" : "";
     $where_jns_peg = "jns_pegawai = '" . $jns_peg . "'";
@@ -402,7 +437,7 @@ class Config extends MY_Controller
   public function select2_mesin_transfer()
   {
     // ambil data post
-    $search = $this->input->post('search');
+    $search = post_safe('search');
     // kondisi where
     $where_search = ($search != '') ? "AND (ket_ukerja LIKE '%$search%' OR kode_ukerja LIKE '%$search%' OR nama_mesin LIKE '%$search%')" : "";
     // query searching

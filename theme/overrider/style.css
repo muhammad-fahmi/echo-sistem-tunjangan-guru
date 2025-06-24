@@ -177,6 +177,13 @@ label.is-invalid {
 #main-wrapper nav.sidebar-nav .bz_sidebar_item ul li.selected a {
   color: #1582c6;
 }
+#main-wrapper nav.sidebar-nav .bz_sidebar_item .dropdown-arrow {
+  display: block;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}
 #main-wrapper nav.sidebar-nav .bz_sidebar_item:hover {
   background-color: #2c90ce;
 }

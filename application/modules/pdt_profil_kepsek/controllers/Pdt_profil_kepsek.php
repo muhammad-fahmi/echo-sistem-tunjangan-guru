@@ -39,6 +39,37 @@ class Pdt_profil_kepsek extends MY_Controller
     echo Modules::run('layout/backend', $data);
   }
 
+  public function edit($encryptedID = '')
+  {
+    $decryptedID = decrypt_id(sanitize_string($encryptedID));
+
+    // CEK VALIDASI DATA
+    $dataset = fetch_row_data('vr_profil_kepsek', ['id_dokumen' => $decryptedID], false);
+    if ($dataset == false) {
+      $this->session->set_userdata('flash_data', "Maaf, data dokumen usulan profil kepala sekolah yang akan di-edit tidak valid.");
+      redirect(site_url('pdt_profil_kepsek'));
+      return;
+    }
+
+    $dataset['id_dokumen'] = encrypt_id($dataset['id_dokumen']);
+    $dataset['id_kepsek'] = encrypt_id($dataset['id_kepsek']);
+
+    // CEK STATUS DOKUMEN
+    if ($dataset['status_dokumen'] != 'DRAFT') {
+      $this->session->set_userdata('flash_data', "Maaf, data dokumen usulan profil kepala sekolah hanya bisa di-edit apabila statusnya adalah Draft.");
+      redirect(site_url('pdt_profil_kepsek'));
+      return;
+    }
+
+    $data = array(
+      'page_title' => "Edit Usulan Profil | PROGURINDA",
+      'module' => "pdt_profil_kepsek",
+      'view' => 'vw_edit_profil_kepsek',
+      'data' => $dataset
+    );
+    echo Modules::run('layout/backend', $data);
+  }
+
   /// |----------------------------------------------------------------------
   /// | >> AJAX REQUEST FUNCTIONS
   /// |----------------------------------------------------------------------
@@ -186,7 +217,8 @@ class Pdt_profil_kepsek extends MY_Controller
             'message' => 'invalid permissions'
           ], 403);
 
-          $dataset = fetch_row_data('vr_profil_kepsek', ['id_dokumen' => $id], false);
+          $decryptedID = decrypt_id($id);
+          $dataset = fetch_row_data('vr_profil_kepsek', ['id_dokumen' => $decryptedID], false);
 
           // VALIDASI DATA USULAN PROFIL
           if ($dataset === false) return output_json([

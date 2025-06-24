@@ -52,7 +52,7 @@ switch ($type) {
             if ($cur_kewenangan == '00') {
             ?>
               <div class="col-12">
-                <label for="kode_ukerja">Unit Kerja</label>
+                <label for="kode_ukerja">Sekolah</label>
                 <select name="kode_ukerja" id="kode_ukerja" class="form-select form-select-sm select2_ukerja"></select>
               </div>
             <?php
@@ -69,7 +69,7 @@ switch ($type) {
               $array_bulan = array_periode_bulan();
               ?>
               <label for="periode_bln">Periode (Bulan)</label>
-              <select name="periode_bulan" id="periode_bulan" class="form-select form-select-sm">
+              <select name="periode_bln" id="periode_bln" class="form-select">
                 <option value="" default>- Bulan -</option>
                 <?php
                 foreach ($array_bulan as $key => $value) {
@@ -82,7 +82,7 @@ switch ($type) {
 
             <div class="col-6">
               <label for="periode_thn">Periode (Tahun)</label>
-              <input name="periode_thn" id="periode_thn" type="number" step="1" min="1" class="form-control form-control-sm" placeholder="- Tahun -" value="<?= em_date('Y') ?>">
+              <input name="periode_thn" id="periode_thn" type="number" step="1" min="1" class="form-control" placeholder="- Tahun -" value="<?= em_date('Y') ?>">
             </div>
 
           </div>
@@ -100,7 +100,7 @@ switch ($type) {
         // ADD TYPE SCRIPT
         $(document).ready(function() {
           init_select2('#nip_select2', 'Cari NIP / Nama...', '<?= site_url('config/select2_pegawai') ?>');
-          init_select2('#kode_ukerja', 'Pilih Kode Unit Kerja...', '<?= site_url('config/select2_instansi') ?>');
+          init_select2('#kode_ukerja', 'Pilih Sekolah...', '<?= site_url('config/select2_sekolah') ?>');
 
           $('#form_add_usulan_profil_kepsek').validate($.extend({
             submitHandler: function(form, event) {
@@ -111,13 +111,8 @@ switch ($type) {
                   if (e.status) {
                     show_notify('success', e.message);
                     setTimeout(() => {
-                      // window href template
-                      // window.location.href = '<?= base_url('url_to_redirect') ?>';
-                      // modal dismiss
-                      // $('#modal_whole_id').modal('hide');
-                      // if using datatable, refresh it's state
-                      // reload_table();
-                    }, 500);
+                      window.location.href = '<?= site_url('pdt_profil_kepsek/edit') ?>/' + e.ID;
+                    }, 2000);
                   } else {
                     show_notify('error', e.message);
                     submit.attr('disabled', false);

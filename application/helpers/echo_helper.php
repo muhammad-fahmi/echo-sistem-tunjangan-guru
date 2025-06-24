@@ -127,26 +127,120 @@ function datetime_now($alphanum = false, $timezone = 'Asia/Hong_Kong')
   return $data;
 }
 
-/** fungsi datetime generator + timezone
- * - param1: format date pake string default: Y-m-d
- * - param2: kalau value = "set" param3 harus diisi dengan datetime yg valid, kalau di set dengan string format seperti now, 1 day ago, +5 day, +5 hour akan melakukan modifikasi terhadap date yang dicetak
- * - param3: value datetime, default null, tapi kalau diisi maka akan mengacu pada tanggal tersebut
- * - param4: timezone berdasarkan aturan string php, default adalah Asia/Hong_Kong (GMT+8)
- */
-function em_date($format = "Y-m-d", $when = "now", $datetime = null, $timezone = 'Asia/Hong_Kong')
+function em_date($format = "Y-m-d", $when = "now", $datetime = null, $lang = 'id', $timezone = 'Asia/Hong_Kong')
 {
-  if ($datetime != null) {
+  if (!check_var($datetime) && $when != "now") return '';
+
+  if (check_var($datetime) && $datetime != null) {
     $dt = new DateTime($datetime, new DateTimeZone($timezone));
     if ($when != "set") {
       $dt->modify($when);
     }
-    $data = $dt->format($format);
-    return $data;
   } else {
     $dt = new DateTime($when, new DateTimeZone($timezone));
-    $data = $dt->format($format);
-    return $data;
   }
+
+  $id_month_short = indonesian_month($dt->format('n'));
+  $id_month_full = indonesian_month($dt->format('n'), true);
+
+  if ($format == 'elapsed') {
+    return time_elapsed_string($dt, $lang);
+  } elseif ($format == 'j M Y' && $lang == 'id') {
+    return $dt->format('j') . ' ' . $id_month_short . ' ' . $dt->format('Y');
+  } elseif ($format == 'j F Y' && $lang == 'id') {
+    return $dt->format('j') . ' ' . $id_month_full . ' ' . $dt->format('Y');
+  } elseif ($format == 'j M Y, H:i:s' && $lang == 'id') {
+    return $dt->format('j') . ' ' . $id_month_short . ' ' . $dt->format('Y') . ', ' . $dt->format('H:i:s');
+  } elseif ($format == 'j F Y, H:i:s' && $lang == 'id') {
+    return $dt->format('j') . ' ' . $id_month_full . ' ' . $dt->format('Y') . ', ' . $dt->format('H:i:s');
+  } else {
+    return $dt->format($format);
+  }
+}
+
+function indonesian_month($month_number = 1, $full = false)
+{
+  $short_months = [
+    1 => 'Jan',
+    2 => 'Feb',
+    3 => 'Mar',
+    4 => 'Apr',
+    5 => 'Mei',
+    6 => 'Jun',
+    7 => 'Jul',
+    8 => 'Agu',
+    9 => 'Sep',
+    10 => 'Okt',
+    11 => 'Nov',
+    12 => 'Des',
+  ];
+
+  $full_months = [
+    1 => 'Januari',
+    2 => 'Februari',
+    3 => 'Maret',
+    4 => 'April',
+    5 => 'Mei',
+    6 => 'Juni',
+    7 => 'Juli',
+    8 => 'Agustus',
+    9 => 'September',
+    10 => 'Oktober',
+    11 => 'November',
+    12 => 'Desember',
+  ];
+
+  return $full ? $full_months[$month_number] : $short_months[$month_number];
+}
+
+function time_elapsed_string($datetime, $lang = 'id', $full = false)
+{
+  $now = new DateTime();
+  $ago = $datetime;
+  $diff = $now->diff($ago);
+
+  $diff->w = floor($diff->d / 7);
+  $diff->d -= $diff->w * 7;
+
+  if ($lang == 'id') {
+    // Translations for Bahasa Indonesia
+    $string = array(
+      'y' => 'tahun',
+      'm' => 'bulan',
+      'w' => 'minggu',
+      'd' => 'hari',
+      'h' => 'jam',
+      'i' => 'menit',
+      's' => 'detik',
+    );
+    $suffix = ' yang lalu';
+    $now_string = 'baru saja';
+  } else {
+    // Default to English
+    $string = array(
+      'y' => 'year',
+      'm' => 'month',
+      'w' => 'week',
+      'd' => 'day',
+      'h' => 'hour',
+      'i' => 'minute',
+      's' => 'second',
+    );
+    $suffix = ' ago';
+    $now_string = 'just now';
+  }
+
+  foreach ($string as $k => &$v) {
+    $multi_suffix = ($lang == 'en') ? 's' : '';
+    if ($diff->$k) {
+      $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? $multi_suffix : '');
+    } else {
+      unset($string[$k]);
+    }
+  }
+
+  if (!$full) $string = array_slice($string, 0, 1);
+  return $string ? implode(', ', $string) . $suffix : $now_string;
 }
 
 /** ambil data tanggal saat ini, dan lakukan split per tahun, bulan, hari, jam, menit */
@@ -487,6 +581,65 @@ function get_safe($key = null, $default = null)
   return $value !== null ? $value : $default;
 }
 
+// Define a mapping from digits to character strings
+function get_digit_to_string_mapping()
+{
+  return [
+    '0' => 'SD',
+    '1' => 'KJ',
+    '2' => 'MM',
+    '3' => 'BY',
+    '4' => 'RH',
+    '5' => 'JL',
+    '6' => 'WW',
+    '7' => 'TN',
+    '8' => 'NB',
+    '9' => 'XT'
+  ];
+}
+
+// Define a reverse mapping from character strings to digits
+function get_string_to_digit_mapping()
+{
+  $mapping = get_digit_to_string_mapping();
+  return array_flip($mapping);
+}
+
+/** Encrypt a numeric ID into a string */
+function encrypt_id($numericID)
+{
+  $mapping = get_digit_to_string_mapping();
+  $encrypted = '';
+  // Iterate through each digit in the numeric ID
+  foreach (str_split($numericID) as $digit) {
+    // Append the corresponding string from the mapping
+    if (check_var($mapping, $digit)) {
+      $encrypted .= $mapping[$digit];
+    } else {
+      $encrypted .= '';
+    }
+  }
+  return $encrypted;
+}
+
+/** Decrypt a string back into a numeric ID */
+function decrypt_id($stringID)
+{
+  $mapping = get_string_to_digit_mapping();
+  $decrypted = '';
+  // Iterate through substrings of the string ID
+  for ($i = 0; $i < strlen($stringID); $i += 2) {
+    $subStr = substr($stringID, $i, 2);
+    // Append the corresponding digit from the reverse mapping
+    if (check_var($mapping, $subStr)) {
+      $decrypted .= $mapping[$subStr];
+    } else {
+      $decrypted .= '';
+    }
+  }
+  return $decrypted;
+}
+
 /** lakukan enkripsi bcrypt pada string password yang diisi sebagai parameter. output berupa hashed password */
 function encrypt_pwd($pwd)
 {
@@ -737,7 +890,7 @@ function menu_loader($echo = true)
             <a class="sidebar_link" href="javascript:void(0)" aria-expanded="' . $a_expand . '">
               <div class="icon"><i class="' . $icon . '"></i></div>
               <div class="menu_title">
-                <div class="main">' . check_var($v, 'menu_title', 'UNKNOWN') . '</div>
+                <div class="main">' . check_var($v, 'menu_title', 'UNKNOWN') . '<i class="dropdown-arrow dropdown-arrow-' . $v['id_menu'] . ' fas fa-chevron-down"></i></div>
                 ' . $subs . '
               </div>
               <ul aria-expanded="' . $a_expand . '" class="' . $c_open . ' first-level">';

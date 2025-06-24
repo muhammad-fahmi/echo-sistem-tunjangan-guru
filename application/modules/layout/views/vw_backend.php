@@ -405,4 +405,16 @@
 
 </body>
 
+<script>
+  <?php
+  $flash_data = $this->session->userdata('flash_data');
+  if (check_var($flash_data)) {
+  ?>
+    show_notify('info', '<?= $flash_data ?>');
+  <?php
+    $this->session->set_userdata('flash_data', null);
+  }
+  ?>
+</script>
+
 </html>
