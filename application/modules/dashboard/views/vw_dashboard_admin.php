@@ -204,7 +204,7 @@
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
           let id_entry = cellData;
-          let html_aksi = '<button type="button" class="btn btn-sm btn-light-info">' +
+          let html_aksi = '<button type="button" class="btn btn-sm btn-light-info" onclick="modal(`' + id_entry + '`, `delete_arsip_tpp`)" href="#">' +
             'Batalkan' +
             '</button>';
           $(td).html('<div class="text-center">' + html_aksi + '</div>');
@@ -236,5 +236,25 @@
   /* fungsi untuk reload datatable ajax */
   function reload_table() {
     tabel_arsip_tpp.ajax.reload();
+  }
+
+  function modal(id, type) {
+    var url = "<?= site_url('dashboard/modal') ?>";
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: {
+        id: id,
+        type: type
+      },
+      success: function(res) {
+        if (res.status) {
+          $("#modal_content_id").html(res.html).show();
+          $("#whole_modal_id").modal("show");
+        } else {
+          toaster('info', 'Unknown error on modal calls.\n- ' + res.message);
+        }
+      }
+    });
   }
 </script>

@@ -104,33 +104,27 @@
               </div>
             </div>
             <!-- Button export file -->
-            <button id="btn_export_file" class="btn btn-sm btn-success me-2" type="submit" form="form_jurnal_bulanan">
-              <i class="fas fa-upload me-2"></i>Export File Jurnal
-            </button>
-
-            <!-- <button id="btn_export_file" class="btn btn-sm btn-success me-2" type="submit" form="form_jurnal_bulanan">
-              <i class="fas fa-upload me-2"></i>Export File Jurnal
-            </button> -->
+            <a href="<?= site_url('laporan/generate_pdf_jurnal_bulanan'); ?>" type="button" id="btn_export_file" class="btn btn-sm btn-success me-2">
+              <i class="fas fa-upload me-2"></i>Export File Jurnal Bulanan
+            </a>
           </form>
 
           <div class="table-responsive mt-4">
 
-            <div class="_loading loading_tabel_jurnal_mengajar">
+            <div class="_loading loading_tabel_jurnal_bulanan">
               <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>
             </div>
 
-            <table id="table_jurnal_mengajar" class="table table-bordered table-hover fs-3" style="width:100%;">
+            <table id="table_jurnal_bulanan" class="table table-bordered table-hover fs-3" style="width:100%;">
 
               <thead class="bg-info text-white">
                 <tr class="text-center">
                   <th>NIP</th>
-                  <!-- <th>Nama</th> -->
                   <th>Jabatan</th>
                   <th>Unit Kerja</th>
                   <th>Bulan</th>
                   <th>Tahun</th>
                   <th>Jam Mengajar</th>
-                  <th>Aksi</th>
                 </tr>
               </thead>
 
@@ -182,7 +176,7 @@
       type: 'POST',
       beforeSend: function() {
         // lakukan sesuatu sebelum mulai ajax process
-        $('.loading_tabel_jurnal_mengajar').addClass('show');
+        $('.loading_tabel_jurnal_bulanan').addClass('show');
       },
     },
     /* Sesuaikan jumlah kolom dengan id table yang digunakan */
@@ -194,14 +188,6 @@
           $(td).html('<div class="text-start">' + cellData + '</div>');
         },
       },
-      // {
-      //   data: 'nama_lengkap',
-      //   orderable: false,
-      //   className: 'vam',
-      //   createdCell: function(td, cellData, rowData, row, col) {
-      //     $(td).html('<div class="text-start">' + cellData + '</div>');
-      //   },
-      // },
       {
         data: 'ket_jab',
         orderable: false,
@@ -242,23 +228,6 @@
           $(td).html('<div class="text-end">' + cellData + '</div>');
         },
       },
-      // {
-      //   data: 'id',
-      //   orderable: false,
-      //   className: 'vam',
-      //   createdCell: function(td, cellData, rowData, row, col) {
-      //     let id_entry = cellData;
-      //     let html_aksi = '<div class="btn-group">' + '<button type="button" class="btn btn-sm btn-light-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">' +
-      //       'Pilih' +
-      //       '</button>' +
-      //       '<ul class="dropdown-menu">' +
-      //       '<li><a class="dropdown-item" onclick="modal(`' + id_entry + '`, `edit_jurnal_bulanan`)" href="#"><i class="fas fa-edit me-1"></i>Edit</a></li>' +
-      //       '<li><a class="dropdown-item text-danger" onclick="modal(`' + id_entry + '`, `delete_jurnal_bulanan`)" href="#"><i class="fas fa-trash me-1"></i>Delete</a></li>' +
-      //       '</ul>' +
-      //       '</div>';
-      //     $(td).html('<div class="text-center">' + html_aksi + '</div>');
-      //   },
-      // },
     ],
     /* Lakukan fungsi callback pada bracket ini */
     drawCallback: function(settings) {
@@ -270,15 +239,6 @@
       }
       /* parameter callback untuk kostumisasi fungsi */
       $('.loading_tabel_jurnal_bulanan').removeClass('show');
-
-      // let btn_add = '<button class="btn btn-sm btn-success me-2" onclick="modal(`0`,`tambah_jurnal_bulanan`)">' +
-      //   '<i class="fas fa-plus me-1"></i>Tambah Jurnal Bulanan' +
-      //   '</button>';
-
-      // if (!init_btn_add) {
-      //   $('.init_btn_container').append(btn_add);
-      //   init_btn_add = true;
-      // }
     }
   });
 

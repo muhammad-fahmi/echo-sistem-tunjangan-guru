@@ -584,4 +584,33 @@ class Mdl_dashboard extends CI_Model
   //   }
   //   return $res;
   // }
+
+  public function delete($data)
+  {
+    try {
+      $this->db->trans_begin();
+      $this->db->where(["id" => $data["id"]])->delete("progurinda_r_jurnal_mengajar");
+      if ($this->db->trans_status() === FALSE) {
+        // do your error handler here
+        $this->db->trans_rollback();
+        $res = [
+          'status' => false,
+          'message' => "Data Arsip TPP gagal dibatalkan!"
+        ];
+      } else {
+        // do your success handler here
+        $this->db->trans_commit();
+        $res = [
+          'status' => true,
+          'message' => "Data Arsip TPP berhasil dibatalkan!"
+        ];
+      }
+    } catch (\Throwable $th) {
+      $res = [
+        'status' => false,
+        'message' => "Proses hapus kamar kost error! Error message : " . $th->getMessage()
+      ];
+    }
+    return $res;
+  }
 }
