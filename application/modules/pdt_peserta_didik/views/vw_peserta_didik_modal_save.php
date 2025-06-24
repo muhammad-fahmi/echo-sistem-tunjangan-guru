@@ -86,13 +86,14 @@
       <div id="pdpd_container" class="col-12 col-lg-12 form_mapel mb-2" style="display: none; margin-top: 10px;">
         <label for="pdpd_options">Ragam Disabilitas</label>
         <select id="pdpd_options" name="pdpd_options" class="form-select form-select">
-          <option value="">-- Pilih Ragam Disabilitas --</option>
+          <?php $selected = ($data["pdpd"] != "") ? "selected" : ""; ?>
+          <!-- <option value="">-- Pilih Ragam Disabilitas --</option>
           <option value="pd_intelek">Peserta Didik Intelektual / Grahita</option>
           <option value="pd_netra">Peserta Didik Netra</option>
           <option value="pd_wicara">Peserta Didik Wicara</option>
           <option value="pd_rungu">Peserta Didik Rungu</option>
           <option value="pd_daksa">Peserta Didik Fisik / Daksa</option>
-          <option value="pd_mental">Peserta Didik Mental</option>
+          <option value="pd_mental">Peserta Didik Mental</option> -->
         </select>
       </div>
 
@@ -177,6 +178,12 @@
     select_pdpd.empty();
   });
 
+  // Custom Validator
+  $.validator.addMethod("noTitles", function(value, element) {
+    const titlePattern = /\b(prof|dr|drs|mrs|mr|ms|ir|hj|haji|habib|ustadz|kyai|s\.pd|s\.kom|s\.e|s\.h|s\.ag|m\.pd|m\.kom|m\.si|m\.sc|m\.m|phd|msc|b\.eng|b\.sc)\b/i;
+    return this.optional(element) || !titlePattern.test(value);
+  });
+
   $('#savePesertaDidik').validate($.extend({
     submitHandler: function(form, event) {
       var submit = $('#savePesertaDidikbtn');
@@ -221,8 +228,13 @@
       kode_agama: {
         required: true
       },
+      nama_ayah: {
+        required: true,
+        noTitles: true
+      },
       nama_ibu: {
-        required: true
+        required: true,
+        noTitles: true
       },
       no_kk: {
         required: true
@@ -257,8 +269,13 @@
       kode_agama: {
         required: "Agama tidak boleh kosong"
       },
+      nama_ayah: {
+        required: "Nama Ayah tidak boleh kosong",
+        noTitles: "Nama Ayah tidak boleh mengandung gelar seperti Prof, Dr, PhD, dll."
+      },
       nama_ibu: {
-        required: "Nama Ibu tidak boleh kosong"
+        required: "Nama Ibu tidak boleh kosong",
+        noTitles: "Nama Ayah tidak boleh mengandung gelar seperti Prof, Dr, PhD, dll."
       },
       no_kk: {
         required: "No. KK tidak boleh kosong"
