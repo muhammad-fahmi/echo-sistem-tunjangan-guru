@@ -205,4 +205,8 @@ label.is-invalid {
 
 .notifyjs-corner {
   z-index: 12840 !important;
+}
+
+a.badge.text-white:hover {
+  color: white !important;
 }/*# sourceMappingURL=style.css.map */

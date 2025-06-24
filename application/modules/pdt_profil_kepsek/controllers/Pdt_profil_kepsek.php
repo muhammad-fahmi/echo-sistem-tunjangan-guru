@@ -174,42 +174,6 @@ class Pdt_profil_kepsek extends MY_Controller
           break;
         }
 
-      case 'edit_usulan_profil': {
-          // CHECK PERMISSION
-          if (!check_perm('update', 'PDT_ProfilKepsek')) return output_json([
-            'status' => false,
-            'message' => 'invalid permissions'
-          ], 403);
-
-          $dataset = fetch_row_data('vr_profil_kepsek', ['id_dokumen' => $id], false);
-
-          // VALIDASI DATA USULAN PROFIL
-          if ($dataset === false) return output_json([
-            'status' => false,
-            'message' => "Maaf, data yang akan di-edit tidak valid."
-          ]);
-
-          // VALIDASI STATUS USULAN PROFIL
-          if ($dataset['status_dokumen'] != 'DRAFT') return output_json([
-            'status' => false,
-            'message' => "Maaf, status usulan profil ini bukan DRAFT, tidak bisa mengedit data tersebut."
-          ]);
-
-          // LOAD VIEW
-          $sent_data = [
-            'modal_title' => 'Edit Profil Kepala Sekolah',
-            'type' => 'edit',
-            'data' => $dataset,
-          ];
-
-          return output_json([
-            'status' => true,
-            'message' => 'modal edit profil kepala sekolah retrieved.',
-            'html' => $this->load->view('vwm_crud_profil_kepsek', $sent_data, TRUE)
-          ]);
-          break;
-        }
-
       case 'hapus_usulan_profil': {
           // CHECK PERMISSION
           if (!check_perm('delete', 'PDT_ProfilKepsek')) return output_json([
@@ -225,6 +189,10 @@ class Pdt_profil_kepsek extends MY_Controller
             'status' => false,
             'message' => "Maaf, data yang akan di-hapus tidak valid."
           ]);
+
+          // encrypt data yang dikirim ke view
+          $dataset['id_dokumen'] = encrypt_id($dataset['id_dokumen']);
+          $dataset['id_kepsek'] = encrypt_id($dataset['id_kepsek']);
 
           // VALIDASI STATUS USULAN PROFIL
           if ($dataset['status_dokumen'] != 'DRAFT') return output_json([
@@ -359,6 +327,10 @@ class Pdt_profil_kepsek extends MY_Controller
     ], 403);
 
     $post = post_safe();
+
+    $response = $this->mdl_profkepsek->delete_profil_kepsek($post);
+
+    return output_json($response);
 
     // DEBUG
     return output_json([
