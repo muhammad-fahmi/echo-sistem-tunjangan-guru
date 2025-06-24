@@ -70,7 +70,7 @@
 
 <script>
   var init_btn_add = false;
-  let urlDatatable = "<?= site_url('peserta_didik/datalist') ?>";
+  let urlDatatable = "<?= site_url('pdt_peserta_didik/get_data') ?>";
   var tabel_pd = $("#table_pd").DataTable({
     responsive: true,
     processing: false,
@@ -177,11 +177,11 @@
           // let btn_user_management = '<a href="<?= site_url('user/menu_management/'); ?>' + cellData + '" class="badge bg-secondary clickable me-1" title="Menu Management">' +
           //   '<i class="fas fa-list"></i></a>';
 
-          let btn_edit = '<div onclick="modal(`' + cellData + '`, `edit`)" class="badge bg-primary clickable me-1" title="Edit">' +
+          let btn_edit = '<div onclick="modal(`' + cellData + '`, `edit_peserta_didik`)" class="badge bg-primary clickable me-1" title="Edit">' +
             '<i class="fas fa-edit"></i></div>';
 
           let btn_delete = (kewenangan_user == '00') ?
-            '<div onclick="modal(`' + cellData + '`, `hapus`)" class="badge bg-danger clickable" title="Hapus">' +
+            '<div onclick="modal(`' + cellData + '`, `hapus_peserta_didik`)" class="badge bg-danger clickable" title="Hapus">' +
             '<i class="fas fa-trash"></i></div>' :
             '';
 
@@ -219,12 +219,12 @@
   }
 
   function modal(id_siswa, type) {
-    var url = "<?= site_url('peserta_didik/modal') ?>";
+    var url = "<?= site_url('pdt_peserta_didik/modal') ?>";
     $.ajax({
       type: "POST",
       url: url,
       data: {
-        id_siswa: id_siswa,
+        id: id_siswa,
         type: type
       },
       success: function(res) {

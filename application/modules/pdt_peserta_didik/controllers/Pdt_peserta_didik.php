@@ -12,7 +12,7 @@ class Pdt_peserta_didik extends MY_Controller
     if ($log != true) {
       redirect(site_url('login'));
     } else {
-      $this->load->model('mdl_pdt_peserta_didik', 'mpd');
+      $this->load->model('mdl_pdt_peserta_didik', 'mdl_peserta_didik');
     }
   }
 
@@ -29,7 +29,7 @@ class Pdt_peserta_didik extends MY_Controller
     echo Modules::run('layout/backend', $data);
   }
 
-  public function datalist()
+  public function get_data()
   {
     // get index value
     $index = $this->input->post("order[0][column]");
@@ -44,7 +44,7 @@ class Pdt_peserta_didik extends MY_Controller
       /* additional data can be declared here */
     );
     // move the db operation to the designated models
-    $result = $this->mpd->get_datatable($param);
+    $result = $this->mdl_peserta_didik->get_datatable($param);
     // return the data back to the views
     $data["recordsTotal"] = $result['total'];
     $data["recordsFiltered"] = $result['filtered'];
@@ -59,7 +59,7 @@ class Pdt_peserta_didik extends MY_Controller
   public function modal()
   {
     $type = $this->input->post('type');
-    $id_siswa = $this->input->post('id_siswa');
+    $id = $this->input->post('id_siswa');
 
     /// |----------------------------------------
     /// | DEFAULT VALUE
@@ -78,6 +78,7 @@ class Pdt_peserta_didik extends MY_Controller
           /// | INSERT DATA
           /// |----------------------------------------
           $dataset = [
+            'id_siswa' => '',
             'nama' => '',
             'nisn' => '',
             'nia' => '',
@@ -87,7 +88,7 @@ class Pdt_peserta_didik extends MY_Controller
             'nama_ibu' => '',
             'no_kk' => '',
             'alamat' => '',
-            'id_siswa' => $id_siswa
+            // 'id_siswa' => $id_siswa
           ];
           $data = [
             'modal_title' => "Tambah Peserta Didik",
@@ -104,7 +105,7 @@ class Pdt_peserta_didik extends MY_Controller
           /// |----------------------------------------
           /// | EDIT DATA
           /// |----------------------------------------
-          $dataset = $this->mpd->get('progurinda_r_siswa', "id_siswa = '$id_siswa'");
+          $dataset = $this->mdl_peserta_didik->get('progurinda_r_siswa', "id_siswa = '$id'");
           $data = [
             'modal_title' => "Edit Peserta Didik",
             'data' => $dataset,
@@ -120,7 +121,7 @@ class Pdt_peserta_didik extends MY_Controller
           /// |----------------------------------------
           /// | DELETE DATA
           /// |----------------------------------------
-          $dataset = $this->mpd->get('progurinda_r_siswa', "id_siswa = '$id_siswa'");
+          $dataset = $this->mdl_peserta_didik->get('progurinda_r_siswa', "id_siswa = '$id'");
           if (isset_nn_nes($dataset)) {
             $data = [
               'modal_title' => "Hapus Peserta Didik",
@@ -152,7 +153,7 @@ class Pdt_peserta_didik extends MY_Controller
     $post = $this->input->post();
     $data_to_save = array(
       'id_siswa' => $post['id_siswa'],
-      'nama_lengkap' => $post['nama_lengkap'],
+      'nama' => $post['nama'],
       'nisn' => $post['nisn'],
       'nia' => $post['nia'],
       'jenis_kelamin' => $post['jenis_kelamin'],
@@ -161,10 +162,10 @@ class Pdt_peserta_didik extends MY_Controller
       'nama_ibu' => $post['nama_ibu'],
       'no_kk' => $post['no_kk'],
       'alamat' => $post['alamat'],
-      's_aktif' => 'Y'
+      's_aktif' => 1,
     );
 
-    $res = $this->mpd->save($data_to_save);
+    $res = $this->mdl_peserta_didik->save($data_to_save);
 
     return $this->output
       ->set_content_type('application/json')
@@ -179,7 +180,7 @@ class Pdt_peserta_didik extends MY_Controller
     ];
 
     $data["id_siswa"] = $this->input->post('id_siswa');
-    $res = $this->mpd->delete($data);
+    $res = $this->mdl_peserta_didik->delete($data);
 
     return $this->output
       ->set_content_type('application/json')

@@ -6,50 +6,95 @@
 </div>
 <div class="modal-body">
 
-  <form id="savePesertaDidik" action="<?= site_url('peserta_didik/save'); ?>" method="POST" enctype="multipart/form-data">
+  <form id="savePesertaDidik" action="<?= site_url('pdt_peserta_didik/save'); ?>" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="type" value="<?= $data['type'] ?>">
-    <input type="hidden" name="id_siswa" value="<?= $data['id_siswa'] ?>">
+    <!-- <input type="hidden" name="id_siswa" value="<?= $data['id_siswa'] ?>"> -->
 
     <div class="row g-2">
       <div class="col-12 form_mapel">
+        <label for="id_siswa">ID Siswa</label>
+        <br>
+        <select name="id_siswa" id="id_siswa" class="form-select form-select" style="width:100%">
+          <?php $selected = ($data["id_siswa"] != "") ? "selected" : ""; ?>
+          <option value=""> - - - Pilih ID Siswa - - - </option>
+          <option value="<?php echo $data["id_siswa"]; ?>" <?php echo $selected ?>><?php echo $data["id_siswa"]; ?></option>
+          <option value="1234567890">Jonah</option>
+          <option value="9123456789">Jontor</option>
+        </select>
+      </div>
+
+      <div class="col-12 form_mapel">
         <label for="nisn">NISN</label>
         <br>
-        <select name="nisn" id="nisn" class="form-control form-control-sm" style="width:100%">
+        <select name="nisn" id="nisn" class="form-select form-select" style="width:100%">
           <?php $selected = ($data["nisn"] != "") ? "selected" : ""; ?>
           <option value=""> - - - Pilih NISN - - - </option>
           <option value="<?php echo $data["nisn"]; ?>" <?php echo $selected ?>><?php echo $data["nisn"]; ?></option>
+          <option value="1234567890">1234567890</option>
+          <option value="9123456789">9123456789</option>
         </select>
       </div>
 
       <div class="col-12 form_mapel">
         <label for="nama">Nama Lengkap</label>
-        <input type="text" name="nama" id="nama" class="form-control form-control-sm" value="<?= $data['nama']; ?>" readonly=true>
+        <input type="text" name="nama" id="nama" class="form-control form-control-sm" value="<?= $data['nama']; ?>">
         <div class="invalid-feedback"></div>
       </div>
 
       <div class="col-12 form_mapel">
         <label for="nia">NIA</label>
-        <input type="text" name="nia" id="nia" class="form-control form-control-sm" value="<?= $data['nia']; ?>" readonly=true>
+        <input type="text" name="nia" id="nia" class="form-control form-control-sm" value="<?= $data['nia']; ?>">
         <div class="invalid-feedback"></div>
       </div>
 
       <div class="col-12 col-lg-12 form_mapel">
         <label for="jenis_kelamin">Jenis Kelamin</label>
-        <input type="text" name="jenis_kelamin" id="jenis_kelamin" class="form-control form-control-sm" value="<?= $data['jenis_kelamin']; ?>" readonly=true>
-        <input type="hidden" name="jenis_kelamin" id="jenis_kelamin" class="form-control form-control-sm" value="<?= $data['jenis_kelamin']; ?>" readonly=true>
+        <br>
+        <select name="jenis_kelamin" id="jenis_kelamin" class="form-select form-select" style="width:100%">
+          <?php $selected = ($data["jenis_kelamin"] != "") ? "selected" : ""; ?>
+          <option value=""> - - - Pilih Jenis Kelamin - - - </option>
+          <option value="L">Laki - Laki</option>
+          <option value="P">Perempuan</option>
+        </select>
       </div>
 
       <div class="col-12 col-lg-12 form_mapel">
         <label for="kode_agama">Agama</label>
-        <input type="text" name="kode_agama" id="kode_agama" class="form-control form-control-sm" value="<?= $data['kode_agama']; ?>" readonly=true>
-        <input type="hidden" name="kode_agama" id="kode_agama" class="form-control form-control-sm" value="<?= $data['kode_agama']; ?>" readonly=true>
+        <br>
+        <select name="kode_agama" id="kode_agama" class="form-select form-select" style="width:100%">
+          <?php $selected = ($data["kode_agama"] != "") ? "selected" : ""; ?>
+          <option value=""> - - - Pilih Jenis Kelamin - - - </option>
+          <option value="00">Islam</option>
+          <option value="01">Hindu</option>
+          <option value="02">Kristen - Protestan</option>
+          <option value="03">Kristen - Katolik</option>
+          <option value="04">Buddha</option>
+          <option value="05">Konghucu</option>
+        </select>
+      </div>
+
+      <div class="col-12 form_mapel">
+        <label for="nama_ayah">Nama Ayah</label>
+        <input type="text" name="nama_ayah" id="nama_ayah" class="form-control form-control-sm" value="<?= $data['nama_ayah']; ?>">
+        <div class="invalid-feedback"></div>
+      </div>
+
+      <div class="col-12 form_mapel">
+        <label for="nama_ibu">Nama Ibu</label>
+        <input type="text" name="nama_ibu" id="nama_ibu" class="form-control form-control-sm" value="<?= $data['nama_ibu']; ?>">
+        <div class="invalid-feedback"></div>
+      </div>
+
+      <div class="col-12 form_mapel">
+        <label for="no_kk">No. KK</label>
+        <input type="text" name="no_kk" id="no_kk" class="form-control form-control-sm" value="<?= $data['no_kk']; ?>">
+        <div class="invalid-feedback"></div>
       </div>
 
       <div class="col-12 col-lg-12 form_mapel">
         <label for="alamat">Alamat</label>
         <input type="text" name="alamat" id="alamat" class="form-control form-control-sm" value="<?= $data['alamat'] ?>">
       </div>
-
     </div>
   </form>
 </div>
@@ -59,43 +104,43 @@
 </div>
 
 <script>
-  $('#nip').select2({
-    allowClear: true,
-    placeholder: 'Pilih Pegawai yang akan disetup.',
-    dropdownParent: $('#whole_modal_id .modal-content'),
-    ajax: {
-      type: 'POST',
-      dataType: 'json',
-      url: '<?= site_url('config/select2_pegawai') ?>',
-      delay: 800,
-      /* delay before sending ajax request */
-      data: function(params) {
-        return {
-          search: params.term
-        }
-      },
-      processResults: function(data) {
-        return {
-          results: data
-        };
-      },
-    }
-  }).on('select2:select', function(e) {
-    // what to do when option selected
-    console.log(e);
-    selected_kewenangan = $('#select2_kewenangan').val();
-    $("#nama_lengkap").val(e.params.data.nama_lengkap);
-    $("#ket_jab").val(e.params.data.ket_jab);
-    $("#kode_jab").val(e.params.data.kode_jab);
-    $("#ket_ukerja").val(e.params.data.ket_ukerja);
-    $("#kode_ukerja").val(e.params.data.kode_ukerja);
+  // $('#nip').select2({
+  //   allowClear: true,
+  //   placeholder: 'Pilih Pegawai yang akan disetup.',
+  //   dropdownParent: $('#whole_modal_id .modal-content'),
+  //   ajax: {
+  //     type: 'POST',
+  //     dataType: 'json',
+  //     url: '<?= site_url('config/select2_pegawai') ?>',
+  //     delay: 800,
+  //     /* delay before sending ajax request */
+  //     data: function(params) {
+  //       return {
+  //         search: params.term
+  //       }
+  //     },
+  //     processResults: function(data) {
+  //       return {
+  //         results: data
+  //       };
+  //     },
+  //   }
+  // }).on('select2:select', function(e) {
+  //   // what to do when option selected
+  //   console.log(e);
+  //   selected_kewenangan = $('#select2_kewenangan').val();
+  //   $("#nama_lengkap").val(e.params.data.nama_lengkap);
+  //   $("#ket_jab").val(e.params.data.ket_jab);
+  //   $("#kode_jab").val(e.params.data.kode_jab);
+  //   $("#ket_ukerja").val(e.params.data.ket_ukerja);
+  //   $("#kode_ukerja").val(e.params.data.kode_ukerja);
 
-  }).on('select2:close', function(e) {
-    // what to do when selection closed
-  }).on('select2:clear', function(e) {
-    // what to do when clearing (only if allowClear: true)
-    selected_kewenangan = '';
-  });
+  // }).on('select2:close', function(e) {
+  //   // what to do when selection closed
+  // }).on('select2:clear', function(e) {
+  //   // what to do when clearing (only if allowClear: true)
+  //   selected_kewenangan = '';
+  // });
 
 
   $('#savePesertaDidik').validate($.extend({
