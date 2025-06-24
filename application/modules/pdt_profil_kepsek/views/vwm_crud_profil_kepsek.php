@@ -115,9 +115,10 @@ switch ($type) {
                 success: function(e) {
                   if (e.status) {
                     show_notify('success', e.message);
+                    reload_r_profil_table();
                     setTimeout(() => {
-                      window.location.href = '<?= site_url('pdt_profil_kepsek/edit') ?>/' + e.ID;
-                    }, 2000);
+                      $('#whole_modal_id').modal('hide');
+                    }, 500);
                   } else {
                     show_notify('error', e.message);
                     submit.attr('disabled', false);

@@ -177,8 +177,11 @@ class Mdl_pdt_profil_kepsek extends CI_Model
       $is_allowed = ($is_admin || $same_ukerja);
 
       // tampilan tombol aksi
+      // $tombol_edit =  ($is_draft && $is_allowed)
+      //   ? '<a href="' . site_url('pdt_profil_kepsek/edit/' . $row['id_dokumen']) . '" class="clickable text-white badge bg-primary"><i class="fas fa-edit me-1"></i>Edit</a>'
+      //   : '';
       $tombol_edit =  ($is_draft && $is_allowed)
-        ? '<a href="' . site_url('pdt_profil_kepsek/edit/' . $row['id_dokumen']) . 'S" class="clickable text-white badge bg-primary"><i class="fas fa-edit me-1"></i>Edit</a>'
+        ? '<a href="#" onclick="on_dev()" class="clickable text-white badge bg-primary"><i class="fas fa-edit me-1"></i>Edit</a>'
         : '';
       // $tombol_detail = '<a href="' . site_url('pdt_profil_kepsek/detail/' . $row['id_dokumen']) . '" class="clickable text-white badge bg-secondary"><i class="fas fa-file me-1"></i>Detail</a>';
       $tombol_detail = '<a href="#" onclick="on_dev()" class="clickable text-white badge bg-secondary"><i class="fas fa-file me-1"></i>Detail</a>';
@@ -315,7 +318,7 @@ class Mdl_pdt_profil_kepsek extends CI_Model
         $this->db->trans_commit();
         return [
           'status' => true,
-          'message' => "Proses tambah usulan profil kepala sekolah berhasil disimpan dengan status DRAFT. Anda akan di re-direct ke halaman dokumen form usulan profil kepala sekolah.",
+          'message' => "Proses tambah usulan profil kepala sekolah berhasil disimpan dengan status DRAFT.",
           'ID' => encrypt_id($insert_id)
         ];
       }

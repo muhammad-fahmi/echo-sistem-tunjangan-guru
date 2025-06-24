@@ -211,12 +211,12 @@
       <div class="scroll-sidebar">
         <!-- User profile -->
         <div class="user-profile position-relative" style="
-              background: url(<?= base_url("theme/assets/images/background/user-info.jpg"); ?>)
-                no-repeat;
+              background: url(<?= base_url("theme/assets/images/background/pangkalan-data-banner.jpg"); ?>)
+                no-repeat; background-size: cover;
             ">
           <!-- User profile image -->
           <div class="profile-img">
-            <img src="<?= base_url("theme/assets/images/users/profile.png") ?>" alt="user" class="w-100" />
+            <img src="<?= base_url("theme/assets/images/logo/logo_tut_wuri_handayani.png") ?>" alt="user" class="w-100" style="border-radius: 50%;" />
           </div>
           <!-- User profile text-->
           <div class="profile-text pt-1 dropdown">
