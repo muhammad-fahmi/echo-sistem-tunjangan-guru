@@ -42,7 +42,7 @@
                   <th scope="col">No.</th>
                   <th scope="col">Nama Lengkap</th>
                   <th scope="col">NISN</th>
-                  <th scope="col">NIA</th>
+                  <th scope="col">NIK</th>
                   <th scope="col">Jenis Kelamin</th>
                   <th scope="col">Agama</th>
                   <th scope="col">Alamat</th>
@@ -174,9 +174,6 @@
         className: '',
         createdCell: function(td, cellData, rowData, row, col) {
           let kewenangan_user = '<?= $this->session->userdata('kewenangan'); ?>';
-          // let btn_user_management = '<a href="<?= site_url('user/menu_management/'); ?>' + cellData + '" class="badge bg-secondary clickable me-1" title="Menu Management">' +
-          //   '<i class="fas fa-list"></i></a>';
-
           let btn_edit = '<div onclick="modal(`' + cellData + '`, `edit_peserta_didik`)" class="badge bg-primary clickable me-1" title="Edit">' +
             '<i class="fas fa-edit"></i></div>';
 

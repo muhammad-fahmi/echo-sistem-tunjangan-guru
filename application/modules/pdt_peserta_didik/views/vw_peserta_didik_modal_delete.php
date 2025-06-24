@@ -6,9 +6,9 @@
 </div>
 <div class="modal-body">
 
-  <form id="deleteMapel" action="<?= site_url('mapel_guru/delete'); ?>" method="POST" enctype="multipart/form-data">
+  <form id="deletePesertaDidik" action="<?= site_url('pdt_peserta_didik/delete'); ?>" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="type" value="<?= $data['type'] ?>">
-    <input type="hidden" name="id" value="<?= $data['id'] ?>">
+    <input type="hidden" name="id_siswa" value="<?= $data['id_siswa'] ?>">
 
     <div class="row g-2">
 
@@ -18,29 +18,49 @@
         </div>
         <table>
           <tr>
-            <td style="min-width: 120px;">NIP</td>
+            <td style="min-width: 120px;">NISN</td>
             <td style="min-width: 10px;">:</td>
-            <td style="width: 100%;"><?= $data['nip'] ?></td>
+            <td style="width: 100%;"><?= $data['nisn'] ?></td>
           </tr>
           <tr>
             <td style="min-width: 120px;">Nama Lengkap</td>
             <td style="min-width: 10px;">:</td>
-            <td style="width: 100%;"><?= $data['nama_lengkap'] ?></td>
+            <td style="width: 100%;"><?= $data['nama'] ?></td>
           </tr>
           <tr>
-            <td style="min-width: 120px;">Jabatan</td>
+            <td style="min-width: 120px;">NIK</td>
             <td style="min-width: 10px;">:</td>
-            <td style="width: 100%;"><?= $data['ket_jab'] ?></td>
+            <td style="width: 100%;"><?= $data['nik'] ?></td>
           </tr>
           <tr>
-            <td style="min-width: 120px;">Unit Kerja</td>
+            <td style="min-width: 120px;">Jenis Kelamin</td>
             <td style="min-width: 10px;">:</td>
-            <td style="width: 100%;"><?= $data['ket_ukerja'] ?></td>
+            <td style="width: 100%;"><?= $data['jenis_kelamin'] ?></td>
           </tr>
           <tr>
-            <td style="min-width: 120px;">Mata Pelajaran</td>
+            <td style="min-width: 120px;">Agama</td>
             <td style="min-width: 10px;">:</td>
-            <td style="width: 100%;"><?= $data['mapel'] ?></td>
+            <td style="width: 100%;"><?= $data['kode_agama'] ?></td>
+          </tr>
+          <tr>
+            <td style="min-width: 120px;">Nama Ibu</td>
+            <td style="min-width: 10px;">:</td>
+            <td style="width: 100%;"><?= $data['nama_ibu'] ?></td>
+          </tr>
+          <tr>
+            <td style="min-width: 120px;">No. KK</td>
+            <td style="min-width: 10px;">:</td>
+            <td style="width: 100%;"><?= $data['no_kk'] ?></td>
+          </tr>
+          <tr>
+            <td style="min-width: 120px;">Alamat</td>
+            <td style="min-width: 10px;">:</td>
+            <td style="width: 100%;"><?= $data['alamat'] ?></td>
+          </tr>
+          <tr>
+            <td style="min-width: 120px;">Penyandang Disabilitas</td>
+            <td style="min-width: 10px;">:</td>
+            <td style="width: 100%;"><?= $data['pdpd'] ?></td>
           </tr>
         </table>
       </div>
@@ -50,13 +70,13 @@
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-sm btn-light-secondary" data-bs-dismiss="modal">Batal</button>
-  <button id="deleteMapelbtn" type="submit" form="deleteMapel" class="btn btn-sm btn-light-success">Hapus</button>
+  <button id="deletePesertaDidikbtn" type="submit" form="deletePesertaDidik" class="btn btn-sm btn-light-success">Hapus</button>
 </div>
 
 <script>
-  $('#deleteMapel').validate($.extend({
+  $('#deletePesertaDidik').validate($.extend({
     submitHandler: function(form, event) {
-      var submit = $('#deleteMapelbtn');
+      var submit = $('#deletePesertaDidikbtn');
       // declare button submit disabling right here if needed
       submit.attr('disabled', true);
       $(form).ajaxSubmit({

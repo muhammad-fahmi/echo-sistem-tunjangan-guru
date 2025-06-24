@@ -30,7 +30,7 @@ $cur_unor = $this->session->userdata('kode_unor');
 switch ($type) {
   case 'add': {
 ?>
-      <form id="form_add_usulan_profil_sekolah" action="<?= site_url('pdt_profil_sekolah/save') ?>" method="POST">
+      <form id="form_add_usulan_profil_sekolah" action="<?= site_url('pdt_profil_sekolah/save') ?>" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="type" value="<?= $type ?>">
 
         <div class="modal-header d-flex align-items-center">

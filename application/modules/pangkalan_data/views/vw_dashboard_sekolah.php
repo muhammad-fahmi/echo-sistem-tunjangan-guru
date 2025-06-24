@@ -47,7 +47,7 @@
         <div class="card-header">
           <h4 class="card-title space-between">
             <div>PROFIL SEKOLAH</div>
-            <div class="btn btn-sm btn-warning pull-right" onclick="<?= site_url('pdt_profil_sekolah') ?>">UPDATE PROFIL SEKOLAH <i class="fas fa-arrow-right ms-2"></i></div>
+            <a class="btn btn-sm btn-warning pull-right" href="<?= site_url('pdt_profil_sekolah') ?>">UPDATE PROFIL SEKOLAH <i class="fas fa-arrow-right ms-2"></i></a>
           </h4>
         </div>
         <div class="card-body">
@@ -225,7 +225,7 @@
         <div class="card-footer">
           <h4 class="card-title space-between">
             <div>PROFIL KEPALA SEKOLAH</div>
-            <div class="btn btn-sm btn-info pull-right" onclick="<?= site_url('pdt_profil_sekolah') ?>">UPDATE PROFIL KEPALA SEKOLAH <i class="fas fa-arrow-right ms-2"></i></div>
+            <a class="btn btn-sm btn-info pull-right" href="<?= site_url('pdt_profil_sekolah') ?>">UPDATE PROFIL KEPALA SEKOLAH <i class="fas fa-arrow-right ms-2"></i></a>
           </h4>
         </div>
         <div class="card-body">
