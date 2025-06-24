@@ -581,6 +581,16 @@ function get_safe($key = null, $default = null)
   return $value !== null ? $value : $default;
 }
 
+/** fungsi untuk ngecek kewenangan di sesi dan menentukan apakah yg login saat ini termasuk admin (output : true / false) */
+function is_admin()
+{
+  $CI = &get_instance();
+  $cur_kewenangan = $CI->session->userdata('kewenangan');
+
+  return ($cur_kewenangan == '00' || $cur_kewenangan == '02')
+    ? true : false;
+}
+
 // Define a mapping from digits to character strings
 function get_digit_to_string_mapping()
 {

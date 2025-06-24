@@ -143,228 +143,229 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
     });
   }
 
+  /// |----------------------------------------------------------------------
+  /// | >> MASTER PROFIL KEPSEK
+  /// |----------------------------------------------------------------------
+  var m_profil_kepsek = $("#tabel_m_profil_kepsek").DataTable({
+    responsive: true,
+    processing: false,
+    serverSide: true,
+    orderCellsTop: true,
+    dom: '<"row g-2"' +
+      '<"col-12 col-sm-6"l><"col-12 col-sm-6"f>' +
+      '<"col-12"tr>' +
+      '<"col-12 col-sm-6"i><"col-12 col-sm-6"p>' +
+      '>',
+    /* set kolom yang di sortir secara default */
+    order: [
+      [4, "desc"],
+    ],
+    /* set placeholder dari input search */
+    language: {
+      searchPlaceholder: "Cari data..."
+    },
+    ajax: {
+      url: '<?= site_url('pdt_profil_kepsek/get_data_master') ?>',
+      /* parameter yang dikirimkan ke controller */
+      data: {
+        param1: function() {
+          return $('#id_atau_class_element').val();
+        },
+      },
+      type: 'POST',
+      beforeSend: function() {
+        // lakukan sesuatu sebelum mulai ajax process
+        $('.loading_tabel_m_profil_kepsek').addClass('show');
+      },
+      error: function(xhr, status, error) {
+        show_notify('error', xhr.status + ' : ' + error);
+      }
+    },
+    /* Sesuaikan jumlah kolom dengan id table yang digunakan */
+    columns: [{
+        data: 'no', // index 0
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        }
+      },
+      {
+        data: 'nip', // index 1
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        }
+      },
+      {
+        data: 'kode_ukerja', // index 2
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        }
+      },
+      {
+        data: 'masa_penugasan_mulai', // index 3
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        }
+      },
+      {
+        data: 'masa_penugasan_selesai', // index 4
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        }
+      },
+      {
+        data: 'id_kepsek', // index 5
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        }
+      }
+    ],
+    /* Lakukan fungsi callback pada bracket ini */
+    drawCallback: function(settings) {
+      /* gunakan code ini utk mengambil data response ke dalam drawCallback */
+      let api = this.api();
+      let json = api.ajax.json();
+      if (json.status == false) {
+        /* jalankan apabila return false */
+      }
+
+      $('.loading_tabel_m_profil_kepsek').removeClass('show');
+      /* parameter callback untuk kostumisasi fungsi */
+    }
+  });
+
+  /* fungsi untuk reload datatable ajax */
+  function reload_m_profil_table() {
+    m_profil_kepsek.ajax.reload();
+  }
+
+  /// |----------------------------------------------------------------------
+  /// | >> USULAN PROFIL KEPSEK
+  /// |----------------------------------------------------------------------
+  var r_profil_kepsek = $("#tabel_r_profil_kepsek").DataTable({
+    responsive: true,
+    processing: false,
+    serverSide: true,
+    orderCellsTop: true,
+    dom: '<"row g-2"' +
+      '<"col-12 col-sm-6"l><"col-12 col-sm-6"f>' +
+      '<"col-12"tr>' +
+      '<"col-12 col-sm-6"i><"col-12 col-sm-6"p>' +
+      '>',
+    /* set kolom yang di sortir secara default */
+    order: [
+      [4, "desc"],
+    ],
+    /* set placeholder dari input search */
+    language: {
+      searchPlaceholder: "Cari data..."
+    },
+    ajax: {
+      url: '<?= site_url('pdt_profil_kepsek/get_data_usulan') ?>',
+      /* parameter yang dikirimkan ke controller */
+      data: {
+        param1: function() {
+          return $('#id_atau_class_element').val();
+        },
+      },
+      type: 'POST',
+      beforeSend: function() {
+        // lakukan sesuatu sebelum mulai ajax process
+        $('.loading_tabel_r_profil_kepsek').addClass('show');
+      },
+      error: function(xhr, status, error) {
+        show_notify('error', xhr.status + ' : ' + error);
+      }
+    },
+    /* Sesuaikan jumlah kolom dengan id table yang digunakan */
+    columns: [{
+        data: 'no', // index 0
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        }
+      },
+      {
+        data: 'nip', // index 1
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-start">' + rowData.kepsek_display + '</div>');
+        }
+      },
+      {
+        data: 'kode_ukerja', // index 2
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-start">' + rowData.sekolah_display + '</div>');
+        }
+      },
+      {
+        data: 'periode_bln', // index 3
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + rowData.periode_display + '</div>');
+        }
+      },
+      {
+        data: 'create_on', // index 4
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + rowData.create_on_display + '</div>');
+        }
+      },
+      {
+        data: 'status_dokumen', // index 5
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + rowData.status_display + '</div>');
+        }
+      },
+      {
+        data: 'id_dokumen', // index 6
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + rowData.aksi_display + '</div>');
+        }
+      }
+    ],
+    /* Lakukan fungsi callback pada bracket ini */
+    drawCallback: function(settings) {
+      /* gunakan code ini utk mengambil data response ke dalam drawCallback */
+      let api = this.api();
+      let json = api.ajax.json();
+      if (json.status == false) {
+        /* jalankan apabila return false */
+      }
+
+      $('.loading_tabel_r_profil_kepsek').removeClass('show');
+      /* parameter callback untuk kostumisasi fungsi */
+    }
+  });
+
+  /* fungsi untuk reload datatable ajax */
+  function reload_r_profil_table() {
+    r_profil_kepsek.ajax.reload();
+  }
+
   $(document).ready(function() {
     // do something on document ready
-    /// |----------------------------------------------------------------------
-    /// | >> MASTER PROFIL KEPSEK
-    /// |----------------------------------------------------------------------
-    var m_profil_kepsek = $("#tabel_m_profil_kepsek").DataTable({
-      responsive: true,
-      processing: false,
-      serverSide: true,
-      orderCellsTop: true,
-      dom: '<"row g-2"' +
-        '<"col-12 col-sm-6"l><"col-12 col-sm-6"f>' +
-        '<"col-12"tr>' +
-        '<"col-12 col-sm-6"i><"col-12 col-sm-6"p>' +
-        '>',
-      /* set kolom yang di sortir secara default */
-      order: [
-        [4, "desc"],
-      ],
-      /* set placeholder dari input search */
-      language: {
-        searchPlaceholder: "Cari data..."
-      },
-      ajax: {
-        url: '<?= site_url('pdt_profil_kepsek/get_data_master') ?>',
-        /* parameter yang dikirimkan ke controller */
-        data: {
-          param1: function() {
-            return $('#id_atau_class_element').val();
-          },
-        },
-        type: 'POST',
-        beforeSend: function() {
-          // lakukan sesuatu sebelum mulai ajax process
-          $('.loading_tabel_m_profil_kepsek').addClass('show');
-        },
-        error: function(xhr, status, error) {
-          show_notify('error', xhr.status + ' : ' + error);
-        }
-      },
-      /* Sesuaikan jumlah kolom dengan id table yang digunakan */
-      columns: [{
-          data: 'no', // index 0
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-center">' + cellData + '</div>');
-          }
-        },
-        {
-          data: 'nip', // index 1
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-center">' + cellData + '</div>');
-          }
-        },
-        {
-          data: 'kode_ukerja', // index 2
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-center">' + cellData + '</div>');
-          }
-        },
-        {
-          data: 'masa_penugasan_mulai', // index 3
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-center">' + cellData + '</div>');
-          }
-        },
-        {
-          data: 'masa_penugasan_selesai', // index 4
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-center">' + cellData + '</div>');
-          }
-        },
-        {
-          data: 'id_kepsek', // index 5
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-center">' + cellData + '</div>');
-          }
-        }
-      ],
-      /* Lakukan fungsi callback pada bracket ini */
-      drawCallback: function(settings) {
-        /* gunakan code ini utk mengambil data response ke dalam drawCallback */
-        let api = this.api();
-        let json = api.ajax.json();
-        if (json.status == false) {
-          /* jalankan apabila return false */
-        }
-
-        $('.loading_tabel_m_profil_kepsek').removeClass('show');
-        /* parameter callback untuk kostumisasi fungsi */
-      }
-    });
-
-    /* fungsi untuk reload datatable ajax */
-    function reload_table() {
-      m_profil_kepsek.ajax.reload();
-    }
-
-    /// |----------------------------------------------------------------------
-    /// | >> USULAN PROFIL KEPSEK
-    /// |----------------------------------------------------------------------
-    var r_profil_kepsek = $("#tabel_r_profil_kepsek").DataTable({
-      responsive: true,
-      processing: false,
-      serverSide: true,
-      orderCellsTop: true,
-      dom: '<"row g-2"' +
-        '<"col-12 col-sm-6"l><"col-12 col-sm-6"f>' +
-        '<"col-12"tr>' +
-        '<"col-12 col-sm-6"i><"col-12 col-sm-6"p>' +
-        '>',
-      /* set kolom yang di sortir secara default */
-      order: [
-        [4, "desc"],
-      ],
-      /* set placeholder dari input search */
-      language: {
-        searchPlaceholder: "Cari data..."
-      },
-      ajax: {
-        url: '<?= site_url('pdt_profil_kepsek/get_data_usulan') ?>',
-        /* parameter yang dikirimkan ke controller */
-        data: {
-          param1: function() {
-            return $('#id_atau_class_element').val();
-          },
-        },
-        type: 'POST',
-        beforeSend: function() {
-          // lakukan sesuatu sebelum mulai ajax process
-          $('.loading_tabel_r_profil_kepsek').addClass('show');
-        },
-        error: function(xhr, status, error) {
-          show_notify('error', xhr.status + ' : ' + error);
-        }
-      },
-      /* Sesuaikan jumlah kolom dengan id table yang digunakan */
-      columns: [{
-          data: 'no', // index 0
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-center">' + cellData + '</div>');
-          }
-        },
-        {
-          data: 'nip', // index 1
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-start">' + rowData.kepsek_display + '</div>');
-          }
-        },
-        {
-          data: 'kode_ukerja', // index 2
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-start">' + rowData.sekolah_display + '</div>');
-          }
-        },
-        {
-          data: 'periode_bln', // index 3
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-center">' + rowData.periode_display + '</div>');
-          }
-        },
-        {
-          data: 'create_on', // index 4
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-center">' + rowData.create_on_display + '</div>');
-          }
-        },
-        {
-          data: 'status_dokumen', // index 5
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-center">' + rowData.status_display + '</div>');
-          }
-        },
-        {
-          data: 'id_dokumen', // index 6
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-center">' + rowData.aksi_display + '</div>');
-          }
-        }
-      ],
-      /* Lakukan fungsi callback pada bracket ini */
-      drawCallback: function(settings) {
-        /* gunakan code ini utk mengambil data response ke dalam drawCallback */
-        let api = this.api();
-        let json = api.ajax.json();
-        if (json.status == false) {
-          /* jalankan apabila return false */
-        }
-
-        $('.loading_tabel_r_profil_kepsek').removeClass('show');
-        /* parameter callback untuk kostumisasi fungsi */
-      }
-    });
-
-    /* fungsi untuk reload datatable ajax */
-    function reload_table() {
-      r_profil_kepsek.ajax.reload();
-    }
   });
 </script>

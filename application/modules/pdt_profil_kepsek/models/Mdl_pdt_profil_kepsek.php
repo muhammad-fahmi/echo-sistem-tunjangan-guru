@@ -177,13 +177,16 @@ class Mdl_pdt_profil_kepsek extends CI_Model
       $is_allowed = ($is_admin || $same_ukerja);
 
       // tampilan tombol aksi
+      // $tombol_edit =  ($is_draft && $is_allowed)
+      //   ? '<a href="' . site_url('pdt_profil_kepsek/edit/' . $row['id_dokumen']) . '" class="clickable text-white badge bg-primary"><i class="fas fa-edit me-1"></i>Edit</a>'
+      //   : '';
       $tombol_edit =  ($is_draft && $is_allowed)
-        ? '<a href="' . site_url('pdt_profil_kepsek/edit/' . $row['id_dokumen']) . 'S" class="clickable badge bg-primary"><i class="fas fa-edit me-1"></i>Edit</a>'
+        ? '<a href="#" onclick="on_dev()" class="clickable text-white badge bg-primary"><i class="fas fa-edit me-1"></i>Edit</a>'
         : '';
-      // $tombol_detail = '<a href="' . site_url('pdt_profil_kepsek/detail/' . $row['id_dokumen']) . '" class="clickable badge bg-secondary"><i class="fas fa-file me-1"></i>Detail</a>';
-      $tombol_detail = '<a href="#" onclick="on_dev()" class="clickable badge bg-secondary"><i class="fas fa-file me-1"></i>Detail</a>';
+      // $tombol_detail = '<a href="' . site_url('pdt_profil_kepsek/detail/' . $row['id_dokumen']) . '" class="clickable text-white badge bg-secondary"><i class="fas fa-file me-1"></i>Detail</a>';
+      $tombol_detail = '<a href="#" onclick="on_dev()" class="clickable text-white badge bg-secondary"><i class="fas fa-file me-1"></i>Detail</a>';
       $tombol_delete = ($is_draft && $is_allowed)
-        ? '<span class="clickable badge bg-danger" onclick="modal(`hapus_usulan_profil`, `' . $row['id_dokumen'] . '`)"><i class="fas fa-trash me-1"></i>Hapus</span>'
+        ? '<span class="clickable text-white badge bg-danger" onclick="modal(`hapus_usulan_profil`, `' . $row['id_dokumen'] . '`)"><i class="fas fa-trash me-1"></i>Hapus</span>'
         : '';
       $row['aksi_display'] = '<div class="d-grid gap-1">' .
         $tombol_edit . $tombol_detail . $tombol_delete .
@@ -290,7 +293,7 @@ class Mdl_pdt_profil_kepsek extends CI_Model
         $cur_user,
         'r_profil_kepsek',
         $insert_id,
-        "Melakukan penambahan usulan profil kepsek dengan data sebagai berikut :\n\n{$data_to_save}"
+        "Melakukan penambahan usulan profil kepsek dengan data sebagai berikut :\n\n" . format_log_view($data_to_save)
       );
 
       // BUAT LOG DOKUMEN (HISTORY YG DITAMPILKAN SAAT VERIFIKASI / HALAMAN DETAIL)
@@ -315,7 +318,7 @@ class Mdl_pdt_profil_kepsek extends CI_Model
         $this->db->trans_commit();
         return [
           'status' => true,
-          'message' => "Proses tambah usulan profil kepala sekolah berhasil disimpan dengan status DRAFT. Anda akan di re-direct ke halaman dokumen form usulan profil kepala sekolah.",
+          'message' => "Proses tambah usulan profil kepala sekolah berhasil disimpan dengan status DRAFT.",
           'ID' => encrypt_id($insert_id)
         ];
       }
@@ -355,8 +358,101 @@ class Mdl_pdt_profil_kepsek extends CI_Model
     ];
   }
 
+  public function submit_profil_kepsek($data)
+  {
+    // DEBUG
+    return [
+      'status' => false,
+      'message' => 'DEBUG MDL : edit_profil_kepsek',
+      'data' => $data
+    ];
+  }
+
   public function delete_profil_kepsek($data)
   {
+    $cur_user = $this->session->userdata('id_user');
+    $cur_unor = $this->session->userdata('kode_unor');
+
+    // FORM VALIDATION
+    $this->load->library('form_validation');
+
+    // Define validation rules
+    $this->form_validation->set_rules('id_dokumen', 'ID Dokumen Usulan Profil Kepala Sekolah', 'required');
+
+    // Validate the input data
+    if ($this->form_validation->run() === FALSE) {
+      // Collect errors
+      $errors = validation_errors('<li>', '</li>'); // This will return a string with errors formatted as HTML
+
+      // Build error list
+      $error_list = '<ul class="mb-0">';
+      $error_list .= $errors;
+      $error_list .= '</ul>';
+
+      // Return response with error details
+      return [
+        'status' => false,
+        'message' => 'Proses tidak bisa dilanjutkan karena form tidak valid.<br>' . $error_list
+      ];
+    }
+
+    // VALIDASI DATA EXISTING
+    $decryptedID = decrypt_id($data['id_dokumen']);
+    $dataset = fetch_row_data('vr_profil_kepsek', ['id_dokumen' => $decryptedID], false);
+    if ($dataset === false) return [
+      'status' => false,
+      'message' => "Maaf, data yang akan dihapus tidak valid lagi."
+    ];
+
+    // PASTIKAN BERHAK MENGHAPUS
+    $same_ukerja = ($cur_unor == $dataset['kode_ukerja']);
+    if (!(is_admin() || $same_ukerja)) return [
+      'status' => false,
+      'message' => "Maaf, Anda tidak memiliki ijin untuk menghapus dokumen ini."
+    ];
+
+    try {
+      // START DB OPERATION
+      $this->db->trans_begin();
+
+      // HAPUS DATA 
+      $proc = 1;
+      $this->db->delete('r_profil_kepsek', [
+        'id_dokumen' => $decryptedID
+      ]);
+
+      // BUAT LOG (KEPERLUAN SISTEM)
+      $proc = 2;
+      log_generator(
+        $cur_user,
+        'r_profil_kepsek',
+        $decryptedID,
+        "Melakukan penghapusan data sebagai berikut :\n\n" . format_log_view($dataset)
+      );
+
+      if ($this->db->trans_status() === FALSE) {
+        // do your error handler here
+        $this->db->trans_rollback();
+        return [
+          'status' => false,
+          'message' => "Maaf, proses mengalami error.\nROLLBACK ISSUE #{$proc}"
+        ];
+      } else {
+        // do your success handler here
+        $this->db->trans_commit();
+        return [
+          'status' => true,
+          'message' => "Dokumen usulan profil kepala sekolah berhasil dihapus",
+        ];
+      }
+    } catch (\Throwable $th) {
+      $catch_error = sanitize_string($th->getMessage());
+      return [
+        'status' => false,
+        'message' => "Maaf, proses mengalami error.\n{$catch_error}"
+      ];
+    }
+
     // DEBUG
     return [
       'status' => false,

@@ -80,6 +80,7 @@ label.is-invalid {
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
+		align-items: center;
 	}
 }
 
@@ -243,4 +244,23 @@ label.is-invalid {
 
 .notifyjs-corner {
 	z-index: 12840 !important;
+}
+
+a.badge.text-white {
+	&:hover {
+		color: white !important;
+	}
+}
+
+.profile-text {
+	a {
+		text-wrap: auto;
+		height: auto;
+	}
+}
+
+.scroll-sidebar {
+	.user-profile {
+		background-size: cover;
+	}
 }

@@ -14,10 +14,10 @@
 
   <div class="row">
 
-    <!-- <?php
-          $show_debug = true;
-          if ($show_debug) {
-          ?>
+    <?php
+    $show_debug = false;
+    if ($show_debug) {
+    ?>
       <div class="col-12">
         <div class="card">
           <div class="card-body">
@@ -30,8 +30,8 @@
         </div>
       </div>
     <?php
-          }
-    ?> -->
+    }
+    ?>
 
     <div class="col-12">
       <div class="card">
