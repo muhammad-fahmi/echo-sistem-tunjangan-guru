@@ -58,4 +58,52 @@ class Pangkalan_data extends MY_Controller
   /// |----------------------------------------------------------------------
   /// | >> AJAX REQUEST FUNCTIONS
   /// |----------------------------------------------------------------------
+  public function get_riwayat_dokumen()
+  {
+    $encrypted_id = post_safe('id_dokumen');
+    $jenis_dokumen = post_safe('jenis_dokumen');
+
+    $decrypted_id = decrypt_id($encrypted_id);
+
+    $html_riwayat = '<div class="col-12 text-center">Belum ada riwayat untuk dokumen ini.</div>';
+
+    // CHECK PERMISSION
+    if (!check_perm('read', 'PDT_Dashboard')) return output_json([
+      'status' => true,
+      'message' => "Riwayat dokumen retrieved",
+      'html' => $html_riwayat
+    ]);
+
+    // tarik data utk log
+    $dataset = $this->db->select('*')->from('v_log_dokumen')->where([
+      'jenis_dokumen' => $jenis_dokumen,
+      'id_dokumen' => $decrypted_id
+    ])->order_by('datetime', 'ASC')->get()->result_array();
+
+    if (check_var($dataset)) {
+      $html_riwayat = '';
+      foreach ($dataset as $key => $value) {
+        $html_riwayat .= '
+          <div class="col-12">
+            <div class="desc_block">
+              <ul class="mb-0">
+                <li>
+                  <div><b>' . $value['nama_user'] . '</b> (' . $value['ket_kewenangan'] . ')</div>
+                  <label>' . em_date('j F Y, H:i:s', 'set', $value['datetime']) . '</label>
+                  <div>
+                    ' . $value['message'] . '
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>';
+      }
+    }
+
+    return output_json([
+      'status' => true,
+      'message' => "Riwayat dokumen retrieved",
+      'html' => $html_riwayat
+    ]);
+  }
 }

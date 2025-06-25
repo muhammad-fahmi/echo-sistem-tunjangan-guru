@@ -954,6 +954,31 @@ function output_json($response_array, $status_code = 200)
     ->set_output(json_encode($response_array));
 }
 
+/**
+ * Mencatat aktivitas log dengan menggunakan sesi CodeIgniter.
+ *
+ * Fungsi ini mencatat aktivitas log dengan format kunci yang terdiri dari waktu mikro dan nama fungsi.
+ * Nilai log disimpan dalam sesi pengguna dengan kunci `__LOG SESSION__`.
+ *
+ * @param string $__FUNCTION__ Nama fungsi atau aktivitas yang dicatat.
+ * @param mixed $value Nilai atau pesan yang akan dicatat dalam log. Default adalah 'logged activity'.
+ * @param bool $reset Jika true, log saat ini akan di-reset. Default adalah false.
+ * @return void
+ */
+function s_log($__FUNCTION__, $value = 'logged activity', $reset = false)
+{
+  $CI = &get_instance();
+  $microtime = number_format(microtime(true), 8, '', '');
+
+  $curLog = $CI->session->userdata('__LOG SESSION__');
+  $curLog = (isset_nn_nes($curLog)) ? $curLog : array();
+
+  $nextLog = ($reset) ? array() : $curLog;
+  $keyname = $microtime . '__[' . $__FUNCTION__ . ']';
+  $nextLog[$keyname] = $value;
+  $CI->session->set_userdata('__LOG SESSION__', $nextLog);
+}
+
 /** fungsi untuk pengecekan akses menu sistem cuti, return true kalau boleh mengakses */
 function menu_auth($privilege = '200', $menu = '-')
 {
