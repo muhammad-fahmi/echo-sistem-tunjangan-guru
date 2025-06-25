@@ -129,7 +129,7 @@
         }
       },
       {
-        data: 'nia',
+        data: 'nik',
         orderable: false,
         className: '',
         createdCell: function(td, cellData, rowData, row, col) {

@@ -81,7 +81,7 @@ class Pdt_peserta_didik extends MY_Controller
             'id_siswa' => '',
             'nama' => '',
             'nisn' => '',
-            'nia' => '',
+            'nik' => '',
             'jenis_kelamin' => '',
             'kode_agama' => '',
             'nama_ayah' => '',
@@ -89,7 +89,6 @@ class Pdt_peserta_didik extends MY_Controller
             'no_kk' => '',
             'alamat' => '',
             'pdpd' => '',
-            // 'id_siswa' => $id_siswa
           ];
           $data = [
             'modal_title' => "Tambah Peserta Didik",
@@ -156,7 +155,7 @@ class Pdt_peserta_didik extends MY_Controller
       'id_siswa' => $post['id_siswa'],
       'nama' => $post['nama'],
       'nisn' => $post['nisn'],
-      'nia' => $post['nia'],
+      'nik' => $post['nik'],
       'jenis_kelamin' => $post['jenis_kelamin'],
       'kode_agama' => $post['kode_agama'],
       'nama_ayah' => $post['nama_ayah'],
