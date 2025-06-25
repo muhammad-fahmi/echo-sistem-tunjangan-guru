@@ -495,6 +495,38 @@ class Config extends MY_Controller
       ->set_output(json_encode($data));
   }
 
+  public function select2_jenis_kelamin()
+  {
+    // ambil data post
+    $search = $this->input->post('search');
+    // kondisi where
+    $where_search = ($search != '')
+      ? "AND (ket_jns_kelamin LIKE '%$search%' 
+      OR jns_kelamin LIKE '%$search%')"
+      : "";
+    // query searching
+    $result = $this->db->query("SELECT * FROM m_jenis_kelamin WHERE jns_kelamin IS NOT NULL $where_search 
+      ORDER BY ket_jns_kelamin ASC")->result_array();
+    $data = array();
+    $index = 0;
+    if (isset_nn_nes($result)) {
+      foreach ($result as $r) {
+        $data[$index]['id'] = $r['jns_kelamin'];
+        $data[$index]['text'] = trim($r['ket_jns_kelamin']);
+
+        // additional param to send back
+        $data[$index]['nip'] = $r['nip'];
+        // $data[$index]['nama_lengkap'] = trim($r['nama_lengkap']);
+        $index++;
+      }
+    } else {
+      $data = $result;
+    }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
   public function select2_disabilitas()
   {
     // ambil data post

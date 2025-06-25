@@ -42,9 +42,6 @@
         <br>
         <select name="jenis_kelamin" id="jenis_kelamin" class="form-select form-select" style="width:100%">
           <?php $selected = ($data["jenis_kelamin"] != "") ? "selected" : ""; ?>
-          <option value=""> -- Pilih Jenis Kelamin -- </option>
-          <option value="L">Laki - Laki</option>
-          <option value="P">Perempuan</option>
         </select>
       </div>
 
@@ -87,13 +84,6 @@
         <label for="pdpd_options">Ragam Disabilitas</label>
         <select id="pdpd_options" name="pdpd_options" class="form-select form-select">
           <?php $selected = ($data["pdpd"] != "") ? "selected" : ""; ?>
-          <!-- <option value="">-- Pilih Ragam Disabilitas --</option>
-          <option value="pd_intelek">Peserta Didik Intelektual / Grahita</option>
-          <option value="pd_netra">Peserta Didik Netra</option>
-          <option value="pd_wicara">Peserta Didik Wicara</option>
-          <option value="pd_rungu">Peserta Didik Rungu</option>
-          <option value="pd_daksa">Peserta Didik Fisik / Daksa</option>
-          <option value="pd_mental">Peserta Didik Mental</option> -->
         </select>
       </div>
 
@@ -143,6 +133,39 @@
   }).on('select2:clear', function(e) {
     // what to do when clearing (only if allowClear: true)
     select2_agama.empty();
+  });
+
+  /// |----------------------------------------------------------------------
+  /// | >> SELECT2 JENIS KELAMIN
+  /// |----------------------------------------------------------------------
+  var select2_jns_kelamin = $('#jenis_kelamin');
+  $('#jenis_kelamin').select2({
+    allowClear: true,
+    placeholder: '-- Pilih jenis kelamin --',
+    ajax: {
+      type: 'POST',
+      dataType: 'json',
+      url: '<?= site_url('config/select2_jenis_kelamin'); ?>',
+      delay: 800,
+      /* delay before sending ajax request */
+      data: function(params) {
+        return {
+          search: params.term,
+        }
+      },
+      processResults: function(data) {
+        return {
+          results: data
+        };
+      },
+    }
+  }).on('select2:select', function(e) {
+    // what to do when option selected
+  }).on('select2:close', function(e) {
+    // what to do when selection closed
+  }).on('select2:clear', function(e) {
+    // what to do when clearing (only if allowClear: true)
+    select2_jns_kelamin.empty();
   });
 
   /// |----------------------------------------------------------------------
