@@ -178,13 +178,13 @@ class Mdl_pdt_profil_kepsek extends CI_Model
 
       // tampilan tombol aksi
       // $tombol_edit =  ($is_draft && $is_allowed)
-      //   ? '<a href="' . site_url('pdt_profil_kepsek/edit/' . $row['id_dokumen']) . '" class="clickable text-white badge bg-primary"><i class="fas fa-edit me-1"></i>Edit</a>'
-      //   : '';
+      //   ? '<a href="#" onclick="on_dev()" class="clickable text-white badge bg-primary"><i class="fas fa-edit me-1"></i>Edit</a>'
+      //   : ''; // DEBUG BUTTON
       $tombol_edit =  ($is_draft && $is_allowed)
-        ? '<a href="#" onclick="on_dev()" class="clickable text-white badge bg-primary"><i class="fas fa-edit me-1"></i>Edit</a>'
+        ? '<a href="' . site_url('pdt_profil_kepsek/edit/' . $row['id_dokumen']) . '" class="clickable text-white badge bg-primary"><i class="fas fa-edit me-1"></i>Edit</a>'
         : '';
       // $tombol_detail = '<a href="' . site_url('pdt_profil_kepsek/detail/' . $row['id_dokumen']) . '" class="clickable text-white badge bg-secondary"><i class="fas fa-file me-1"></i>Detail</a>';
-      $tombol_detail = '<a href="#" onclick="on_dev()" class="clickable text-white badge bg-secondary"><i class="fas fa-file me-1"></i>Detail</a>';
+      $tombol_detail = '<a href="#" onclick="on_dev()" class="clickable text-white badge bg-secondary"><i class="fas fa-file me-1"></i>Detail</a>'; // DEBUG BUTTON
       $tombol_delete = ($is_draft && $is_allowed)
         ? '<span class="clickable text-white badge bg-danger" onclick="modal(`hapus_usulan_profil`, `' . $row['id_dokumen'] . '`)"><i class="fas fa-trash me-1"></i>Hapus</span>'
         : '';
@@ -251,7 +251,7 @@ class Mdl_pdt_profil_kepsek extends CI_Model
       'status_dokumen' => 'DRAFT',
       'kode_ukerja' => $post['kode_ukerja'],
       'nip' => $post['nip'],
-      'nama' => trim($data_pegawai['nama_lengkap']),
+      'nama' => str_alphanumeric_space(trim(strtoupper($data_pegawai['nama']))),
       'nuptr' => null, /* sumber di v_pns (?) */
       'nurs' => null, /* sumber di v_pns (?) */
       'nrg' => null, /* sumber di v_pns (?) */

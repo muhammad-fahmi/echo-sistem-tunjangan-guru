@@ -339,4 +339,40 @@ class Pdt_profil_kepsek extends MY_Controller
       'data' => $post
     ]);
   }
+
+  public function edit_draft()
+  {
+    // CHECK PERMISSION
+    if (!check_perm('update', 'PDT_ProfilKepsek')) return output_json([
+      'status' => false,
+      'message' => 'invalid permissions'
+    ], 403);
+
+    $post = post_safe();
+
+    // DEBUG
+    return output_json([
+      'status' => false,
+      'message' => 'DEBUG EDIT DRAFT : PDT_ProfilKepsek',
+      'data' => $post
+    ]);
+  }
+
+  public function submit_draft()
+  {
+    // CHECK PERMISSION
+    if (!check_perm('update', 'PDT_ProfilKepsek')) return output_json([
+      'status' => false,
+      'message' => 'invalid permissions'
+    ], 403);
+
+    $post = post_safe();
+
+    // DEBUG
+    return output_json([
+      'status' => false,
+      'message' => 'DEBUG SUBMIT DRAFT : PDT_ProfilKepsek',
+      'data' => $post
+    ]);
+  }
 }
