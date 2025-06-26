@@ -9,6 +9,9 @@
   opacity: 0;
   pointer-events: none;
 }
+._loading.behind-navbar {
+  z-index: 30;
+}
 ._loading.foremost {
   z-index: 9999;
 }
@@ -61,6 +64,10 @@
 label.is-invalid {
   color: #fc4b6c;
   font-size: 9px;
+}
+
+.invalid-feedback {
+  font-size: 0.7rem;
 }
 
 .sidebar-footer {
@@ -225,6 +232,7 @@ a.badge.text-white:hover {
   border-bottom: 1px solid #e9ecef;
   padding-bottom: 5px;
   margin-bottom: 5px;
+  color: #455260;
 }
 .desc_block label {
   opacity: 0.65;
@@ -255,4 +263,11 @@ a.badge.text-white:hover {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.row_riwayat_dokumen {
+  min-height: 50px;
+}
+.row_riwayat_dokumen [class*=col-] {
+  position: relative;
 }/*# sourceMappingURL=style.css.map */

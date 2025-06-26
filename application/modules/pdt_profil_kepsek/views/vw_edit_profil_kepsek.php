@@ -21,7 +21,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
   <div class="row">
 
     <?php
-    $show_debug = true;
+    $show_debug = false;
     if ($show_debug) {
     ?>
       <div class="col-12">
@@ -87,6 +87,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
     <div class="col-12">
       <form id="form_edit_profil_kepsek" action="<?= site_url('pdt_profil_kepsek/edit') ?>" method="POST">
         <input type="hidden" name="id_dokumen" value="<?= check_var($data, 'id_dokumen', '') ?>">
+        <input type="hidden" name="nip" value="<?= check_var($data, 'nip', '') ?>">
 
         <div class="card">
           <div class="card-body">
@@ -182,8 +183,8 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                   <div class="col-12">
                     <div class="input_block">
                       <label for="alamat_saat_ini">Alamat saat ini</label>
-                      <textarea type="text" class="form-control form-input-bg" id="alamat_saat_ini" name="alamat_saat_ini" placeholder="Alamat saat ini" rows="3"><?= check_var($data, "alamat_saat_ini", '') ?></textarea>
-                      <div class="invalid-feedback" for="alamat_saat_ini"></div>
+                      <textarea type="text" class="form-control form-input-bg" id="alamat_saat_ini" name="alamat_saat_ini" rows="3"><?= check_var($data, "alamat_saat_ini", '') ?></textarea>
+                      <div class="invalid-feedback" id="error_alamat_saat_ini"></div>
                     </div>
                   </div>
 
@@ -191,7 +192,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="nuptr">NUPTR</label>
                       <input type="text" class="form-control form-input-bg" id="nuptr" name="nuptr" value="<?= check_var($data, "nuptr", '') ?>" />
-                      <div class="invalid-feedback" for="nuptr"></div>
+                      <div class="invalid-feedback" id="error_nuptr"></div>
                     </div>
                   </div>
 
@@ -199,7 +200,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="nurs">NURS</label>
                       <input type="text" class="form-control form-input-bg" id="nurs" name="nurs" value="<?= check_var($data, "nurs", '') ?>" />
-                      <div class="invalid-feedback" for="nurs"></div>
+                      <div class="invalid-feedback" id="error_nurs"></div>
                     </div>
                   </div>
 
@@ -207,7 +208,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="nrg">NRG</label>
                       <input type="text" class="form-control form-input-bg" id="nrg" name="nrg" value="<?= check_var($data, "nrg", '') ?>" />
-                      <div class="invalid-feedback" for="nrg"></div>
+                      <div class="invalid-feedback" id="error_nrg"></div>
                     </div>
                   </div>
 
@@ -215,7 +216,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="nik">NIK</label>
                       <input type="text" class="form-control form-input-bg" id="nik" name="nik" value="<?= check_var($data, "nik", '') ?>" />
-                      <div class="invalid-feedback" for="nik"></div>
+                      <div class="invalid-feedback" id="error_nik"></div>
                     </div>
                   </div>
 
@@ -223,7 +224,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="no_sertifikat_pendidik">No. Sertifikat Pendidik</label>
                       <input type="text" class="form-control form-input-bg" id="no_sertifikat_pendidik" name="no_sertifikat_pendidik" value="<?= check_var($data, "no_sertifikat_pendidik", '') ?>" />
-                      <div class="invalid-feedback" for="no_sertifikat_pendidik"></div>
+                      <div class="invalid-feedback" id="error_no_sertifikat_pendidik"></div>
                     </div>
                   </div>
 
@@ -231,7 +232,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="no_sertifikat_gp">No. Sertifikat GP</label>
                       <input type="text" class="form-control form-input-bg" id="no_sertifikat_gp" name="no_sertifikat_gp" value="<?= check_var($data, "no_sertifikat_gp", '') ?>" />
-                      <div class="invalid-feedback" for="no_sertifikat_gp"></div>
+                      <div class="invalid-feedback" id="error_no_sertifikat_gp"></div>
                     </div>
                   </div>
 
@@ -239,7 +240,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="no_sertifikat_crs">No. Sertifikat CRS</label>
                       <input type="text" class="form-control form-input-bg" id="no_sertifikat_crs" name="no_sertifikat_crs" value="<?= check_var($data, "no_sertifikat_crs", '') ?>" />
-                      <div class="invalid-feedback" for="no_sertifikat_crs"></div>
+                      <div class="invalid-feedback" id="error_no_sertifikat_crs"></div>
                     </div>
                   </div>
 
@@ -247,7 +248,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="no_rek_bank">No. Rekening Bank</label>
                       <input type="text" class="form-control form-input-bg" id="no_rek_bank" name="no_rek_bank" value="<?= check_var($data, "no_rek_bank", '') ?>" />
-                      <div class="invalid-feedback" for="no_rek_bank"></div>
+                      <div class="invalid-feedback" id="error_no_rek_bank"></div>
                     </div>
                   </div>
 
@@ -255,7 +256,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="npwp">NPWP</label>
                       <input type="text" class="form-control form-input-bg" id="npwp" name="npwp" value="<?= check_var($data, "npwp", '') ?>" />
-                      <div class="invalid-feedback" for="npwp"></div>
+                      <div class="invalid-feedback" id="error_npwp"></div>
                     </div>
                   </div>
 
@@ -267,7 +268,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                       <label for="menerima_ttp_insentif">Menerima TTP Insentif</label>
                       <select name="menerima_ttp_insentif" id="menerima_ttp_insentif" class="form-select">
                         <option value="" default hidden>- Pilih Status TTP Insentif -</option>
-                        <option value="Y" <?= ($mttpi == 'Y') ? 'selected' : '' ?>>Menerima TTP Insentif</option>
+                        <option value="Y" <?= ($mttpi == 'Y') ? 'selected' : '' ?>>Ya, Menerima TTP Insentif</option>
                         <option value="N" <?= ($mttpi == 'N') ? 'selected' : '' ?>>Tidak Menerima TTP Insentif</option>
                       </select>
                     </div>
@@ -277,7 +278,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="email">E-mail</label>
                       <input type="text" class="form-control form-input-bg" id="email" name="email" value="<?= check_var($data, "email", '') ?>" />
-                      <div class="invalid-feedback" for="email"></div>
+                      <div class="invalid-feedback" id="error_email"></div>
                     </div>
                   </div>
 
@@ -285,7 +286,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="no_hp">No. HP</label>
                       <input type="text" class="form-control form-input-bg" id="no_hp" name="no_hp" value="<?= check_var($data, "no_hp", '') ?>" />
-                      <div class="invalid-feedback" for="no_hp"></div>
+                      <div class="invalid-feedback" id="error_no_hp"></div>
                     </div>
                   </div>
 
@@ -293,7 +294,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="periode_ke">Periode Ke</label>
                       <input type="text" class="form-control form-input-bg" id="periode_ke" name="periode_ke" value="<?= check_var($data, "periode_ke", '') ?>" />
-                      <div class="invalid-feedback" for="periode_ke"></div>
+                      <div class="invalid-feedback" id="error_periode_ke"></div>
                     </div>
                   </div>
 
@@ -301,7 +302,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="masa_penugasan_mulai">Masa / Tgl. Penugasan (Mulai)</label>
                       <input type="text" class="form-control form-input-bg flatpickr" id="masa_penugasan_mulai" name="masa_penugasan_mulai" value="<?= check_var($data, "masa_penugasan_mulai", '') ?>" />
-                      <div class="invalid-feedback" for="masa_penugasan_mulai"></div>
+                      <div class="invalid-feedback" id="error_masa_penugasan_mulai"></div>
                     </div>
                   </div>
 
@@ -309,7 +310,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="masa_penugasan_selesai">Masa / Tgl. Penugasan (Selesai)</label>
                       <input type="text" class="form-control form-input-bg flatpickr" id="masa_penugasan_selesai" name="masa_penugasan_selesai" value="<?= check_var($data, "masa_penugasan_selesai", '') ?>" />
-                      <div class="invalid-feedback" for="masa_penugasan_selesai"></div>
+                      <div class="invalid-feedback" id="error_masa_penugasan_selesai"></div>
                     </div>
                   </div>
 
@@ -419,12 +420,26 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
               // what to do when the response status = true
               show_notify('success', e.message);
               setTimeout(() => {
-                window.location.href = '<?= site_url('pdt_profil_kepsek') ?>';
+                window.location.href = '<?= site_url('pdt_profil_kepsek') ?>/' + e.redirect + '/<?= $data['id_dokumen'] ?>';
               }, 2000);
             } else {
               // what to do when the response status = false
               show_notify('error', e.message);
               submit.attr('disabled', false);
+              if (e.error_value) {
+                $.each(e.error_value, function(field, error) {
+                  const $input = $('#' + field);
+                  const $flatpickrInput = $input.siblings('.flatpickr');
+
+                  if ($flatpickrInput.length) {
+                    $flatpickrInput.addClass('is-invalid');
+                  } else {
+                    $input.addClass('is-invalid');
+                  }
+
+                  $('#error_' + field).html(error); // Display message
+                });
+              }
             }
           },
           error: function(xhr, status, error) {
@@ -456,7 +471,8 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
       unhighlight: function(element) {
         $(element).removeClass('is-invalid').addClass('mv-valid');
         // Clear error text if valid
-        $(element).closest('.form-floating').find('.invalid-feedback').text('');
+        $(element).closest('input, select, textarea').removeClass('is-invalid');
+        $('.invalid-feedback').html('');
       },
       messages: {
         // NUPTR: {

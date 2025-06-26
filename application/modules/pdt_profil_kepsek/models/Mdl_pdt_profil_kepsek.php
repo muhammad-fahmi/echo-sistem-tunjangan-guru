@@ -177,14 +177,10 @@ class Mdl_pdt_profil_kepsek extends CI_Model
       $is_allowed = ($is_admin || $same_ukerja);
 
       // tampilan tombol aksi
-      // $tombol_edit =  ($is_draft && $is_allowed)
-      //   ? '<a href="#" onclick="on_dev()" class="clickable text-white badge bg-primary"><i class="fas fa-edit me-1"></i>Edit</a>'
-      //   : ''; // DEBUG BUTTON
       $tombol_edit =  ($is_draft && $is_allowed)
         ? '<a href="' . site_url('pdt_profil_kepsek/edit/' . $row['id_dokumen']) . '" class="clickable text-white badge bg-primary"><i class="fas fa-edit me-1"></i>Edit</a>'
         : '';
-      // $tombol_detail = '<a href="' . site_url('pdt_profil_kepsek/detail/' . $row['id_dokumen']) . '" class="clickable text-white badge bg-secondary"><i class="fas fa-file me-1"></i>Detail</a>';
-      $tombol_detail = '<a href="#" onclick="on_dev()" class="clickable text-white badge bg-secondary"><i class="fas fa-file me-1"></i>Detail</a>'; // DEBUG BUTTON
+      $tombol_detail = '<a href="' . site_url('pdt_profil_kepsek/detail/' . $row['id_dokumen']) . '" class="clickable text-white badge bg-secondary"><i class="fas fa-file me-1"></i>Detail</a>';
       $tombol_delete = ($is_draft && $is_allowed)
         ? '<span class="clickable text-white badge bg-danger" onclick="modal(`hapus_usulan_profil`, `' . $row['id_dokumen'] . '`)"><i class="fas fa-trash me-1"></i>Hapus</span>'
         : '';
@@ -293,7 +289,7 @@ class Mdl_pdt_profil_kepsek extends CI_Model
         $cur_user,
         'r_profil_kepsek',
         $insert_id,
-        "Melakukan penambahan usulan profil kepsek dengan data sebagai berikut :\n\n" . format_log_view($data_to_save)
+        "Melakukan penambahan usulan profil kepala sekolah dengan data sebagai berikut :\n\n" . format_log_view($data_to_save)
       );
 
       // BUAT LOG DOKUMEN (HISTORY YG DITAMPILKAN SAAT VERIFIKASI / HALAMAN DETAIL)
@@ -303,7 +299,7 @@ class Mdl_pdt_profil_kepsek extends CI_Model
         'id_dokumen' => $insert_id,
         'id_user' => $cur_user,
         'datetime' => em_date('Y-m-d H:i:s'),
-        'message' => "Menambahkan Usulan Profil Kepsek dengan NIP : {$data_to_save['nip']} a/n {$data_to_save['nama']} untuk periode {$data_to_save['periode_bln']}/{$data_to_save['periode_thn']}."
+        'message' => "Menambahkan Usulan Profil Kepala Sekolah dengan NIP : {$data_to_save['nip']} a/n {$data_to_save['nama']} untuk periode {$data_to_save['periode_bln']}/{$data_to_save['periode_thn']}."
       ]);
 
       if ($this->db->trans_status() === FALSE) {
@@ -340,6 +336,83 @@ class Mdl_pdt_profil_kepsek extends CI_Model
 
   public function edit_profil_kepsek($data)
   {
+    $cur_unor = $this->session->userdata('kode_unor');
+    $cur_user = $this->session->userdata('id_user');
+
+    $decryptedID = decrypt_id($data['id_dokumen']);
+    $dataset = fetch_row_data('vr_profil_kepsek', ['id_dokumen' => $decryptedID], false);
+    if ($dataset === false) return [
+      'status' => "Maaf, data yang akan di-edit tidak valid lagi."
+    ];
+
+    // CEK STATUS DOKUMEN
+    $is_valid = ($dataset['status_dokumen'] == 'DRAFT');
+    if (!$is_valid) return [
+      'status' => false,
+      'message' => "Maaf, Dokumen ini tidak dalam status Draft."
+    ];
+
+    // CEK KEWENANGAN
+    $same_ukerja = ($dataset['kode_ukerja'] == $cur_unor);
+    if (!((is_admin() || $same_ukerja))) return [
+      'status' => false,
+      'message' => "Maaf, Anda tidak memiliki ijin untuk meng-edit draft dokumen profil kepala sekolah ini."
+    ];
+
+    // BANDINGKAN DATA LAMA DENGAN DATA YANG DI POST UTK KEPERLUAN LOG
+    $old_data = $dataset;
+    $old_data['id_dokumen'] = encrypt_id($old_data['id_dokumen']);
+    $new_data = $data;
+    $comparison = get_changed_data($old_data, $new_data);
+
+    try {
+      $this->db->trans_begin();
+      // do your db process here
+      if (check_var($comparison, 'after')) {
+        // hanya lakukan update apabila ada data yang berubah pada data yang lama
+        $proc = 1;
+        $this->db->update('r_profil_kepsek', $comparison['after'], [
+          'id_dokumen' => $decryptedID
+        ]);
+
+        // BUAT LOG SISTEM
+        $proc = 2;
+        $before_text = format_log_view($comparison['before']);
+        $after_text = format_log_view($comparison['after']);
+        log_generator(
+          $cur_user,
+          'r_profil_kepsek',
+          $decryptedID,
+          "Melakukan update data profil kepala sekolah dengan perubahan data sebagai berikut :\n\n" .
+            "BEFORE:\n{$before_text}\n\n" .
+            "AFTER:\n{$after_text}"
+        );
+      }
+
+      if ($this->db->trans_status() === FALSE) {
+        // do your error handler here
+        $this->db->trans_rollback();
+        return [
+          'status' => false,
+          'message' => "Maaf, terjadi kesalahan dalam proses.\nROLLBACK ISSUE #{$proc}"
+        ];
+      } else {
+        // do your success handler here
+        $this->db->trans_commit();
+        return [
+          'status' => true,
+          'message' => "Proses simpan draft profil kepala sekolah berhasil.",
+          'redirect' => 'edit'
+        ];
+      }
+    } catch (\Throwable $th) {
+      $catch_error = sanitize_string($th->getMessage());
+      return [
+        'status' => false,
+        'message' => "Maaf, terjadi kesalahan dalam proses.<br>{$catch_error}"
+      ];
+    }
+
     // DEBUG
     return [
       'status' => false,
@@ -360,10 +433,141 @@ class Mdl_pdt_profil_kepsek extends CI_Model
 
   public function submit_profil_kepsek($data)
   {
+    $this->load->library('form_validation');
+
+    // Define validation rules
+    $this->form_validation->set_rules('alamat_saat_ini', 'Alamat Saat Ini', 'required');
+    $this->form_validation->set_rules('nuptr', 'NUPTR', 'required');
+    $this->form_validation->set_rules('nurs', 'NURS', 'required');
+    $this->form_validation->set_rules('nrg', 'NRG', 'required');
+    $this->form_validation->set_rules('nik', 'NIK', 'required');
+    $this->form_validation->set_rules('no_sertifikat_pendidik', 'No. Sertifikat Pendidik', 'required');
+    $this->form_validation->set_rules('no_sertifikat_gp', 'No. Sertifikat GP', 'required');
+    $this->form_validation->set_rules('no_sertifikat_crs', 'No. Sertifikat CRS', 'required');
+    $this->form_validation->set_rules('no_rek_bank', 'No. Rekening Bank', 'required');
+    $this->form_validation->set_rules('npwp', 'NPWP', 'required');
+    $this->form_validation->set_rules('menerima_ttp_insentif', 'Menerima TTP Insentif', 'required');
+    $this->form_validation->set_rules('email', 'E-mail', 'required|valid_email');
+    $this->form_validation->set_rules('no_hp', 'No. HP', 'required');
+    $this->form_validation->set_rules('periode_ke', 'Periode Ke', 'required');
+    $this->form_validation->set_rules('masa_penugasan_mulai', 'Masa / Tgl. Penugasan (Mulai)', 'required');
+    $this->form_validation->set_rules('masa_penugasan_selesai', 'Masa / Tgl. Penugasan (Selesai)', 'required');
+
+    // Validate the input data
+    if ($this->form_validation->run() === FALSE) {
+      // Get raw error array (field => message)
+      $error_value = $this->form_validation->error_array();
+
+      // Optional: Also format for general display
+      $error_text = '<ul class="mb-0">';
+      foreach ($error_value as $field => $error) {
+        $error_text .= "<li>{$error}</li>";
+      }
+      $error_text .= '</ul>';
+
+      // Return response with error details
+      return [
+        'status' => false,
+        'message' => "Maaf, tidak bisa melakukan submit karena form tidak valid.\n{$error_text}",
+        'error_value' => $error_value
+      ];
+    }
+
+    $cur_unor = $this->session->userdata('kode_unor');
+    $cur_user = $this->session->userdata('id_user');
+
+    $decryptedID = decrypt_id($data['id_dokumen']);
+    $dataset = fetch_row_data('vr_profil_kepsek', ['id_dokumen' => $decryptedID], false);
+    if ($dataset === false) return [
+      'status' => "Maaf, data yang akan di-edit tidak valid lagi."
+    ];
+
+    // CEK STATUS DOKUMEN
+    $is_valid = ($dataset['status_dokumen'] == 'DRAFT');
+    if (!$is_valid) return [
+      'status' => false,
+      'message' => "Maaf, Dokumen ini tidak dalam status Draft. Tidak bisa melakukan submit."
+    ];
+
+    // CEK KEWENANGAN
+    $same_ukerja = ($dataset['kode_ukerja'] == $cur_unor);
+    if (!((is_admin() || $same_ukerja))) return [
+      'status' => false,
+      'message' => "Maaf, Anda tidak memiliki ijin untuk submit draft dokumen profil kepala sekolah ini."
+    ];
+
+    // BANDINGKAN DATA LAMA DENGAN DATA YANG DI POST UTK KEPERLUAN LOG
+    $old_data = $dataset;
+    $old_data['id_dokumen'] = encrypt_id($old_data['id_dokumen']);
+    $new_data = $data;
+    $comparison = get_changed_data($old_data, $new_data);
+
+    try {
+      $this->db->trans_begin();
+      // do your db process here
+      if (check_var($comparison, 'after')) {
+        // tambah status baru
+        $comparison['after']['status_dokumen'] = 'VRFDD';
+
+        // hanya lakukan update apabila ada data yang berubah pada data yang lama
+        $proc = 1;
+        $this->db->update('r_profil_kepsek', $comparison['after'], [
+          'id_dokumen' => $decryptedID
+        ]);
+
+        // BUAT LOG SISTEM
+        $proc = 2;
+        $before_text = format_log_view($comparison['before']);
+        $after_text = format_log_view($comparison['after']);
+        log_generator(
+          $cur_user,
+          'r_profil_kepsek',
+          $decryptedID,
+          "Melakukan submit data profil kepala sekolah dengan perubahan data sebagai berikut :\n\n" .
+            "BEFORE:\n{$before_text}\n\n" .
+            "AFTER:\n{$after_text}"
+        );
+
+        // BUAT RIWAYAT DOKUMEN
+        $proc = 3;
+        $periode_text = check_var($dataset, 'periode_bln', '-') . '/' . check_var($dataset, 'periode_thn', '-');
+        $this->db->insert('r_log_dokumen', [
+          'jenis_dokumen' => 'PROFIL_KEPSEK',
+          'id_dokumen' => $decryptedID,
+          'id_user' => $cur_user,
+          'datetime' => em_date('Y-m-d H:i:s'),
+          'message' => "Melakukan submit pada Usulan Profil Kepala Sekolah dengan NIP : {$dataset['nip']} a/n {$dataset['nama']}, untuk periode {$periode_text}."
+        ]);
+      }
+
+      if ($this->db->trans_status() === FALSE) {
+        // do your error handler here
+        $this->db->trans_rollback();
+        return [
+          'status' => false,
+          'message' => "Maaf, terjadi kesalahan dalam proses.\nROLLBACK ISSUE #{$proc}"
+        ];
+      } else {
+        // do your success handler here
+        $this->db->trans_commit();
+        return [
+          'status' => true,
+          'message' => "Proses submit draft profil kepala sekolah berhasil.",
+          'redirect' => 'detail'
+        ];
+      }
+    } catch (\Throwable $th) {
+      $catch_error = sanitize_string($th->getMessage());
+      return [
+        'status' => false,
+        'message' => "Maaf, terjadi kesalahan dalam proses.<br>{$catch_error}"
+      ];
+    }
+
     // DEBUG
     return [
       'status' => false,
-      'message' => 'DEBUG MDL : edit_profil_kepsek',
+      'message' => 'DEBUG MDL : submit_profil_kepsek',
       'data' => $data
     ];
   }
