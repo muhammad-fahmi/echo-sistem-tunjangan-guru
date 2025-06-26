@@ -163,6 +163,7 @@ class Pdt_peserta_didik extends MY_Controller
       'no_kk' => $post['no_kk'],
       'alamat' => $post['alamat'],
       's_aktif' => 1,
+      'tgl_masuk' => em_date('Y-m-d'),
       'pdpd' => $post['pdpd_options'],
     );
 

@@ -96,6 +96,9 @@
 </div>
 
 <script>
+  /// |----------------------------------------------------------------------
+  /// | >> CHECKBOX FUNCTION
+  /// |----------------------------------------------------------------------
   function toggleDisabilitySelect() {
     const checkbox = document.getElementById('pdpd');
     const select_pd = document.getElementById('pdpd_container');

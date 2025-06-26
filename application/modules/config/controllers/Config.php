@@ -515,8 +515,8 @@ class Config extends MY_Controller
         $data[$index]['text'] = trim($r['ket_jns_kelamin']);
 
         // additional param to send back
-        $data[$index]['nip'] = $r['nip'];
-        // $data[$index]['nama_lengkap'] = trim($r['nama_lengkap']);
+        $data[$index]['jns_kelamin'] = $r['jns_kelamin'];
+        $data[$index]['ket_jns_kelamin'] = $r['ket_jns_kelamin'];
         $index++;
       }
     } else {
