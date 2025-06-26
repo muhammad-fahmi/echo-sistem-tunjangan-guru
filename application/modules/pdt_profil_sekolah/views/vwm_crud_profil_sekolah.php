@@ -25,7 +25,6 @@
   }
 </script>
 <?php
-$cur_kewenangan = $this->session->userdata('kewenangan');
 $cur_unor = $this->session->userdata('kode_unor');
 switch ($type) {
   case 'add': {
@@ -49,10 +48,10 @@ switch ($type) {
 
             <?php
             // kalau yang login super admin bisa milih kode ukerja pake select2
-            if ($cur_kewenangan == '00') {
+            if (is_admin()) {
             ?>
               <div class="col-12">
-                <label for="kode_ukerja">Unit Kerja</label>
+                <label for="kode_ukerja">Sekolah</label>
                 <select name="kode_ukerja" id="kode_ukerja" class="form-select form-select-sm select2_ukerja"></select>
               </div>
             <?php
@@ -69,7 +68,7 @@ switch ($type) {
               $array_bulan = array_periode_bulan();
               ?>
               <label for="periode_bln">Periode (Bulan)</label>
-              <select name="periode_bulan" id="periode_bulan" class="form-select form-select-sm">
+              <select name="periode_bln" id="periode_bln" class="form-select">
                 <option value="" default>- Bulan -</option>
                 <?php
                 foreach ($array_bulan as $key => $value) {
@@ -82,7 +81,7 @@ switch ($type) {
 
             <div class="col-6">
               <label for="periode_thn">Periode (Tahun)</label>
-              <input name="periode_thn" id="periode_thn" type="number" step="1" min="1" class="form-control form-control-sm" placeholder="- Tahun -" value="<?= em_date('Y') ?>">
+              <input name="periode_thn" id="periode_thn" type="number" step="1" min="1" class="form-control" placeholder="- Tahun -" value="<?= em_date('Y') ?>">
             </div>
 
           </div>
@@ -100,7 +99,13 @@ switch ($type) {
         // ADD TYPE SCRIPT
         $(document).ready(function() {
           init_select2('#nip_select2', 'Cari NIP / Nama...', '<?= site_url('config/select2_pegawai') ?>');
-          init_select2('#kode_ukerja', 'Pilih Kode Unit Kerja...', '<?= site_url('config/select2_instansi') ?>');
+          <?php
+          if (is_admin()) {
+          ?>
+            init_select2('#kode_ukerja', 'Pilih Sekolah...', '<?= site_url('config/select2_sekolah') ?>');
+          <?php
+          }
+          ?>
 
           $('#form_add_usulan_profil_sekolah').validate($.extend({
             submitHandler: function(form, event) {
@@ -110,13 +115,9 @@ switch ($type) {
                 success: function(e) {
                   if (e.status) {
                     show_notify('success', e.message);
+                    reload_r_profil_table();
                     setTimeout(() => {
-                      // window href template
-                      // window.location.href = '<?= base_url('url_to_redirect') ?>';
-                      // modal dismiss
-                      // $('#modal_whole_id').modal('hide');
-                      // if using datatable, refresh it's state
-                      // reload_table();
+                      $('#whole_modal_id').modal('hide');
                     }, 500);
                   } else {
                     show_notify('error', e.message);
@@ -191,15 +192,111 @@ switch ($type) {
 
   case 'delete': {
     ?>
-      <div class="modal-header d-flex align-items-center">
-        <div>
-          <h3 class="mb-0"><?= $modal_title ?></h3>
+      <form id="form_delete_usulan_profil_sekolah" action="<?= site_url('pdt_profil_sekolah/delete') ?>" method="POST">
+        <input type="hidden" name="id_dokumen" value="<?= check_var($data, 'id_dokumen', '') ?>">
+
+        <div class="modal-header d-flex align-items-center">
+          <div>
+            <h3 class="mb-0"><?= $modal_title ?></h3>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body"></div>
+        <div class="modal-body">
+          <div class="row g-2">
+
+            <div class="col-12">
+              <div class="alert alert-danger mb-0">Apakah Anda yakin ingin menghapus dokumen usulan profil sekolah ini?</div>
+            </div>
+
+            <div class="col-12">
+              <table style="width: 100%;">
+                <tr>
+                  <td style="min-width: 150px;">Nama</td>
+                  <td style="min-width: 15px; text-align: center;">:</td>
+                  <td style="width: 100%;"><?= check_var($data, 'nama', '-') ?></td>
+                </tr>
+                <tr>
+                  <td style="min-width: 150px;">NIP</td>
+                  <td style="min-width: 15px; text-align: center;">:</td>
+                  <td style="width: 100%;"><?= check_var($data, 'nip', '-') ?></td>
+                </tr>
+                <tr>
+                  <td style="min-width: 150px;">Periode</td>
+                  <td style="min-width: 15px; text-align: center;">:</td>
+                  <td style="width: 100%;">
+                    <?= check_var($data, 'periode_bln', '-') . '/' .
+                      check_var($data, 'periode_thn', '-');
+                    ?>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="min-width: 150px;">Dibuat Pada</td>
+                  <td style="min-width: 15px; text-align: center;">:</td>
+                  <td style="width: 100%;"><?= em_date('j F Y, H:i:s', 'set', check_var($data, 'create_on', '')) ?></td>
+                </tr>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <div class="text-end">
+            <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-undo-alt me-1"></i>Batal</button>
+            <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash me-1"></i>Ya, Hapus</button>
+          </div>
+        </div>
+
+      </form>
       <script>
         // DELETE TYPE SCRIPT
+        $(document).ready(function() {
+          $('#form_delete_usulan_profil_sekolah').validate($.extend({
+            submitHandler: function(form, event) {
+              var submit = $('[type="submit"]');
+              submit.attr('disabled', true);
+              $(form).ajaxSubmit({
+                success: function(e) {
+                  if (e.status) {
+                    show_notify('success', e.message);
+                    reload_r_profil_table();
+                    setTimeout(() => {
+                      $('#whole_modal_id').modal('hide');
+                    }, 500);
+                  } else {
+                    show_notify('error', e.message);
+                    submit.attr('disabled', false);
+                  }
+                },
+                error: function(xhr, status, error) {
+                  show_notify('error', xhr.status + ' : ' + error);
+                  submit.attr('disabled', false);
+                },
+                dataType: 'json'
+              });
+            },
+            rules: {
+              input_name_rules: {
+                required: true
+              },
+            },
+            errorClass: 'is-invalid',
+            validClass: 'mv-valid',
+            /* if there's select2 element, please use this errorPlacement */
+            errorPlacement: function(error, element) {
+              if (element.hasClass('select2') && element.next('.select2-container').length) {
+                error.insertAfter(element.next('.select2-container'));
+              } else {
+                error.insertAfter(element);
+              }
+            },
+            messages: {
+              input_name_rules: {
+                required: "custom_error_message",
+              }
+            },
+          }));
+        });
       </script>
     <?php
       break;

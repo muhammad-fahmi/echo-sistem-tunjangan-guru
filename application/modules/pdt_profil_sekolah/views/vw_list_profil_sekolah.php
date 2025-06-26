@@ -46,27 +46,25 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
           <h4 class="card-title mb-2">Daftar Profil Sekolah</h4>
 
           <div class="table-responsive mt-4">
-            <div class="_loading loading_m_profil_sekolah">
+            <div class="_loading loading_tabel_m_profil_sekolah">
               <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>
             </div>
 
-            <table id="m_profil_sekolah" class="table table-bordered table-hover fs-3" style="width:100%;">
+            <table id="tabel_m_profil_sekolah" class="table table-bordered table-hover fs-3" style="width:100%;">
               <thead>
                 <tr class="text-center">
-                  <th class="vam" style="min-width: 40px;">#</th>
+                  <th class="vam" rowspan="2" style="min-width: 40px;">#</th>
                   <!-- nama / nip dll -->
-                  <th class="vam" style="width: 50%;">Sekolah</th>
+                  <th class="vam" rowspan="2" style="width: 50%;">Sekolah</th>
                   <!-- nama sekolah / alamat / jenjang -->
-                  <th class="vam" style="width: 50%;">NPSN</th>
-                  <th class="vam" style="width: 50%;">NSS</th>
-                  <th class="vam" style="min-width: 180px;">Akreditasi</th>
-                  <th class="vam" style="min-width: 180px;">Alamat</th>
-                  <th class="vam" style="min-width: 60px;">Aksi</th>
+                  <th class="vam" rowspan="2" style="width: 50%;">Sekolah</th>
+                  <th class="vam" colspan="2" rowspan="1" style="min-width: 180px;">Masa Penugasan</th>
+                  <th class="vam" rowspan="2" style="min-width: 60px;">Aksi</th>
                 </tr>
-                <!-- <tr class="text-center vam">
+                <tr class="text-center vam">
                   <th class="vam">Mulai</th>
                   <th class="vam">Selesai</th>
-                </tr> -->
+                </tr>
               </thead>
             </table>
           </div>
@@ -103,7 +101,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                   <!-- nama / nip dll -->
                   <th class="vam" style="width: 50%;">Sekolah</th>
                   <!-- nama sekolah / alamat / jenjang -->
-                  <th class="vam" style="width: 50%;">NPSN</th>
+                  <th class="vam" style="width: 50%;">Sekolah</th>
                   <th class="vam" style="min-width: 80px;">Periode</th>
                   <th class="vam" style="min-width: 100px;">Dibuat Pada</th>
                   <th class="vam" style="min-width: 80px;">Status</th>
@@ -144,236 +142,230 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
       }
     });
   }
+
+  /// |----------------------------------------------------------------------
+  /// | >> MASTER PROFIL KEPSEK
+  /// |----------------------------------------------------------------------
+  var m_profil_sekolah = $("#tabel_m_profil_sekolah").DataTable({
+    responsive: true,
+    processing: false,
+    serverSide: true,
+    orderCellsTop: true,
+    dom: '<"row g-2"' +
+      '<"col-12 col-sm-6"l><"col-12 col-sm-6"f>' +
+      '<"col-12"tr>' +
+      '<"col-12 col-sm-6"i><"col-12 col-sm-6"p>' +
+      '>',
+    /* set kolom yang di sortir secara default */
+    order: [
+      [4, "desc"],
+    ],
+    /* set placeholder dari input search */
+    language: {
+      searchPlaceholder: "Cari data..."
+    },
+    ajax: {
+      url: '<?= site_url('pdt_profil_sekolah/get_data_master') ?>',
+      /* parameter yang dikirimkan ke controller */
+      data: {
+        param1: function() {
+          return $('#id_atau_class_element').val();
+        },
+      },
+      type: 'POST',
+      beforeSend: function() {
+        // lakukan sesuatu sebelum mulai ajax process
+        $('.loading_tabel_m_profil_sekolah').addClass('show');
+      },
+      error: function(xhr, status, error) {
+        show_notify('error', xhr.status + ' : ' + error);
+      }
+    },
+    /* Sesuaikan jumlah kolom dengan id table yang digunakan */
+    columns: [{
+        data: 'no', // index 0
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        }
+      },
+      {
+        data: 'nip', // index 1
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        }
+      },
+      {
+        data: 'kode_ukerja', // index 2
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        }
+      },
+      {
+        data: 'masa_penugasan_mulai', // index 3
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        }
+      },
+      {
+        data: 'masa_penugasan_selesai', // index 4
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        }
+      },
+      {
+        data: 'id_sekolah', // index 5
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        }
+      }
+    ],
+    /* Lakukan fungsi callback pada bracket ini */
+    drawCallback: function(settings) {
+      /* gunakan code ini utk mengambil data response ke dalam drawCallback */
+      let api = this.api();
+      let json = api.ajax.json();
+      if (json.status == false) {
+        /* jalankan apabila return false */
+      }
+
+      $('.loading_tabel_m_profil_sekolah').removeClass('show');
+      /* parameter callback untuk kostumisasi fungsi */
+    }
+  });
+
+  /* fungsi untuk reload datatable ajax */
+  function reload_m_profil_table() {
+    m_profil_sekolah.ajax.reload();
+  }
+
+  /// |----------------------------------------------------------------------
+  /// | >> USULAN PROFIL KEPSEK
+  /// |----------------------------------------------------------------------
+  var r_profil_sekolah = $("#tabel_r_profil_sekolah").DataTable({
+    responsive: true,
+    processing: false,
+    serverSide: true,
+    orderCellsTop: true,
+    dom: '<"row g-2"' +
+      '<"col-12 col-sm-6"l><"col-12 col-sm-6"f>' +
+      '<"col-12"tr>' +
+      '<"col-12 col-sm-6"i><"col-12 col-sm-6"p>' +
+      '>',
+    /* set kolom yang di sortir secara default */
+    order: [
+      [4, "desc"],
+    ],
+    /* set placeholder dari input search */
+    language: {
+      searchPlaceholder: "Cari data..."
+    },
+    ajax: {
+      url: '<?= site_url('pdt_profil_sekolah/get_data_usulan') ?>',
+      /* parameter yang dikirimkan ke controller */
+      data: {
+        param1: function() {
+          return $('#id_atau_class_element').val();
+        },
+      },
+      type: 'POST',
+      beforeSend: function() {
+        // lakukan sesuatu sebelum mulai ajax process
+        $('.loading_tabel_r_profil_sekolah').addClass('show');
+      },
+      error: function(xhr, status, error) {
+        show_notify('error', xhr.status + ' : ' + error);
+      }
+    },
+    /* Sesuaikan jumlah kolom dengan id table yang digunakan */
+    columns: [{
+        data: 'no', // index 0
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        }
+      },
+      {
+        data: 'nip', // index 1
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-start">' + rowData.sekolah_display + '</div>');
+        }
+      },
+      {
+        data: 'kode_ukerja', // index 2
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-start">' + rowData.sekolah_display + '</div>');
+        }
+      },
+      {
+        data: 'periode_bln', // index 3
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + rowData.periode_display + '</div>');
+        }
+      },
+      {
+        data: 'create_on', // index 4
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + rowData.create_on_display + '</div>');
+        }
+      },
+      {
+        data: 'status_dokumen', // index 5
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + rowData.status_display + '</div>');
+        }
+      },
+      {
+        data: 'id_dokumen', // index 6
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + rowData.aksi_display + '</div>');
+        }
+      }
+    ],
+    /* Lakukan fungsi callback pada bracket ini */
+    drawCallback: function(settings) {
+      /* gunakan code ini utk mengambil data response ke dalam drawCallback */
+      let api = this.api();
+      let json = api.ajax.json();
+      if (json.status == false) {
+        /* jalankan apabila return false */
+      }
+
+      $('.loading_tabel_r_profil_sekolah').removeClass('show');
+      /* parameter callback untuk kostumisasi fungsi */
+    }
+  });
+
+  /* fungsi untuk reload datatable ajax */
+  function reload_r_profil_table() {
+    r_profil_sekolah.ajax.reload();
+  }
+
   $(document).ready(function() {
     // do something on document ready
-    /// |----------------------------------------------------------------------
-    /// | >> MASTER PROFIL SEKOLAH
-    /// |----------------------------------------------------------------------
-    var m_profil_sekolah = $("#m_profil_sekolah").DataTable({
-      responsive: true,
-      processing: false,
-      serverSide: true,
-      orderCellsTop: true,
-      dom: '<"row g-2"' +
-        '<"col-12 col-sm-6"l><"col-12 col-sm-6"f>' +
-        '<"col-12"tr>' +
-        '<"col-12 col-sm-6"i><"col-12 col-sm-6"p>' +
-        '>',
-      /* set kolom yang di sortir secara default */
-      order: [
-        [4, "desc"],
-      ],
-      /* set placeholder dari input search */
-      language: {
-        searchPlaceholder: "Cari data..."
-      },
-      ajax: {
-        url: '<?= site_url('pdt_profil_sekolah/get_data_master') ?>',
-        /* parameter yang dikirimkan ke controller */
-        data: {
-          param1: function() {
-            return $('#id_atau_class_element').val();
-          },
-        },
-        type: 'POST',
-        beforeSend: function() {
-          // lakukan sesuatu sebelum mulai ajax process
-          $('.loading_m_profil_sekolah').addClass('show');
-        },
-        error: function(xhr, status, error) {
-          show_notify('error', xhr.status + ' : ' + error);
-        }
-      },
-      /* Sesuaikan jumlah kolom dengan id table yang digunakan */
-      columns: [{
-          data: 'no', // index 0
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-center">' + cellData + '</div>');
-          }
-        },
-        {
-          data: 'kode_ukerja', // index 1
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-center">' + cellData + '</div>');
-          }
-        },
-        {
-          data: 'npsn', // index 2
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-center">' + cellData + '</div>');
-          }
-        },
-        {
-          data: 'nss', // index 3
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-center">' + cellData + '</div>');
-          }
-        },
-        {
-          data: 'akreditasi', // index 4
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-center">' + cellData + '</div>');
-          }
-        },
-        {
-          data: 'alamat', // index 4
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-center">' + cellData + '</div>');
-          }
-        },
-        {
-          data: 'kode_ukerja', // index 5
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-center">' + cellData + '</div>');
-          }
-        }
-      ],
-      /* Lakukan fungsi callback pada bracket ini */
-      drawCallback: function(settings) {
-        /* gunakan code ini utk mengambil data response ke dalam drawCallback */
-        let api = this.api();
-        let json = api.ajax.json();
-        if (json.status == false) {
-          /* jalankan apabila return false */
-        }
-
-        $('.loading_m_profil_sekolah').removeClass('show');
-        /* parameter callback untuk kostumisasi fungsi */
-      }
-    });
-
-    /* fungsi untuk reload datatable ajax */
-    function reload_table() {
-      m_profil_sekolah.ajax.reload();
-    }
-
-    /// |----------------------------------------------------------------------
-    /// | >> USULAN PROFIL SEKOLAH
-    /// |----------------------------------------------------------------------
-    var r_profil_sekolah = $("#tabel_r_profil_sekolah").DataTable({
-      responsive: true,
-      processing: false,
-      serverSide: true,
-      orderCellsTop: true,
-      dom: '<"row g-2"' +
-        '<"col-12 col-sm-6"l><"col-12 col-sm-6"f>' +
-        '<"col-12"tr>' +
-        '<"col-12 col-sm-6"i><"col-12 col-sm-6"p>' +
-        '>',
-      /* set kolom yang di sortir secara default */
-      order: [
-        [4, "desc"],
-      ],
-      /* set placeholder dari input search */
-      language: {
-        searchPlaceholder: "Cari data..."
-      },
-      ajax: {
-        url: '<?= site_url('pdt_profil_sekolah/get_data_usulan') ?>',
-        /* parameter yang dikirimkan ke controller */
-        data: {
-          param1: function() {
-            return $('#id_atau_class_element').val();
-          },
-        },
-        type: 'POST',
-        beforeSend: function() {
-          // lakukan sesuatu sebelum mulai ajax process
-          $('.loading_tabel_r_profil_sekolah').addClass('show');
-        },
-        error: function(xhr, status, error) {
-          show_notify('error', xhr.status + ' : ' + error);
-        }
-      },
-      /* Sesuaikan jumlah kolom dengan id table yang digunakan */
-      columns: [{
-          data: 'no', // index 0
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-center">' + cellData + '</div>');
-          }
-        },
-        {
-          data: 'kode_ukerja', // index 1
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-center">' + cellData + '</div>');
-          }
-        },
-        {
-          data: 'npsn', // index 2
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-center">' + cellData + '</div>');
-          }
-        },
-        {
-          data: 'periode_bln', // index 3
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-center">' + cellData + '</div>');
-          }
-        },
-        {
-          data: 'create_on', // index 4
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-center">' + cellData + '</div>');
-          }
-        },
-        {
-          data: 'status_dokumen', // index 5
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-center">' + cellData + '</div>');
-          }
-        },
-        {
-          data: 'id_dokumen', // index 7
-          orderable: false,
-          className: 'vat',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html('<div class="text-center">' + cellData + '</div>');
-          }
-        }
-      ],
-      /* Lakukan fungsi callback pada bracket ini */
-      drawCallback: function(settings) {
-        /* gunakan code ini utk mengambil data response ke dalam drawCallback */
-        let api = this.api();
-        let json = api.ajax.json();
-        if (json.status == false) {
-          /* jalankan apabila return false */
-        }
-
-        $('.loading_tabel_r_profil_sekolah').removeClass('show');
-        /* parameter callback untuk kostumisasi fungsi */
-      }
-    });
-
-    /* fungsi untuk reload datatable ajax */
-    function reload_table() {
-      r_profil_sekolah.ajax.reload();
-    }
   });
 </script>
