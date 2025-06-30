@@ -935,6 +935,11 @@ function menu_loader($echo = true)
           </li>';
       }
     }
+
+    // FIX: Close any remaining open dropdown after the loop
+    if ($cur_parent_dropdown) {
+      $html .= '</ul></li>';
+    }
   }
 
   if ($echo) {

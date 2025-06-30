@@ -18,7 +18,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
   <div class="row">
 
     <?php
-    $show_debug = false;
+    $show_debug = true;
     if ($show_debug) {
     ?>
       <div class="col-12">
@@ -53,17 +53,11 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
             <table id="tabel_m_profil_sekolah" class="table table-bordered table-hover fs-3" style="width:100%;">
               <thead>
                 <tr class="text-center">
-                  <th class="vam" rowspan="2" style="min-width: 40px;">#</th>
-                  <!-- nama / nip dll -->
-                  <th class="vam" rowspan="2" style="width: 50%;">Sekolah</th>
-                  <!-- nama sekolah / alamat / jenjang -->
-                  <th class="vam" rowspan="2" style="width: 50%;">Sekolah</th>
-                  <th class="vam" colspan="2" rowspan="1" style="min-width: 180px;">Masa Penugasan</th>
-                  <th class="vam" rowspan="2" style="min-width: 60px;">Aksi</th>
-                </tr>
-                <tr class="text-center vam">
-                  <th class="vam">Mulai</th>
-                  <th class="vam">Selesai</th>
+                  <th class="vam" style="min-width: 40px;">#</th>
+                  <th class="vam" style="width: 50%;">Sekolah</th>
+                  <th class="vam" style="width: 50%;">Alamat</th>
+                  <th class="vam" style="min-width: 120px;">Kontak</th>
+                  <th class="vam" style="min-width: 60px;">Aksi</th>
                 </tr>
               </thead>
             </table>
@@ -98,10 +92,8 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
               <thead>
                 <tr class="text-center">
                   <th class="vam" style="min-width: 40px;">#</th>
-                  <!-- nama / nip dll -->
                   <th class="vam" style="width: 50%;">Sekolah</th>
-                  <!-- nama sekolah / alamat / jenjang -->
-                  <th class="vam" style="width: 50%;">Sekolah</th>
+                  <th class="vam" style="width: 50%;">Alamat</th>
                   <th class="vam" style="min-width: 80px;">Periode</th>
                   <th class="vam" style="min-width: 100px;">Dibuat Pada</th>
                   <th class="vam" style="min-width: 80px;">Status</th>
@@ -179,6 +171,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
       },
       error: function(xhr, status, error) {
         show_notify('error', xhr.status + ' : ' + error);
+        $('.loading_tabel_m_profil_sekolah').removeClass('show');
       }
     },
     /* Sesuaikan jumlah kolom dengan id table yang digunakan */
@@ -191,7 +184,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
         }
       },
       {
-        data: 'nip', // index 1
+        data: 'kode_ukerja', // index 1
         orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -199,7 +192,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
         }
       },
       {
-        data: 'kode_ukerja', // index 2
+        data: 'alamat', // index 2
         orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -207,7 +200,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
         }
       },
       {
-        data: 'masa_penugasan_mulai', // index 3
+        data: 'email', // index 3
         orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -215,15 +208,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
         }
       },
       {
-        data: 'masa_penugasan_selesai', // index 4
-        orderable: false,
-        className: 'vat',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        }
-      },
-      {
-        data: 'id_sekolah', // index 5
+        data: 'kode_ukerja', // index 4
         orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -286,6 +271,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
       },
       error: function(xhr, status, error) {
         show_notify('error', xhr.status + ' : ' + error);
+        $('.loading_tabel_r_profil_sekolah').removeClass('show');
       }
     },
     /* Sesuaikan jumlah kolom dengan id table yang digunakan */
@@ -298,7 +284,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
         }
       },
       {
-        data: 'nip', // index 1
+        data: 'kode_ukerja', // index 1
         orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -306,7 +292,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
         }
       },
       {
-        data: 'kode_ukerja', // index 2
+        data: 'alamat', // index 2
         orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {

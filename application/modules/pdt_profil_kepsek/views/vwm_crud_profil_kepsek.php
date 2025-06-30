@@ -158,22 +158,6 @@ switch ($type) {
       break;
     }
 
-  case 'edit': {
-    ?>
-      <div class="modal-header d-flex align-items-center">
-        <div>
-          <h3 class="mb-0"><?= $modal_title ?></h3>
-        </div>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body"></div>
-      <script>
-        // EDIT TYPE SCRIPT
-      </script>
-    <?php
-      break;
-    }
-
   case 'update': {
     ?>
       <div class="modal-header d-flex align-items-center">
