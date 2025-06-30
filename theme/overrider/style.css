@@ -263,6 +263,7 @@ a.badge.text-white:hover {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+  border-radius: 6px;
 }
 
 .row_riwayat_dokumen {

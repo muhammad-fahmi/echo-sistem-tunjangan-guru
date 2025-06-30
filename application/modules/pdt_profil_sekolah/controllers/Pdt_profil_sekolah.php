@@ -30,6 +30,7 @@ class Pdt_profil_sekolah extends MY_Controller
   public function index()
   {
     $sent_data = [];
+
     $data = array(
       'page_title' => "Profil Sekolah | PROGURINDA",
       'module' => "pdt_profil_sekolah",

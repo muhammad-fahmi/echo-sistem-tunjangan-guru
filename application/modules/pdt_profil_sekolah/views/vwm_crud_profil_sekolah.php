@@ -26,6 +26,7 @@
 </script>
 <?php
 $cur_unor = $this->session->userdata('kode_unor');
+$cur_ket_unor = $this->session->userdata('ket_unor');
 switch ($type) {
   case 'add': {
 ?>
@@ -42,8 +43,15 @@ switch ($type) {
           <div class="row g-2">
 
             <div class="col-12">
-              <label for="nip_select2">NIP / Nama</label>
-              <select name="nip" id="nip_select2" class="form-select form-select-sm nip_select2"></select>
+              <div class="input_block">
+                <label for="jenjang">Jenjang</label>
+                <select name="nip" id="jenjang" class="form-select form-select-sm">
+                  <option value="" default hidden>- Pilih Jenjang Sekolah -</option>
+                  <option value="TK">TK</option>
+                  <option value="SD">SD</option>
+                  <option value="SMP">SMP</option>
+                </select>
+              </div>
             </div>
 
             <?php
@@ -51,14 +59,22 @@ switch ($type) {
             if (is_admin()) {
             ?>
               <div class="col-12">
-                <label for="kode_ukerja">Sekolah</label>
-                <select name="kode_ukerja" id="kode_ukerja" class="form-select form-select-sm select2_ukerja"></select>
+                <div class="input_block">
+                  <label for="kode_ukerja">Nama Sekolah</label>
+                  <select name="kode_ukerja" id="kode_ukerja" class="form-select form-select-sm select2_ukerja"></select>
+                </div>
               </div>
             <?php
             } else {
-              // kalau yang login admin disdik / upt, fixed kode ukerja dari login session
+              // kalau yang login admin sekolah, fixed kode ukerja dari login session
             ?>
-              <input type="hidden" name="kode_ukerja" id="kode_ukerja" value="<?= $cur_unor ?>">
+              <div class="col-12">
+                <div class="desc_block">
+                  <label>Nama Sekolah</label>
+                  <div class="value"><?= check_var($cur_unor, null, '...') . ' - ' . check_var($cur_ket_unor, null, '...'); ?></div>
+                  <input type="hidden" name="kode_ukerja" id="kode_ukerja" value="<?= $cur_unor ?>">
+                </div>
+              </div>
             <?php
             }
             ?>
@@ -67,21 +83,25 @@ switch ($type) {
               <?php
               $array_bulan = array_periode_bulan();
               ?>
-              <label for="periode_bln">Periode (Bulan)</label>
-              <select name="periode_bln" id="periode_bln" class="form-select">
-                <option value="" default>- Bulan -</option>
-                <?php
-                foreach ($array_bulan as $key => $value) {
-                  $selected = (em_date('m') == $key) ? 'selected default' : '';
-                  echo '<option value="' .  $key . '" ' . $selected . '>' . $value . '</option>';
-                }
-                ?>
-              </select>
+              <div class="input_block">
+                <label for="periode_bln">Periode (Bulan)</label>
+                <select name="periode_bln" id="periode_bln" class="form-select">
+                  <option value="" default>- Bulan -</option>
+                  <?php
+                  foreach ($array_bulan as $key => $value) {
+                    $selected = (em_date('m') == $key) ? 'selected default' : '';
+                    echo '<option value="' .  $key . '" ' . $selected . '>' . $value . '</option>';
+                  }
+                  ?>
+                </select>
+              </div>
             </div>
 
             <div class="col-6">
-              <label for="periode_thn">Periode (Tahun)</label>
-              <input name="periode_thn" id="periode_thn" type="number" step="1" min="1" class="form-control" placeholder="- Tahun -" value="<?= em_date('Y') ?>">
+              <div class="input_block">
+                <label for="periode_thn">Periode (Tahun)</label>
+                <input name="periode_thn" id="periode_thn" type="number" step="1" min="1" class="form-control" placeholder="- Tahun -" value="<?= em_date('Y') ?>">
+              </div>
             </div>
 
           </div>
@@ -158,22 +178,6 @@ switch ($type) {
       break;
     }
 
-  case 'edit': {
-    ?>
-      <div class="modal-header d-flex align-items-center">
-        <div>
-          <h3 class="mb-0"><?= $modal_title ?></h3>
-        </div>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body"></div>
-      <script>
-        // EDIT TYPE SCRIPT
-      </script>
-    <?php
-      break;
-    }
-
   case 'update': {
     ?>
       <div class="modal-header d-flex align-items-center">
@@ -211,14 +215,14 @@ switch ($type) {
             <div class="col-12">
               <table style="width: 100%;">
                 <tr>
-                  <td style="min-width: 150px;">Nama</td>
+                  <td style="min-width: 150px;">Nama Sekolah</td>
                   <td style="min-width: 15px; text-align: center;">:</td>
-                  <td style="width: 100%;"><?= check_var($data, 'nama', '-') ?></td>
+                  <td style="width: 100%;"><?= check_var($data, 'ket_ukerja', '-') ?></td>
                 </tr>
                 <tr>
-                  <td style="min-width: 150px;">NIP</td>
+                  <td style="min-width: 150px;">Jenjang</td>
                   <td style="min-width: 15px; text-align: center;">:</td>
-                  <td style="width: 100%;"><?= check_var($data, 'nip', '-') ?></td>
+                  <td style="width: 100%;"><?= check_var($data, 'jenjang', '-') ?></td>
                 </tr>
                 <tr>
                   <td style="min-width: 150px;">Periode</td>

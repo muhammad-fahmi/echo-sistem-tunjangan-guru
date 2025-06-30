@@ -208,8 +208,8 @@ class Mdl_pdt_profil_sekolah extends CI_Model
     $this->load->library('form_validation');
 
     // Define validation rules
-    $this->form_validation->set_rules('nip', 'NIP', 'required|numeric');
-    $this->form_validation->set_rules('kode_ukerja', 'Sekolah', 'required|numeric');
+    $this->form_validation->set_rules('jenjang', 'Jenjang', 'required');
+    $this->form_validation->set_rules('kode_ukerja', 'Nama Sekolah', 'required|numeric');
     $this->form_validation->set_rules('periode_bln', 'Periode (Bulan)', 'required|numeric');
     $this->form_validation->set_rules('periode_thn', 'Periode (Tahun)', 'required|numeric');
 
@@ -230,9 +230,9 @@ class Mdl_pdt_profil_sekolah extends CI_Model
       ];
     }
 
-    // TARIK DATA PEGAWAI YG DIPILIH
-    $data_pegawai = fetch_row_data('v_pns', ['nip' => $post['nip']], false);
-    if ($data_pegawai === false) return [
+    // TARIK DATA SEKOLAH YG DIPILIH
+    $data_sekolah = fetch_row_data('v_ukerja', ['nip' => $post['nip']], false);
+    if ($data_sekolah === false) return [
       'status' => false,
       'message' => 'Maaf, NIP yang dipilih tidak valid lagi.'
     ];
@@ -246,32 +246,34 @@ class Mdl_pdt_profil_sekolah extends CI_Model
       'create_by' => $cur_user,
       'status_dokumen' => 'DRAFT',
       'kode_ukerja' => $post['kode_ukerja'],
-      'nip' => $post['nip'],
-      'nama' => str_alphanumeric_space(trim(strtoupper($data_pegawai['nama']))),
-      'nuptr' => null, /* sumber di v_pns (?) */
-      'nurs' => null, /* sumber di v_pns (?) */
-      'nrg' => null, /* sumber di v_pns (?) */
-      'nik' => check_var($data_pegawai, 'nik', null),
-      'tgl_lahir' => check_var($data_pegawai, 'tgl_lahir', null),
-      'jenis_kelamin' => check_var($data_pegawai, 'j_kelamin', null),
-      'alamat_saat_ini' => check_var($data_pegawai, 'tt_alamat', null),
-      'status_pernikahan' => check_var($data_pegawai, 'ket_kawin', null),
-      'kode_didik' => check_var($data_pegawai, 'kode_didik', null),
-      'pendidikan' => check_var($data_pegawai, 'ket_didik', null),
-      'no_sertifikat_pendidik' => null, /* sumber di v_pns (?) */
-      'no_sertifikat_gp' => null, /* sumber di v_pns (?) */
-      'no_sertifikat_crs' => null, /* sumber di v_pns (?) */
-      'no_rek_bank' => null, /* sumber di v_pns (?) */
-      'npwp' => check_var($data_pegawai, 'no_npwp', null),
-      'menerima_ttp_insentif' => null, /* sumber di v_pns (?) */
-      'status' => check_var($data_pegawai, 'kode_status', null),
-      'email' => check_var($data_pegawai, 'email', null),
-      'no_hp' => check_var($data_pegawai, 'no_hp', null),
-      'kode_agama' => check_var($data_pegawai, 'kode_agama', null),
-      'periode_ke' => null, /* sumber di v_pns (?) */
-      'masa_penugasan_mulai' => null, /* sumber di v_pns (?) */
-      'masa_penugasan_selesai' => null, /* sumber di v_pns (?) */
-      's_aktif' => null /* sumber di v_pns (?) */
+
+      'jenjang' => $post['jenjang'],
+      'status' => null, /* data ini tidak ada di m_ukerja */
+      'npsn' => null, /* data ini tidak ada di m_ukerja */
+      'nss' => null, /* data ini tidak ada di m_ukerja */
+      'no_statistik_bangunan' => null, /* data ini tidak ada di m_ukerja */
+      'akreaditasi' => null, /* data ini tidak ada di m_ukerja */
+      'inklusif' => null, /* data ini tidak ada di m_ukerja */
+      'alamat' => check_var($data_sekolah, 'alamat_ukerja', null),
+      'id_kelurahan' => null, /* data ini tidak ada di m_ukerja */
+      'id_kecamatan' => null, /* data ini tidak ada di m_ukerja */
+      'kode_pos' => null, /* data ini tidak ada di m_ukerja */
+      'lat' => null, /* data ini tidak ada di m_ukerja */
+      'long' => null, /* data ini tidak ada di m_ukerja */
+      'telepon' => check_var($data_sekolah, 'telp_ukerja', null),
+      'website' => check_var($data_sekolah, 'website_ukerja', null),
+      'email' => check_var($data_sekolah, 'email_ukerja', null),
+      'no_rek_bank' => null, /* data ini tidak ada di m_ukerja */
+      'nama_bank' => null, /* data ini tidak ada di m_ukerja */
+      'cabang_kcp_unit' => null, /* data ini tidak ada di m_ukerja */
+      'nama_wajib_pajak' => null, /* data ini tidak ada di m_ukerja */
+      'npwp' => null, /* data ini tidak ada di m_ukerja */
+      'no_sk_pendirian' => null, /* data ini tidak ada di m_ukerja */
+      'tgl_sk_pendirian' => null, /* data ini tidak ada di m_ukerja */
+      'no_sk_izin_operasional' => null, /* data ini tidak ada di m_ukerja */
+      'tgl_sk_izin_operasional' => null, /* data ini tidak ada di m_ukerja */
+      'luas_tanah' => null, /* data ini tidak ada di m_ukerja */
+      'kepemilikan_tanah' => null, /* MILIK / SEWA / PINJAM */ /* data ini tidak ada di m_ukerja */
     ];
 
     try {
