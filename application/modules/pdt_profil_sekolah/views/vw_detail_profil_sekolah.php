@@ -365,7 +365,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
       url: "<?= site_url('pangkalan_data/get_riwayat_dokumen') ?>",
       data: {
         id_dokumen: '<?= $data['id_dokumen'] ?>',
-        jenis_dokumen: 'PROFIL_KEPSEK'
+        jenis_dokumen: 'PROFIL_SEKOLAH'
       },
       dataType: 'json',
       beforeSend: function(e) {

@@ -237,6 +237,25 @@ class Mdl_pdt_profil_kepsek extends CI_Model
       'message' => 'Maaf, NIP yang dipilih tidak valid lagi.'
     ];
 
+    // CEK DULU APA SUDAH ADA USULAN DGN PERIODE YG SAMA DAN STATUSNYA
+    // BUKAN DITOLAK / DITERIMA?
+    $existing_usulan = $this->db->from('vr_profil_kepsek')
+      ->where('nip', $post['nip'])
+      ->where('kode_ukerja', $post['kode_ukerja'])
+      ->where('status_dokumen <>', 'DITRM')
+      ->where('status_dokumen <>', 'DITLK')
+      ->where('periode_bln', $post['periode_bln'])
+      ->where('periode_thn', $post['periode_thn'])
+      ->get()->row_array();
+
+    if (check_var($existing_usulan)) {
+      // sudah ada dokumen usulan, output error
+      return [
+        'status' => false,
+        'message' => "Maaf, sudah ada dokumen usulan profil kepala sekolah untuk Periode {$post['periode_bln']}/{$post['periode_thn']} dengan status : {$existing_usulan['ket_status_dokumen']}."
+      ];
+    }
+
     // NORMALISASI DATA DARI V_PNS KE FORMAT M_PROFIL
     $cur_user = $this->session->userdata('id_user');
     $data_to_save = [

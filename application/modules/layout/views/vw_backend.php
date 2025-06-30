@@ -21,6 +21,13 @@
   <link rel="stylesheet" href="<?= base_url("theme/dist/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css"); ?>">
   <link rel="stylesheet" href="<?= base_url("theme/dist/css/style.min.css"); ?>" rel="stylesheet" />
   <link rel="stylesheet" href="<?= base_url('assets_old/flatpickr/flatpickr.min.css'); ?>">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="<?= base_url('theme/assets/pangkalan_data/leaflet/leaflet.css'); ?>">
+
+  <!-- Leaflet Control Geocoder CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+
   <link rel="stylesheet" href="<?= base_url("theme/overrider/style.css?v=") . em_date('YmdHis'); ?>" rel="stylesheet" />
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -72,6 +79,12 @@
   <script src="<?= base_url("theme/dist/libs/select2/dist/js/select2.full.min.js"); ?>"></script>
   <script src="<?= base_url("theme/dist/libs/select2/dist/js/select2.min.js"); ?>"></script>
   <script src="<?php echo base_url("theme/assets/pangkalan_data/notifyjs/notify.min.js"); ?>"></script>
+
+  <!-- Leaflet JS -->
+  <script type="text/javascript" src="<?= base_url('theme/assets/pangkalan_data/leaflet/leaflet.js'); ?>"></script>
+
+  <!-- Leaflet Control Geocoder JS -->
+  <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
   <script type="text/javascript" src="<?= base_url("theme/overrider/script.js?v=") . em_date('YmdHis'); ?>"></script>
 </head>

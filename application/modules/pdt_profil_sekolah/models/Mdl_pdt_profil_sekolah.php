@@ -231,13 +231,31 @@ class Mdl_pdt_profil_sekolah extends CI_Model
     }
 
     // TARIK DATA SEKOLAH YG DIPILIH
-    $data_sekolah = fetch_row_data('v_ukerja', ['nip' => $post['nip']], false);
+    $data_sekolah = fetch_row_data('v_ukerja', ['kode_ukerja' => $post['kode_ukerja']], false);
     if ($data_sekolah === false) return [
       'status' => false,
       'message' => 'Maaf, NIP yang dipilih tidak valid lagi.'
     ];
 
-    // NORMALISASI DATA DARI V_PNS KE FORMAT M_PROFIL
+    // CEK DULU APA SUDAH ADA USULAN DGN PERIODE YG SAMA DAN STATUSNYA
+    // BUKAN DITOLAK / DITERIMA?
+    $existing_usulan = $this->db->from('vr_profil_sekolah')
+      ->where('kode_ukerja', $post['kode_ukerja'])
+      ->where('status_dokumen <>', 'DITRM')
+      ->where('status_dokumen <>', 'DITLK')
+      ->where('periode_bln', $post['periode_bln'])
+      ->where('periode_thn', $post['periode_thn'])
+      ->get()->row_array();
+
+    if (check_var($existing_usulan)) {
+      // sudah ada dokumen usulan, output error
+      return [
+        'status' => false,
+        'message' => "Maaf, sudah ada dokumen usulan profil sekolah untuk Periode {$post['periode_bln']}/{$post['periode_thn']} dengan status : {$existing_usulan['ket_status_dokumen']}."
+      ];
+    }
+
+    // NORMALISASI DATA DARI V_UKERJA KE FORMAT M_PROFIL
     $cur_user = $this->session->userdata('id_user');
     $data_to_save = [
       'periode_bln' => $post['periode_bln'],
@@ -252,7 +270,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
       'npsn' => null, /* data ini tidak ada di m_ukerja */
       'nss' => null, /* data ini tidak ada di m_ukerja */
       'no_statistik_bangunan' => null, /* data ini tidak ada di m_ukerja */
-      'akreaditasi' => null, /* data ini tidak ada di m_ukerja */
+      'akreditasi' => null, /* data ini tidak ada di m_ukerja */
       'inklusif' => null, /* data ini tidak ada di m_ukerja */
       'alamat' => check_var($data_sekolah, 'alamat_ukerja', null),
       'id_kelurahan' => null, /* data ini tidak ada di m_ukerja */
@@ -280,7 +298,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
       // START DB OPERATION
       $this->db->trans_begin();
 
-      // SIMPAN DATA BASELINE DOKUMEN USULAN KEPSEK BARU
+      // SIMPAN DATA BASELINE DOKUMEN USULAN PROFIL SEKOLAH BARU
       $proc = 1;
       $this->db->insert('r_profil_sekolah', $data_to_save);
       $insert_id = $this->db->insert_id();
@@ -291,7 +309,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
         $cur_user,
         'r_profil_sekolah',
         $insert_id,
-        "Melakukan penambahan usulan profil kepala sekolah dengan data sebagai berikut :\n\n" . format_log_view($data_to_save)
+        "Melakukan penambahan usulan profil sekolah dengan data sebagai berikut :\n\n" . format_log_view($data_to_save)
       );
 
       // BUAT LOG DOKUMEN (HISTORY YG DITAMPILKAN SAAT VERIFIKASI / HALAMAN DETAIL)
@@ -301,7 +319,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
         'id_dokumen' => $insert_id,
         'id_user' => $cur_user,
         'datetime' => em_date('Y-m-d H:i:s'),
-        'message' => "Menambahkan Usulan Profil Sekolah dengan NIP : {$data_to_save['nip']} a/n {$data_to_save['nama']} untuk periode {$data_to_save['periode_bln']}/{$data_to_save['periode_thn']}."
+        'message' => "Menambahkan Usulan Profil Sekolah ({$data_sekolah['ket_ukerja']}) dengan jenjang {$post['jenjang']} untuk periode {$data_to_save['periode_bln']}/{$data_to_save['periode_thn']}."
       ]);
 
       if ($this->db->trans_status() === FALSE) {
@@ -316,7 +334,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
         $this->db->trans_commit();
         return [
           'status' => true,
-          'message' => "Proses tambah usulan profil kepala sekolah berhasil disimpan dengan status DRAFT.",
+          'message' => "Proses tambah usulan profil sekolah berhasil disimpan dengan status DRAFT.",
           'ID' => encrypt_id($insert_id)
         ];
       }
@@ -358,7 +376,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
     $same_ukerja = ($dataset['kode_ukerja'] == $cur_unor);
     if (!((is_admin() || $same_ukerja))) return [
       'status' => false,
-      'message' => "Maaf, Anda tidak memiliki ijin untuk meng-edit draft dokumen profil kepala sekolah ini."
+      'message' => "Maaf, Anda tidak memiliki ijin untuk meng-edit draft dokumen profil sekolah ini."
     ];
 
     // BANDINGKAN DATA LAMA DENGAN DATA YANG DI POST UTK KEPERLUAN LOG
@@ -385,7 +403,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
           $cur_user,
           'r_profil_sekolah',
           $decryptedID,
-          "Melakukan update data profil kepala sekolah dengan perubahan data sebagai berikut :\n\n" .
+          "Melakukan update data profil sekolah dengan perubahan data sebagai berikut :\n\n" .
             "BEFORE:\n{$before_text}\n\n" .
             "AFTER:\n{$after_text}"
         );
@@ -403,7 +421,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
         $this->db->trans_commit();
         return [
           'status' => true,
-          'message' => "Proses simpan draft profil kepala sekolah berhasil.",
+          'message' => "Proses simpan draft profil sekolah berhasil.",
           'redirect' => 'edit'
         ];
       }
@@ -495,7 +513,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
     $same_ukerja = ($dataset['kode_ukerja'] == $cur_unor);
     if (!((is_admin() || $same_ukerja))) return [
       'status' => false,
-      'message' => "Maaf, Anda tidak memiliki ijin untuk submit draft dokumen profil kepala sekolah ini."
+      'message' => "Maaf, Anda tidak memiliki ijin untuk submit draft dokumen profil sekolah ini."
     ];
 
     // BANDINGKAN DATA LAMA DENGAN DATA YANG DI POST UTK KEPERLUAN LOG
@@ -525,7 +543,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
           $cur_user,
           'r_profil_sekolah',
           $decryptedID,
-          "Melakukan submit data profil kepala sekolah dengan perubahan data sebagai berikut :\n\n" .
+          "Melakukan submit data profil sekolah dengan perubahan data sebagai berikut :\n\n" .
             "BEFORE:\n{$before_text}\n\n" .
             "AFTER:\n{$after_text}"
         );
@@ -554,7 +572,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
         $this->db->trans_commit();
         return [
           'status' => true,
-          'message' => "Proses submit draft profil kepala sekolah berhasil.",
+          'message' => "Proses submit draft profil sekolah berhasil.",
           'redirect' => 'detail'
         ];
       }
@@ -648,7 +666,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
         $this->db->trans_commit();
         return [
           'status' => true,
-          'message' => "Dokumen usulan profil kepala sekolah berhasil dihapus",
+          'message' => "Dokumen usulan profil sekolah berhasil dihapus",
         ];
       }
     } catch (\Throwable $th) {

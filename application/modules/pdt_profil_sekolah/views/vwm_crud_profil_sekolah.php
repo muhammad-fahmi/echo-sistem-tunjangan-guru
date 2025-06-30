@@ -45,7 +45,7 @@ switch ($type) {
             <div class="col-12">
               <div class="input_block">
                 <label for="jenjang">Jenjang</label>
-                <select name="nip" id="jenjang" class="form-select form-select-sm">
+                <select name="jenjang" id="jenjang" class="form-select form-select-sm">
                   <option value="" default hidden>- Pilih Jenjang Sekolah -</option>
                   <option value="TK">TK</option>
                   <option value="SD">SD</option>
