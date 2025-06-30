@@ -23,6 +23,43 @@
   <!-- Start Page Content -->
   <!-- -------------------------------------------------------------- -->
   <!-- basic table -->
+  <!-- <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Riwayat Peserta Didik</h4>
+
+          <div class="table-responsive mt-4">
+
+            <div class="_loading loading_tabel_riwayat_peserta_didik">
+              <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>
+            </div>
+
+            <table id="table_riwayat_peserta_didik" class="table table-bordered table-hover fs-3" style="width:100%;">
+
+              <thead class="bg-info text-white">
+                <tr class="text-center">
+                  <th scope="col">No.</th>
+                  <th scope="col">Nama Lengkap</th>
+                  <th scope="col">NISN</th>
+                  <th scope="col">NIK</th>
+                  <th scope="col">Jenis Kelamin</th>
+                  <th scope="col">Agama</th>
+                  <th scope="col">Penyandang Disabilitas</th>
+                  <th scope="col">Aktif</th>
+                  <th scope="col">Aktif</th>
+                </tr>
+              </thead>
+
+              <tbody style="font-size: 11px;"></tbody>
+
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
   <div class="row">
     <div class="col-12">
       <div class="card">

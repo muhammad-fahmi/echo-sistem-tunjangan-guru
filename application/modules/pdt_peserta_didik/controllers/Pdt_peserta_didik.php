@@ -151,8 +151,14 @@ class Pdt_peserta_didik extends MY_Controller
     /// | AMBIL DATA POST
     /// |----------------------------------------
     $post = $this->input->post();
+
+    /// |----------------------------------------
+    /// | CEK JIKA ID_SISWA EXIST
+    /// |----------------------------------------
+    $id_siswa_exist = empty($post['id_siswa']) ? $this->mdl_peserta_didik->generate_id_siswa() : $post['id_siswa'];
+
     $data_to_save = array(
-      'id_siswa' => $post['id_siswa'],
+      'id_siswa' => $id_siswa_exist,
       'nama' => $post['nama'],
       'nisn' => $post['nisn'],
       'nik' => $post['nik'],
@@ -167,7 +173,7 @@ class Pdt_peserta_didik extends MY_Controller
       'pdpd' => $post['pdpd_options'],
     );
 
-    $res = $this->mdl_peserta_didik->save($data_to_save);
+    $res = $this->mdl_peserta_didik->save_peserta_didik($data_to_save);
 
     return $this->output
       ->set_content_type('application/json')
@@ -182,7 +188,7 @@ class Pdt_peserta_didik extends MY_Controller
     ];
 
     $data["id_siswa"] = $this->input->post('id_siswa');
-    $res = $this->mdl_peserta_didik->delete($data);
+    $res = $this->mdl_peserta_didik->delete_peserta_didik($data);
 
     return $this->output
       ->set_content_type('application/json')

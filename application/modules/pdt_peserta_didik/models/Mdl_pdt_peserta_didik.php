@@ -82,8 +82,50 @@ class Mdl_pdt_peserta_didik extends CI_Model
     );
   }
 
-  public function save($data)
+  public function generate_id_siswa()
   {
+    do {
+      $prefix = rand(100000, 999999); // 6-digit random
+      $id_siswa = $prefix . '2025';
+
+      $exists = $this->db->get_where('progurinda_r_siswa', ['id_siswa' => $id_siswa])->num_rows() > 0;
+    } while ($exists);
+
+    return $id_siswa;
+  }
+
+  public function save_peserta_didik($data)
+  {
+    // FORM VALIDATION
+    $this->load->library('form_validation');
+
+    // Define validation rules
+    $this->form_validation->set_rules('nama', 'Nama Lengkap', 'required');
+    $this->form_validation->set_rules('nisn', 'NISN', 'required|numeric');
+    $this->form_validation->set_rules('nik', 'NIK', 'required|numeric');
+    $this->form_validation->set_rules('jenis_kelamin', 'Jenis Kelamin', 'required');
+    $this->form_validation->set_rules('kode_agama', 'Agama', 'required|numeric');
+    $this->form_validation->set_rules('nama_ibu', 'Nama Ibu', 'required');
+    $this->form_validation->set_rules('no_kk', 'No. KK', 'required|numeric');
+    $this->form_validation->set_rules('alamat', 'Alamat', 'required');
+
+    // Validate the input data
+    if ($this->form_validation->run() === FALSE) {
+      // Collect errors
+      $errors = validation_errors('<li>', '</li>'); // This will return a string with errors formatted as HTML
+
+      // Build error list
+      $error_list = '<ul class="mb-0">';
+      $error_list .= $errors;
+      $error_list .= '</ul>';
+
+      // Return response with error details
+      return [
+        'status' => false,
+        'message' => 'Proses tidak bisa dilanjutkan karena form tidak valid.<br>' . $error_list
+      ];
+    }
+
     try {
       //start db transaction
       $this->db->trans_begin();
@@ -119,8 +161,31 @@ class Mdl_pdt_peserta_didik extends CI_Model
     return $res;
   }
 
-  public function delete($data)
+  public function delete_peserta_didik($data)
   {
+    // FORM VALIDATION
+    $this->load->library('form_validation');
+
+    // Define validation rules
+    $this->form_validation->set_rules('id_siswa', 'ID Siswa', 'required');
+
+    // Validate the input data
+    if ($this->form_validation->run() === FALSE) {
+      // Collect errors
+      $errors = validation_errors('<li>', '</li>'); // This will return a string with errors formatted as HTML
+
+      // Build error list
+      $error_list = '<ul class="mb-0">';
+      $error_list .= $errors;
+      $error_list .= '</ul>';
+
+      // Return response with error details
+      return [
+        'status' => false,
+        'message' => 'Proses tidak bisa dilanjutkan karena form tidak valid.<br>' . $error_list
+      ];
+    }
+
     try {
       $this->db->trans_begin();
       $this->db->where(["id_siswa" => $data["id_siswa"]])->delete("progurinda_r_siswa");
@@ -147,4 +212,8 @@ class Mdl_pdt_peserta_didik extends CI_Model
     }
     return $res;
   }
+
+  /// |----------------------------------------------------------------------
+  /// | >> FUNGSI CRUD
+  /// |----------------------------------------------------------------------
 }
