@@ -116,7 +116,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
         <div class="card">
           <div class="card-body">
             <h4 class="card-title space-between mb-3">
-              <div><i class="fas fa-user me-2"></i>Profil Sekolah</div>
+              <div><i class="fas fa-building me-2"></i>Profil Sekolah</div>
               <div></div>
             </h4>
 
@@ -155,10 +155,10 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                   <div class="col-12">
                     <div class="input_block">
                       <label for="status">Status Sekolah</label>
-                      <select name="status" id="status" class="form-select select2_status_sekolah">
+                      <select name="status" id="status" class="form-select select2_status">
                         <option value="" default hidden>- Pilih Status Sekolah -</option>
                         <?= (check_var($data, 'ket_status_sekolah', false) !== false)
-                          ? '<option value="' . $data['status_sekolah'] . '" selected>' . $data['ket_status_sekolah'] . '</option>'
+                          ? '<option value="' . $data['status'] . '" selected>' . $data['ket_status_sekolah'] . '</option>'
                           : '' ?>
                       </select>
                       <div class="invalid-feedback" id="error_status"></div>
@@ -463,7 +463,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
   /// | INIT SELECT2
   /// |----------------------------------------
   init_select2(
-    '.select2_status_sekolah',
+    '.select2_status',
     '- Pilih Status Sekolah -',
     '<?= site_url('config/select2_status_sekolah') ?>'
   );

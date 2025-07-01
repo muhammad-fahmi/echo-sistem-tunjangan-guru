@@ -359,7 +359,7 @@ class Mdl_pdt_profil_kepsek extends CI_Model
     $cur_user = $this->session->userdata('id_user');
 
     $decryptedID = decrypt_id($data['id_dokumen']);
-    $dataset = fetch_row_data('vr_profil_kepsek', ['id_dokumen' => $decryptedID], false);
+    $dataset = fetch_row_data('r_profil_kepsek', ['id_dokumen' => $decryptedID], false);
     if ($dataset === false) return [
       'status' => "Maaf, data yang akan di-edit tidak valid lagi."
     ];
@@ -382,6 +382,11 @@ class Mdl_pdt_profil_kepsek extends CI_Model
     $old_data = $dataset;
     $old_data['id_dokumen'] = encrypt_id($old_data['id_dokumen']);
     $new_data = $data;
+
+    // tambah update on dan update by
+    $new_data['update_on'] = em_date('Y-m-d H:i:s');
+    $new_data['update_by'] = $cur_user;
+
     $comparison = get_changed_data($old_data, $new_data);
 
     try {
@@ -390,9 +395,6 @@ class Mdl_pdt_profil_kepsek extends CI_Model
       if (check_var($comparison, 'after')) {
         // hanya lakukan update apabila ada data yang berubah pada data yang lama
         $proc = 1;
-        // tambah update on dan update by
-        $comparison['after']['update_on'] = em_date('Y-m-d H:i:s');
-        $comparison['after']['update_by'] = $cur_user;
         $this->db->update('r_profil_kepsek', $comparison['after'], [
           'id_dokumen' => $decryptedID
         ]);
@@ -499,7 +501,7 @@ class Mdl_pdt_profil_kepsek extends CI_Model
     $cur_user = $this->session->userdata('id_user');
 
     $decryptedID = decrypt_id($data['id_dokumen']);
-    $dataset = fetch_row_data('vr_profil_kepsek', ['id_dokumen' => $decryptedID], false);
+    $dataset = fetch_row_data('r_profil_kepsek', ['id_dokumen' => $decryptedID], false);
     if ($dataset === false) return [
       'status' => "Maaf, data yang akan di-edit tidak valid lagi."
     ];
