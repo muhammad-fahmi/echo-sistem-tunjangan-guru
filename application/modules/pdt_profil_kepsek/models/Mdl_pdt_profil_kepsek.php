@@ -237,6 +237,25 @@ class Mdl_pdt_profil_kepsek extends CI_Model
       'message' => 'Maaf, NIP yang dipilih tidak valid lagi.'
     ];
 
+    // CEK DULU APA SUDAH ADA USULAN DGN PERIODE YG SAMA DAN STATUSNYA
+    // BUKAN DITOLAK / DITERIMA?
+    $existing_usulan = $this->db->from('vr_profil_kepsek')
+      ->where('nip', $post['nip'])
+      ->where('kode_ukerja', $post['kode_ukerja'])
+      ->where('status_dokumen <>', 'DITRM')
+      ->where('status_dokumen <>', 'DITLK')
+      ->where('periode_bln', $post['periode_bln'])
+      ->where('periode_thn', $post['periode_thn'])
+      ->get()->row_array();
+
+    if (check_var($existing_usulan)) {
+      // sudah ada dokumen usulan, output error
+      return [
+        'status' => false,
+        'message' => "Maaf, sudah ada dokumen usulan profil kepala sekolah untuk Periode {$post['periode_bln']}/{$post['periode_thn']} dengan status : {$existing_usulan['ket_status_dokumen']}."
+      ];
+    }
+
     // NORMALISASI DATA DARI V_PNS KE FORMAT M_PROFIL
     $cur_user = $this->session->userdata('id_user');
     $data_to_save = [
@@ -340,7 +359,7 @@ class Mdl_pdt_profil_kepsek extends CI_Model
     $cur_user = $this->session->userdata('id_user');
 
     $decryptedID = decrypt_id($data['id_dokumen']);
-    $dataset = fetch_row_data('vr_profil_kepsek', ['id_dokumen' => $decryptedID], false);
+    $dataset = fetch_row_data('r_profil_kepsek', ['id_dokumen' => $decryptedID], false);
     if ($dataset === false) return [
       'status' => "Maaf, data yang akan di-edit tidak valid lagi."
     ];
@@ -363,6 +382,11 @@ class Mdl_pdt_profil_kepsek extends CI_Model
     $old_data = $dataset;
     $old_data['id_dokumen'] = encrypt_id($old_data['id_dokumen']);
     $new_data = $data;
+
+    // tambah update on dan update by
+    $new_data['update_on'] = em_date('Y-m-d H:i:s');
+    $new_data['update_by'] = $cur_user;
+
     $comparison = get_changed_data($old_data, $new_data);
 
     try {
@@ -477,7 +501,7 @@ class Mdl_pdt_profil_kepsek extends CI_Model
     $cur_user = $this->session->userdata('id_user');
 
     $decryptedID = decrypt_id($data['id_dokumen']);
-    $dataset = fetch_row_data('vr_profil_kepsek', ['id_dokumen' => $decryptedID], false);
+    $dataset = fetch_row_data('r_profil_kepsek', ['id_dokumen' => $decryptedID], false);
     if ($dataset === false) return [
       'status' => "Maaf, data yang akan di-edit tidak valid lagi."
     ];

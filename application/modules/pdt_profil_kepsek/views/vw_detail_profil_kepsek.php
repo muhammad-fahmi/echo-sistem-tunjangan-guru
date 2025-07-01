@@ -297,7 +297,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                 <div class="col-12">
                   <div class="desc_block">
                     <label>NPWP</label>
-                    <div><?= check_var($data, 'email', '-') ?></div>
+                    <div><?= check_var($data, 'npwp', '-') ?></div>
                   </div>
                 </div>
 

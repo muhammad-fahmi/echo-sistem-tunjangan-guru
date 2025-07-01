@@ -18,7 +18,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
   <div class="row">
 
     <?php
-    $show_debug = true;
+    $show_debug = false;
     if ($show_debug) {
     ?>
       <div class="col-12">

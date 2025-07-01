@@ -231,13 +231,31 @@ class Mdl_pdt_profil_sekolah extends CI_Model
     }
 
     // TARIK DATA SEKOLAH YG DIPILIH
-    $data_sekolah = fetch_row_data('v_ukerja', ['nip' => $post['nip']], false);
+    $data_sekolah = fetch_row_data('v_ukerja', ['kode_ukerja' => $post['kode_ukerja']], false);
     if ($data_sekolah === false) return [
       'status' => false,
       'message' => 'Maaf, NIP yang dipilih tidak valid lagi.'
     ];
 
-    // NORMALISASI DATA DARI V_PNS KE FORMAT M_PROFIL
+    // CEK DULU APA SUDAH ADA USULAN DGN PERIODE YG SAMA DAN STATUSNYA
+    // BUKAN DITOLAK / DITERIMA?
+    $existing_usulan = $this->db->from('vr_profil_sekolah')
+      ->where('kode_ukerja', $post['kode_ukerja'])
+      ->where('status_dokumen <>', 'DITRM')
+      ->where('status_dokumen <>', 'DITLK')
+      ->where('periode_bln', $post['periode_bln'])
+      ->where('periode_thn', $post['periode_thn'])
+      ->get()->row_array();
+
+    if (check_var($existing_usulan)) {
+      // sudah ada dokumen usulan, output error
+      return [
+        'status' => false,
+        'message' => "Maaf, sudah ada dokumen usulan profil sekolah untuk Periode {$post['periode_bln']}/{$post['periode_thn']} dengan status : {$existing_usulan['ket_status_dokumen']}."
+      ];
+    }
+
+    // NORMALISASI DATA DARI V_UKERJA KE FORMAT M_PROFIL
     $cur_user = $this->session->userdata('id_user');
     $data_to_save = [
       'periode_bln' => $post['periode_bln'],
@@ -252,7 +270,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
       'npsn' => null, /* data ini tidak ada di m_ukerja */
       'nss' => null, /* data ini tidak ada di m_ukerja */
       'no_statistik_bangunan' => null, /* data ini tidak ada di m_ukerja */
-      'akreaditasi' => null, /* data ini tidak ada di m_ukerja */
+      'akreditasi' => null, /* data ini tidak ada di m_ukerja */
       'inklusif' => null, /* data ini tidak ada di m_ukerja */
       'alamat' => check_var($data_sekolah, 'alamat_ukerja', null),
       'id_kelurahan' => null, /* data ini tidak ada di m_ukerja */
@@ -280,7 +298,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
       // START DB OPERATION
       $this->db->trans_begin();
 
-      // SIMPAN DATA BASELINE DOKUMEN USULAN KEPSEK BARU
+      // SIMPAN DATA BASELINE DOKUMEN USULAN PROFIL SEKOLAH BARU
       $proc = 1;
       $this->db->insert('r_profil_sekolah', $data_to_save);
       $insert_id = $this->db->insert_id();
@@ -291,7 +309,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
         $cur_user,
         'r_profil_sekolah',
         $insert_id,
-        "Melakukan penambahan usulan profil kepala sekolah dengan data sebagai berikut :\n\n" . format_log_view($data_to_save)
+        "Melakukan penambahan usulan profil sekolah dengan data sebagai berikut :\n\n" . format_log_view($data_to_save)
       );
 
       // BUAT LOG DOKUMEN (HISTORY YG DITAMPILKAN SAAT VERIFIKASI / HALAMAN DETAIL)
@@ -301,7 +319,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
         'id_dokumen' => $insert_id,
         'id_user' => $cur_user,
         'datetime' => em_date('Y-m-d H:i:s'),
-        'message' => "Menambahkan Usulan Profil Sekolah dengan NIP : {$data_to_save['nip']} a/n {$data_to_save['nama']} untuk periode {$data_to_save['periode_bln']}/{$data_to_save['periode_thn']}."
+        'message' => "Menambahkan Usulan Profil Sekolah ({$data_sekolah['ket_ukerja']}) dengan jenjang {$post['jenjang']} untuk periode {$data_to_save['periode_bln']}/{$data_to_save['periode_thn']}."
       ]);
 
       if ($this->db->trans_status() === FALSE) {
@@ -316,7 +334,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
         $this->db->trans_commit();
         return [
           'status' => true,
-          'message' => "Proses tambah usulan profil kepala sekolah berhasil disimpan dengan status DRAFT.",
+          'message' => "Proses tambah usulan profil sekolah berhasil disimpan dengan status DRAFT.",
           'ID' => encrypt_id($insert_id)
         ];
       }
@@ -358,13 +376,18 @@ class Mdl_pdt_profil_sekolah extends CI_Model
     $same_ukerja = ($dataset['kode_ukerja'] == $cur_unor);
     if (!((is_admin() || $same_ukerja))) return [
       'status' => false,
-      'message' => "Maaf, Anda tidak memiliki ijin untuk meng-edit draft dokumen profil kepala sekolah ini."
+      'message' => "Maaf, Anda tidak memiliki ijin untuk meng-edit draft dokumen profil sekolah ini."
     ];
 
     // BANDINGKAN DATA LAMA DENGAN DATA YANG DI POST UTK KEPERLUAN LOG
     $old_data = $dataset;
     $old_data['id_dokumen'] = encrypt_id($old_data['id_dokumen']);
     $new_data = $data;
+
+    // tambah update on dan update by
+    $new_data['update_on'] = em_date('Y-m-d H:i:s');
+    $new_data['update_by'] = $cur_user;
+
     $comparison = get_changed_data($old_data, $new_data);
 
     try {
@@ -385,7 +408,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
           $cur_user,
           'r_profil_sekolah',
           $decryptedID,
-          "Melakukan update data profil kepala sekolah dengan perubahan data sebagai berikut :\n\n" .
+          "Melakukan update data profil sekolah dengan perubahan data sebagai berikut :\n\n" .
             "BEFORE:\n{$before_text}\n\n" .
             "AFTER:\n{$after_text}"
         );
@@ -403,7 +426,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
         $this->db->trans_commit();
         return [
           'status' => true,
-          'message' => "Proses simpan draft profil kepala sekolah berhasil.",
+          'message' => "Proses simpan draft profil sekolah berhasil.",
           'redirect' => 'edit'
         ];
       }
@@ -438,22 +461,34 @@ class Mdl_pdt_profil_sekolah extends CI_Model
     $this->load->library('form_validation');
 
     // Define validation rules
-    $this->form_validation->set_rules('alamat_saat_ini', 'Alamat Saat Ini', 'required');
-    $this->form_validation->set_rules('nuptr', 'NUPTR', 'required');
-    $this->form_validation->set_rules('nurs', 'NURS', 'required');
-    $this->form_validation->set_rules('nrg', 'NRG', 'required');
-    $this->form_validation->set_rules('nik', 'NIK', 'required');
-    $this->form_validation->set_rules('no_sertifikat_pendidik', 'No. Sertifikat Pendidik', 'required');
-    $this->form_validation->set_rules('no_sertifikat_gp', 'No. Sertifikat GP', 'required');
-    $this->form_validation->set_rules('no_sertifikat_crs', 'No. Sertifikat CRS', 'required');
+    $this->form_validation->set_rules('jenjang', 'Jenjang', 'required');
+    $this->form_validation->set_rules('status', 'Status', 'required');
+    $this->form_validation->set_rules('npsn', 'NPSN', 'required');
+    $this->form_validation->set_rules('nss', 'NSS', 'required');
+    $this->form_validation->set_rules('no_statistik_bangunan', 'No. Statistik Bangunan', 'required');
+    $this->form_validation->set_rules('akreditasi', 'Akreaditasi', 'required');
+    $this->form_validation->set_rules('inklusif', 'Inklusif', 'required');
+    $this->form_validation->set_rules('alamat', 'Alamat', 'required');
+    $this->form_validation->set_rules('id_kelurahan', 'Kelurahan', 'required');
+    $this->form_validation->set_rules('id_kecamatan', 'Kecamatan', 'required');
+    $this->form_validation->set_rules('kode_pos', 'Kode POS', 'required');
+    $this->form_validation->set_rules('lat', 'Latitude', 'required');
+    $this->form_validation->set_rules('long', 'Longitude', 'required');
+    $this->form_validation->set_rules('telepon', 'No. Telp', 'required');
+    $this->form_validation->set_rules('website', 'Website', 'required');
+    $this->form_validation->set_rules('email', 'E-mail', 'required');
     $this->form_validation->set_rules('no_rek_bank', 'No. Rekening Bank', 'required');
+    $this->form_validation->set_rules('nama_bank', 'Nama Bank', 'required');
+    $this->form_validation->set_rules('cabang_kcp_unit', 'Cabang KCP Unit', 'required');
+    $this->form_validation->set_rules('nama_wajib_pajak', 'Nama Wajib Pajak', 'required');
     $this->form_validation->set_rules('npwp', 'NPWP', 'required');
-    $this->form_validation->set_rules('menerima_ttp_insentif', 'Menerima TTP Insentif', 'required');
-    $this->form_validation->set_rules('email', 'E-mail', 'required|valid_email');
-    $this->form_validation->set_rules('no_hp', 'No. HP', 'required');
-    $this->form_validation->set_rules('periode_ke', 'Periode Ke', 'required');
-    $this->form_validation->set_rules('masa_penugasan_mulai', 'Masa / Tgl. Penugasan (Mulai)', 'required');
-    $this->form_validation->set_rules('masa_penugasan_selesai', 'Masa / Tgl. Penugasan (Selesai)', 'required');
+    $this->form_validation->set_rules('no_sk_pendirian', 'No. SK Pendirian', 'required');
+    $this->form_validation->set_rules('tgl_sk_pendirian', 'Tgl. SK Pendirian', 'required');
+    $this->form_validation->set_rules('no_sk_izin_operasional', 'No. SK Izin Operasional', 'required');
+    $this->form_validation->set_rules('tgl_sk_izin_operasional', 'Tgl. SK Izin Operasional', 'required');
+    $this->form_validation->set_rules('no_sk_pendirian', 'No. SK Pendirian', 'required');
+    $this->form_validation->set_rules('luas_tanah', 'Luas Tanah', 'required');
+    $this->form_validation->set_rules('kepemilikan_tanah', 'Kepemilikan Tanah', 'required');
 
     // Validate the input data
     if ($this->form_validation->run() === FALSE) {
@@ -495,22 +530,27 @@ class Mdl_pdt_profil_sekolah extends CI_Model
     $same_ukerja = ($dataset['kode_ukerja'] == $cur_unor);
     if (!((is_admin() || $same_ukerja))) return [
       'status' => false,
-      'message' => "Maaf, Anda tidak memiliki ijin untuk submit draft dokumen profil kepala sekolah ini."
+      'message' => "Maaf, Anda tidak memiliki ijin untuk submit draft dokumen profil sekolah ini."
     ];
 
     // BANDINGKAN DATA LAMA DENGAN DATA YANG DI POST UTK KEPERLUAN LOG
     $old_data = $dataset;
     $old_data['id_dokumen'] = encrypt_id($old_data['id_dokumen']);
     $new_data = $data;
+
+    // tambah status baru
+    $new_data['status_dokumen'] = 'VRFDD';
+
+    // tambah update on dan update by
+    $new_data['update_on'] = em_date('Y-m-d H:i:s');
+    $new_data['update_by'] = $cur_user;
+
     $comparison = get_changed_data($old_data, $new_data);
 
     try {
       $this->db->trans_begin();
       // do your db process here
       if (check_var($comparison, 'after')) {
-        // tambah status baru
-        $comparison['after']['status_dokumen'] = 'VRFDD';
-
         // hanya lakukan update apabila ada data yang berubah pada data yang lama
         $proc = 1;
         $this->db->update('r_profil_sekolah', $comparison['after'], [
@@ -525,7 +565,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
           $cur_user,
           'r_profil_sekolah',
           $decryptedID,
-          "Melakukan submit data profil kepala sekolah dengan perubahan data sebagai berikut :\n\n" .
+          "Melakukan submit data profil sekolah dengan perubahan data sebagai berikut :\n\n" .
             "BEFORE:\n{$before_text}\n\n" .
             "AFTER:\n{$after_text}"
         );
@@ -538,7 +578,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
           'id_dokumen' => $decryptedID,
           'id_user' => $cur_user,
           'datetime' => em_date('Y-m-d H:i:s'),
-          'message' => "Melakukan submit pada Usulan Profil Sekolah dengan NIP : {$dataset['nip']} a/n {$dataset['nama']}, untuk periode {$periode_text}."
+          'message' => "Melakukan Submit Usulan Profil Sekolah ({$dataset['ket_ukerja']}) dengan jenjang {$data['jenjang']} untuk periode {$periode_text}."
         ]);
       }
 
@@ -554,7 +594,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
         $this->db->trans_commit();
         return [
           'status' => true,
-          'message' => "Proses submit draft profil kepala sekolah berhasil.",
+          'message' => "Proses submit draft profil sekolah berhasil.",
           'redirect' => 'detail'
         ];
       }
@@ -648,7 +688,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
         $this->db->trans_commit();
         return [
           'status' => true,
-          'message' => "Dokumen usulan profil kepala sekolah berhasil dihapus",
+          'message' => "Dokumen usulan profil sekolah berhasil dihapus",
         ];
       }
     } catch (\Throwable $th) {

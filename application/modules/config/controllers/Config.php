@@ -559,4 +559,92 @@ class Config extends MY_Controller
       ->set_content_type('application/json')
       ->set_output(json_encode($data));
   }
+
+  public function select2_status_sekolah()
+  {
+    // ambil data post
+    $search = post_safe('search');
+    // kondisi where
+    $where_search = ($search != '')
+      ? "AND ket_status_sekolah LIKE '%$search%'"
+      : "";
+    // query searching
+    $result = $this->db->query("SELECT * FROM m_status_sekolah WHERE id_status_sekolah IS NOT NULL $where_search 
+      ORDER BY id_status_sekolah ASC LIMIT 10")->result_array();
+    $data = array();
+    if (check_var($result)) {
+      foreach ($result as $r) {
+        $data[] = array(
+          'id' => $r['id_status_sekolah'],
+          'text' => $r['ket_status_sekolah']
+        );
+      }
+    } else {
+      $data = $result;
+    }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
+  public function select2_kecamatan()
+  {
+    // ambil data post
+    $search = post_safe('search');
+
+    // kondisi where
+    $where_search = ($search != '')
+      ? "AND nama_kecamatan LIKE '%$search%'"
+      : "";
+    // query searching
+    $result = $this->db->query("SELECT * FROM m_kecamatan WHERE id_kecamatan IS NOT NULL $where_search 
+      ORDER BY id_kecamatan ASC LIMIT 10")->result_array();
+    $data = array();
+    if (check_var($result)) {
+      foreach ($result as $r) {
+        $data[] = array(
+          'id' => $r['id_kecamatan'],
+          'text' => $r['nama_kecamatan']
+        );
+      }
+    } else {
+      $data = $result;
+    }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
+  public function select2_kelurahan()
+  {
+    // ambil data post
+    $search = post_safe('search');
+    $id_kecamatan = post_safe('id_kecamatan');
+
+    // kondisi where
+    $where_search = ($search != '')
+      ? "AND nama_kelurahan LIKE '%{$search}%'"
+      : "";
+    $where_kecamatan = (check_var($id_kecamatan))
+      ? "AND id_kelurahan LIKE '{$id_kecamatan}%'"
+      : "";
+
+    // query searching
+    $result = $this->db->query("SELECT * FROM m_kelurahan WHERE id_kelurahan IS NOT NULL $where_search $where_kecamatan 
+      ORDER BY id_kelurahan ASC LIMIT 10")->result_array();
+    $data = array();
+    if (check_var($result)) {
+      foreach ($result as $r) {
+        $data[] = array(
+          'id' => $r['id_kelurahan'],
+          'text' => $r['nama_kelurahan']
+        );
+      }
+    } else {
+      $data = $result;
+    }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
 }
