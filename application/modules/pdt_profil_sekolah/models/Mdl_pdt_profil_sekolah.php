@@ -360,7 +360,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
     $cur_user = $this->session->userdata('id_user');
 
     $decryptedID = decrypt_id($data['id_dokumen']);
-    $dataset = fetch_row_data('vr_profil_sekolah', ['id_dokumen' => $decryptedID], false);
+    $dataset = fetch_row_data('r_profil_sekolah', ['id_dokumen' => $decryptedID], false);
     if ($dataset === false) return [
       'status' => "Maaf, data yang akan di-edit tidak valid lagi."
     ];
@@ -391,6 +391,9 @@ class Mdl_pdt_profil_sekolah extends CI_Model
       if (check_var($comparison, 'after')) {
         // hanya lakukan update apabila ada data yang berubah pada data yang lama
         $proc = 1;
+        // tambah update on dan update by
+        $comparison['after']['update_on'] = em_date('Y-m-d H:i:s');
+        $comparison['after']['update_by'] = $cur_user;
         $this->db->update('r_profil_sekolah', $comparison['after'], [
           'id_dokumen' => $decryptedID
         ]);
@@ -456,22 +459,34 @@ class Mdl_pdt_profil_sekolah extends CI_Model
     $this->load->library('form_validation');
 
     // Define validation rules
-    $this->form_validation->set_rules('alamat_saat_ini', 'Alamat Saat Ini', 'required');
-    $this->form_validation->set_rules('nuptr', 'NUPTR', 'required');
-    $this->form_validation->set_rules('nurs', 'NURS', 'required');
-    $this->form_validation->set_rules('nrg', 'NRG', 'required');
-    $this->form_validation->set_rules('nik', 'NIK', 'required');
-    $this->form_validation->set_rules('no_sertifikat_pendidik', 'No. Sertifikat Pendidik', 'required');
-    $this->form_validation->set_rules('no_sertifikat_gp', 'No. Sertifikat GP', 'required');
-    $this->form_validation->set_rules('no_sertifikat_crs', 'No. Sertifikat CRS', 'required');
+    $this->form_validation->set_rules('jenjang', 'Jenjang', 'required');
+    $this->form_validation->set_rules('status', 'Status', 'required');
+    $this->form_validation->set_rules('npsn', 'NPSN', 'required');
+    $this->form_validation->set_rules('nss', 'NSS', 'required');
+    $this->form_validation->set_rules('no_statistik_bangunan', 'No. Statistik Bangunan', 'required');
+    $this->form_validation->set_rules('akreditasi', 'Akreaditasi', 'required');
+    $this->form_validation->set_rules('inklusif', 'Inklusif', 'required');
+    $this->form_validation->set_rules('alamat', 'Alamat', 'required');
+    $this->form_validation->set_rules('id_kelurahan', 'Kelurahan', 'required');
+    $this->form_validation->set_rules('id_kecamatan', 'Kecamatan', 'required');
+    $this->form_validation->set_rules('kode_pos', 'Kode POS', 'required');
+    $this->form_validation->set_rules('lat', 'Latitude', 'required');
+    $this->form_validation->set_rules('long', 'Longitude', 'required');
+    $this->form_validation->set_rules('telepon', 'No. Telp', 'required');
+    $this->form_validation->set_rules('website', 'Website', 'required');
+    $this->form_validation->set_rules('email', 'E-mail', 'required');
     $this->form_validation->set_rules('no_rek_bank', 'No. Rekening Bank', 'required');
+    $this->form_validation->set_rules('nama_bank', 'Nama Bank', 'required');
+    $this->form_validation->set_rules('cabang_kcp_unit', 'Cabang KCP Unit', 'required');
+    $this->form_validation->set_rules('nama_wajib_pajak', 'Nama Wajib Pajak', 'required');
     $this->form_validation->set_rules('npwp', 'NPWP', 'required');
-    $this->form_validation->set_rules('menerima_ttp_insentif', 'Menerima TTP Insentif', 'required');
-    $this->form_validation->set_rules('email', 'E-mail', 'required|valid_email');
-    $this->form_validation->set_rules('no_hp', 'No. HP', 'required');
-    $this->form_validation->set_rules('periode_ke', 'Periode Ke', 'required');
-    $this->form_validation->set_rules('masa_penugasan_mulai', 'Masa / Tgl. Penugasan (Mulai)', 'required');
-    $this->form_validation->set_rules('masa_penugasan_selesai', 'Masa / Tgl. Penugasan (Selesai)', 'required');
+    $this->form_validation->set_rules('no_sk_pendirian', 'No. SK Pendirian', 'required');
+    $this->form_validation->set_rules('tgl_sk_pendirian', 'Tgl. SK Pendirian', 'required');
+    $this->form_validation->set_rules('no_sk_izin_operasional', 'No. SK Izin Operasional', 'required');
+    $this->form_validation->set_rules('tgl_sk_izin_operasional', 'Tgl. SK Izin Operasional', 'required');
+    $this->form_validation->set_rules('no_sk_pendirian', 'No. SK Pendirian', 'required');
+    $this->form_validation->set_rules('luas_tanah', 'Luas Tanah', 'required');
+    $this->form_validation->set_rules('kepemilikan_tanah', 'Kepemilikan Tanah', 'required');
 
     // Validate the input data
     if ($this->form_validation->run() === FALSE) {
@@ -497,7 +512,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
     $cur_user = $this->session->userdata('id_user');
 
     $decryptedID = decrypt_id($data['id_dokumen']);
-    $dataset = fetch_row_data('vr_profil_sekolah', ['id_dokumen' => $decryptedID], false);
+    $dataset = fetch_row_data('r_profil_sekolah', ['id_dokumen' => $decryptedID], false);
     if ($dataset === false) return [
       'status' => "Maaf, data yang akan di-edit tidak valid lagi."
     ];
@@ -531,6 +546,9 @@ class Mdl_pdt_profil_sekolah extends CI_Model
 
         // hanya lakukan update apabila ada data yang berubah pada data yang lama
         $proc = 1;
+        // tambah update on dan update by
+        $comparison['after']['update_on'] = em_date('Y-m-d H:i:s');
+        $comparison['after']['update_by'] = $cur_user;
         $this->db->update('r_profil_sekolah', $comparison['after'], [
           'id_dokumen' => $decryptedID
         ]);
@@ -556,7 +574,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
           'id_dokumen' => $decryptedID,
           'id_user' => $cur_user,
           'datetime' => em_date('Y-m-d H:i:s'),
-          'message' => "Melakukan submit pada Usulan Profil Sekolah dengan NIP : {$dataset['nip']} a/n {$dataset['nama']}, untuk periode {$periode_text}."
+          'message' => "Melakukan Submit Usulan Profil Sekolah ({$dataset['ket_ukerja']}) dengan jenjang {$data['jenjang']} untuk periode {$periode_text}."
         ]);
       }
 

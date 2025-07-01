@@ -428,13 +428,22 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
               submit.attr('disabled', false);
               if (e.error_value) {
                 $.each(e.error_value, function(field, error) {
-                  const $input = $('#' + field);
-                  const $flatpickrInput = $input.siblings('.flatpickr');
+                  const el_input = $('#' + field);
+                  const wrapper = el_input.closest('.input_block');
+                  const el_flatpickrInput = wrapper.find('.flatpickr');
+                  const el_select2Input = wrapper.find('.select2-selection');
+                  const el_select2Container = wrapper.find('.select2.select2-container');
 
-                  if ($flatpickrInput.length) {
-                    $flatpickrInput.addClass('is-invalid');
+                  // Clear old state (optional but recommended)
+                  wrapper.find('.is-invalid').removeClass('is-invalid');
+
+                  if (el_select2Input.length) {
+                    el_select2Container.addClass('is-invalid');
+                    el_select2Input.addClass('is-invalid');
+                  } else if (el_flatpickrInput.length) {
+                    el_flatpickrInput.addClass('is-invalid');
                   } else {
-                    $input.addClass('is-invalid');
+                    el_input.addClass('is-invalid');
                   }
 
                   $('#error_' + field).html(error); // Display message
@@ -465,14 +474,19 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
         }
       },
       highlight: function(element) {
-        $(element).addClass('is-invalid').removeClass('mv-valid');
+        $(element).addClass('is-invalid');
       },
 
       unhighlight: function(element) {
-        $(element).removeClass('is-invalid').addClass('mv-valid');
         // Clear error text if valid
-        $(element).closest('input, select, textarea').removeClass('is-invalid');
-        $('.invalid-feedback').html('');
+        $(element).removeClass('is-invalid');
+        let closest = $(element).closest('.input_block');
+        closest.find('input, textarea, select').removeClass('is-invalid');
+        closest.find('.select2-selection').removeClass('is-invalid');
+        closest.find('.select2-container').removeClass('is-invalid');
+
+        const fieldId = $el.attr('id');
+        $('#error_' + fieldId).html('');
       },
       messages: {
         // NUPTR: {

@@ -321,3 +321,7 @@ a.badge.text-white {
 		position: relative;
 	}
 }
+
+.select2-selection.is-invalid {
+	border: 1px solid #fc4b6c;
+}

@@ -271,4 +271,8 @@ a.badge.text-white:hover {
 }
 .row_riwayat_dokumen [class*=col-] {
   position: relative;
+}
+
+.select2-selection.is-invalid {
+  border: 1px solid #fc4b6c;
 }/*# sourceMappingURL=style.css.map */

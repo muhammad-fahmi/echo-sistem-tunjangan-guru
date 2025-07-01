@@ -390,6 +390,9 @@ class Mdl_pdt_profil_kepsek extends CI_Model
       if (check_var($comparison, 'after')) {
         // hanya lakukan update apabila ada data yang berubah pada data yang lama
         $proc = 1;
+        // tambah update on dan update by
+        $comparison['after']['update_on'] = em_date('Y-m-d H:i:s');
+        $comparison['after']['update_by'] = $cur_user;
         $this->db->update('r_profil_kepsek', $comparison['after'], [
           'id_dokumen' => $decryptedID
         ]);

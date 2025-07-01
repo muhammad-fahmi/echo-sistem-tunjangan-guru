@@ -112,7 +112,6 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
     <div class="col-12">
       <form id="form_edit_profil_sekolah" action="<?= site_url('pdt_profil_sekolah/edit') ?>" method="POST">
         <input type="hidden" name="id_dokumen" value="<?= check_var($data, 'id_dokumen', '') ?>">
-        <input type="hidden" name="nip" value="<?= check_var($data, 'nip', '') ?>">
 
         <div class="card">
           <div class="card-body">
@@ -144,11 +143,12 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                         <?php
                         $arr_jenjang = ['TK', 'SD', 'SMP'];
                         foreach ($arr_jenjang as $value) {
-                          $selected = ($value == $data['status_sekolah']) ? 'selected' : '';
+                          $selected = ($value == $data['jenjang']) ? 'selected' : '';
                           echo '<option value="' . $value . '" ' . $selected . '>' . $value . '</option>';
                         }
                         ?>
                       </select>
+                      <div class="invalid-feedback" id="error_jenjang"></div>
                     </div>
                   </div>
 
@@ -161,6 +161,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                           ? '<option value="' . $data['status_sekolah'] . '" selected>' . $data['ket_status_sekolah'] . '</option>'
                           : '' ?>
                       </select>
+                      <div class="invalid-feedback" id="error_status"></div>
                     </div>
                   </div>
 
@@ -168,6 +169,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="npsn">NPSN</label>
                       <input id="npsn" name="npsn" type="text" class="form-control" value="<?= check_var($data, 'npsn', '') ?>">
+                      <div class="invalid-feedback" id="error_npsn"></div>
                     </div>
                   </div>
 
@@ -175,6 +177,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="nss">NSS</label>
                       <input id="nss" name="nss" type="text" class="form-control" value="<?= check_var($data, 'nss', '') ?>">
+                      <div class="invalid-feedback" id="error_nss"></div>
                     </div>
                   </div>
 
@@ -182,6 +185,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="no_statistik_bangunan">No. Statistik Bangunan</label>
                       <input id="no_statistik_bangunan" name="no_statistik_bangunan" type="text" class="form-control" value="<?= check_var($data, 'no_statistik_bangunan', '') ?>">
+                      <div class="invalid-feedback" id="error_no_statistik_bangunan"></div>
                     </div>
                   </div>
 
@@ -189,6 +193,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="akreditasi">Akreditasi</label>
                       <input id="akreditasi" name="akreditasi" type="text" class="form-control" value="<?= check_var($data, 'akreditasi', '') ?>">
+                      <div class="invalid-feedback" id="error_akreditasi"></div>
                     </div>
                   </div>
 
@@ -200,6 +205,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                         <option value="1" <?= (check_var($data, 'inklusif', '') == '1') ? 'selected' : '' ?>>Ya, Sekolah ini Inklusif</option>
                         <option value="0" <?= (check_var($data, 'inklusif', '') == '0') ? 'selected' : '' ?>>Tidak, Sekolah ini tidak Inklusif</option>
                       </select>
+                      <div class="invalid-feedback" id="error_inklusif"></div>
                     </div>
                   </div>
 
@@ -207,6 +213,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="alamat">Alamat</label>
                       <textarea id="alamat" name="alamat" rows="3" class="form-control"><?= check_var($data, 'alamat', '') ?></textarea>
+                      <div class="invalid-feedback" id="error_alamat"></div>
                     </div>
                   </div>
 
@@ -219,6 +226,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                           ? '<option value="' . $data['id_kecamatan'] . '" selected>' . $data['nama_kecamatan'] . '</option>'
                           : '' ?>
                       </select>
+                      <div class="invalid-feedback" id="error_id_kecamatan"></div>
                     </div>
                   </div>
 
@@ -231,6 +239,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                           ? '<option value="' . $data['id_kelurahan'] . '" selected>' . $data['nama_kelurahan'] . '</option>'
                           : '' ?>
                       </select>
+                      <div class="invalid-feedback" id="error_id_kelurahan"></div>
                     </div>
                   </div>
 
@@ -238,17 +247,32 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="kode_pos">Kode POS</label>
                       <input id="kode_pos" name="kode_pos" type="text" class="form-control" value="<?= check_var($data, 'kode_pos', '') ?>">
+                      <div class="invalid-feedback" id="error_kode_pos"></div>
                     </div>
                   </div>
 
                   <div class="col-12">
                     <div class="input_block">
                       <label for="map_location">Lokasi pada MAP</label>
-                      <input type="hidden" id="lat" name="lat" value="<?= check_var($data, 'lat', '') ?>">
-                      <input type="hidden" id="long" name="long" value="<?= check_var($data, 'long', '') ?>">
                       <div style="display: block; position: relative; width: calc(100% - 40px);">
                         <div id="map_location" style="height: 500px; z-index: 1;"></div>
                       </div>
+                    </div>
+                  </div>
+
+                  <div class="col-6">
+                    <div class="input_block">
+                      <label for="lat">Latitude</label>
+                      <input type="text" id="lat" name="lat" class="form-control" value="<?= check_var($data, 'lat', '') ?>" readonly>
+                      <div class="invalid-feedback" id="error_lat"></div>
+                    </div>
+                  </div>
+
+                  <div class="col-6">
+                    <div class="input_block">
+                      <label for="long">Longitude</label>
+                      <input type="text" id="long" name="long" class="form-control" value="<?= check_var($data, 'long', '') ?>" readonly>
+                      <div class="invalid-feedback" id="error_long"></div>
                     </div>
                   </div>
 
@@ -256,6 +280,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="telepon">No. Telepon</label>
                       <input id="telepon" name="telepon" type="text" class="form-control" value="<?= check_var($data, 'telepon', '') ?>">
+                      <div class="invalid-feedback" id="error_telepon"></div>
                     </div>
                   </div>
 
@@ -263,6 +288,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="website">Website</label>
                       <input id="website" name="website" type="text" class="form-control" value="<?= check_var($data, 'website', '') ?>">
+                      <div class="invalid-feedback" id="error_website"></div>
                     </div>
                   </div>
 
@@ -270,6 +296,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="email">E-mail</label>
                       <input id="email" name="email" type="text" class="form-control" value="<?= check_var($data, 'email', '') ?>">
+                      <div class="invalid-feedback" id="error_email"></div>
                     </div>
                   </div>
 
@@ -277,6 +304,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="no_rek_bank">No. Rekening Bank</label>
                       <input id="no_rek_bank" name="no_rek_bank" type="text" class="form-control" value="<?= check_var($data, 'no_rek_bank', '') ?>">
+                      <div class="invalid-feedback" id="error_no_rek_bank"></div>
                     </div>
                   </div>
 
@@ -284,6 +312,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="nama_bank">Nama Bank</label>
                       <input id="nama_bank" name="nama_bank" type="text" class="form-control" value="<?= check_var($data, 'nama_bank', '') ?>">
+                      <div class="invalid-feedback" id="error_nama_bank"></div>
                     </div>
                   </div>
 
@@ -291,6 +320,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="cabang_kcp_unit">Cabang KCP Unit</label>
                       <input id="cabang_kcp_unit" name="cabang_kcp_unit" type="text" class="form-control" value="<?= check_var($data, 'cabang_kcp_unit', '') ?>">
+                      <div class="invalid-feedback" id="error_cabang_kcp_unit"></div>
                     </div>
                   </div>
 
@@ -298,6 +328,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="nama_wajib_pajak">Nama Wajib Pajak</label>
                       <input id="nama_wajib_pajak" name="nama_wajib_pajak" type="text" class="form-control" value="<?= check_var($data, 'nama_wajib_pajak', '') ?>">
+                      <div class="invalid-feedback" id="error_nama_wajib_pajak"></div>
                     </div>
                   </div>
 
@@ -305,6 +336,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="npwp">NPWP</label>
                       <input id="npwp" name="npwp" type="text" class="form-control" value="<?= check_var($data, 'npwp', '') ?>">
+                      <div class="invalid-feedback" id="error_npwp"></div>
                     </div>
                   </div>
 
@@ -312,6 +344,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="no_sk_pendirian">No. SK Pendirian</label>
                       <input id="no_sk_pendirian" name="no_sk_pendirian" type="text" class="form-control" value="<?= check_var($data, 'no_sk_pendirian', '') ?>">
+                      <div class="invalid-feedback" id="error_no_sk_pendirian"></div>
                     </div>
                   </div>
 
@@ -319,6 +352,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="tgl_sk_pendirian">Tgl. SK Pendirian</label>
                       <input id="tgl_sk_pendirian" name="tgl_sk_pendirian" type="text" class="form-control flatpickr" value="<?= check_var($data, 'tgl_sk_pendirian', '') ?>">
+                      <div class="invalid-feedback" id="error_tgl_sk_pendirian"></div>
                     </div>
                   </div>
 
@@ -326,6 +360,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="no_sk_izin_operasional">No. SK Izin Operasional</label>
                       <input id="no_sk_izin_operasional" name="no_sk_izin_operasional" type="text" class="form-control" value="<?= check_var($data, 'no_sk_izin_operasional', '') ?>">
+                      <div class="invalid-feedback" id="error_no_sk_izin_operasional"></div>
                     </div>
                   </div>
 
@@ -333,6 +368,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="tgl_sk_izin_operasional">Tgl. SK Izin Operasional</label>
                       <input id="tgl_sk_izin_operasional" name="tgl_sk_izin_operasional" type="text" class="form-control flatpickr" value="<?= check_var($data, 'tgl_sk_izin_operasional', '') ?>">
+                      <div class="invalid-feedback" id="error_tgl_sk_izin_operasional"></div>
                     </div>
                   </div>
 
@@ -340,6 +376,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="input_block">
                       <label for="luas_tanah">Luas Tanah</label>
                       <input id="luas_tanah" name="luas_tanah" type="text" class="form-control" value="<?= check_var($data, 'luas_tanah', '') ?>">
+                      <div class="invalid-feedback" id="error_luas_tanah"></div>
                     </div>
                   </div>
 
@@ -355,6 +392,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                         <option value="SEWA" <?= ($kptn == 'SEWA') ? 'selected' : '' ?>>Sewa</option>
                         <option value="PINJAM" <?= ($kptn == 'PINJAM') ? 'selected' : '' ?>>Pinjam</option>
                       </select>
+                      <div class="invalid-feedback" id="error_kepemilikan_tanah"></div>
                     </div>
                   </div>
 
@@ -449,6 +487,12 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
     );
   }, 100);
 
+  setTimeout(() => {
+    $('.select2-hidden-accessible').on('change', function() {
+      $(this).valid();
+    });
+  }, 150);
+
   /// |----------------------------------------
   /// | FORM ACTION
   /// |----------------------------------------
@@ -468,6 +512,9 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
   /// | DOCUMENT READY
   /// |----------------------------------------
   $(document).ready(function() {
+    /// |----------------------------------------
+    /// | FORM SUBMISSION
+    /// |----------------------------------------
     $('#form_edit_profil_sekolah').on('keydown', function(e) {
       if (e.key === 'Enter') {
         // prevent Enter key from triggering form submission
@@ -478,7 +525,6 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
       }
     });
 
-    // do something on document ready
     $('#form_edit_profil_sekolah').validate($.extend({
       submitHandler: function(form, event) {
         // declare element that will be affected
@@ -504,15 +550,25 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
               // what to do when the response status = false
               show_notify('error', e.message);
               submit.attr('disabled', false);
+
+              // reset error
+              $('#form_edit_profil_sekolah .is-invalid').removeClass('is-invalid');
+              $('#form_edit_profil_sekolah .invalid-feedback').html('');
+
               if (e.error_value) {
                 $.each(e.error_value, function(field, error) {
-                  const $input = $('#' + field);
-                  const $flatpickrInput = $input.siblings('.flatpickr');
+                  const el_input = $('#' + field);
+                  const wrapper = el_input.closest('.input_block');
+                  const el_flatpickrInput = wrapper.find('.flatpickr');
+                  const el_select2Input = wrapper.find('.select2-selection');
+                  const el_select2Container = wrapper.find('.select2.select2-container');
 
-                  if ($flatpickrInput.length) {
-                    $flatpickrInput.addClass('is-invalid');
-                  } else {
-                    $input.addClass('is-invalid');
+                  el_input.addClass('is-invalid');
+                  if (el_select2Input.length) {
+                    el_select2Container.addClass('is-invalid');
+                    el_select2Input.addClass('is-invalid');
+                  } else if (el_flatpickrInput.length) {
+                    el_flatpickrInput.addClass('is-invalid');
                   }
 
                   $('#error_' + field).html(error); // Display message
@@ -543,14 +599,14 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
         }
       },
       highlight: function(element) {
-        $(element).addClass('is-invalid').removeClass('mv-valid');
+        $(element).addClass('is-invalid');
       },
 
       unhighlight: function(element) {
-        $(element).removeClass('is-invalid').addClass('mv-valid');
-        // Clear error text if valid
-        $(element).closest('input, select, textarea').removeClass('is-invalid');
-        $('.invalid-feedback').html('');
+        const $el = $(element);
+        const closest = $el.closest('.input_block');
+        closest.find('.is-invalid').removeClass('is-invalid');
+        $('#error_' + $el.attr('id')).html('');
       },
       messages: {
         // NUPTR: {
@@ -575,7 +631,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
     let lng = $('#long').val() || defaultLng;
 
     // Init map
-    const map = L.map('map_location').setView([lat, lng], 16);
+    const map = L.map('map_location').setView([lat, lng], 17);
 
     // STADIAMAPS
     // L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
@@ -584,21 +640,21 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
     // }).addTo(map);
 
     // CARTO VOYAGER
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://carto.com/">CARTO</a> © OpenStreetMap contributors',
-      subdomains: 'abcd',
-      maxZoom: 20
-    }).addTo(map);
+    // L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    //   attribution: '&copy; <a href="https://carto.com/">CARTO</a> © OpenStreetMap contributors',
+    //   subdomains: 'abcd',
+    //   maxZoom: 20
+    // }).addTo(map);
 
     // OPEN STREET MAP
-    // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    //   attribution: '&copy; OpenStreetMap contributors',
-    //   maxZoom: 19
-    // }).addTo(map);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+      maxZoom: 19
+    }).addTo(map);
 
     // Marker
     let marker = L.marker([lat, lng], {
-      draggable: true
+      draggable: false
     }).addTo(map);
 
     // Update hidden fields on click
@@ -608,8 +664,8 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
         lng
       } = e.latlng;
       marker.setLatLng([lat, lng]); // move marker
-      $('#lat').val(lat);
-      $('#long').val(lng);
+      $('#lat').val(lat).valid();
+      $('#long').val(lng).valid();
     });
 
     // add search control to the map using leaflet-control-geocoder
