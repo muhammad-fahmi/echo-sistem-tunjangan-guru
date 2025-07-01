@@ -905,7 +905,7 @@ function menu_loader($echo = true)
           $html .= '<li class="bz_sidebar_item parent_item ' . $v['id_menu'] . ' ' . $parent_active . '">
             <a class="sidebar_link" href="javascript:void(0)" aria-expanded="' . $a_expand . '">
               <div class="icon"><i class="' . $icon . '"></i></div>
-              <div class="menu_title">
+              <div class="hide-menu">
                 <div class="main">' . check_var($v, 'menu_title', 'UNKNOWN') . '<i class="dropdown-arrow dropdown-arrow-' . $v['id_menu'] . ' fas fa-chevron-down"></i></div>
                 ' . $subs . '
               </div>
@@ -927,7 +927,7 @@ function menu_loader($echo = true)
         $html .= '<li class="bz_sidebar_item ' . $v['id_menu'] . ' ' . $active . '">
             <a ' . $href . ' ' . $onclick . ' class="sidebar_link">
               <div class="icon"><i class="' . $icon . '"></i></div>
-              <div class="menu_title">
+              <div class="hide-menu">
                 <div class="main">' . check_var($v, 'menu_title', 'UNKNOWN') . '</div>
                 ' . $subs . '
               </div>
