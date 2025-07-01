@@ -6,9 +6,9 @@
 </div>
 <div class="modal-body">
 
-  <form id="savePesertaDidik" action="<?= site_url('pdt_peserta_didik/save'); ?>" method="POST" enctype="multipart/form-data">
-    <input type="hidden" name="type" value="<?= $data['type'] ?>">
-    <input type="hidden" name="id_siswa" value="<?= $data['id_siswa'] ?>">
+  <form id="savePesertaDidik" action="<?= site_url('pdt_peserta_didik/save'); ?>" method="POST">
+    <input type="hidden" name="type" value="<?= $data['type']; ?>">
+    <input type="hidden" name="id_siswa" value="<?= $data['id_siswa']; ?>">
 
     <div class="row g-2">
       <div class="card bg-primary p-3 m-0">

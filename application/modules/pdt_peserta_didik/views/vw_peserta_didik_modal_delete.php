@@ -20,47 +20,47 @@
           <tr>
             <td style="min-width: 120px;">NISN</td>
             <td style="min-width: 10px;">:</td>
-            <td style="width: 100%;"><?= $data['nisn'] ?></td>
+            <td style="width: 100%;"><?= check_var($data, 'nisn', '-') ?></td>
           </tr>
           <tr>
             <td style="min-width: 120px;">Nama Lengkap</td>
             <td style="min-width: 10px;">:</td>
-            <td style="width: 100%;"><?= $data['nama'] ?></td>
+            <td style="width: 100%;"><?= check_var($data, 'nama', '-') ?></td>
           </tr>
           <tr>
             <td style="min-width: 120px;">NIK</td>
             <td style="min-width: 10px;">:</td>
-            <td style="width: 100%;"><?= $data['nik'] ?></td>
+            <td style="width: 100%;"><?= check_var($data, 'nik', '-') ?></td>
           </tr>
           <tr>
             <td style="min-width: 120px;">Jenis Kelamin</td>
             <td style="min-width: 10px;">:</td>
-            <td style="width: 100%;"><?= $data['jenis_kelamin'] ?></td>
+            <td style="width: 100%;"><?= check_var($data, 'ket_jns_kelamin', '-') ?></td>
           </tr>
           <tr>
             <td style="min-width: 120px;">Agama</td>
             <td style="min-width: 10px;">:</td>
-            <td style="width: 100%;"><?= $data['kode_agama'] ?></td>
+            <td style="width: 100%;"><?= check_var($data, 'ket_agama', '-') ?></td>
           </tr>
           <tr>
             <td style="min-width: 120px;">Nama Ibu</td>
             <td style="min-width: 10px;">:</td>
-            <td style="width: 100%;"><?= $data['nama_ibu'] ?></td>
+            <td style="width: 100%;"><?= check_var($data, 'nama_ibu', '-') ?></td>
           </tr>
           <tr>
             <td style="min-width: 120px;">No. KK</td>
             <td style="min-width: 10px;">:</td>
-            <td style="width: 100%;"><?= $data['no_kk'] ?></td>
+            <td style="width: 100%;"><?= check_var($data, 'no_kk', '-') ?></td>
           </tr>
           <tr>
             <td style="min-width: 120px;">Alamat</td>
             <td style="min-width: 10px;">:</td>
-            <td style="width: 100%;"><?= $data['alamat'] ?></td>
+            <td style="width: 100%;"><?= check_var($data, 'alamat', '-') ?></td>
           </tr>
           <tr>
             <td style="min-width: 120px;">Penyandang Disabilitas</td>
             <td style="min-width: 10px;">:</td>
-            <td style="width: 100%;"><?= $data['pdpd'] ?></td>
+            <td style="width: 100%;"><?= check_var($data, 'pdpd', '-') ?></td>
           </tr>
         </table>
       </div>

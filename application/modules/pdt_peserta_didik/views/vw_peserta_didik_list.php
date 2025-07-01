@@ -174,7 +174,7 @@
         }
       },
       {
-        data: 'jenis_kelamin',
+        data: 'ket_jns_kelamin',
         orderable: false,
         className: '',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -182,7 +182,7 @@
         }
       },
       {
-        data: 'kode_agama',
+        data: 'ket_agama',
         orderable: false,
         className: '',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -202,7 +202,10 @@
         orderable: false,
         className: '',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
+          let status_siswa = (cellData == '1') ?
+            '<div class="badge bg-success text-center p-2">Aktif</div>' :
+            '<div class="badge bg-secondary text-center p-2">Non-Aktif</div>'
+          $(td).html('<div class="text-center">' + status_siswa + '</div>');
         }
       },
       {
@@ -211,11 +214,11 @@
         className: '',
         createdCell: function(td, cellData, rowData, row, col) {
           let kewenangan_user = '<?= $this->session->userdata('kewenangan'); ?>';
-          let btn_edit = '<div onclick="modal(`' + cellData + '`, `edit_peserta_didik`)" class="badge bg-primary clickable me-1" title="Edit">' +
+          let btn_edit = '<div onclick="modal(`' + cellData + '`, `edit_peserta_didik`)" class="badge bg-primary clickable me-1 py-2" title="Edit">' +
             '<i class="fas fa-edit"></i></div>';
 
           let btn_delete = (kewenangan_user == '00') ?
-            '<div onclick="modal(`' + cellData + '`, `hapus_peserta_didik`)" class="badge bg-danger clickable" title="Hapus">' +
+            '<div onclick="modal(`' + cellData + '`, `delete_peserta_didik`)" class="badge bg-danger clickable py-2" title="Hapus">' +
             '<i class="fas fa-trash"></i></div>' :
             '';
 

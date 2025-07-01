@@ -59,7 +59,7 @@ class Pdt_peserta_didik extends MY_Controller
   public function modal()
   {
     $type = $this->input->post('type');
-    $id = $this->input->post('id_siswa');
+    $id = $this->input->post('id');
 
     /// |----------------------------------------
     /// | DEFAULT VALUE
@@ -78,6 +78,7 @@ class Pdt_peserta_didik extends MY_Controller
           /// | INSERT DATA
           /// |----------------------------------------
           $dataset = [
+            // 'id_siswa' => $this->mdl_peserta_didik->generate_id_siswa(),
             'id_siswa' => '',
             'nama' => '',
             'nisn' => '',
@@ -105,7 +106,7 @@ class Pdt_peserta_didik extends MY_Controller
           /// |----------------------------------------
           /// | EDIT DATA
           /// |----------------------------------------
-          $dataset = $this->mdl_peserta_didik->get('progurinda_r_siswa', "id_siswa = '$id'");
+          $dataset = $this->mdl_peserta_didik->get('v_progurinda_siswa', "id_siswa = '$id'");
           $data = [
             'modal_title' => "Edit Peserta Didik",
             'data' => $dataset,
@@ -121,7 +122,7 @@ class Pdt_peserta_didik extends MY_Controller
           /// |----------------------------------------
           /// | DELETE DATA
           /// |----------------------------------------
-          $dataset = $this->mdl_peserta_didik->get('progurinda_r_siswa', "id_siswa = '$id'");
+          $dataset = $this->mdl_peserta_didik->get('v_progurinda_siswa', "id_siswa = '$id'");
           if (isset_nn_nes($dataset)) {
             $data = [
               'modal_title' => "Hapus Peserta Didik",
@@ -152,13 +153,15 @@ class Pdt_peserta_didik extends MY_Controller
     /// |----------------------------------------
     $post = $this->input->post();
 
-    /// |----------------------------------------
-    /// | CEK JIKA ID_SISWA EXIST
-    /// |----------------------------------------
-    $id_siswa_exist = empty($post['id_siswa']) ? $this->mdl_peserta_didik->generate_id_siswa() : $post['id_siswa'];
+    // Cek jika id_siswa sudah terdaftar didalam DB
+    // $is_siswa_exist = fetch_row_data('v_progurinda_siswa', ['id_siswa' => $post['id_siswa']], false);
+    // if (!$is_siswa_exist) return [
+    //   'status' => false,
+    //   'message' => 'Maaf, Peserta Didik (Siswa) sudah terdaftar dalam database.'
+    // ];
 
     $data_to_save = array(
-      'id_siswa' => $id_siswa_exist,
+      'id_siswa' => $post['id_siswa'],
       'nama' => $post['nama'],
       'nisn' => $post['nisn'],
       'nik' => $post['nik'],
