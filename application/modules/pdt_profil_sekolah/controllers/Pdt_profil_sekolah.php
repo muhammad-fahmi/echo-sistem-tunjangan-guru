@@ -74,11 +74,20 @@ class Pdt_profil_sekolah extends MY_Controller
   public function detail($encryptedID = '')
   {
     $decryptedID = decrypt_id(sanitize_string($encryptedID));
+    $cur_unor = $this->session->userdata('kode_unor');
 
     // CEK VALIDASI DATA
     $dataset = fetch_row_data('vr_profil_sekolah', ['id_dokumen' => $decryptedID], false);
     if ($dataset == false) {
       $this->session->set_userdata('flash_data', "Maaf, data dokumen usulan Profil Sekolah yang akan dilihat detailnya tidak valid.");
+      redirect(site_url('pdt_profil_sekolah'));
+      return;
+    }
+
+    // CEK PERM
+    $same_ukerja = ($dataset['kode_ukerja'] == $cur_unor);
+    if (!is_admin() && !$same_ukerja) {
+      $this->session->set_userdata('flash_data', "Maaf, Anda tidak memiliki ijin untuk melihat data Profil Sekolah tersebut.");
       redirect(site_url('pdt_profil_sekolah'));
       return;
     }
@@ -90,6 +99,39 @@ class Pdt_profil_sekolah extends MY_Controller
       'page_title' => "Detail Usulan Profil | PROGURINDA",
       'module' => "pdt_profil_sekolah",
       'view' => 'vw_detail_profil_sekolah',
+      'data' => $dataset
+    );
+    echo Modules::run('layout/backend', $data);
+  }
+
+  public function detail_master($kode_ukerja = '')
+  {
+    $kode_ukerja = sanitize_string($kode_ukerja);
+    $cur_unor = $this->session->userdata('kode_unor');
+
+    // CEK VALIDASI DATA
+    $dataset = fetch_row_data('vm_profil_sekolah', ['kode_ukerja' => $kode_ukerja], false);
+    if ($dataset == false) {
+      $this->session->set_userdata('flash_data', "Maaf, data Profil Sekolah yang akan dilihat detailnya tidak valid.");
+      redirect(site_url('pdt_profil_sekolah'));
+      return;
+    }
+
+    // CEK PERM
+    $same_ukerja = ($dataset['kode_ukerja'] == $cur_unor);
+    if (!is_admin() && !$same_ukerja) {
+      $this->session->set_userdata('flash_data', "Maaf, Anda tidak memiliki ijin untuk melihat data Profil Sekolah tersebut.");
+      redirect(site_url('pdt_profil_sekolah'));
+      return;
+    }
+
+    $dataset['id_dokumen'] = encrypt_id($dataset['id_dokumen']);
+    $dataset['id_kepsek'] = encrypt_id($dataset['id_kepsek']);
+
+    $data = array(
+      'page_title' => "Detail Profil | PROGURINDA",
+      'module' => "pdt_profil_sekolah",
+      'view' => 'vw_detail_master_profil_sekolah',
       'data' => $dataset
     );
     echo Modules::run('layout/backend', $data);
@@ -259,7 +301,7 @@ class Pdt_profil_sekolah extends MY_Controller
             'message' => 'invalid permissions'
           ], 403);
 
-          $dataset = fetch_row_data('vm_profil_sekolah', ['id_kepsek' => $id], false);
+          $dataset = fetch_row_data('vm_profil_sekolah', ['kode_ukerja' => $id], false);
 
           // VALIDASI DATA PROFIL EXISTING
           if ($dataset === false) return output_json([
@@ -267,29 +309,9 @@ class Pdt_profil_sekolah extends MY_Controller
             'message' => "Maaf, data Profil Sekolah yang akan di-update tidak valid lagi."
           ]);
 
-          // VALIDASI DATA USULAN UPDATE YANG MASIH ONGOING
-          $data_ongoing = fetch_row_data(
-            'vr_profil_sekolah',
-            "`id_kepsek` = '$id' AND (" .
-              "`status_dokumen` <> 'DITRM' AND " .
-              "`status_dokumen` <> 'DITLK'" .
-              ")",
-            false
-          );
-
-          if ($data_ongoing !== false) return output_json([
-            'status' => false,
-            'message' => "Maaf, tidak bisa mengajukan usulan update lagi karena masih ada dokumen usulan update yang belum selesai prosesnya.<ul class=\"mb-0\">" .
-              "<li>Nama: " . check_var($data_ongoing, 'nama', '-') . "</li>" .
-              "<li>NIP: " . check_var($data_ongoing, 'nip', '-') . "</li>" .
-              "<li>Periode: " . check_var($data_ongoing, 'periode_bln', '00') . "/" . check_var($data_ongoing, 'periode_thn', '0000') . "</li>" .
-              "<li>Status: " . check_var($data_ongoing, 'ket_status_dokumen', '-') . "</li>" .
-              "</ul>"
-          ]);
-
           // LOAD VIEW
           $sent_data = [
-            'modal_title' => '',
+            'modal_title' => 'Update Profil Sekolah',
             'type' => 'update',
             'data' => $dataset
           ];
@@ -353,6 +375,30 @@ class Pdt_profil_sekolah extends MY_Controller
     }
 
     return output_json($response);
+  }
+
+  public function update()
+  {
+    // CHECK PERMISSION
+    if (!check_perm('update', 'PDT_ProfilSekolah')) return output_json([
+      'status' => false,
+      'message' => 'invalid permissions'
+    ], 403);
+
+    $post = post_safe();
+
+    $response = $this->mdl_profsekolah->update_profil_sekolah($post);
+
+    return output_json($response);
+
+    // DEBUG
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode([
+        'status' => false,
+        'message' => "DEBUG update existing m_profil_sekolah",
+        'data' => $post
+      ]));
   }
 
   public function delete()

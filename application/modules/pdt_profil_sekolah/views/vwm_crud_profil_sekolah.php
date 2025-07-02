@@ -180,15 +180,118 @@ switch ($type) {
 
   case 'update': {
     ?>
-      <div class="modal-header d-flex align-items-center">
-        <div>
-          <h3 class="mb-0"><?= $modal_title ?></h3>
+      <form id="form_update_usulan_profil_sekolah" action="<?= site_url('pdt_profil_sekolah/update') ?>" method="POST">
+        <input type="hidden" name="type" value="<?= $type ?>">
+
+        <div class="modal-header d-flex align-items-center">
+          <div>
+            <h3 class="mb-0"><?= $modal_title ?></h3>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body"></div>
+        <div class="modal-body">
+          <div class="row g-2">
+
+            <div class="col-12">
+              <div class="input_block">
+                <label for="jenjang">Jenjang</label>
+                <div class="form-control"><?= check_var($data, 'jenjang', '-') ?></div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="input_block">
+                <label for="kode_ukerja">Nama Sekolah</label>
+                <input type="hidden" name="kode_ukerja" value="<?= check_var($data, 'kode_ukerja', '') ?>">
+                <div class="form-control"><?= check_var($data, 'ket_ukerja', '-') ?></div>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <?php
+              $array_bulan = array_periode_bulan();
+              ?>
+              <div class="input_block">
+                <label for="periode_bln">Periode (Bulan)</label>
+                <select name="periode_bln" id="periode_bln" class="form-select">
+                  <option value="" default>- Bulan -</option>
+                  <?php
+                  foreach ($array_bulan as $key => $value) {
+                    $selected = (em_date('m') == $key) ? 'selected default' : '';
+                    echo '<option value="' .  $key . '" ' . $selected . '>' . $value . '</option>';
+                  }
+                  ?>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="input_block">
+                <label for="periode_thn">Periode (Tahun)</label>
+                <input name="periode_thn" id="periode_thn" type="number" step="1" min="1" class="form-control" placeholder="- Tahun -" value="<?= em_date('Y') ?>">
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <div class="text-end">
+            <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-undo-alt me-1"></i>Batal</button>
+            <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-edit me-1"></i>Update</button>
+          </div>
+        </div>
+
+      </form>
       <script>
         // UPDATE TYPE SCRIPT
+        $(document).ready(function() {
+          $('#form_update_usulan_profil_sekolah').validate($.extend({
+            submitHandler: function(form, event) {
+              var submit = $('[type="submit"]');
+              submit.attr('disabled', true);
+              $(form).ajaxSubmit({
+                success: function(e) {
+                  if (e.status) {
+                    show_notify('success', e.message);
+                    reload_r_profil_table();
+                    setTimeout(() => {
+                      $('#whole_modal_id').modal('hide');
+                    }, 500);
+                  } else {
+                    show_notify('error', e.message);
+                    submit.attr('disabled', false);
+                  }
+                },
+                error: function(xhr, status, error) {
+                  show_notify('error', xhr.status + ' : ' + error);
+                  submit.attr('disabled', false);
+                },
+                dataType: 'json'
+              });
+            },
+            rules: {
+              input_name_rules: {
+                required: true
+              },
+            },
+            errorClass: 'is-invalid',
+            validClass: 'mv-valid',
+            /* if there's select2 element, please use this errorPlacement */
+            errorPlacement: function(error, element) {
+              if (element.hasClass('select2') && element.next('.select2-container').length) {
+                error.insertAfter(element.next('.select2-container'));
+              } else {
+                error.insertAfter(element);
+              }
+            },
+            messages: {
+              input_name_rules: {
+                required: "custom_error_message",
+              }
+            },
+          }));
+        });
       </script>
     <?php
       break;

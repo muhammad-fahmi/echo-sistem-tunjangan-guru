@@ -254,29 +254,9 @@ class Pdt_profil_kepsek extends MY_Controller
             'message' => "Maaf, data profil kepala sekolah yang akan di-update tidak valid lagi."
           ]);
 
-          // VALIDASI DATA USULAN UPDATE YANG MASIH ONGOING
-          $data_ongoing = fetch_row_data(
-            'vr_profil_kepsek',
-            "`id_kepsek` = '$id' AND (" .
-              "`status_dokumen` <> 'DITRM' AND " .
-              "`status_dokumen` <> 'DITLK'" .
-              ")",
-            false
-          );
-
-          if ($data_ongoing !== false) return output_json([
-            'status' => false,
-            'message' => "Maaf, tidak bisa mengajukan usulan update lagi karena masih ada dokumen usulan update yang belum selesai prosesnya.<ul class=\"mb-0\">" .
-              "<li>Nama: " . check_var($data_ongoing, 'nama', '-') . "</li>" .
-              "<li>NIP: " . check_var($data_ongoing, 'nip', '-') . "</li>" .
-              "<li>Periode: " . check_var($data_ongoing, 'periode_bln', '00') . "/" . check_var($data_ongoing, 'periode_thn', '0000') . "</li>" .
-              "<li>Status: " . check_var($data_ongoing, 'ket_status_dokumen', '-') . "</li>" .
-              "</ul>"
-          ]);
-
           // LOAD VIEW
           $sent_data = [
-            'modal_title' => '',
+            'modal_title' => 'Update Profil Kepsek',
             'type' => 'update',
             'data' => $dataset
           ];
