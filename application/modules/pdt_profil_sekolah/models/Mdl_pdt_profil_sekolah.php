@@ -34,22 +34,24 @@ class Mdl_pdt_profil_sekolah extends CI_Model
   /// |----------------------------------------------------------------------
   private function query_m_profil_sekolah($data)
   {
-    $cur_kewenangan = $this->session->userdata('kewenangan');
     $cur_unor = $this->session->userdata('kode_unor');
 
     // declare table
-    $this->db->from('m_profil_sekolah');
+    $this->db->from('vm_profil_sekolah');
 
     // where condition
     if (check_var($data, 'search')) {
       $this->db->group_start()
-        ->like('nip', $data['search'])
-        ->or_like('nama', $data['search'])
-        ->or_like('alamat_saat_ini', $data['search'])
+        ->like('kode_ukerja', $data['search'])
+        ->or_like('ket_ukerja', $data['search'])
+        ->or_like('alamat', $data['search'])
+        ->or_like('website', $data['search'])
+        ->or_like('email', $data['search'])
+        ->or_like('telepon', $data['search'])
         ->group_end();
     }
 
-    if ($cur_kewenangan == '10') {
+    if (!is_admin()) {
       // tambah kondisi kode_ukerja karena yang login adalah admin sekolah
       $this->db->where(['kode_ukerja' => $cur_unor]);
     }
@@ -80,7 +82,35 @@ class Mdl_pdt_profil_sekolah extends CI_Model
     $data_result = [];
     foreach ($query_result as $row) {
       $row['no'] = $no++;
-      $row['something'] = 'something'; // Add your custom column
+
+      // tampilan sekolah
+      $kode_sekolah = '<div><small style="opacity: 0.65;">' . $row['kode_ukerja'] . '</small></div>';
+      $nama_sekolah = '<div>' . $row['ket_ukerja'] . '</div>';
+      $row['sekolah_display'] = $kode_sekolah . $nama_sekolah;
+
+      // tampilan alamat
+      $kec = '<div><small style="opacity: 0.6;">KEC: ' . check_var($row, 'nama_kecamatan', '-') . '</small></div>';
+      $kel = '<div><small style="opacity: 0.6;">KEL: ' . check_var($row, 'nama_kelurahan', '-') . '</small></div>';
+      $row['alamat_display'] = '<div>' . $kec . $kel . '</div>' .
+        '<div>' . check_var($row, 'alamat', '-') . '</div>';
+
+      // tampilan kontak
+      $telp = check_var($row, 'telepon', '-');
+      $email = check_var($row, 'email', '-');
+      $website = check_var($row, 'website', '-');
+      $row['kontak_display'] = '<div><small style="opacity: 0.6;"><i class="fas fa-phone me-1"></i>' . $telp . '</small></div>' .
+        '<div>' . $email . '</div>' .
+        '<div><small style="opacity: 0.6;"><i class="fas fa-globe me-1"></i>' . $website . '</small></div>';
+
+      // tampilan aksi
+      $tombol_update = '<div class="badge bg-warning clickable" onclick="on_dev()"><i class="fas fa-sync me-1"></i>Update</div>';
+      $tombol_detail = '<a href="' . site_url('pdt_profil_sekolah/detail_master/' . $row['kode_ukerja']) . '" class="clickable text-white badge bg-secondary"><i class="fas fa-file me-1"></i>Detail</a>';
+
+      $row['aksi_display'] = '<div class="d-grid gap-1">' .
+        $tombol_update . $tombol_detail .
+        '</div>';
+
+      // store modified data into the result
       $data_result[] = $row;
     }
 
@@ -97,7 +127,6 @@ class Mdl_pdt_profil_sekolah extends CI_Model
   /// |----------------------------------------------------------------------
   private function query_r_profil_sekolah($data)
   {
-    $cur_kewenangan = $this->session->userdata('kewenangan');
     $cur_unor = $this->session->userdata('kode_unor');
 
     // declare table
@@ -106,13 +135,16 @@ class Mdl_pdt_profil_sekolah extends CI_Model
     // where condition
     if (check_var($data, 'search')) {
       $this->db->group_start()
-        ->like('nip', $data['search'])
-        ->or_like('nama', $data['search'])
-        ->or_like('alamat_saat_ini', $data['search'])
+        ->like('kode_ukerja', $data['search'])
+        ->or_like('ket_ukerja', $data['search'])
+        ->or_like('alamat', $data['search'])
+        ->or_like('website', $data['search'])
+        ->or_like('email', $data['search'])
+        ->or_like('telepon', $data['search'])
         ->group_end();
     }
 
-    if ($cur_kewenangan == '10') {
+    if (!is_admin()) {
       // tambah kondisi kode_ukerja karena yang login adalah admin sekolah
       $this->db->where(['kode_ukerja' => $cur_unor]);
     }
@@ -161,11 +193,6 @@ class Mdl_pdt_profil_sekolah extends CI_Model
       $kode_sekolah = '<div><small style="opacity: 0.65;">' . $row['kode_ukerja'] . '</small></div>';
       $nama_sekolah = '<div>' . $row['ket_ukerja'] . '</div>';
       $row['sekolah_display'] = $kode_sekolah . $nama_sekolah;
-
-      // tampilan kepsek
-      $nip = '<div><small style="opacity: 0.65;">' . $row['nip'] . '</small></div>';
-      $nama = '<div>' . $row['nama'] . '</div>';
-      $row['kepsek_display'] = $nip . $nama;
 
       // tampilan status
       $row['status_display'] = '<div class="badge bg-' . $row['col_status_dokumen'] . '">' . $row['ket_status_dokumen'] . '</div>';
@@ -229,6 +256,16 @@ class Mdl_pdt_profil_sekolah extends CI_Model
         'message' => 'Proses tidak bisa dilanjutkan karena form tidak valid.<br>' . $error_list
       ];
     }
+
+    // CEK EXISTING PROFIL YANG TERVERIFIKASI
+    $data_existing  = fetch_num_rows('m_profil_sekolah', [
+      'kode_ukerja' => $post['kode_ukerja']
+    ]);
+    if ($data_existing > 0) return [
+      'status' => false,
+      'message' => "Sudah ada profil yang terverifikasi untuk sekolah yang dipilih, silahkan lakukan update pada profil tersebut."
+    ];
+
 
     // TARIK DATA SEKOLAH YG DIPILIH
     $data_sekolah = fetch_row_data('v_ukerja', ['kode_ukerja' => $post['kode_ukerja']], false);

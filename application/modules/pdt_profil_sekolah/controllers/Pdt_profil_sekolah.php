@@ -185,6 +185,18 @@ class Pdt_profil_sekolah extends MY_Controller
             'message' => 'invalid permissions'
           ], 403);
 
+          // CHECK EXISTING PROFIL
+          if (!is_admin()) {
+            $cur_unor = $this->session->userdata('kode_unor');
+            $existing = fetch_num_rows('m_profil_sekolah', [
+              'kode_ukerja' => $cur_unor
+            ]);
+            if ($existing > 0) return output_json([
+              'status' => false,
+              'message' => "Maaf, sudah ada profil sekolah yang terverifikasi, silahkan lakukan update pada profil tersebut."
+            ]);
+          }
+
           $sent_data = [
             'modal_title' => 'Tambah Profil Sekolah',
             'type' => 'add',

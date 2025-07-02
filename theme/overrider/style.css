@@ -152,15 +152,18 @@ label.is-invalid {
   min-width: 21px;
   text-align: center;
 }
-#main-wrapper nav.sidebar-nav .bz_sidebar_item a .menu_title {
+#main-wrapper nav.sidebar-nav .bz_sidebar_item a .menu_title,
+#main-wrapper nav.sidebar-nav .bz_sidebar_item a .hide-menu {
   padding-left: 8px;
   position: relative;
   width: 100%;
 }
-#main-wrapper nav.sidebar-nav .bz_sidebar_item a .menu_title .main {
+#main-wrapper nav.sidebar-nav .bz_sidebar_item a .menu_title .main,
+#main-wrapper nav.sidebar-nav .bz_sidebar_item a .hide-menu .main {
   position: relative;
 }
-#main-wrapper nav.sidebar-nav .bz_sidebar_item a .menu_title .sub {
+#main-wrapper nav.sidebar-nav .bz_sidebar_item a .menu_title .sub,
+#main-wrapper nav.sidebar-nav .bz_sidebar_item a .hide-menu .sub {
   position: relative;
 }
 #main-wrapper nav.sidebar-nav .bz_sidebar_item ul {
