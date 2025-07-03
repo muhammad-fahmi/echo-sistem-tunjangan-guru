@@ -76,19 +76,19 @@
 
               <thead class="bg-info text-white">
                 <tr class="text-center">
-                  <th scope="col">No.</th>
-                  <th scope="col">Nama Lengkap</th>
-                  <th scope="col">NISN</th>
-                  <th scope="col">NIK</th>
-                  <th scope="col">Jenis Kelamin</th>
-                  <th scope="col">Agama</th>
-                  <th scope="col">Alamat</th>
-                  <th scope="col">Aktif</th>
-                  <th scope="col">Aksi</th>
+                  <th class="vam" style="min-width: 35px;">#</th>
+                  <th class="vam" style="min-width: 175px;">NISN / Nama Lengkap</th>
+                  <!-- <th class="vam">NISN</th> -->
+                  <th class="vam" style="min-width: 100px;">NIK</th>
+                  <th class="vam" style="min-width: 80px;">Jenis Kelamin</th>
+                  <th class="vam" style="min-width: 60px;">Agama</th>
+                  <th class="vam" style="min-width: 150px;">Alamat</th>
+                  <th class="vam" style="min-width: 40px;">Status</th>
+                  <th class="vam" style="min-width: 60px;">Aksi</th>
                 </tr>
               </thead>
 
-              <tbody style="font-size: 11px;"></tbody>
+              <tbody style="font-size: 12px;"></tbody>
 
             </table>
           </div>
@@ -144,7 +144,7 @@
     columns: [{
         data: 'no',
         orderable: false,
-        className: '',
+        className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-center">' + cellData + '</div>');
         }
@@ -152,23 +152,26 @@
       {
         data: 'nama',
         orderable: true,
-        className: '',
+        className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-start">' + cellData + '</div>');
+          $(td).html('<div class="text-start">' +
+            '<div class="badge bg-secondary mb-1" style="opacity: 0.65;">' + rowData['nisn'] + '</div><br>' + cellData +
+            '</div>'
+          );
         }
       },
-      {
-        data: 'nisn',
-        orderable: false,
-        className: '',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-start">' + cellData + '</div>');
-        }
-      },
+      // {
+      //   data: 'nisn',
+      //   orderable: false,
+      //   className: 'vat',
+      //   createdCell: function(td, cellData, rowData, row, col) {
+      //     $(td).html('<div class="text-start">' + cellData + '</div>');
+      //   }
+      // },
       {
         data: 'nik',
         orderable: false,
-        className: '',
+        className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-start">' + cellData + '</div>');
         }
@@ -176,7 +179,7 @@
       {
         data: 'ket_jns_kelamin',
         orderable: false,
-        className: '',
+        className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-center">' + cellData + '</div>');
         }
@@ -184,7 +187,7 @@
       {
         data: 'ket_agama',
         orderable: false,
-        className: '',
+        className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-center">' + cellData + '</div>');
         }
@@ -192,37 +195,45 @@
       {
         data: 'alamat',
         orderable: false,
-        className: '',
+        className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-start">' + cellData + '</div>');
         }
       },
       {
         data: 's_aktif',
-        orderable: false,
-        className: '',
+        orderable: true,
+        className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
           let status_siswa = (cellData == '1') ?
-            '<div class="badge bg-success text-center p-2">Aktif</div>' :
-            '<div class="badge bg-secondary text-center p-2">Non-Aktif</div>'
+            '<div class="badge bg-success text-center py-2">Aktif</div>' :
+            '<div class="badge bg-secondary text-center py-2">Non-Aktif</div>'
           $(td).html('<div class="text-center">' + status_siswa + '</div>');
         }
       },
       {
         data: 'id_siswa',
         orderable: false,
-        className: '',
+        className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
+          let detail_url = "<?= site_url('pdt_peserta_didik/detail/'); ?>";
           let kewenangan_user = '<?= $this->session->userdata('kewenangan'); ?>';
-          let btn_edit = '<div onclick="modal(`' + cellData + '`, `edit_peserta_didik`)" class="badge bg-primary clickable me-1 py-2" title="Edit">' +
-            '<i class="fas fa-edit"></i></div>';
+
+          let btn_edit = '<div onclick="modal(`' + cellData + '`, `edit_peserta_didik`)" class="badge bg-primary clickable me-1" title="Edit">' +
+            '<i class="fas fa-edit"></i> EDIT</div>';
+
+          let btn_detail = '<a href="' + detail_url + cellData + '" class="badge bg-secondary clickable me-1"><i class="fas fa-eye"></i> DETAIL</a>';
 
           let btn_delete = (kewenangan_user == '00') ?
-            '<div onclick="modal(`' + cellData + '`, `delete_peserta_didik`)" class="badge bg-danger clickable py-2" title="Hapus">' +
-            '<i class="fas fa-trash"></i></div>' :
+            '<div onclick="modal(`' + cellData + '`, `delete_peserta_didik`)" class="badge bg-danger clickable me-1" title="Hapus">' +
+            '<i class="fas fa-trash"></i> HAPUS</div>' :
             '';
 
-          $(td).html('<div class="text-center">' + btn_edit + btn_delete + '</div>');
+          $(td).html('<div class="text-center">' +
+            '<div class="d-grid gap-1"><div class="col-12">' + btn_edit + '</div>' +
+            '<div class="col-12">' + btn_detail + '</div>' +
+            '<div class="col-12">' + btn_delete + '</div>' +
+            '</div></div>');
         }
       },
     ],

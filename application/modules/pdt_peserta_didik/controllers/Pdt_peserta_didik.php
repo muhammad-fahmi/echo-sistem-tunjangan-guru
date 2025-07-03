@@ -21,10 +21,33 @@ class Pdt_peserta_didik extends MY_Controller
     // lakukan proses init halaman
     $sent_data = array();
     $data = array(
-      'page_title' => "Peserta Didik | Pangkalan Data Progurinda",
+      'page_title' => "Peserta Didik | PROGURINDA",
       'module' => "pdt_peserta_didik",
       'view' => "vw_peserta_didik_list",
       'data' => $sent_data
+    );
+    echo Modules::run('layout/backend', $data);
+  }
+
+  public function detail($encryptedID = '')
+  {
+    $decryptedID = decrypt_id(sanitize_string($encryptedID));
+
+    // CEK VALIDASI DATA
+    $dataset = fetch_row_data('v_progurinda_siswa', ['id_siswa' => $decryptedID], false);
+    if ($dataset == false) {
+      $this->session->set_userdata('flash_data', "Maaf, data Peserta Didik yang akan dilihat detailnya tidak valid.");
+      redirect(site_url('pdt_peserta_didik'));
+      return;
+    }
+
+    $dataset['id_siswa'] = encrypt_id($dataset['id_siswa']);
+
+    $data = array(
+      'page_title' => "Detail Data Peserta Didik | PROGURINDA",
+      'module' => "pdt_peserta_didik",
+      'view' => 'vw_peserta_didik_detail',
+      'data' => $dataset
     );
     echo Modules::run('layout/backend', $data);
   }
