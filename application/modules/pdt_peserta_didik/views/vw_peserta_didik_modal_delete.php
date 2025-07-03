@@ -13,8 +13,10 @@
     <div class="row g-2">
 
       <div class="col-12 form_mapel">
-        <div class="mb-3">
-          Apakah anda yakin untuk menghapus data ini?
+        <div class="col-12 mb-3">
+          <div class="alert alert-danger m-0">
+            Apakah anda yakin untuk menghapus data peserta didik ini?
+          </div>
         </div>
         <table>
           <tr>

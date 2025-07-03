@@ -11,8 +11,8 @@
     <input type="hidden" name="id_siswa" value="<?= $data['id_siswa']; ?>">
 
     <div class="row g-2">
-      <div class="card bg-warning p-3 m-0">
-        <div class="col-12 col-lg-12 text-white">
+      <div class="col-12 col-lg-12">
+        <div class="alert alert-warning m-0">
           <i class="fas fa-exclamation-circle me-1"></i>
           <b>Peringatan :</b><br>
           Untuk penamaan orang tua peserta didik (<b>ayah</b> dan <b>ibu</b>), tidak disarankan mencantumkan <b>gelar</b> apapun <br>(contoh : <b>Hj, Ir, Ustad,</b> dll).
