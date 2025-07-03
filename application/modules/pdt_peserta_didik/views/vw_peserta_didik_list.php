@@ -220,13 +220,13 @@
           let kewenangan_user = '<?= $this->session->userdata('kewenangan'); ?>';
 
           let btn_edit = '<div onclick="modal(`' + cellData + '`, `edit_peserta_didik`)" class="badge bg-primary clickable me-1" title="Edit">' +
-            '<i class="fas fa-edit"></i> EDIT</div>';
+            '<i class="fas fa-edit"></i> Edit</div>';
 
-          let btn_detail = '<a href="' + detail_url + cellData + '" class="badge bg-secondary clickable me-1"><i class="fas fa-eye"></i> DETAIL</a>';
+          let btn_detail = '<a href="' + detail_url + cellData + '" class="badge bg-secondary clickable text-white me-1"><i class="fas fa-eye"></i> Detail</a>';
 
           let btn_delete = (kewenangan_user == '00') ?
             '<div onclick="modal(`' + cellData + '`, `delete_peserta_didik`)" class="badge bg-danger clickable me-1" title="Hapus">' +
-            '<i class="fas fa-trash"></i> HAPUS</div>' :
+            '<i class="fas fa-trash"></i> Hapus</div>' :
             '';
 
           $(td).html('<div class="text-center">' +
