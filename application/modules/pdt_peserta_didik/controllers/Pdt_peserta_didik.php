@@ -132,6 +132,7 @@ class Pdt_peserta_didik extends MY_Controller
           $dataset = $this->mdl_peserta_didik->get('v_progurinda_siswa', "id_siswa = '$id'");
           $data = [
             'modal_title' => "Edit Peserta Didik",
+            'type' => $type,
             'data' => $dataset,
           ];
           $res = [

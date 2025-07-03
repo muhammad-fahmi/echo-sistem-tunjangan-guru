@@ -21,7 +21,7 @@
 
       <div class="col-12 form_mapel mb-2">
         <label for="nisn">NISN</label>
-        <input type="text" name="nisn" id="nisn" class="form-control form-control-sm" value="<?= $data['nisn']; ?>">
+        <input type="number" name="nisn" id="nisn" class="form-control form-control-sm" value="<?= $data['nisn']; ?>">
         <div class="invalid-feedback"></div>
       </div>
 
@@ -33,7 +33,7 @@
 
       <div class="col-12 form_mapel mb-2">
         <label for="nik">NIK</label>
-        <input type="text" name="nik" id="nik" class="form-control form-control-sm" value="<?= $data['nik']; ?>">
+        <input type="number" name="nik" id="nik" class="form-control form-control-sm" value="<?= $data['nik']; ?>">
         <div class="invalid-feedback"></div>
       </div>
 
@@ -67,7 +67,7 @@
 
       <div class="col-12 form_mapel mb-2">
         <label for="no_kk">No. KK</label>
-        <input type="text" name="no_kk" id="no_kk" class="form-control form-control-sm" value="<?= $data['no_kk']; ?>">
+        <input type="number" name="no_kk" id="no_kk" class="form-control form-control-sm" value="<?= $data['no_kk']; ?>">
         <div class="invalid-feedback"></div>
       </div>
 
@@ -77,7 +77,7 @@
       </div>
 
       <!-- Status Aktif tampil sesuai kewenangan -->
-      <?php if ($this->session->userdata('kewenangan') == 00) { ?>
+      <?php if ($this->session->userdata('kewenangan') == 00 && $type == 'edit_peserta_didik') { ?>
         <div class="col-12 col-lg-12 form_mapel mb-2">
           <label for="s_aktif">Status Aktif</label>
           <select name="s_aktif" id="s_aktif" class="form-select form-select-sm">
