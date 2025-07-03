@@ -285,6 +285,10 @@ a.badge.text-white {
 		font-size: 0.75rem;
 		margin-bottom: -4px;
 	}
+
+	&.new_change {
+		background-color: #ecfefa;
+	}
 }
 
 .input_block {

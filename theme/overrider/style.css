@@ -242,6 +242,9 @@ a.badge.text-white:hover {
   font-size: 0.75rem;
   margin-bottom: -4px;
 }
+.desc_block.new_change {
+  background-color: #ecfefa;
+}
 
 .input_block {
   padding-bottom: 5px;
