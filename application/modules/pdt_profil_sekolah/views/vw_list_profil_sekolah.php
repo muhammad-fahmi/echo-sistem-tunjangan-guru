@@ -296,7 +296,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
         orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-start">' + rowData.sekolah_display + '</div>');
+          $(td).html('<div class="text-start">' + rowData.alamat_display + '</div>');
         }
       },
       {

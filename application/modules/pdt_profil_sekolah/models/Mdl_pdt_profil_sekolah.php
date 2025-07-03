@@ -103,7 +103,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
         '<div><small style="opacity: 0.6;"><i class="fas fa-globe me-1"></i>' . $website . '</small></div>';
 
       // tampilan aksi
-      $tombol_update = '<div class="badge bg-warning clickable" onclick="on_dev()"><i class="fas fa-sync me-1"></i>Update</div>';
+      $tombol_update = '<div class="badge bg-warning clickable" onclick="modal(`update_existing_profil`, `' . $row['kode_ukerja'] . '`)"><i class="fas fa-sync me-1"></i>Update</div>';
       $tombol_detail = '<a href="' . site_url('pdt_profil_sekolah/detail_master/' . $row['kode_ukerja']) . '" class="clickable text-white badge bg-secondary"><i class="fas fa-file me-1"></i>Detail</a>';
 
       $row['aksi_display'] = '<div class="d-grid gap-1">' .
@@ -193,6 +193,12 @@ class Mdl_pdt_profil_sekolah extends CI_Model
       $kode_sekolah = '<div><small style="opacity: 0.65;">' . $row['kode_ukerja'] . '</small></div>';
       $nama_sekolah = '<div>' . $row['ket_ukerja'] . '</div>';
       $row['sekolah_display'] = $kode_sekolah . $nama_sekolah;
+
+      // tampilan alamat
+      $kec = '<div><small style="opacity: 0.6;">KEC: ' . check_var($row, 'nama_kecamatan', '-') . '</small></div>';
+      $kel = '<div><small style="opacity: 0.6;">KEL: ' . check_var($row, 'nama_kelurahan', '-') . '</small></div>';
+      $row['alamat_display'] = '<div>' . $kec . $kel . '</div>' .
+        '<div>' . check_var($row, 'alamat', '-') . '</div>';
 
       // tampilan status
       $row['status_display'] = '<div class="badge bg-' . $row['col_status_dokumen'] . '">' . $row['ket_status_dokumen'] . '</div>';
@@ -485,6 +491,106 @@ class Mdl_pdt_profil_sekolah extends CI_Model
 
   public function update_profil_sekolah($data)
   {
+    // VALIDASI DATASET
+    $data_existing = fetch_row_data('vm_profil_sekolah', [
+      'kode_ukerja' => $data['kode_ukerja']
+    ], false);
+    if ($data_existing === false) return [
+      'status' => false,
+      'message' => "Maaf, data yang akan di-update tidak valid lagi."
+    ];
+
+    // VALIDASI PERM
+    $cur_unor = $this->session->userdata('kode_unor');
+    if (!is_admin() && $cur_unor != $data_existing['kode_ukerja']) {
+      return [
+        'status' => false,
+        'message' => "Maaf, Anda tidak memiliki ijin untuk meng-update data profil sekolah ini."
+      ];
+    }
+
+    // VALIDASI ONGOING USULAN
+    $existing_usulan = $this->db->from('vr_profil_sekolah')
+      ->where('kode_ukerja', $data_existing['kode_ukerja'])
+      ->where('status_dokumen <>', 'DITRM')
+      ->where('status_dokumen <>', 'DITLK')
+      ->where('periode_bln', $data['periode_bln'])
+      ->where('periode_thn', $data['periode_thn'])
+      ->order_by('periode_thn', 'DESC')
+      ->order_by('periode_bln', 'DESC')
+      ->limit(1)->get()->row_array();
+
+    if (check_var($existing_usulan)) return [
+      'status' => false,
+      'message' => "Maaf, tidak bisa melakukan update karena sudah ada usulan dokumen untuk sekolah yang dipilih ({$existing_usulan['ket_ukerja']}) untuk periode {$existing_usulan['periode_bln']}/{$existing_usulan['periode_thn']} dengan status {$existing_usulan['ket_status_dokumen']}"
+    ];
+
+    try {
+      $this->db->trans_begin();
+
+      // sesuaikan data utk usulan dokumen baru
+      $proc = 1;
+      $cur_user = $this->session->userdata('id_user');
+
+      // unset key that do not exist on r_profil_sekolah
+      $filtered_data_existing = $data_existing;
+      unset($filtered_data_existing['ket_ukerja']);
+      unset($filtered_data_existing['ket_status_sekolah']);
+      unset($filtered_data_existing['nama_kelurahan']);
+      unset($filtered_data_existing['nama_kecamatan']);
+
+      // add additional data that was required to set on r_profil_sekolah
+      $new_r_profil_sekolah = $filtered_data_existing;
+      $new_r_profil_sekolah['periode_bln'] = $data['periode_bln'];
+      $new_r_profil_sekolah['periode_thn'] = $data['periode_thn'];
+      $new_r_profil_sekolah['create_on'] = em_date('Y-m-d H:i:s');
+      $new_r_profil_sekolah['create_by'] = $cur_user;
+      $new_r_profil_sekolah['status_dokumen'] = 'DRAFT';
+      $this->db->insert('r_profil_sekolah', $new_r_profil_sekolah);
+      $insert_id = $this->db->insert_id();
+
+      // buat log sistem
+      $proc = 2;
+      $text_insert = format_log_view($new_r_profil_sekolah);
+      log_generator(
+        $cur_user,
+        'r_profil_sekolah',
+        $insert_id,
+        "Menambahkan dokumen usulan profil sekolah untuk meng-update data yang sudah ada dengan detail sebagai berikut:\n\n{$text_insert}"
+      );
+
+      // buat riwayat dokumen
+      $proc = 3;
+      $periode_text = check_var($data, 'periode_bln', '-') . '/' . check_var($data, 'periode_thn', '-');
+      $this->db->insert('r_log_dokumen', [
+        'jenis_dokumen' => 'PROFIL_SEKOLAH',
+        'id_dokumen' => $insert_id,
+        'id_user' => $cur_user,
+        'datetime' => em_date('Y-m-d H:i:s'),
+        'message' => "Mengajukan usulan update data pada Profil Sekolah ({$data_existing['ket_ukerja']}) dengan jenjang {$data['jenjang']} untuk periode {$periode_text}."
+      ]);
+
+      if ($this->db->trans_status() === FALSE) {
+        $this->db->trans_rollback();
+        return [
+          'status' => false,
+          'message' => "Maaf, terjadi kesalahan dalam proses.\nROLLBACK ISSUE #{$proc}"
+        ];
+      } else {
+        $this->db->trans_commit();
+        return [
+          'status' => true,
+          'message' => "Usulan Update Profil Sekolah berhasil dibuat dengan status Draft."
+        ];
+      }
+    } catch (\Throwable $th) {
+      $catch_error = sanitize_string($th->getMessage());
+      return [
+        'status' => false,
+        'message' => "Maaf, terjadi kesalahan saat proses.\n{$catch_error}"
+      ];
+    }
+
     // DEBUG
     return [
       'status' => false,

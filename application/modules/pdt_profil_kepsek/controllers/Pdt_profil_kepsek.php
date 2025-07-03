@@ -94,6 +94,30 @@ class Pdt_profil_kepsek extends MY_Controller
     echo Modules::run('layout/backend', $data);
   }
 
+  public function detail_master($encryptedID = '')
+  {
+    $decryptedID = decrypt_id(sanitize_string($encryptedID));
+
+    // CEK VALIDASI DATA
+    $dataset = fetch_row_data('vm_profil_kepsek', ['id_kepsek' => $decryptedID], false);
+    if ($dataset == false) {
+      $this->session->set_userdata('flash_data', "Maaf, data profil kepala sekolah yang akan dilihat detailnya tidak valid.");
+      redirect(site_url('pdt_profil_kepsek'));
+      return;
+    }
+
+    $dataset['id_dokumen'] = encrypt_id($dataset['id_dokumen']);
+    $dataset['id_kepsek'] = encrypt_id($dataset['id_kepsek']);
+
+    $data = array(
+      'page_title' => "Profil Kepala Sekolah | PROGURINDA",
+      'module' => "pdt_profil_kepsek",
+      'view' => 'vw_detail_master_profil_kepsek',
+      'data' => $dataset
+    );
+    echo Modules::run('layout/backend', $data);
+  }
+
   /// |----------------------------------------------------------------------
   /// | >> AJAX REQUEST FUNCTIONS
   /// |----------------------------------------------------------------------
@@ -246,7 +270,8 @@ class Pdt_profil_kepsek extends MY_Controller
             'message' => 'invalid permissions'
           ], 403);
 
-          $dataset = fetch_row_data('vm_profil_kepsek', ['id_kepsek' => $id], false);
+          $id_kepsek = decrypt_id($id);
+          $dataset = fetch_row_data('vm_profil_kepsek', ['id_kepsek' => $id_kepsek], false);
 
           // VALIDASI DATA PROFIL EXISTING
           if ($dataset === false) return output_json([
@@ -254,29 +279,11 @@ class Pdt_profil_kepsek extends MY_Controller
             'message' => "Maaf, data profil kepala sekolah yang akan di-update tidak valid lagi."
           ]);
 
-          // VALIDASI DATA USULAN UPDATE YANG MASIH ONGOING
-          $data_ongoing = fetch_row_data(
-            'vr_profil_kepsek',
-            "`id_kepsek` = '$id' AND (" .
-              "`status_dokumen` <> 'DITRM' AND " .
-              "`status_dokumen` <> 'DITLK'" .
-              ")",
-            false
-          );
-
-          if ($data_ongoing !== false) return output_json([
-            'status' => false,
-            'message' => "Maaf, tidak bisa mengajukan usulan update lagi karena masih ada dokumen usulan update yang belum selesai prosesnya.<ul class=\"mb-0\">" .
-              "<li>Nama: " . check_var($data_ongoing, 'nama', '-') . "</li>" .
-              "<li>NIP: " . check_var($data_ongoing, 'nip', '-') . "</li>" .
-              "<li>Periode: " . check_var($data_ongoing, 'periode_bln', '00') . "/" . check_var($data_ongoing, 'periode_thn', '0000') . "</li>" .
-              "<li>Status: " . check_var($data_ongoing, 'ket_status_dokumen', '-') . "</li>" .
-              "</ul>"
-          ]);
+          $dataset['id_kepsek'] = encrypt_id($dataset['id_kepsek']);
 
           // LOAD VIEW
           $sent_data = [
-            'modal_title' => '',
+            'modal_title' => 'Update Profil Kepala Sekolah',
             'type' => 'update',
             'data' => $dataset
           ];
