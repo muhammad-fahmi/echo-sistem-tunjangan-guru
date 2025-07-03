@@ -195,7 +195,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
         orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
+          $(td).html('<div class="text-start">' + rowData.kepsek_display + '</div>');
         }
       },
       {
@@ -203,7 +203,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
         orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
+          $(td).html('<div class="text-start">' + rowData.sekolah_display + '</div>');
         }
       },
       {
@@ -211,7 +211,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
         orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
+          $(td).html('<div class="text-center">' + rowData.masa_mulai_display + '</div>');
         }
       },
       {
@@ -219,7 +219,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
         orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
+          $(td).html('<div class="text-center">' + rowData.masa_selesai_display + '</div>');
         }
       },
       {
@@ -227,7 +227,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
         orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
+          $(td).html('<div class="text-center">' + rowData.aksi_display + '</div>');
         }
       }
     ],

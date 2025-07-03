@@ -38,14 +38,16 @@ class Mdl_pdt_profil_kepsek extends CI_Model
     $cur_unor = $this->session->userdata('kode_unor');
 
     // declare table
-    $this->db->from('m_profil_kepsek');
+    $this->db->from('vm_profil_kepsek');
 
     // where condition
     if (check_var($data, 'search')) {
       $this->db->group_start()
         ->like('nip', $data['search'])
         ->or_like('nama', $data['search'])
-        ->or_like('alamat_saat_ini', $data['search'])
+        ->or_like('alamat', $data['search'])
+        ->or_like('kode_ukerja', $data['search'])
+        ->or_like('ket_ukerja', $data['search'])
         ->group_end();
     }
 
@@ -78,9 +80,39 @@ class Mdl_pdt_profil_kepsek extends CI_Model
     // RE-ARRANGE RESULT DATA
     $no = $data['start'] + 1;
     $data_result = [];
+    $cur_unor = $this->session->userdata('kode_unor');
     foreach ($query_result as $row) {
       $row['no'] = $no++;
-      $row['something'] = 'something'; // Add your custom column
+
+      // tampilan kepsek
+      $nip = check_var($row, 'nip', '-');
+      $nama = check_var($row, 'nama', '-');
+      $row['kepsek_display'] = '<div><small style="opacity: 0.6;">' . $nip . '</small></div>' .
+        '<div>' . $nama . '</div>';
+
+      // tampilan sekolah
+      $kode_ukerja = check_var($row, 'kode_ukerja', '-');
+      $ket_ukerja = check_var($row, 'ket_ukerja', '-');
+      $row['sekolah_display'] = '<div><small style="opacity: 0.6;">' . $kode_ukerja . '</small></div>' .
+        '<div>' . $ket_ukerja . '</div>';
+
+      // tampilan masa
+      $row['masa_mulai_display'] = check_var(em_date('j M Y', 'set', $row['masa_penugasan_mulai']), null, '-');
+      $row['masa_selesai_display'] = check_var(em_date('j M Y', 'set', $row['masa_penugasan_selesai']), null, '-');
+
+      // encrypt ID Kepsek
+      $row['id_kepsek'] = encrypt_id($row['id_kepsek']);
+
+      // tampilan aksi
+      $same_ukerja = ($row['kode_ukerja'] == $cur_unor);
+      $tombol_update = ($same_ukerja || is_admin())
+        ? '<span onclick="modal(`update_existing_profil`, `' . $row['id_kepsek'] . '`)" class="clickable text-white badge bg-warning"><i class="fas fa-sync me-1"></i>Update</span>'
+        : '';
+      $tombol_detail = '<a href="' . site_url('pdt_profil_kepsek/detail_master/' . $row['id_kepsek']) . '" class="clickable text-white badge bg-secondary"><i class="fas fa-file me-1"></i>Detail</a>';
+      $row['aksi_display'] = '<div class="d-grid gap-1">' .
+        $tombol_update . $tombol_detail .
+        '</div>';
+
       $data_result[] = $row;
     }
 
@@ -108,7 +140,9 @@ class Mdl_pdt_profil_kepsek extends CI_Model
       $this->db->group_start()
         ->like('nip', $data['search'])
         ->or_like('nama', $data['search'])
-        ->or_like('alamat_saat_ini', $data['search'])
+        ->or_like('alamat', $data['search'])
+        ->or_like('kode_ukerja', $data['search'])
+        ->or_like('ket_ukerja', $data['search'])
         ->group_end();
     }
 
@@ -447,6 +481,107 @@ class Mdl_pdt_profil_kepsek extends CI_Model
 
   public function update_profil_kepsek($data)
   {
+    // VALIDASI DATASET
+    $id_kepsek = decrypt_id($data['id_kepsek']);
+    $data_existing = fetch_row_data('vm_profil_kepsek', [
+      'id_kepsek' => $id_kepsek
+    ], false);
+    if ($data_existing === false) return [
+      'status' => false,
+      'message' => "Maaf, data yang akan di-update tidak valid lagi."
+    ];
+
+    // VALIDASI PERM
+    $cur_unor = $this->session->userdata('kode_unor');
+    if (!is_admin() && $cur_unor != $data_existing['kode_ukerja']) {
+      return [
+        'status' => false,
+        'message' => "Maaf, Anda tidak memiliki ijin untuk meng-update data profil kepala sekolah ini."
+      ];
+    }
+
+    // VALIDASI ONGOING USULAN
+    $existing_usulan = $this->db->from('vr_profil_kepsek')
+      ->where('id_kepsek', $data_existing['id_kepsek'])
+      ->where('status_dokumen <>', 'DITRM')
+      ->where('status_dokumen <>', 'DITLK')
+      ->where('periode_bln', $data['periode_bln'])
+      ->where('periode_thn', $data['periode_thn'])
+      ->order_by('periode_thn', 'DESC')
+      ->order_by('periode_bln', 'DESC')
+      ->limit(1)->get()->row_array();
+
+    if (check_var($existing_usulan)) return [
+      'status' => false,
+      'message' => "Maaf, tidak bisa melakukan update karena sudah ada usulan dokumen untuk kepala sekolah yang dipilih ({$existing_usulan['nip']} / {$existing_usulan['nama']}) untuk periode {$existing_usulan['periode_bln']}/{$existing_usulan['periode_thn']} dengan status {$existing_usulan['ket_status_dokumen']}"
+    ];
+
+    try {
+      $this->db->trans_begin();
+
+      // sesuaikan data utk usulan dokumen baru
+      $proc = 1;
+      $cur_user = $this->session->userdata('id_user');
+
+      // unset key that do not exist on r_profil_kepsek
+      $filtered_data_existing = $data_existing;
+      $unset_list = ['ket_ukerja', 'ket_jenis_kelamin', 'ket_status_pernikahan', 'ket_status', 'ket_agama'];
+      foreach ($unset_list as $value) {
+        unset($filtered_data_existing[$value]);
+      }
+
+      // add additional data that was required to set on r_profil_kepsek
+      $new_r_profil_kepsek = $filtered_data_existing;
+      $new_r_profil_kepsek['periode_bln'] = $data['periode_bln'];
+      $new_r_profil_kepsek['periode_thn'] = $data['periode_thn'];
+      $new_r_profil_kepsek['create_on'] = em_date('Y-m-d H:i:s');
+      $new_r_profil_kepsek['create_by'] = $cur_user;
+      $new_r_profil_kepsek['status_dokumen'] = 'DRAFT';
+      $this->db->insert('r_profil_kepsek', $new_r_profil_kepsek);
+      $insert_id = $this->db->insert_id();
+
+      // buat log sistem
+      $proc = 2;
+      $text_insert = format_log_view($new_r_profil_kepsek);
+      log_generator(
+        $cur_user,
+        'r_profil_kepsek',
+        $insert_id,
+        "Menambahkan dokumen usulan profil kepala sekolah untuk meng-update data yang sudah ada dengan detail sebagai berikut:\n\n{$text_insert}"
+      );
+
+      // buat riwayat dokumen
+      $proc = 3;
+      $periode_text = check_var($data, 'periode_bln', '-') . '/' . check_var($data, 'periode_thn', '-');
+      $this->db->insert('r_log_dokumen', [
+        'jenis_dokumen' => 'PROFIL_KEPSEK',
+        'id_dokumen' => $insert_id,
+        'id_user' => $cur_user,
+        'datetime' => em_date('Y-m-d H:i:s'),
+        'message' => "Mengajukan usulan update data pada Profil Kepala Sekolah ({$data_existing['nip']} / {$data_existing['nama']})  untuk periode {$periode_text}."
+      ]);
+
+      if ($this->db->trans_status() === FALSE) {
+        $this->db->trans_rollback();
+        return [
+          'status' => false,
+          'message' => "Maaf, terjadi kesalahan dalam proses.\nROLLBACK ISSUE #{$proc}"
+        ];
+      } else {
+        $this->db->trans_commit();
+        return [
+          'status' => true,
+          'message' => "Usulan Update Profil Sekolah berhasil dibuat dengan status Draft."
+        ];
+      }
+    } catch (\Throwable $th) {
+      $catch_error = sanitize_string($th->getMessage());
+      return [
+        'status' => false,
+        'message' => "Maaf, terjadi kesalahan saat proses.\n{$catch_error}"
+      ];
+    }
+
     // DEBUG
     return [
       'status' => false,

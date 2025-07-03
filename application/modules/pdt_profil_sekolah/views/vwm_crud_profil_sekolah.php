@@ -180,7 +180,7 @@ switch ($type) {
 
   case 'update': {
     ?>
-      <form id="form_update_usulan_profil_sekolah" action="<?= site_url('pdt_profil_sekolah/update') ?>" method="POST">
+      <form id="form_update_usulan_profil_sekolah" action="<?= site_url('pdt_profil_sekolah/save') ?>" method="POST">
         <input type="hidden" name="type" value="<?= $type ?>">
 
         <div class="modal-header d-flex align-items-center">

@@ -377,30 +377,6 @@ class Pdt_profil_sekolah extends MY_Controller
     return output_json($response);
   }
 
-  public function update()
-  {
-    // CHECK PERMISSION
-    if (!check_perm('update', 'PDT_ProfilSekolah')) return output_json([
-      'status' => false,
-      'message' => 'invalid permissions'
-    ], 403);
-
-    $post = post_safe();
-
-    $response = $this->mdl_profsekolah->update_profil_sekolah($post);
-
-    return output_json($response);
-
-    // DEBUG
-    return $this->output
-      ->set_content_type('application/json')
-      ->set_output(json_encode([
-        'status' => false,
-        'message' => "DEBUG update existing m_profil_sekolah",
-        'data' => $post
-      ]));
-  }
-
   public function delete()
   {
     // CHECK PERMISSION
