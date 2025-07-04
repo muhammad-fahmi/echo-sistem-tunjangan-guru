@@ -45,7 +45,7 @@ switch ($type) {
             <div class="col-12">
               <div class="input_block">
                 <label for="jenjang">Jenjang</label>
-                <select name="jenjang" id="jenjang" class="form-select form-select-sm">
+                <select name="jenjang" id="jenjang" class="form-select">
                   <option value="" default hidden>- Pilih Jenjang Sekolah -</option>
                   <option value="TK">TK</option>
                   <option value="SD">SD</option>
@@ -61,7 +61,7 @@ switch ($type) {
               <div class="col-12">
                 <div class="input_block">
                   <label for="kode_ukerja">Nama Sekolah</label>
-                  <select name="kode_ukerja" id="kode_ukerja" class="form-select form-select-sm select2_ukerja"></select>
+                  <select name="kode_ukerja" id="kode_ukerja" class="form-select select2_ukerja"></select>
                 </div>
               </div>
             <?php
@@ -109,8 +109,8 @@ switch ($type) {
 
         <div class="modal-footer">
           <div class="text-end">
-            <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-undo-alt me-1"></i>Batal</button>
-            <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-save me-1"></i>Simpan</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-undo-alt me-1"></i>Batal</button>
+            <button type="submit" class="btn btn-success"><i class="fas fa-save me-1"></i>Simpan</button>
           </div>
         </div>
 
@@ -237,8 +237,8 @@ switch ($type) {
 
         <div class="modal-footer">
           <div class="text-end">
-            <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-undo-alt me-1"></i>Batal</button>
-            <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-edit me-1"></i>Update</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-undo-alt me-1"></i>Batal</button>
+            <button type="submit" class="btn btn-success"><i class="fas fa-edit me-1"></i>Update</button>
           </div>
         </div>
 
@@ -349,8 +349,8 @@ switch ($type) {
 
         <div class="modal-footer">
           <div class="text-end">
-            <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-undo-alt me-1"></i>Batal</button>
-            <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash me-1"></i>Ya, Hapus</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-undo-alt me-1"></i>Batal</button>
+            <button type="submit" class="btn btn-danger"><i class="fas fa-trash me-1"></i>Ya, Hapus</button>
           </div>
         </div>
 
