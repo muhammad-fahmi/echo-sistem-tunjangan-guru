@@ -78,7 +78,7 @@
                 <tr class="text-center">
                   <th class="vam" style="min-width: 35px;">#</th>
                   <th class="vam" style="min-width: 175px;">NISN / Nama Lengkap</th>
-                  <!-- <th class="vam">NISN</th> -->
+                  <th class="vam" style="min-width: 175px;">Orang Tua PD</th>
                   <th class="vam" style="min-width: 100px;">NIK</th>
                   <th class="vam" style="min-width: 80px;">Jenis Kelamin</th>
                   <th class="vam" style="min-width: 60px;">Agama</th>
@@ -160,14 +160,21 @@
           );
         }
       },
-      // {
-      //   data: 'nisn',
-      //   orderable: false,
-      //   className: 'vat',
-      //   createdCell: function(td, cellData, rowData, row, col) {
-      //     $(td).html('<div class="text-start">' + cellData + '</div>');
-      //   }
-      // },
+      {
+        data: 'nama_ibu',
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          let nama_ayah = '<div class="mb-2">' + rowData['nama_ayah'] ? rowData['nama_ayah'] : '-' + '</div>';
+          let nama_ibu = '<div class="mb-2">' + cellData ? cellData : '-' + '</div>';
+
+          $(td).html('<div class="text-start">' +
+            '<div class="badge bg-success mb-1 me-1">Ayah</div>' + nama_ayah + '<br>' +
+            '<div class="badge bg-primary mb-1 me-1">Ibu</div>' + nama_ibu +
+            '</div>'
+          );
+        }
+      },
       {
         data: 'nik',
         orderable: false,
@@ -202,7 +209,7 @@
       },
       {
         data: 's_aktif',
-        orderable: true,
+        orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
           let status_siswa = (cellData == '1') ?
@@ -230,9 +237,9 @@
             '';
 
           $(td).html('<div class="text-center">' +
-            '<div class="d-grid gap-1"><div class="col-12">' + btn_edit + '</div>' +
-            '<div class="col-12">' + btn_detail + '</div>' +
-            '<div class="col-12">' + btn_delete + '</div>' +
+            '<div class="d-grid gap-1 px-2"><div class="row">' + btn_edit + '</div>' +
+            '<div class="row">' + btn_detail + '</div>' +
+            '<div class="row">' + btn_delete + '</div>' +
             '</div></div>');
         }
       },

@@ -112,6 +112,7 @@ class Pdt_peserta_didik extends MY_Controller
             'nama_ibu' => '',
             'no_kk' => '',
             'alamat' => '',
+            's_aktif' => 1,
             'pdpd' => '',
           ];
           $data = [
@@ -177,13 +178,7 @@ class Pdt_peserta_didik extends MY_Controller
     /// |----------------------------------------
     $post = $this->input->post();
 
-    // Cek jika id_siswa sudah terdaftar didalam DB
-    // $is_siswa_exist = fetch_row_data('v_progurinda_siswa', ['id_siswa' => $post['id_siswa']], false);
-    // if (!$is_siswa_exist) return [
-    //   'status' => false,
-    //   'message' => 'Maaf, Peserta Didik (Siswa) sudah terdaftar dalam database.'
-    // ];
-
+    // set data array utk proses insert
     $data_to_save = array(
       'id_siswa' => $post['id_siswa'],
       'nama' => $post['nama'],
@@ -195,10 +190,16 @@ class Pdt_peserta_didik extends MY_Controller
       'nama_ibu' => $post['nama_ibu'],
       'no_kk' => $post['no_kk'],
       'alamat' => $post['alamat'],
-      's_aktif' => 1,
+      's_aktif' => $post['s_aktif'],
       'tgl_masuk' => em_date('Y-m-d'),
       'pdpd' => $post['pdpd_options'],
     );
+
+    // Jika peserta didik di non-aktifkan, lanjutkan proses insert data
+    if ($data_to_save['s_aktif'] == 0) {
+      $data_to_save['alasan_keluar'] = $post['alasan_keluar'];
+      $data_to_save['tgl_keluar'] = em_date('Y-m-d');
+    }
 
     $res = $this->mdl_peserta_didik->save_peserta_didik($data_to_save);
 

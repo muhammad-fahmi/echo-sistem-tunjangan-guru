@@ -127,6 +127,15 @@ class Mdl_pdt_peserta_didik extends CI_Model
       ];
     }
 
+    // cek apakah data sudah ada di database
+    $is_siswa_exist = fetch_row_data('progurinda_r_siswa', ['nama' => $data['nama']], '');
+    if ($is_siswa_exist) {
+      return [
+        'status' => false,
+        'message' => 'Maaf, Peserta Didik (Siswa) sudah terdaftar dalam database.'
+      ];
+    }
+
     $cur_user = $this->session->userdata('id_user');
     try {
       //start db transaction
