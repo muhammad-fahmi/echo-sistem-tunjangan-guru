@@ -12,7 +12,7 @@ class Pangkalan_data extends MY_Controller
     $is_ajax = $this->input->is_ajax_request();
     if (!$is_ajax) {
       $this->session->set_userdata('menu', 'PDT_Dashboard');
-      if (!check_perm('read')) {
+      if (!check_perm('read') || !is_logged_in()) {
         redirect(site_url('login'));
       }
     }

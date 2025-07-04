@@ -18,6 +18,19 @@ function isset_nn_nes($data, $placeholder = null)
   }
 }
 
+function is_logged_in()
+{
+  $CI = &get_instance();
+  $logged_in = $CI->session->userdata('logged_in');
+  $id_user = $CI->session->userdata('id_user');
+
+  if (!$logged_in || !$id_user) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 /**
  * Checks if a variable has a valid value (not empty).
  * 
@@ -902,6 +915,13 @@ function menu_loader($echo = true)
             $a_expand = 'false';
             $c_open = 'collapse';
           }
+
+          //_____ ORIGINAL STYLE
+          // $html .= '<li class="sidebar-item parent_item ' . $v['id_menu'] . ' ' . $parent_active . '">
+          //   <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="' . $a_expand . '"><i class="' . $icon . '"></i><span class="hide-menu">' . check_var($v, 'menu_title', 'UNKNOWN') . '<small>' . $subs . '</small></span></a>
+          //   <ul aria-expanded="false" class="' . $c_open . ' first-level">';
+
+          //_____ MODIFIED STYLE
           $html .= '<li class="bz_sidebar_item parent_item ' . $v['id_menu'] . ' ' . $parent_active . '">
             <a class="sidebar_link" href="javascript:void(0)" aria-expanded="' . $a_expand . '">
               <div class="icon"><i class="' . $icon . '"></i></div>
@@ -924,6 +944,15 @@ function menu_loader($echo = true)
           $href = 'href="' . site_url(check_var($v, 'url', '#')) . '"';
           $onclick = '';
         }
+
+        //_____ ORIGINAL STYLE
+        // $html .= '<li class="sidebar-item ' . $v['id_menu'] . ' ' . $active . '">
+        //     <a ' . $href . ' ' . $onclick . ' class="sidebar-link"><i class="' . $icon . '"></i><span class="hide-menu">
+        //         ' . check_var($v, 'menu_title', 'UNKNOWN') . '<small>' . $subs . '</small>
+        //       </span></a>
+        //   </li>';
+
+        //_____ MODIFIED STYLE
         $html .= '<li class="bz_sidebar_item ' . $v['id_menu'] . ' ' . $active . '">
             <a ' . $href . ' ' . $onclick . ' class="sidebar_link">
               <div class="icon"><i class="' . $icon . '"></i></div>
