@@ -9,7 +9,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
         <a href="javascript:void(0)">Pangkalan Data</a>
       </li>
       <li class="breadcrumb-item">
-        <a href="<?= site_url('pdt_profil_sekolah') ?>">Verifikasi Profil Sekolah</a>
+        <a href="<?= site_url('pdt_verif_profil_sekolah') ?>">Verifikasi Profil Sekolah</a>
       </li>
       <li class="breadcrumb-item active">Verifikasi Dokumen Usulan Profil Sekolah</li>
     </ol>
@@ -76,238 +76,252 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
 
           <div class="row g-2">
 
-            <div class="col-12">
-              <div class="desc_block old_data old_kode_ukerja" attr-data="kode_ukerja">
-                <label>Sekolah / Unit Kerja</label>
-                <div><?= check_var($data, 'ket_ukerja', '-') ?></div>
+            <?php
+            if (check_var($data)) {
+              // kalau memang ada data awal, tampilkan
+            ?>
+              <div class="col-12">
+                <div class="desc_block old_data old_kode_ukerja" attr-data="kode_ukerja">
+                  <label>Sekolah / Unit Kerja</label>
+                  <div><?= check_var($data, 'ket_ukerja', '-') ?></div>
+                </div>
               </div>
-            </div>
 
-            <div class="col-12">
-              <div class="desc_block old_data old_jenjang" attr-data="jenjang">
-                <label>Jenjang</label>
-                <div class="text_value"><?= check_var($data, 'jenjang', '-') ?></div>
+              <div class="col-12">
+                <div class="desc_block old_data old_jenjang" attr-data="jenjang">
+                  <label>Jenjang</label>
+                  <div class="text_value"><?= check_var($data, 'jenjang', '-') ?></div>
+                </div>
               </div>
-            </div>
 
-            <div class="col-12">
-              <div class="desc_block old_data old_status" attr-data="status">
-                <label>Status Sekolah</label>
-                <div class="text_value"><?= check_var($data, 'ket_status_sekolah', '-') ?></div>
+              <div class="col-12">
+                <div class="desc_block old_data old_status" attr-data="status">
+                  <label>Status Sekolah</label>
+                  <div class="text_value"><?= check_var($data, 'ket_status_sekolah', '-') ?></div>
+                </div>
               </div>
-            </div>
 
-            <div class="col-12">
-              <div class="desc_block old_data old_npsn" attr-data="npsn">
-                <label>NPSN</label>
-                <div class="text_value"><?= check_var($data, 'npsn', '-') ?></div>
+              <div class="col-12">
+                <div class="desc_block old_data old_npsn" attr-data="npsn">
+                  <label>NPSN</label>
+                  <div class="text_value"><?= check_var($data, 'npsn', '-') ?></div>
+                </div>
               </div>
-            </div>
 
-            <div class="col-12">
-              <div class="desc_block old_data old_nss" attr-data="nss">
-                <label>NSS</label>
-                <div class="text_value"><?= check_var($data, 'nss', '-') ?></div>
+              <div class="col-12">
+                <div class="desc_block old_data old_nss" attr-data="nss">
+                  <label>NSS</label>
+                  <div class="text_value"><?= check_var($data, 'nss', '-') ?></div>
+                </div>
               </div>
-            </div>
 
-            <div class="col-12">
-              <div class="desc_block old_data old_no_statistik_bangunan" attr-data="no_statistik_bangunan">
-                <label>No. Statistik Bangunan</label>
-                <div class="text_value"><?= check_var($data, 'no_statistik_bangunan', '-') ?></div>
+              <div class="col-12">
+                <div class="desc_block old_data old_no_statistik_bangunan" attr-data="no_statistik_bangunan">
+                  <label>No. Statistik Bangunan</label>
+                  <div class="text_value"><?= check_var($data, 'no_statistik_bangunan', '-') ?></div>
+                </div>
               </div>
-            </div>
 
-            <div class="col-12">
-              <div class="desc_block old_data old_akreditasi" attr-data="akreditasi">
-                <label>Akreditasi</label>
-                <div class="text_value"><?= check_var($data, 'akreditasi', '-') ?></div>
+              <div class="col-12">
+                <div class="desc_block old_data old_akreditasi" attr-data="akreditasi">
+                  <label>Akreditasi</label>
+                  <div class="text_value"><?= check_var($data, 'akreditasi', '-') ?></div>
+                </div>
               </div>
-            </div>
 
-            <div class="col-12">
-              <div class="desc_block old_data old_inklusif" attr-data="inklusif">
-                <label>Inklusif</label>
-                <div class="text_value">
+              <div class="col-12">
+                <div class="desc_block old_data old_inklusif" attr-data="inklusif">
+                  <label>Inklusif</label>
+                  <div class="text_value">
+                    <?php
+                    if (check_var($data, 'inklusif', '__') == '1') {
+                      echo 'Ya, Sekolah ini Inklusif';
+                    } elseif (check_var($data, 'inklusif', '__') == '0') {
+                      echo 'Tidak, Sekolah ini tidak Inklusif';
+                    } else {
+                      echo '-';
+                    }
+                    ?>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_alamat" attr-data="alamat">
+                  <label>Alamat</label>
+                  <div class="text_value"><?= nl2br(check_var($data, 'alamat', '-')) ?></div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_id_kecamatan" attr-data="id_kecamatan">
+                  <label>Kecamatan</label>
+                  <div class="text_value"><?= check_var($data, 'id_kecamatan', '...') . ' - ' . check_var($data, 'nama_kecamatan', '...') ?></div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_id_kelurahan" attr-data="id_kelurahan">
+                  <label>Kelurahan</label>
+                  <div class="text_value"><?= check_var($data, 'id_kelurahan', '...') . ' - ' . check_var($data, 'nama_kelurahan', '...') ?></div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_kode_pos" attr-data="kode_pos">
+                  <label>Kode POS</label>
+                  <div class="text_value"><?= check_var($data, 'kode_pos', '-') ?></div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_map_location" attr-data="map_location">
+                  <label>Lokasi pada MAP</label>
+                  <div style="display: block; position: relative; width: calc(100% - 40px);">
+                    <div id="old_map_location" style="height: 500px; z-index: 1;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6">
+                <div class="desc_block old_data old_lat" attr-data="lat">
+                  <label>Latitude</label>
+                  <div class="text_value"><?= check_var($data, 'lat', '-') ?></div>
+                </div>
+              </div>
+
+              <div class="col-6">
+                <div class="desc_block old_data old_long" attr-data="long">
+                  <label>Longitude</label>
+                  <div class="text_value"><?= check_var($data, 'long', '-') ?></div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_telepon" attr-data="telepon">
+                  <label>No. Telepon</label>
+                  <div class="text_value"><?= check_var($data, 'telepon', '-') ?></div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_website" attr-data="website">
+                  <label>Website</label>
+                  <div class="text_value"><?= check_var($data, 'website', '-') ?></div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_email" attr-data="email">
+                  <label>E-mail</label>
+                  <div class="text_value"><?= check_var($data, 'email', '-') ?></div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_no_rek_bank" attr-data="no_rek_bank">
+                  <label>No. Rekening Bank</label>
+                  <div class="text_value"><?= check_var($data, 'no_rek_bank', '-') ?></div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_nama_bank" attr-data="nama_bank">
+                  <label>Nama Bank</label>
+                  <div class="text_value"><?= check_var($data, 'nama_bank', '-') ?></div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_cabang_kcp_unit" attr-data="cabang_kcp_unit">
+                  <label>Cabang KCP Unit</label>
+                  <div class="text_value"><?= check_var($data, 'cabang_kcp_unit', '-') ?></div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_nama_wajib_pajak" attr-data="nama_wajib_pajak">
+                  <label>Nama Wajib Pajak</label>
+                  <div class="text_value"><?= check_var($data, 'nama_wajib_pajak', '-') ?></div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_npwp" attr-data="npwp">
+                  <label>NPWP</label>
+                  <div class="text_value"><?= check_var($data, 'npwp', '-') ?></div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_no_sk_pendirian" attr-data="no_sk_pendirian">
+                  <label>No. SK Pendirian</label>
+                  <div class="text_value"><?= check_var($data, 'no_sk_pendirian', '-') ?></div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_tgl_sk_pendirian" attr-data="tgl_sk_pendirian">
+                  <label>Tgl. SK Pendirian</label>
+                  <div class="text_value">
+                    <?php
+                    $date_skp = check_var($data, 'tgl_sk_pendirian', '');
+                    echo check_var(em_date('j F Y', 'set', $date_skp), null, '-');
+                    ?>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_no_sk_izin_operasional" attr-data="no_sk_izin_operasional">
+                  <label>No. SK Izin Operasional</label>
+                  <div class="text_value"><?= check_var($data, 'no_sk_izin_operasional', '-') ?></div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_tgl_sk_izin_operasional" attr-data="tgl_sk_izin_operasional">
+                  <label>Tgl. SK Izin Operasional</label>
+                  <div class="text_value">
+                    <?php
+                    $date_skio = check_var($data, 'tgl_sk_izin_operasional', '');
+                    echo check_var(em_date('j F Y', 'set', $date_skio), null, '-');
+                    ?>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_luas_tanah" attr-data="luas_tanah">
+                  <label>Luas Tanah (m<sup>2</sup>)</label>
+                  <div class="text_value"><?= number_format(check_var($data, 'luas_tanah', 0), 2, ',', ',') ?></div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_kepemilikan_tanah" attr-data="kepemilikan_tanah">
+                  <label>Kepemilikan Tanah</label>
                   <?php
-                  if (check_var($data, 'inklusif', '__') == '1') {
-                    echo 'Ya, Sekolah ini Inklusif';
-                  } elseif (check_var($data, 'inklusif', '__') == '0') {
-                    echo 'Tidak, Sekolah ini tidak Inklusif';
-                  } else {
-                    echo '-';
-                  }
+                  $arr_kepemilikan = [
+                    'MILIK' => 'Hak Milik',
+                    'SEWA' => 'Sewa',
+                    'PINJAM' => 'Pinjam',
+                    'invalid' => '-'
+                  ];
                   ?>
+                  <div class="text_value"><?= $arr_kepemilikan[check_var($data, 'kepemilikan_tanah', 'invalid')] ?></div>
                 </div>
               </div>
-            </div>
-
-            <div class="col-12">
-              <div class="desc_block old_data old_alamat" attr-data="alamat">
-                <label>Alamat</label>
-                <div class="text_value"><?= nl2br(check_var($data, 'alamat', '-')) ?></div>
+            <?php
+            } else {
+              // kalau tidak ada tampilkan pesan
+            ?>
+              <div class="col-12">
+                <div class="desc_block text-center">Belum ada data profil yang terverifikasi.</div>
               </div>
-            </div>
-
-            <div class="col-12">
-              <div class="desc_block old_data old_id_kecamatan" attr-data="id_kecamatan">
-                <label>Kecamatan</label>
-                <div class="text_value"><?= check_var($data, 'id_kecamatan', '...') . ' - ' . check_var($data, 'nama_kecamatan', '...') ?></div>
-              </div>
-            </div>
-
-            <div class="col-12">
-              <div class="desc_block old_data old_id_kelurahan" attr-data="id_kelurahan">
-                <label>Kelurahan</label>
-                <div class="text_value"><?= check_var($data, 'id_kelurahan', '...') . ' - ' . check_var($data, 'nama_kelurahan', '...') ?></div>
-              </div>
-            </div>
-
-            <div class="col-12">
-              <div class="desc_block old_data old_kode_pos" attr-data="kode_pos">
-                <label>Kode POS</label>
-                <div class="text_value"><?= check_var($data, 'kode_pos', '-') ?></div>
-              </div>
-            </div>
-
-            <div class="col-12">
-              <div class="desc_block old_data old_map_location" attr-data="map_location">
-                <label>Lokasi pada MAP</label>
-                <div style="display: block; position: relative; width: calc(100% - 40px);">
-                  <div id="old_map_location" style="height: 500px; z-index: 1;"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-6">
-              <div class="desc_block old_data old_lat" attr-data="lat">
-                <label>Latitude</label>
-                <div class="text_value"><?= check_var($data, 'lat', '-') ?></div>
-              </div>
-            </div>
-
-            <div class="col-6">
-              <div class="desc_block old_data old_long" attr-data="long">
-                <label>Longitude</label>
-                <div class="text_value"><?= check_var($data, 'long', '-') ?></div>
-              </div>
-            </div>
-
-            <div class="col-12">
-              <div class="desc_block old_data old_telepon" attr-data="telepon">
-                <label>No. Telepon</label>
-                <div class="text_value"><?= check_var($data, 'telepon', '-') ?></div>
-              </div>
-            </div>
-
-            <div class="col-12">
-              <div class="desc_block old_data old_website" attr-data="website">
-                <label>Website</label>
-                <div class="text_value"><?= check_var($data, 'website', '-') ?></div>
-              </div>
-            </div>
-
-            <div class="col-12">
-              <div class="desc_block old_data old_email" attr-data="email">
-                <label>E-mail</label>
-                <div class="text_value"><?= check_var($data, 'email', '-') ?></div>
-              </div>
-            </div>
-
-            <div class="col-12">
-              <div class="desc_block old_data old_no_rek_bank" attr-data="no_rek_bank">
-                <label>No. Rekening Bank</label>
-                <div class="text_value"><?= check_var($data, 'no_rek_bank', '-') ?></div>
-              </div>
-            </div>
-
-            <div class="col-12">
-              <div class="desc_block old_data old_nama_bank" attr-data="nama_bank">
-                <label>Nama Bank</label>
-                <div class="text_value"><?= check_var($data, 'nama_bank', '-') ?></div>
-              </div>
-            </div>
-
-            <div class="col-12">
-              <div class="desc_block old_data old_cabang_kcp_unit" attr-data="cabang_kcp_unit">
-                <label>Cabang KCP Unit</label>
-                <div class="text_value"><?= check_var($data, 'cabang_kcp_unit', '-') ?></div>
-              </div>
-            </div>
-
-            <div class="col-12">
-              <div class="desc_block old_data old_nama_wajib_pajak" attr-data="nama_wajib_pajak">
-                <label>Nama Wajib Pajak</label>
-                <div class="text_value"><?= check_var($data, 'nama_wajib_pajak', '-') ?></div>
-              </div>
-            </div>
-
-            <div class="col-12">
-              <div class="desc_block old_data old_npwp" attr-data="npwp">
-                <label>NPWP</label>
-                <div class="text_value"><?= check_var($data, 'npwp', '-') ?></div>
-              </div>
-            </div>
-
-            <div class="col-12">
-              <div class="desc_block old_data old_no_sk_pendirian" attr-data="no_sk_pendirian">
-                <label>No. SK Pendirian</label>
-                <div class="text_value"><?= check_var($data, 'no_sk_pendirian', '-') ?></div>
-              </div>
-            </div>
-
-            <div class="col-12">
-              <div class="desc_block old_data old_tgl_sk_pendirian" attr-data="tgl_sk_pendirian">
-                <label>Tgl. SK Pendirian</label>
-                <div class="text_value">
-                  <?php
-                  $date_skp = check_var($data, 'tgl_sk_pendirian', '');
-                  echo check_var(em_date('j F Y', 'set', $date_skp), null, '-');
-                  ?>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12">
-              <div class="desc_block old_data old_no_sk_izin_operasional" attr-data="no_sk_izin_operasional">
-                <label>No. SK Izin Operasional</label>
-                <div class="text_value"><?= check_var($data, 'no_sk_izin_operasional', '-') ?></div>
-              </div>
-            </div>
-
-            <div class="col-12">
-              <div class="desc_block old_data old_tgl_sk_izin_operasional" attr-data="tgl_sk_izin_operasional">
-                <label>Tgl. SK Izin Operasional</label>
-                <div class="text_value">
-                  <?php
-                  $date_skio = check_var($data, 'tgl_sk_izin_operasional', '');
-                  echo check_var(em_date('j F Y', 'set', $date_skio), null, '-');
-                  ?>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12">
-              <div class="desc_block old_data old_luas_tanah" attr-data="luas_tanah">
-                <label>Luas Tanah (m<sup>2</sup>)</label>
-                <div class="text_value"><?= number_format(check_var($data, 'luas_tanah', 0), 2, ',', ',') ?></div>
-              </div>
-            </div>
-
-            <div class="col-12">
-              <div class="desc_block old_data old_kepemilikan_tanah" attr-data="kepemilikan_tanah">
-                <label>Kepemilikan Tanah</label>
-                <?php
-                $arr_kepemilikan = [
-                  'MILIK' => 'Hak Milik',
-                  'SEWA' => 'Sewa',
-                  'PINJAM' => 'Pinjam',
-                  'invalid' => '-'
-                ];
-                ?>
-                <div class="text_value"><?= $arr_kepemilikan[check_var($data, 'kepemilikan_tanah', 'invalid')] ?></div>
-              </div>
-            </div>
+            <?php
+            }
+            ?>
 
           </div>
 
@@ -574,6 +588,49 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
 
     </div>
 
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title space-between">
+            <div>Form Verifikasi</div>
+          </div>
+
+          <form id="form_verifikasi" action="<?= site_url('pdt_verif_profil_sekolah/do_verif') ?>" method="POST">
+            <input type="hidden" name="id_dokumen" id="id_dokumen" value="<?= check_var($dokumen, 'id_dokumen', '') ?>">
+
+            <div class="row g-2">
+
+              <div class="col-12">
+                <div class="input_block">
+                  <label for="tindak_lanjut">Tindak Lanjut</label>
+                  <select name="tindak_lanjut" id="tindak_lanjut" class="form-select">
+                    <option value="" default hidden>- Pilih Tindak Lanjut -</option>
+                    <option value="setuju">Setuju</option>
+                    <option value="tolak">Tolak</option>
+                  </select>
+                  <div class="invalid-feedback" id="error_tindak_lanjut"></div>
+                </div>
+              </div>
+
+              <div id="container_alasan" class="col-12 d-none">
+                <div class="input_block">
+                  <label for="alasan">Alasan / Pesan</label>
+                  <textarea name="alasan" id="alasan" class="form-control" rows="4" placeholder="Silahkan isi pesan / alasan terkait tindak lanjut yang dipilih"></textarea>
+                  <div class="invalid-feedback" id="error_alasan"></div>
+                </div>
+              </div>
+
+              <div class="col-12 text-end">
+                <button type="submit" class="btn btn-success form_action_button ms-2"><i class="fas fa-check-square me-1"></i>Verifikasi</button>
+              </div>
+
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+
   </div>
 
 </div>
@@ -620,7 +677,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
     /// |----------------------------------------
     /// | FORM SUBMISSION
     /// |----------------------------------------
-    $('#form_edit_profil_sekolah').validate($.extend({
+    $('#form_verifikasi').validate($.extend({
       submitHandler: function(form, event) {
         // declare element that will be affected
         // by every state of the form submission
@@ -630,16 +687,13 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
         // declare button submit disabling right here if needed
         submit.attr('disabled', true);
 
-        // change url based on which button pressed
-        $(form).attr('action', form_action_url);
-
         $(form).ajaxSubmit({
           success: function(e) {
             if (e.status) {
               // what to do when the response status = true
               show_notify('success', e.message);
               setTimeout(() => {
-                window.location.href = '<?= site_url('pdt_profil_sekolah') ?>/' + e.redirect + '/<?= $data['id_dokumen'] ?>';
+                window.location.href = '<?= site_url('pdt_verif_profil_sekolah') ?>/detail/<?= $dokumen['id_dokumen'] ?>';
               }, 2000);
             } else {
               // what to do when the response status = false
@@ -647,8 +701,8 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
               submit.attr('disabled', false);
 
               // reset error
-              $('#form_edit_profil_sekolah .is-invalid').removeClass('is-invalid');
-              $('#form_edit_profil_sekolah .invalid-feedback').html('');
+              $('#form_verifikasi .is-invalid').removeClass('is-invalid');
+              $('#form_verifikasi .invalid-feedback').html('');
 
               if (e.error_value) {
                 $.each(e.error_value, function(field, error) {
@@ -715,29 +769,47 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
     }));
 
     /// |----------------------------------------
-    /// | MAP FUNCTIONALITY (OLD DATA)
+    /// | TINDAK LANJUT LISTENER
     /// |----------------------------------------
-    // Default coordinates if no value is set
-    const old_defaultLat = <?= check_var($data, 'lat', ' -0.492215') ?>;
-    const old_defaultLng = <?= check_var($data, 'long', '117.1432875') ?>;
+    $('#tindak_lanjut').on('change', function(e) {
+      if ($(this).val() == 'tolak') {
+        $('#container_alasan').removeClass('d-none');
+      } else {
+        $('#container_alasan').addClass('d-none');
+      }
+    });
 
-    // Get initial coordinates
-    var old_lat = $('.old_lat').val() || old_defaultLat;
-    var old_lng = $('.old_long').val() || old_defaultLng;
+    <?php
+    if (check_var($data)) {
+      // kalau ada data awal, init map nya
+    ?>
+      /// |----------------------------------------
+      /// | MAP FUNCTIONALITY (OLD DATA)
+      /// |----------------------------------------
+      // Default coordinates if no value is set
+      const old_defaultLat = <?= check_var($data, 'lat', ' -0.492215') ?>;
+      const old_defaultLng = <?= check_var($data, 'long', '117.1432875') ?>;
 
-    // Init map
-    const old_map = L.map('old_map_location').setView([old_lat, old_lng], 17);
+      // Get initial coordinates
+      var old_lat = $('.old_lat').val() || old_defaultLat;
+      var old_lng = $('.old_long').val() || old_defaultLng;
 
-    // OPEN STREET MAP
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors',
-      maxZoom: 19
-    }).addTo(old_map);
+      // Init map
+      const old_map = L.map('old_map_location').setView([old_lat, old_lng], 17);
 
-    // Marker
-    var old_marker = L.marker([old_lat, old_lng], {
-      draggable: false
-    }).addTo(old_map);
+      // OPEN STREET MAP
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 19
+      }).addTo(old_map);
+
+      // Marker
+      var old_marker = L.marker([old_lat, old_lng], {
+        draggable: false
+      }).addTo(old_map);
+    <?php
+    }
+    ?>
 
     /// |----------------------------------------
     /// | MAP FUNCTIONALITY (NEW DATA)

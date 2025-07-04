@@ -84,7 +84,7 @@ class Pdt_verif_profil_sekolah extends MY_Controller
     $dataset = fetch_row_data('vr_profil_sekolah', ['id_dokumen' => $decryptedID], false);
     if ($dataset == false) {
       $this->session->set_userdata('flash_data', "Maaf, data dokumen usulan Profil Sekolah yang akan dilihat detailnya tidak valid.");
-      redirect(site_url('pdt_profil_sekolah'));
+      redirect(site_url('pdt_verif_profil_sekolah'));
       return;
     }
 
@@ -92,7 +92,7 @@ class Pdt_verif_profil_sekolah extends MY_Controller
     $same_ukerja = ($dataset['kode_ukerja'] == $cur_unor);
     if (!is_admin() && !$same_ukerja) {
       $this->session->set_userdata('flash_data', "Maaf, Anda tidak memiliki ijin untuk melihat data Profil Sekolah tersebut.");
-      redirect(site_url('pdt_profil_sekolah'));
+      redirect(site_url('pdt_verif_profil_sekolah'));
       return;
     }
 
@@ -151,44 +151,14 @@ class Pdt_verif_profil_sekolah extends MY_Controller
 
   public function do_verif()
   {
-    $type = post_safe('type');
-
-    if ($type == 'add') {
-      // CHECK PERMISSION
-      if (!check_perm('insert', 'PDT_ProfilSekolah')) return output_json([
-        'status' => false,
-        'message' => 'invalid permissions'
-      ], 403);
-    } else {
-      // CHECK PERMISSION
-      if (!check_perm('update', 'PDT_ProfilSekolah')) return output_json([
-        'status' => false,
-        'message' => 'invalid permissions'
-      ], 403);
-    }
+    if (!check_perm('verif', 'PDT_ProfilSekolah')) return output_json([
+      'status' => false,
+      'message' => 'invalid permissions'
+    ], 403);
 
     $post = post_safe();
 
-    switch ($type) {
-      case 'add':
-        $response = $this->mdl_vrfprofsekolah->tambah_profil_sekolah($post);
-        break;
-
-      case 'edit':
-        $response = $this->mdl_vrfprofsekolah->edit_profil_sekolah($post);
-        break;
-
-      case 'update':
-        $response = $this->mdl_vrfprofsekolah->update_profil_sekolah($post);
-        break;
-
-      default:
-        return output_json([
-          'status' => false,
-          'message' => 'invalid save type'
-        ], 400);
-        break;
-    }
+    $response = $this->mdl_vrfprofsekolah->verif_profil_sekolah($post);
 
     return output_json($response);
   }
