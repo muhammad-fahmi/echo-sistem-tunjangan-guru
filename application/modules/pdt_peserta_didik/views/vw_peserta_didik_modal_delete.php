@@ -15,52 +15,52 @@
       <div class="col-12 form_mapel">
         <div class="col-12 mb-3">
           <div class="alert alert-danger m-0">
-            Apakah anda yakin untuk menghapus data peserta didik ini?
+            Apakah anda yakin untuk menghapus data <b>peserta didik</b> ini?
           </div>
         </div>
         <table>
-          <tr>
-            <td style="min-width: 120px;">NISN</td>
+          <tr class="mb-2">
+            <td style="min-width: 120px; font-weight: 500;">NISN</td>
             <td style="min-width: 10px;">:</td>
             <td style="width: 100%;"><?= check_var($data, 'nisn', '-') ?></td>
           </tr>
-          <tr>
-            <td style="min-width: 120px;">Nama Lengkap</td>
+          <tr class="mb-2">
+            <td style="min-width: 120px; font-weight: 500;">Nama Lengkap</td>
             <td style="min-width: 10px;">:</td>
             <td style="width: 100%;"><?= check_var($data, 'nama', '-') ?></td>
           </tr>
-          <tr>
-            <td style="min-width: 120px;">NIK</td>
+          <tr class="mb-2">
+            <td style="min-width: 120px; font-weight: 500;">NIK</td>
             <td style="min-width: 10px;">:</td>
             <td style="width: 100%;"><?= check_var($data, 'nik', '-') ?></td>
           </tr>
-          <tr>
-            <td style="min-width: 120px;">Jenis Kelamin</td>
+          <tr class="mb-2">
+            <td style="min-width: 120px; font-weight: 500;">Jenis Kelamin</td>
             <td style="min-width: 10px;">:</td>
             <td style="width: 100%;"><?= check_var($data, 'ket_jns_kelamin', '-') ?></td>
           </tr>
-          <tr>
-            <td style="min-width: 120px;">Agama</td>
+          <tr class="mb-2">
+            <td style="min-width: 120px; font-weight: 500;">Agama</td>
             <td style="min-width: 10px;">:</td>
             <td style="width: 100%;"><?= check_var($data, 'ket_agama', '-') ?></td>
           </tr>
-          <tr>
-            <td style="min-width: 120px;">Nama Ibu</td>
+          <tr class="mb-2">
+            <td style="min-width: 120px; font-weight: 500;">Nama Ibu</td>
             <td style="min-width: 10px;">:</td>
             <td style="width: 100%;"><?= check_var($data, 'nama_ibu', '-') ?></td>
           </tr>
-          <tr>
-            <td style="min-width: 120px;">No. KK</td>
+          <tr class="mb-2">
+            <td style="min-width: 120px; font-weight: 500;">No. KK</td>
             <td style="min-width: 10px;">:</td>
             <td style="width: 100%;"><?= check_var($data, 'no_kk', '-') ?></td>
           </tr>
-          <tr>
-            <td style="min-width: 120px;">Alamat</td>
+          <tr class="mb-2">
+            <td style="min-width: 120px; font-weight: 500;">Alamat</td>
             <td style="min-width: 10px;">:</td>
             <td style="width: 100%;"><?= check_var($data, 'alamat', '-') ?></td>
           </tr>
-          <tr>
-            <td style="min-width: 120px;">Penyandang Disabilitas</td>
+          <tr class="mb-2">
+            <td style="min-width: 120px; font-weight: 500;">Penyandang Disabilitas</td>
             <td style="min-width: 10px;">:</td>
             <td style="width: 100%;"><?= check_var($data, 'pdpd', '-') ?></td>
           </tr>
