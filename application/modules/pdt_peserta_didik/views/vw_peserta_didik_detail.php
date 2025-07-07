@@ -85,7 +85,7 @@
       <div class="card">
         <div class="card-body">
           <h4 class="card-title space-between mb-3">
-            <div><i class="fas fa-history me-2"></i>Riwayat Dokumen</div>
+            <div><i class="fas fa-history me-2"></i>Riwayat Peserta Didik</div>
             <div></div>
           </h4>
           <div>
@@ -112,7 +112,7 @@
         <div class="card">
           <div class="card-body">
             <h4 class="card-title space-between mb-3">
-              <div><i class="fas fa-building me-2"></i>Profil Sekolah</div>
+              <div><i class="fas fa-building me-2"></i>Profil Peserta Didik</div>
               <div></div>
             </h4>
 
@@ -126,67 +126,57 @@
 
                   <div class="col-12">
                     <div class="desc_block">
-                      <label>Sekolah / Unit Kerja</label>
-                      <div><?= check_var($data, 'ket_ukerja', '-') ?></div>
+                      <label>NISN</label>
+                      <div><?= check_var($data, 'nisn', '-') ?></div>
                     </div>
                   </div>
 
                   <div class="col-12">
                     <div class="desc_block">
-                      <label for="jenjang">Jenjang</label>
-                      <div class="text_value"><?= check_var($data, 'jenjang', '-') ?></div>
+                      <label for="nama">Nama Lengkap</label>
+                      <div class="text_value"><?= check_var($data, 'nama', '-') ?></div>
                     </div>
                   </div>
 
                   <div class="col-12">
                     <div class="desc_block">
-                      <label for="status">Status Sekolah</label>
-                      <div class="text_value"><?= check_var($data, 'ket_status_sekolah', '-') ?></div>
+                      <label for="status">NIK</label>
+                      <div class="text_value"><?= check_var($data, 'nik', '-') ?></div>
                     </div>
                   </div>
 
                   <div class="col-12">
                     <div class="desc_block">
-                      <label for="npsn">NPSN</label>
-                      <div class="text_value"><?= check_var($data, 'npsn', '-') ?></div>
+                      <label for="ket_jenis_kelamin">Jenis Kelamin</label>
+                      <div class="text_value"><?= check_var($data, 'ket_jenis_kelamin', '-') ?></div>
                     </div>
                   </div>
 
                   <div class="col-12">
                     <div class="desc_block">
-                      <label for="nss">NSS</label>
-                      <div class="text_value"><?= check_var($data, 'nss', '-') ?></div>
+                      <label for="ket_agama">Agama</label>
+                      <div class="text_value"><?= check_var($data, 'ket_agama', '-') ?></div>
                     </div>
                   </div>
 
                   <div class="col-12">
                     <div class="desc_block">
-                      <label for="no_statistik_bangunan">No. Statistik Bangunan</label>
-                      <div class="text_value"><?= check_var($data, 'no_statistik_bangunan', '-') ?></div>
+                      <label for="nama_ayah">Nama Ayah</label>
+                      <div class="text_value"><?= check_var($data, 'nama_ayah', '-') ?></div>
                     </div>
                   </div>
 
                   <div class="col-12">
                     <div class="desc_block">
-                      <label for="akreditasi">Akreditasi</label>
-                      <div class="text_value"><?= check_var($data, 'akreditasi', '-') ?></div>
+                      <label for="nama_ibu">Nama Ibu</label>
+                      <div class="text_value"><?= check_var($data, 'nama_ibu', '-') ?></div>
                     </div>
                   </div>
 
                   <div class="col-12">
                     <div class="desc_block">
-                      <label for="inklusif">Inklusif</label>
-                      <div class="text_value">
-                        <?php
-                        if (check_var($data, 'inklusif', '__') == '1') {
-                          echo 'Ya, Sekolah ini Inklusif';
-                        } elseif (check_var($data, 'inklusif', '__') == '0') {
-                          echo 'Tidak, Sekolah ini tidak Inklusif';
-                        } else {
-                          echo '-';
-                        }
-                        ?>
-                      </div>
+                      <label for="no_kk">No. KK</label>
+                      <div class="text_value"><?= check_var($data, 'no_kk', '-') ?></div>
                     </div>
                   </div>
 
@@ -199,161 +189,29 @@
 
                   <div class="col-12">
                     <div class="desc_block">
-                      <label for="id_kecamatan">Kecamatan</label>
-                      <div class="text_value"><?= check_var($data, 'id_kecamatan', '...') . ' - ' . check_var($data, 'nama_kecamatan', '...') ?></div>
+                      <label for="tgl_masuk">Tgl. Masuk</label>
+                      <div class="text_value"><?= check_var($data, 'tgl_masuk', '-') ?></div>
                     </div>
                   </div>
 
                   <div class="col-12">
                     <div class="desc_block">
-                      <label for="id_kelurahan">Kelurahan</label>
-                      <div class="text_value"><?= check_var($data, 'id_kelurahan', '...') . ' - ' . check_var($data, 'nama_kelurahan', '...') ?></div>
+                      <label for="tgl_keluar">Tgl. Keluar</label>
+                      <div class="text_value"><?= check_var($data, 'tgl_keluar', '-') ?></div>
                     </div>
                   </div>
 
                   <div class="col-12">
                     <div class="desc_block">
-                      <label for="kode_pos">Kode POS</label>
-                      <div class="text_value"><?= check_var($data, 'kode_pos', '-') ?></div>
+                      <label for="alasan_keluar">Alasan Keluar</label>
+                      <div class="text_value"><?= check_var($data, 'alasan_keluar', '-') ?></div>
                     </div>
                   </div>
 
                   <div class="col-12">
                     <div class="desc_block">
-                      <label for="map_location">Lokasi pada MAP</label>
-                      <div style="display: block; position: relative; width: calc(100% - 40px);">
-                        <div id="map_location" style="height: 500px; z-index: 1;"></div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col-6">
-                    <div class="desc_block">
-                      <label for="lat">Latitude</label>
-                      <div class="text_value"><?= check_var($data, 'lat', '-') ?></div>
-                    </div>
-                  </div>
-
-                  <div class="col-6">
-                    <div class="desc_block">
-                      <label for="long">Longitude</label>
-                      <div class="text_value"><?= check_var($data, 'long', '-') ?></div>
-                    </div>
-                  </div>
-
-                  <div class="col-12">
-                    <div class="desc_block">
-                      <label for="telepon">No. Telepon</label>
-                      <div class="text_value"><?= check_var($data, 'telepon', '-') ?></div>
-                    </div>
-                  </div>
-
-                  <div class="col-12">
-                    <div class="desc_block">
-                      <label for="website">Website</label>
-                      <div class="text_value"><?= check_var($data, 'website', '-') ?></div>
-                    </div>
-                  </div>
-
-                  <div class="col-12">
-                    <div class="desc_block">
-                      <label for="email">E-mail</label>
-                      <div class="text_value"><?= check_var($data, 'email', '-') ?></div>
-                    </div>
-                  </div>
-
-                  <div class="col-12">
-                    <div class="desc_block">
-                      <label for="no_rek_bank">No. Rekening Bank</label>
-                      <div class="text_value"><?= check_var($data, 'no_rek_bank', '-') ?></div>
-                    </div>
-                  </div>
-
-                  <div class="col-12">
-                    <div class="desc_block">
-                      <label for="nama_bank">Nama Bank</label>
-                      <div class="text_value"><?= check_var($data, 'nama_bank', '-') ?></div>
-                    </div>
-                  </div>
-
-                  <div class="col-12">
-                    <div class="desc_block">
-                      <label for="cabang_kcp_unit">Cabang KCP Unit</label>
-                      <div class="text_value"><?= check_var($data, 'cabang_kcp_unit', '-') ?></div>
-                    </div>
-                  </div>
-
-                  <div class="col-12">
-                    <div class="desc_block">
-                      <label for="nama_wajib_pajak">Nama Wajib Pajak</label>
-                      <div class="text_value"><?= check_var($data, 'nama_wajib_pajak', '-') ?></div>
-                    </div>
-                  </div>
-
-                  <div class="col-12">
-                    <div class="desc_block">
-                      <label for="npwp">NPWP</label>
-                      <div class="text_value"><?= check_var($data, 'npwp', '-') ?></div>
-                    </div>
-                  </div>
-
-                  <div class="col-12">
-                    <div class="desc_block">
-                      <label for="no_sk_pendirian">No. SK Pendirian</label>
-                      <div class="text_value"><?= check_var($data, 'no_sk_pendirian', '-') ?></div>
-                    </div>
-                  </div>
-
-                  <div class="col-12">
-                    <div class="desc_block">
-                      <label for="tgl_sk_pendirian">Tgl. SK Pendirian</label>
-                      <div class="text_value">
-                        <?php
-                        $date_skp = check_var($data, 'tgl_sk_pendirian', '');
-                        echo check_var(em_date('j F Y', 'set', $date_skp), null, '-');
-                        ?>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col-12">
-                    <div class="desc_block">
-                      <label for="no_sk_izin_operasional">No. SK Izin Operasional</label>
-                      <div class="text_value"><?= check_var($data, 'no_sk_izin_operasional', '-') ?></div>
-                    </div>
-                  </div>
-
-                  <div class="col-12">
-                    <div class="desc_block">
-                      <label for="tgl_sk_izin_operasional">Tgl. SK Izin Operasional</label>
-                      <div class="text_value">
-                        <?php
-                        $date_skio = check_var($data, 'tgl_sk_izin_operasional', '');
-                        echo check_var(em_date('j F Y', 'set', $date_skio), null, '-');
-                        ?>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col-12">
-                    <div class="desc_block">
-                      <label for="luas_tanah">Luas Tanah (m<sup>2</sup>)</label>
-                      <div class="text_value"><?= number_format(check_var($data, 'luas_tanah', 0), 2, ',', ',') ?></div>
-                    </div>
-                  </div>
-
-                  <div class="col-12">
-                    <div class="desc_block">
-                      <label for="kepemilikan_tanah">Kepemilikan Tanah</label>
-                      <?php
-                      $arr_kepemilikan = [
-                        'MILIK' => 'Hak Milik',
-                        'SEWA' => 'Sewa',
-                        'PINJAM' => 'Pinjam',
-                        'invalid' => '-'
-                      ];
-                      ?>
-                      <div class="text_value"><?= $arr_kepemilikan[check_var($data, 'kepemilikan_tanah', 'invalid')] ?></div>
+                      <label for="pdpd">Penyandang Disabilitas</label>
+                      <div class="text_value"><?= check_var($data, 'pdpd', '-') ?></div>
                     </div>
                   </div>
 
