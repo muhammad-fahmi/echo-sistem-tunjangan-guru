@@ -169,7 +169,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                   <div class="col-12">
                     <div class="desc_block">
                       <label>Status Pernikahan</label>
-                      <div><?= check_var($data, 'status_pernikahan', '-') ?></div>
+                      <div><?= check_var($data, 'ket_status_pernikahan', '-') ?></div>
                     </div>
                   </div>
 
@@ -271,6 +271,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                         <option value="Y" <?= ($mttpi == 'Y') ? 'selected' : '' ?>>Ya, Menerima TTP Insentif</option>
                         <option value="N" <?= ($mttpi == 'N') ? 'selected' : '' ?>>Tidak Menerima TTP Insentif</option>
                       </select>
+                      <div class="invalid-feedback" id="error_menerima_ttp_insentif"></div>
                     </div>
                   </div>
 
@@ -311,6 +312,18 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                       <label for="masa_penugasan_selesai">Masa / Tgl. Penugasan (Selesai)</label>
                       <input type="text" class="form-control form-input-bg flatpickr" id="masa_penugasan_selesai" name="masa_penugasan_selesai" value="<?= check_var($data, "masa_penugasan_selesai", '') ?>" />
                       <div class="invalid-feedback" id="error_masa_penugasan_selesai"></div>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <div class="input_block">
+                      <label for="s_aktif">Status Riwayat</label>
+                      <select name="s_aktif" id="s_aktif" class="form-select">
+                        <option value="" default hidden>- Pilih Status Riwayat -</option>
+                        <option value="1">Riwayat Terbaru (Aktif)</option>
+                        <option value="0">Bukan Riwayat Terbaru (Non-Aktif)</option>
+                      </select>
+                      <div class="invalid-feedback" id="error_s_aktif"></div>
                     </div>
                   </div>
 

@@ -1150,6 +1150,80 @@ function generate_no_dok()
   return "MNJD-$curyear-$numbering";
 }
 
+/** normalisasi data dari `v_ukerja` ke format `vm_profil_sekolah` */
+function normalisasi_data_profil_sekolah(&$data_sekolah, $data_v_ukerja)
+{
+  $data_sekolah = [
+    'kode_ukerja' => check_var($data_v_ukerja, 'kode_ukerja', null),
+    'ket_ukerja' => check_var($data_v_ukerja, 'ket_ukerja', null),
+    'jenjang' => null,
+    'status' => null,
+    'npsn' => null,
+    'nss' => null,
+    'no_statistik_bangunan' => null,
+    'akreditasi' => null,
+    'inklusif' => null,
+    'alamat' => check_var($data_v_ukerja, 'alamat_ukerja', null),
+    'id_kelurahan' => null,
+    'id_kecamatan' => null,
+    'kode_pos' => null,
+    'lat' => null,
+    'long' => null,
+    'telepon' => check_var($data_v_ukerja, 'telp_ukerja', null),
+    'website' => check_var($data_v_ukerja, 'website_ukerja', null),
+    'email' => check_var($data_v_ukerja, 'email_ukerja', null),
+    'no_rek_bank' => null,
+    'nama_bank' => null,
+    'cabang_kcp_unit' => null,
+    'nama_wajib_pajak' => null,
+    'npwp' => null,
+    'no_sk_pendirian' => null,
+    'tgl_sk_pendirian' => null,
+    'no_sk_izin_operasional' => null,
+    'tgl_sk_izin_operasional' => null,
+    'luas_tanah' => null,
+    'kepemilikan_tanah' => null, /* MILIK / SEWA / PINJAM */
+  ];
+}
+
+/** normalisasi data dari `v_pns` ke format `vm_profil_kepsek` */
+function normalisasi_data_profil_kepsek(&$data_kepsek, $data_v_pns)
+{
+  $data_kepsek = [
+    'kode_ukerja' => $data_v_pns['kode_ukerja'],
+    'ket_ukerja' => $data_v_pns['ket_ukerja'],
+    'nip' => $data_v_pns['nip'],
+    'nama' => str_alphanumeric_space(trim(strtoupper($data_v_pns['nama']))),
+    'nuptr' => null,
+    'nurs' => null,
+    'nrg' => null,
+    'nik' => check_var($data_v_pns, 'nik', null),
+    'tgl_lahir' => check_var($data_v_pns, 'tgl_lahir', null),
+    'jenis_kelamin' => check_var($data_v_pns, 'j_kelamin', null),
+    'alamat_saat_ini' => check_var($data_v_pns, 'tt_alamat', null),
+    'status_pernikahan' => check_var($data_v_pns, 'kode_kawin', null),
+    'ket_status_pernikahan' => check_var($data_v_pns, 'ket_kawin', null),
+    'kode_didik' => check_var($data_v_pns, 'kode_didik', null),
+    'pendidikan' => check_var($data_v_pns, 'ket_didik', null),
+    'no_sertifikat_pendidik' => null,
+    'no_sertifikat_gp' => null,
+    'no_sertifikat_crs' => null,
+    'no_rek_bank' => null,
+    'npwp' => check_var($data_v_pns, 'no_npwp', null),
+    'menerima_ttp_insentif' => null,
+    'status' => check_var($data_v_pns, 'kode_status', null),
+    'ket_status' => check_var($data_v_pns, 'ket_status', null),
+    'email' => check_var($data_v_pns, 'email', null),
+    'no_hp' => check_var($data_v_pns, 'no_hp', null),
+    'kode_agama' => check_var($data_v_pns, 'kode_agama', null),
+    'ket_agama' => check_var($data_v_pns, 'ket_agama', null),
+    'periode_ke' => null,
+    'masa_penugasan_mulai' => null,
+    'masa_penugasan_selesai' => null,
+    's_aktif' => null
+  ];
+}
+
 /** fungsi untuk merubah int menit menjadi int jam dan int menit
  * - return array [hour, minute] if format = int
  * - return time format (string) if format = time
