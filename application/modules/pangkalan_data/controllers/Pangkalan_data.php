@@ -32,17 +32,32 @@ class Pangkalan_data extends MY_Controller
     $cur_kewenangan = $this->session->userdata('kewenangan');
     if (in_array($cur_kewenangan, ['00', '02'])) {
       $view = 'vw_dashboard_admin';
-      $sent_data = [];
+      $data_kepsek = [];
+      $data_sekolah = [];
     } else {
       $view = 'vw_dashboard_sekolah';
       $kode_unor = $this->session->userdata('kode_unor');
-      $ukerja_simpeg = fetch_row_data('m_ukerja', ['kode_ukerja' => $kode_unor], false);
-      $ukerja_profil = fetch_row_data('m_profil_sekolah', ['kode_ukerja' => $kode_unor], false);
-      $sent_data = [];
+
+      // set data kepsek
+      $data_kepsek = [];
+      $kepsek_simpeg = $this->db->from('v_pns')->where('kode_ukerja', $kode_unor)
+        ->like('ket_jab', 'Kepala Sekolah')
+        ->get()->row_array();
+      $kepsek_profil = fetch_row_data('vm_profil_kepsek', ['kode_ukerja' => $kode_unor, 's_aktif' => '1'], false);
+      if ($kepsek_profil !== false) {
+        $data_kepsek = $kepsek_profil;
+      } else if (check_var($kepsek_simpeg)) {
+        normalisasi_data_profil_kepsek($data_kepsek, $kepsek_simpeg);
+      }
+
+      // set data sekolah
+      $data_sekolah = [];
+      $ukerja_simpeg = fetch_row_data('v_ukerja', ['kode_ukerja' => $kode_unor], false);
+      $ukerja_profil = fetch_row_data('vm_profil_sekolah', ['kode_ukerja' => $kode_unor], false);
       if ($ukerja_profil !== false) {
-        $sent_data = $ukerja_profil;
+        $data_sekolah = $ukerja_profil;
       } else if ($ukerja_simpeg !== false) {
-        $sent_data = $ukerja_simpeg;
+        normalisasi_data_profil_sekolah($data_sekolah, $ukerja_simpeg);
       }
     }
 
@@ -50,7 +65,10 @@ class Pangkalan_data extends MY_Controller
       'page_title' => "Dashboard Pangkalan Data | PROGURINDA",
       'module' => "pangkalan_data",
       'view' => $view,
-      'data' => $sent_data
+      'data' =>  [
+        'kepsek' => $data_kepsek,
+        'sekolah' => $data_sekolah
+      ]
     );
     echo Modules::run('layout/backend', $data);
   }

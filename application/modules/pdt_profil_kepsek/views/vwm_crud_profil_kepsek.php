@@ -92,6 +92,17 @@ switch ($type) {
               </div>
             </div>
 
+            <div class="col-12">
+              <div class="input_block">
+                <label for="s_aktif">Status Riwayat</label>
+                <select name="s_aktif" id="s_aktif" class="form-select">
+                  <option value="" default hidden>- Pilih Status Riwayat -</option>
+                  <option value="1">Riwayat Terbaru (Aktif)</option>
+                  <option value="0">Bukan Riwayat Terbaru (Non-Aktif)</option>
+                </select>
+              </div>
+            </div>
+
           </div>
         </div>
 
@@ -236,6 +247,17 @@ switch ($type) {
               <div class="input_block">
                 <label for="periode_thn">Periode (Tahun)</label>
                 <input name="periode_thn" id="periode_thn" type="number" step="1" min="1" class="form-control" placeholder="- Tahun -" value="<?= em_date('Y') ?>">
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="input_block">
+                <label for="s_aktif">Status Riwayat</label>
+                <select name="s_aktif" id="s_aktif" class="form-select">
+                  <option value="" default hidden>- Pilih Status Riwayat -</option>
+                  <option value="1">Riwayat Terbaru (Aktif)</option>
+                  <option value="0">Bukan Riwayat Terbaru (Non-Aktif)</option>
+                </select>
               </div>
             </div>
 

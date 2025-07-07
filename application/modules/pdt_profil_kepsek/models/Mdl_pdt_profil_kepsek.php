@@ -246,6 +246,7 @@ class Mdl_pdt_profil_kepsek extends CI_Model
     $this->form_validation->set_rules('kode_ukerja', 'Sekolah', 'required|numeric');
     $this->form_validation->set_rules('periode_bln', 'Periode (Bulan)', 'required|numeric');
     $this->form_validation->set_rules('periode_thn', 'Periode (Tahun)', 'required|numeric');
+    $this->form_validation->set_rules('s_aktif', 'Status Riwayat', 'required|numeric');
 
     // Validate the input data
     if ($this->form_validation->run() === FALSE) {
@@ -263,6 +264,16 @@ class Mdl_pdt_profil_kepsek extends CI_Model
         'message' => 'Proses tidak bisa dilanjutkan karena form tidak valid.<br>' . $error_list
       ];
     }
+
+    // CEK APAKAH SUDAH ADA KEPALA SEKOLAH DENGAN NIP YG DIPILIH
+    $data_kepsek_existing = fetch_row_data('vm_profil_kepsek', [
+      'nip' => $post['nip'],
+      'kode_ukerja' => $post['kode_ukerja']
+    ], false);
+    if ($data_kepsek_existing !== false) return [
+      'status' => false,
+      'message' => "Maaf, NIP yang dipilih sudah pernah tercantum sebagai Kepala Sekolah di {$data_kepsek_existing['ket_ukerja']}.\nSilahkan lakukan <b>UPDATE</b> pada data tersebut."
+    ];
 
     // TARIK DATA PEGAWAI YG DIPILIH
     $data_pegawai = fetch_row_data('v_pns', ['nip' => $post['nip']], false);
@@ -308,7 +319,7 @@ class Mdl_pdt_profil_kepsek extends CI_Model
       'tgl_lahir' => check_var($data_pegawai, 'tgl_lahir', null),
       'jenis_kelamin' => check_var($data_pegawai, 'j_kelamin', null),
       'alamat_saat_ini' => check_var($data_pegawai, 'tt_alamat', null),
-      'status_pernikahan' => check_var($data_pegawai, 'ket_kawin', null),
+      'status_pernikahan' => check_var($data_pegawai, 'kode_kawin', null),
       'kode_didik' => check_var($data_pegawai, 'kode_didik', null),
       'pendidikan' => check_var($data_pegawai, 'ket_didik', null),
       'no_sertifikat_pendidik' => null, /* sumber di v_pns (?) */
@@ -481,6 +492,32 @@ class Mdl_pdt_profil_kepsek extends CI_Model
 
   public function update_profil_kepsek($data)
   {
+    // FORM VALIDATION
+    $this->load->library('form_validation');
+
+    // Define validation rules
+    $this->form_validation->set_rules('id_kepsek', 'ID Kepala Sekolah', 'required');
+    $this->form_validation->set_rules('periode_bln', 'Periode (Bulan)', 'required|numeric');
+    $this->form_validation->set_rules('periode_thn', 'Periode (Tahun)', 'required|numeric');
+    $this->form_validation->set_rules('s_aktif', 'Status Riwayat', 'required|numeric');
+
+    // Validate the input data
+    if ($this->form_validation->run() === FALSE) {
+      // Collect errors
+      $errors = validation_errors('<li>', '</li>'); // This will return a string with errors formatted as HTML
+
+      // Build error list
+      $error_list = '<ul class="mb-0">';
+      $error_list .= $errors;
+      $error_list .= '</ul>';
+
+      // Return response with error details
+      return [
+        'status' => false,
+        'message' => 'Proses tidak bisa dilanjutkan karena form tidak valid.<br>' . $error_list
+      ];
+    }
+
     // VALIDASI DATASET
     $id_kepsek = decrypt_id($data['id_kepsek']);
     $data_existing = fetch_row_data('vm_profil_kepsek', [
@@ -592,6 +629,7 @@ class Mdl_pdt_profil_kepsek extends CI_Model
 
   public function submit_profil_kepsek($data)
   {
+    // Form validation
     $this->load->library('form_validation');
 
     // Define validation rules
@@ -611,6 +649,7 @@ class Mdl_pdt_profil_kepsek extends CI_Model
     $this->form_validation->set_rules('periode_ke', 'Periode Ke', 'required');
     $this->form_validation->set_rules('masa_penugasan_mulai', 'Masa / Tgl. Penugasan (Mulai)', 'required');
     $this->form_validation->set_rules('masa_penugasan_selesai', 'Masa / Tgl. Penugasan (Selesai)', 'required');
+    $this->form_validation->set_rules('s_aktif', 'Status Riwayat', 'required|numeric');
 
     // Validate the input data
     if ($this->form_validation->run() === FALSE) {
@@ -658,16 +697,18 @@ class Mdl_pdt_profil_kepsek extends CI_Model
     // BANDINGKAN DATA LAMA DENGAN DATA YANG DI POST UTK KEPERLUAN LOG
     $old_data = $dataset;
     $old_data['id_dokumen'] = encrypt_id($old_data['id_dokumen']);
+
     $new_data = $data;
+    $new_data['status_dokumen'] = 'VRFDD';
+    $new_data['update_on'] = em_date('Y-m-d H:i:s');
+    $new_data['update_by'] = $cur_user;
+
     $comparison = get_changed_data($old_data, $new_data);
 
     try {
       $this->db->trans_begin();
       // do your db process here
       if (check_var($comparison, 'after')) {
-        // tambah status baru
-        $comparison['after']['status_dokumen'] = 'VRFDD';
-
         // hanya lakukan update apabila ada data yang berubah pada data yang lama
         $proc = 1;
         $this->db->update('r_profil_kepsek', $comparison['after'], [
