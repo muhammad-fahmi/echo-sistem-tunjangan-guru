@@ -1,29 +1,3 @@
-<script>
-  // GLOBAL MODAL TYPE SCRIPT
-  function init_select2(d_element_selector, d_placeholder, d_url) {
-    $('' + d_element_selector).select2({
-      allowClear: false,
-      placeholder: d_placeholder,
-      ajax: {
-        type: 'POST',
-        dataType: 'json',
-        url: d_url,
-        delay: 800,
-        /* delay before sending ajax request */
-        data: function(params) {
-          return {
-            search: params.term,
-          }
-        },
-        processResults: function(data) {
-          return {
-            results: data
-          };
-        },
-      }
-    });
-  }
-</script>
 <?php
 $cur_unor = $this->session->userdata('kode_unor');
 switch ($type) {

@@ -60,6 +60,41 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
               <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>
             </div>
 
+            <div class="row g-2">
+
+              <div class="col-12 col-md-6 col-lg-3 col-xl-2">
+                <div class="input_block">
+                  <label for="f_ukerja"><i class="fas fa-filter me-1"></i>Sekolah / Unit Kerja</label>
+                  <select name="f_ukerja" id="f_ukerja" class="form-select form-select-sm select2 select2-sm select2_f_ukerja">
+                    <option value="all" default selected>- SEMUA -</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-12 col-md-6 col-lg-3 col-xl-2">
+                <?php $arr_bulan = array_periode_bulan(); ?>
+                <div class="input_block">
+                  <label for="f_periode_bln"><i class="fas fa-filter me-1"></i>Periode Bulan</label>
+                  <select name="f_periode_bln" id="f_periode_bln" class="form-select form-select-sm">
+                    <option value="all">- SEMUA -</option>
+                    <?php
+                    foreach ($arr_bulan as $key => $value) {
+                      echo '<option value="' . $key . '">' . $value . '</option>';
+                    }
+                    ?>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-12 col-md-6 col-lg-3 col-xl-2">
+                <div class="input_block">
+                  <label for="f_periode_thn"><i class="fas fa-filter me-1"></i>Periode Tahun</label>
+                  <input type="number" min="2000" step="1" name="f_periode_thn" id="f_periode_thn" class="form-control form-control-sm" placeholder="- SEMUA -" value="">
+                </div>
+              </div>
+
+            </div>
+
             <table id="tabel_r_profil_kepsek" class="table table-bordered table-hover fs-3" style="width:100%;">
               <thead>
                 <tr class="text-center">
@@ -134,6 +169,15 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
       data: {
         is_history: function() {
           return $('#is_history').val();
+        },
+        f_ukerja: function() {
+          return $('#f_ukerja').val();
+        },
+        f_periode_bln: function() {
+          return $('#f_periode_bln').val();
+        },
+        f_periode_thn: function() {
+          return $('#f_periode_thn').val();
         },
       },
       type: 'POST',
@@ -228,5 +272,25 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
     $('#is_history').on('change', function() {
       reload_r_profil_table();
     });
+
+    // init select2
+    init_select2('#f_ukerja',
+      'Pilih Sekolah...',
+      '<?= site_url('config/select2_sekolah') ?>',
+      () => ({
+        include_semua: 'yes',
+      })
+    );
+
+    // change size select2-sm
+    $('.select2-sm').siblings('.select2-container')
+      .find('.select2-selection--single, .select2-selection__rendered, .select2-selection__arrow')
+      .addClass('select2-sm-style');
+
+    $('#f_ukerja, #f_periode_bln').on('change', function() {
+      reload_r_profil_table();
+    });
+    let reloadTimer;
+    $('#f_periode_thn').on('input', debounce(reload_r_profil_table, 500));
   });
 </script>

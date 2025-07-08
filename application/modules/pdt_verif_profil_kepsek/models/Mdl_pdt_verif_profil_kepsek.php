@@ -50,15 +50,22 @@ class Mdl_pdt_verif_profil_kepsek extends CI_Model
         ->group_end();
     }
 
-    if (!is_admin()) {
-      // tambah kondisi kode_ukerja karena yang login adalah admin sekolah
-      $this->db->where(['kode_ukerja' => $cur_unor]);
-    }
-
     if (check_var($data, 'is_history', 'NO') == 'YES') {
       $this->db->where('verif_by', $cur_user);
     } else {
       $this->db->where('status_dokumen', 'VRFDD');
+    }
+
+    if (check_var($data['f_ukerja']) && $data['f_ukerja'] != 'all') {
+      $this->db->where('kode_ukerja', $data['f_ukerja']);
+    }
+
+    if (check_var($data['f_periode_bln']) && $data['f_periode_bln'] != 'all') {
+      $this->db->where('periode_bln', $data['f_periode_bln']);
+    }
+
+    if (check_var($data['f_periode_thn']) && $data['f_periode_thn'] != 'all') {
+      $this->db->where('periode_thn', $data['f_periode_thn']);
     }
   }
 
