@@ -272,6 +272,19 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                   </div>
                 </div>
 
+                <div class="col-12">
+                  <div class="desc_block">
+                    <label>Status Riwayat</label>
+                    <div>
+                      <?php
+                      $s_aktif = check_var($data, 's_aktif', '-');
+                      if ($s_aktif == '1') echo 'Riwayat Terbaru (Aktif)';
+                      if ($s_aktif == '0') echo 'Bukan Riwayat Terbaru (Non-Aktif)';
+                      ?>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
 

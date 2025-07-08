@@ -158,18 +158,21 @@ class Mdl_pdt_verif_profil_kepsek extends CI_Model
     $proc_vrfdd = 2;
     $save_m_profil = $data_dokumen;
     $unset_key = [
-      'id_dokumen', 'periode_bln', 'periode_thn',
+      'id_dokumen', 'periode_bln', 'periode_thn', 'id_kepsek',
       'create_on', 'create_by', 'create_by_nama', 'create_by_kewenangan',
       'update_on', 'update_by', 'update_by_nama', 'update_by_kewenangan',
       'verif_on', 'verif_by', 'verif_by_nama', 'verif_by_kewenangan',
       'status_dokumen', 'ket_status_dokumen', 'col_status_dokumen',
-      'ket_ukerja', 'ket_status_kepsek', 'nama_kelurahan', 'nama_kecamatan'
+      'ket_ukerja', 'ket_jenis_kelamin', 'ket_status_pernikahan', 'ket_status', 'ket_agama'
     ];
     foreach ($unset_key as $key_value) {
       unset($save_m_profil[$key_value]);
     }
 
-    // UPDATE M_PROFIL_KEPSEK
+    // SET ID KEPSEK YG ADA
+    $id_kepsek = check_var($data_dokumen, 'id_kepsek', null);
+
+    // CEK DATA AWAL M_PROFIL_KEPSEK
     $proc_vrfdd = 3;
     $data_awal = fetch_row_data('m_profil_kepsek', [
       'kode_ukerja' => $save_m_profil['kode_ukerja'],
@@ -177,81 +180,54 @@ class Mdl_pdt_verif_profil_kepsek extends CI_Model
     ], []);
     $changelog = get_changed_data($data_awal, $save_m_profil);
 
-    // cek apakah data awal exist, kalau tidak lakukan insert
-    // kalau exist lakukan update
-    if (check_var($data_awal)) {
+    // UNSET S_AKTIF KALAU ENTRY INI DI SET SEBAGAI RIWAYAT TERBARU
+    $proc_vrfdd = 4;
+    if ($save_m_profil['s_aktif'] == '1') {
+      $this->db->update('m_profil_kepsek', [
+        's_aktif' => '0',
+      ], [
+        'kode_ukerja' => $save_m_profil['kode_ukerja']
+      ]);
+    }
+
+    // kalau id KEPSEK declared berarti ini update data existing
+    if ($id_kepsek !== null) {
       // PROSES UPDATE
-      $this->db->update('m_profil_kepsek', $save_m_profil, ['id_kepsek' => $data_awal['id_kepsek']]);
-      $proc_vrfdd = 4;
+      $proc_vrfdd = 5;
+      $this->db->update('m_profil_kepsek', $save_m_profil, ['id_kepsek' => $id_kepsek]);
+
+      $proc_vrfdd = 6;
       log_generator(
         $cur_user,
         'm_profil_kepsek',
-        $data_dokumen['kode_ukerja'],
+        $id_kepsek,
         "Melakukan update data master profil kepala sekolah berdasarkan verifikasi profil dengan perubahan sebagai berikut :" .
           "\n\nBEFORE:\n" . format_log_view($changelog['before']) .
           "\n\nAFTER:\n" . format_log_view($changelog['after'])
       );
     } else {
       // PROSES INSERT
+      $proc_vrfdd = 7;
       $this->db->insert('m_profil_kepsek', $save_m_profil);
-      $insert_id_kepsek = $this->db->insert_id();
-      $proc_vrfdd = 5;
+      $id_kepsek = $this->db->insert_id();
+
+      $proc_vrfdd = 8;
       log_generator(
         $cur_user,
         'm_profil_kepsek',
-        $insert_id_kepsek,
+        $id_kepsek,
         "Melakukan insert data master profil kepala sekolah berdasarkan verifikasi profil dengan data sebagai berikut :" .
           "\n\n" . format_log_view($save_m_profil)
       );
     }
 
-    // UPDATE R_PROFIL_SEKOLAH (GANTI STATUS JADI DITERIMA)
-    $proc_vrfdd = 6;
+    // UPDATE R_PROFIL_KEPSEK (GANTI STATUS JADI DITERIMA)
+    $proc_vrfdd = 9;
     $data_update_dok = [
+      'id_kepsek' => $id_kepsek,
       'verif_by' => $cur_user,
       'verif_on' => em_date('Y-m-d H:i:s'),
       'status_dokumen' => 'DITRM'
-    ];
-    $this->db->update('r_profil_kepsek', $data_update_dok, ['id_dokumen' => $data_dokumen['id_dokumen']]);
-
-    // BUAT LOG SISTEM
-    $proc_vrfdd = 7;
-    log_generator(
-      $cur_user,
-      'r_profil_kepsek',
-      $data_dokumen['id_dokumen'],
-      "Menyetujui usulan profil kepala sekolah dengan data sebagai berikut :\n\n" . format_log_view($save_m_profil)
-    );
-
-    // BUAT RIWAYAT DOKUMEN
-    $proc_vrfdd = 8;
-    $this->db->insert('r_log_dokumen', [
-      'jenis_dokumen' => 'PROFIL_SEKOLAH',
-      'id_dokumen' => $data_dokumen['id_dokumen'],
-      'id_user' => $cur_user,
-      'datetime' => em_date('Y-m-d H:i:s'),
-      'message' => "Menyetujui Usulan Profil Sekolah ({$data_dokumen['ket_ukerja']}) dengan jenjang {$data_dokumen['jenjang']} untuk periode {$data_dokumen['periode_bln']}/{$data_dokumen['periode_thn']}."
-    ]);
-
-    // KEMBALIKAN RESPON
-    return [
-      'status' => true,
-      'message' => "Anda menyetujui dokumen usulan profil sekolah ({$data_dokumen['ket_ukerja']}) untuk periode {$data_dokumen['periode_bln']}/{$data_dokumen['periode_thn']}.",
-      'ID' => $post_data['id_dokumen']
-    ];
-  }
-
-  /** fungsi untuk menolak verifikasi disdik, return row_array (status / message) */
-  private function tolak_vrfdd($data_dokumen, $post_data, &$proc_vrfdd)
-  {
-    $cur_user = $this->session->userdata('id_user');
-
-    // UPDATE R_PROFIL_SEKOLAH (GANTI STATUS JADI DITOLAK)
-    $proc_vrfdd = 9;
-    $data_update_dok = [
-      'verif_by' => $cur_user,
-      'verif_on' => em_date('Y-m-d H:i:s'),
-      'status_dokumen' => 'DITLK'
     ];
     $this->db->update('r_profil_kepsek', $data_update_dok, ['id_dokumen' => $data_dokumen['id_dokumen']]);
 
@@ -261,17 +237,58 @@ class Mdl_pdt_verif_profil_kepsek extends CI_Model
       $cur_user,
       'r_profil_kepsek',
       $data_dokumen['id_dokumen'],
-      "Menolak usulan profil sekolah dengan data sebagai berikut :\n\n" . format_log_view($data_dokumen)
+      "Menyetujui usulan profil kepala sekolah dengan data sebagai berikut :\n\n" . format_log_view($save_m_profil)
     );
 
     // BUAT RIWAYAT DOKUMEN
     $proc_vrfdd = 11;
     $this->db->insert('r_log_dokumen', [
-      'jenis_dokumen' => 'PROFIL_SEKOLAH',
+      'jenis_dokumen' => 'PROFIL_KEPSEK',
       'id_dokumen' => $data_dokumen['id_dokumen'],
       'id_user' => $cur_user,
       'datetime' => em_date('Y-m-d H:i:s'),
-      'message' => "Menolak Usulan Profil Sekolah ({$data_dokumen['ket_ukerja']}) dengan jenjang {$data_dokumen['jenjang']} untuk periode {$data_dokumen['periode_bln']}/{$data_dokumen['periode_thn']}. Adapun alasan penolakan dokumen ini antara lain:\n" .
+      'message' => "Menyetujui Usulan Profil Kepala Sekolah ({$data_dokumen['ket_ukerja']}) dengan NIP {$data_dokumen['nip']} a/n {$data_dokumen['nama']} untuk periode {$data_dokumen['periode_bln']}/{$data_dokumen['periode_thn']}."
+    ]);
+
+    // KEMBALIKAN RESPON
+    return [
+      'status' => true,
+      'message' => "Anda menyetujui dokumen usulan profil kepala sekolah ({$data_dokumen['ket_ukerja']}) untuk periode {$data_dokumen['periode_bln']}/{$data_dokumen['periode_thn']}.",
+      'ID' => $post_data['id_dokumen']
+    ];
+  }
+
+  /** fungsi untuk menolak verifikasi disdik, return row_array (status / message) */
+  private function tolak_vrfdd($data_dokumen, $post_data, &$proc_vrfdd)
+  {
+    $cur_user = $this->session->userdata('id_user');
+
+    // UPDATE R_PROFIL_KEPSEK (GANTI STATUS JADI DITOLAK)
+    $proc_vrfdd = 12;
+    $data_update_dok = [
+      'verif_by' => $cur_user,
+      'verif_on' => em_date('Y-m-d H:i:s'),
+      'status_dokumen' => 'DITLK'
+    ];
+    $this->db->update('r_profil_kepsek', $data_update_dok, ['id_dokumen' => $data_dokumen['id_dokumen']]);
+
+    // BUAT LOG SISTEM
+    $proc_vrfdd = 13;
+    log_generator(
+      $cur_user,
+      'r_profil_kepsek',
+      $data_dokumen['id_dokumen'],
+      "Menolak usulan profil sekolah dengan data sebagai berikut :\n\n" . format_log_view($data_dokumen)
+    );
+
+    // BUAT RIWAYAT DOKUMEN
+    $proc_vrfdd = 14;
+    $this->db->insert('r_log_dokumen', [
+      'jenis_dokumen' => 'PROFIL_KEPSEK',
+      'id_dokumen' => $data_dokumen['id_dokumen'],
+      'id_user' => $cur_user,
+      'datetime' => em_date('Y-m-d H:i:s'),
+      'message' => "Menolak Usulan Profil Kepala Sekolah ({$data_dokumen['ket_ukerja']}) dengan NIP {$data_dokumen['nip']} a/n {$data_dokumen['nama']} untuk periode {$data_dokumen['periode_bln']}/{$data_dokumen['periode_thn']}. Adapun alasan penolakan dokumen ini antara lain:\n" .
         "\"{$post_data['alasan']}\""
     ]);
 

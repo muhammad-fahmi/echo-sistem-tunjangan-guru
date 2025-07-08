@@ -287,6 +287,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
       .find('.select2-selection--single, .select2-selection__rendered, .select2-selection__arrow')
       .addClass('select2-sm-style');
 
+    // filter listener
     $('#f_ukerja, #f_periode_bln').on('change', function() {
       reload_r_profil_table();
     });
