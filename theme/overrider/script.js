@@ -103,3 +103,65 @@ function show_notify(status, message) {
 function on_dev() {
 	show_notify("info", "Maaf, proses ini masih dalam tahap pengembangan.");
 }
+
+/**
+ * Initializes a Select2 dropdown with AJAX-based search and optional extra parameters.
+ *
+ * @function init_select2
+ * @param {string} d_element_selector - jQuery selector for the element to be initialized as Select2.
+ * @param {string} d_placeholder - Placeholder text to show in the Select2 input.
+ * @param {string} d_url - URL endpoint to fetch AJAX search results (expects JSON).
+ * @param {Function} [extraDataFn=() => ({})] - Optional function that returns an object
+ *        of additional parameters to be sent with each AJAX request.
+ *
+ * @example
+ * init_select2('#f_kecamatan', 'Cari Kecamatan...', '/api/search_kecamatan');
+ *
+ * @example
+ * init_select2('#f_sekolah', 'Pilih Sekolah', '/api/sekolah', () => ({
+ *   tahun: $('#filter_tahun').val()
+ * }));
+ */
+function init_select2(
+	d_element_selector,
+	d_placeholder,
+	d_url,
+	extraDataFn = () => ({})
+) {
+	$(d_element_selector).select2({
+		allowClear: false,
+		placeholder: d_placeholder,
+		ajax: {
+			type: "POST",
+			dataType: "json",
+			url: d_url,
+			delay: 800,
+			data: function (params) {
+				return {
+					search: params.term,
+					...extraDataFn(), // ← dynamically merged when request is made
+				};
+			},
+			processResults: function (data) {
+				return {
+					results: data,
+				};
+			},
+		},
+	});
+}
+
+/**
+ * Creates a debounced version of a function.
+ *
+ * @param {Function} fn - The function to debounce.
+ * @param {number} delay - Delay in milliseconds before `fn` is executed.
+ * @returns {Function} A debounced version of `fn`.
+ */
+function debounce(fn, delay) {
+	let timer = null;
+	return function (...args) {
+		clearTimeout(timer);
+		timer = setTimeout(() => fn.apply(this, args), delay);
+	};
+}

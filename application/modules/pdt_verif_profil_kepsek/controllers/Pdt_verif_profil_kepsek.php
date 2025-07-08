@@ -137,7 +137,10 @@ class Pdt_verif_profil_kepsek extends MY_Controller
       'search' => post_safe("search[value]"),
       'draw' => post_safe("draw"),
       /* additional data can be declared here */
-      'is_history' => post_safe('is_history')
+      'is_history' => post_safe('is_history'),
+      'f_ukerja' => post_safe('f_ukerja'),
+      'f_periode_bln' => post_safe('f_periode_bln'),
+      'f_periode_thn' => post_safe('f_periode_thn')
     );
     // move the db operation to the designated models
     $result = $this->mdl_vrfprofkepsek->get_datatable($param);

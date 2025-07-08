@@ -83,7 +83,8 @@ label.is-invalid {
 	display: block !important;
 }
 
-.card-title {
+.card-title,
+.card-footer {
 	&.space-between {
 		display: flex;
 		flex-direction: row;
@@ -362,4 +363,10 @@ a.badge.text-white {
 
 .select2-selection.is-invalid {
 	border: 1px solid #fc4b6c;
+}
+
+.select2-sm-style {
+	height: 30px !important;
+	font-size: 0.8rem !important;
+	line-height: 30px !important;
 }

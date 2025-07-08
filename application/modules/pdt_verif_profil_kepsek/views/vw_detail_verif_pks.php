@@ -192,7 +192,7 @@
                 <div class="col-12">
                   <div class="desc_block">
                     <label>Status Pernikahan</label>
-                    <div><?= check_var($data, 'status_pernikahan', '-') ?></div>
+                    <div><?= check_var($data, 'ket_status_pernikahan', '-') ?></div>
                   </div>
                 </div>
 
@@ -330,6 +330,19 @@
                       $mp_selesai = check_var($data, 'masa_penugasan_selesai', '');
                       $mp_text = check_var(em_date('j F Y', 'set', $mp_selesai), null, '-');
                       echo $mp_text;
+                      ?>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="desc_block">
+                    <label>Status Riwayat</label>
+                    <div>
+                      <?php
+                      $s_aktif = check_var($data, 's_aktif', '-');
+                      if ($s_aktif == '1') echo 'Riwayat Terbaru (Aktif)';
+                      if ($s_aktif == '0') echo 'Bukan Riwayat Terbaru (Non-Aktif)';
                       ?>
                     </div>
                   </div>

@@ -87,8 +87,10 @@ class Mdl_pdt_profil_kepsek extends CI_Model
       // tampilan kepsek
       $nip = check_var($row, 'nip', '-');
       $nama = check_var($row, 'nama', '-');
+      $s_aktif = check_var($row, 's_aktif', '-');
+      $s_aktif = ($s_aktif == '1') ? '<div class="badge bg-success">Aktif</div>' : '<div class="badge bg-secondary">Non-Aktif</div>';
       $row['kepsek_display'] = '<div><small style="opacity: 0.6;">' . $nip . '</small></div>' .
-        '<div>' . $nama . '</div>';
+        '<div>' . $nama . '</div>' . $s_aktif;
 
       // tampilan sekolah
       $kode_ukerja = check_var($row, 'kode_ukerja', '-');

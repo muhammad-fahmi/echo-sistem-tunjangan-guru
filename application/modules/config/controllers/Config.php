@@ -121,6 +121,7 @@ class Config extends MY_Controller
     $session_kewenangan = $this->session->userdata("kewenangan");
     // ambil data post
     $search = post_safe('search');
+    $include_semua = post_safe('include_semua');
 
     // kondisi where
     $where_search = ($search != '') ? "AND (ket_ukerja LIKE '%$search%' OR kode_ukerja LIKE '%$search%' OR ket_uorg LIKE '%$search%' OR kode_ukerja LIKE '%$search%')" : "";
@@ -134,6 +135,13 @@ class Config extends MY_Controller
       LIMIT 20")->result_array();
     $data = array();
     $index = 0;
+
+    if ($include_semua == 'yes') {
+      $data[$index]['id'] = 'all';
+      $data[$index]['text'] = '- SEMUA -';
+      $index++;
+    }
+
     if (isset_nn_nes($result)) {
       foreach ($result as $r) {
         $s_aktif = ($r["s_ukerja"] == 0) ? "[NON-AKTIF]" : "";

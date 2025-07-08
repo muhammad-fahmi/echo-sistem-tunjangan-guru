@@ -78,7 +78,8 @@ label.is-invalid {
   display: block !important;
 }
 
-.card-title.space-between {
+.card-title.space-between,
+.card-footer.space-between {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -307,4 +308,10 @@ a.badge.text-white:hover {
 
 .select2-selection.is-invalid {
   border: 1px solid #fc4b6c;
+}
+
+.select2-sm-style {
+  height: 30px !important;
+  font-size: 0.8rem !important;
+  line-height: 30px !important;
 }/*# sourceMappingURL=style.css.map */

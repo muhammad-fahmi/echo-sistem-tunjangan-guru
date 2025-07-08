@@ -21,7 +21,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
   <div class="row">
 
     <?php
-    $show_debug = true;
+    $show_debug = false;
     if ($show_debug) {
     ?>
       <div class="col-12">
@@ -67,7 +67,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
     ?>
     <div class="col-12 col-lg-6">
 
-      <div class="card">
+      <div id="old_card" class="card">
         <div class="card-body">
           <h4 class="card-title space-between mb-3">
             <div><i class="fas fa-building me-2"></i>Profil Kepala Sekolah (Saat Ini)</div>
@@ -80,8 +80,8 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
             if (check_var($data)) {
               // kalau memang ada data awal, tampilkan
             ?>
-              <div class="col-12 old_data old_ket_ukerja" attr-data="ket_ukerja">
-                <div class="desc_block">
+              <div class="col-12">
+                <div class="desc_block old_data old_ket_ukerja" attr-data="ket_ukerja">
                   <label>Sekolah / Unit Kerja</label>
                   <div><?= check_var($data, 'ket_ukerja', '-') ?></div>
                 </div>
@@ -150,7 +150,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
               <div class="col-12">
                 <div class="desc_block old_data old_status_pernikahan" attr-data="status_pernikahan">
                   <label>Status Pernikahan</label>
-                  <div><?= check_var($data, 'status_pernikahan', '-') ?></div>
+                  <div><?= check_var($data, 'ket_status_pernikahan', '-') ?></div>
                 </div>
               </div>
 
@@ -292,6 +292,20 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                   </div>
                 </div>
               </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_s_aktif" attr-data="s_aktif">
+                  <label>Status Riwayat</label>
+                  <div>
+                    <?php
+                    $s_aktif = check_var($data, 's_aktif', '-');
+                    if ($s_aktif == '1') $s_aktif = 'Riwayat Terbaru (Aktif)';
+                    if ($s_aktif == '0') $s_aktif = 'Bukan Riwayat Terbaru (Non-Aktif)';
+                    echo $s_aktif;
+                    ?>
+                  </div>
+                </div>
+              </div>
             <?php
             } else {
               // kalau tidak ada tampilkan pesan
@@ -318,7 +332,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
     ?>
     <div class="col-12 col-lg-6">
 
-      <div class="card">
+      <div id="new_card" class="card">
         <div class="card-body">
           <h4 class="card-title space-between mb-3">
             <div><i class="fas fa-building me-2"></i>Profil Kepala Sekolah (Baru)</div>
@@ -397,7 +411,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
             <div class="col-12">
               <div class="desc_block new_data new_status_pernikahan" attr-data="status_pernikahan">
                 <label>Status Pernikahan</label>
-                <div><?= check_var($dokumen, 'status_pernikahan', '-') ?></div>
+                <div><?= check_var($dokumen, 'ket_status_pernikahan', '-') ?></div>
               </div>
             </div>
 
@@ -540,6 +554,20 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
               </div>
             </div>
 
+            <div class="col-12">
+              <div class="desc_block new_data new_s_aktif" attr-data="s_aktif">
+                <label>Status Riwayat</label>
+                <div>
+                  <?php
+                  $s_aktif = check_var($dokumen, 's_aktif', '-');
+                  if ($s_aktif == '1') $s_aktif = 'Riwayat Terbaru (Aktif)';
+                  if ($s_aktif == '0') $s_aktif = 'Bukan Riwayat Terbaru (Non-Aktif)';
+                  echo $s_aktif;
+                  ?>
+                </div>
+              </div>
+            </div>
+
           </div>
 
         </div>
@@ -616,16 +644,6 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
       }
     });
   }
-
-  <?php
-  $new_change = get_changed_data($data, $dokumen);
-  if (check_var($new_change, 'after')) {
-    // kalau ada data yang beda, lakukan penambahan class ke desc_block nya
-    foreach ($new_change['after'] as $key => $value) {
-      echo "$('.new_{$key}').addClass('new_change');";
-    }
-  }
-  ?>
 
   /// |----------------------------------------
   /// | DOCUMENT READY
@@ -736,8 +754,39 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
       }
     });
 
-    setTimeout(() => {
-      match_old_new_height();
-    }, 150);
+    // match height between parameter
+    match_old_new_height();
+
+    /// |----------------------------------------
+    /// | CHECK DATA OR CHANGED DATA
+    /// |----------------------------------------
+    <?php
+    if (check_var($data)) {
+      // KALAU DATA AWAL ADA, LAKUKAN PERBANDINGAN
+      $new_change = get_changed_data($data, $dokumen);
+      if (check_var($new_change, 'after')) {
+        // kalau ada data yang beda, lakukan penambahan class ke desc_block nya
+        foreach ($new_change['after'] as $key => $value) {
+          echo "$('.new_{$key}').addClass('new_change');";
+        }
+      }
+    } else {
+      // KALAU DATA AWAL TIDAK ADA, MARK SEMUA NEW SEBAGAI CHANGED
+    ?>
+      $('.new_data').addClass('new_change');
+      var old_card = $('#old_card');
+      var new_card = $('#new_card');
+      old_card.css('min-height', '');
+      new_card.css('min-height', '');
+
+      const oldCardHeight = old_card.outerHeight();
+      const newCardHeight = new_card.outerHeight();
+      const maxCardHeight = Math.max(oldCardHeight, newCardHeight);
+
+      old_card.css('min-height', maxCardHeight);
+      new_card.css('min-height', maxCardHeight);
+    <?php
+    }
+    ?>
   });
 </script>

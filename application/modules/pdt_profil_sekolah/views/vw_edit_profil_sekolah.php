@@ -1,28 +1,3 @@
-<script>
-  function init_select2(d_element_selector, d_placeholder, d_url, extraDataFn = () => ({})) {
-    $(d_element_selector).select2({
-      allowClear: false,
-      placeholder: d_placeholder,
-      ajax: {
-        type: 'POST',
-        dataType: 'json',
-        url: d_url,
-        delay: 800,
-        data: function(params) {
-          return {
-            search: params.term,
-            ...extraDataFn() // ← dynamically merged when request is made
-          };
-        },
-        processResults: function(data) {
-          return {
-            results: data
-          };
-        },
-      }
-    });
-  }
-</script>
 <?php
 $cur_kewenangan = $this->session->userdata('kewenangan');
 ?>
