@@ -124,4 +124,52 @@ class Pangkalan_data extends MY_Controller
       'html' => $html_riwayat
     ]);
   }
+
+  public function get_riwayat_update_sekolah()
+  {
+    $html_riwayat = '<div class="col-12 text-center">Belum ada riwayat untuk Sekolah.</div>';
+
+    // CHECK PERMISSION
+    if (!check_perm('read', 'PDT_Dashboard')) return output_json([
+      'status' => true,
+      'message' => "Riwayat sekolah retrieved",
+      'html' => $html_riwayat
+    ]);
+
+    /// |----------------------------------------
+    /// | TATA FORMAT HTMLNYA
+    /// |----------------------------------------
+
+    return output_json([
+      'status' => true,
+      'message' => "Riwayat sekolah retrieved",
+      'html' => $html_riwayat
+    ]);
+  }
+
+  public function get_riwayat_kepala_sekolah()
+  {
+    $nip = post_safe('nip');
+
+    $html_riwayat = '<div class="col-12 text-center">Belum ada riwayat untuk Kepala Sekolah.</div>';
+
+    // CHECK PERMISSION
+    if (!check_perm('read', 'PDT_Dashboard')) return output_json([
+      'status' => true,
+      'message' => "Riwayat kepala sekolah retrieved",
+      'html' => $html_riwayat
+    ]);
+
+    // TARIK DATASET DARI MODEL
+    $dataset = $this->mdl_pkldata->get_riwayat_kepala_sekolah($nip);
+    if (check_var($dataset)) {
+      // kalau ada datanya, tata biar dalam bentuk HTML yang valid kembaliannya
+    }
+
+    return output_json([
+      'status' => true,
+      'message' => "Riwayat kepala sekolah retrieved",
+      'html' => $html_riwayat
+    ]);
+  }
 }

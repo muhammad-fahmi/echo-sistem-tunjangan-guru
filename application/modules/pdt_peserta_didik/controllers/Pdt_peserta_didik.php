@@ -5,15 +5,16 @@ class Pdt_peserta_didik extends MY_Controller
   public function __construct()
   {
     parent::__construct();
-    // lakukan proses verifikasi user disini
-    parent::__construct();
-    $priv = $this->session->userdata('kewenangan');
-    $log = $this->session->userdata('logged_in');
-    if ($log != true) {
-      redirect(site_url('login'));
-    } else {
-      $this->load->model('mdl_pdt_peserta_didik', 'mdl_peserta_didik');
+
+    $is_ajax = $this->input->is_ajax_request();
+    if (!$is_ajax) {
+      $this->session->set_userdata('menu', 'PDT_PesertaDidik');
+      if (!check_perm('read') || !is_logged_in()) {
+        redirect(site_url('pangkalan_data'));
+      }
     }
+
+    $this->load->model('mdl_pdt_peserta_didik', 'mdl_peserta_didik');
   }
 
   public function index()

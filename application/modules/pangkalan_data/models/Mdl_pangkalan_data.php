@@ -28,4 +28,15 @@ class Mdl_pangkalan_data extends CI_Model
     }
     return $result;
   }
+
+  /** fungsi untuk tarik data riwayat dokumen yang final (DITRM) */
+  public function get_riwayat_kepala_sekolah($nip = '0000')
+  {
+    $dataset = $this->db->from('vr_profil_kepseks')
+      ->where(['nip' => $nip, 'status_dokumen' => 'DITRM'])
+      ->order_by('masa_penugasan_selesai', 'DESC')
+      ->get()->result_array();
+
+    return $dataset;
+  }
 }
