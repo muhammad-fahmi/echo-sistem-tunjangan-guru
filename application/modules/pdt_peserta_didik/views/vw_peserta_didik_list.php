@@ -23,6 +23,43 @@
   <!-- Start Page Content -->
   <!-- -------------------------------------------------------------- -->
   <!-- basic table -->
+  <!-- <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Riwayat Peserta Didik</h4>
+
+          <div class="table-responsive mt-4">
+
+            <div class="_loading loading_tabel_riwayat_peserta_didik">
+              <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>
+            </div>
+
+            <table id="table_riwayat_peserta_didik" class="table table-bordered table-hover fs-3" style="width:100%;">
+
+              <thead class="bg-info text-white">
+                <tr class="text-center">
+                  <th scope="col">No.</th>
+                  <th scope="col">Nama Lengkap</th>
+                  <th scope="col">NISN</th>
+                  <th scope="col">NIK</th>
+                  <th scope="col">Jenis Kelamin</th>
+                  <th scope="col">Agama</th>
+                  <th scope="col">Penyandang Disabilitas</th>
+                  <th scope="col">Aktif</th>
+                  <th scope="col">Aktif</th>
+                </tr>
+              </thead>
+
+              <tbody style="font-size: 11px;"></tbody>
+
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
   <div class="row">
     <div class="col-12">
       <div class="card">
@@ -39,19 +76,19 @@
 
               <thead class="bg-info text-white">
                 <tr class="text-center">
-                  <th scope="col">No.</th>
-                  <th scope="col">Nama Lengkap</th>
-                  <th scope="col">NISN</th>
-                  <th scope="col">NIA</th>
-                  <th scope="col">Jenis Kelamin</th>
-                  <th scope="col">Agama</th>
-                  <th scope="col">Alamat</th>
-                  <th scope="col">Aktif</th>
-                  <th scope="col">Aksi</th>
+                  <th class="vam" style="min-width: 35px;">#</th>
+                  <th class="vam" style="min-width: 175px;">NISN / Nama Lengkap</th>
+                  <th class="vam" style="min-width: 175px;">Orang Tua PD</th>
+                  <th class="vam" style="min-width: 100px;">NIK</th>
+                  <th class="vam" style="min-width: 80px;">Jenis Kelamin</th>
+                  <th class="vam" style="min-width: 60px;">Agama</th>
+                  <th class="vam" style="min-width: 150px;">Alamat</th>
+                  <th class="vam" style="min-width: 40px;">Status</th>
+                  <th class="vam" style="min-width: 60px;">Aksi</th>
                 </tr>
               </thead>
 
-              <tbody style="font-size: 11px;"></tbody>
+              <tbody style="font-size: 12px;"></tbody>
 
             </table>
           </div>
@@ -107,7 +144,7 @@
     columns: [{
         data: 'no',
         orderable: false,
-        className: '',
+        className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-center">' + cellData + '</div>');
         }
@@ -115,39 +152,49 @@
       {
         data: 'nama',
         orderable: true,
-        className: '',
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-start">' +
+            '<div class="badge bg-secondary mb-1" style="opacity: 0.65;">' + rowData['nisn'] + '</div><br>' + cellData +
+            '</div>'
+          );
+        }
+      },
+      {
+        data: 'nama_ibu',
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          let nama_ayah = '<div class="mb-2">' + rowData['nama_ayah'] ? rowData['nama_ayah'] : '-' + '</div>';
+          let nama_ibu = '<div class="mb-2">' + cellData ? cellData : '-' + '</div>';
+
+          $(td).html('<div class="text-start">' +
+            '<div class="badge bg-success mb-1 me-1">Ayah</div>' + nama_ayah + '<br>' +
+            '<div class="badge bg-primary mb-1 me-1">Ibu</div>' + nama_ibu +
+            '</div>'
+          );
+        }
+      },
+      {
+        data: 'nik',
+        orderable: false,
+        className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-start">' + cellData + '</div>');
         }
       },
       {
-        data: 'nisn',
+        data: 'ket_jns_kelamin',
         orderable: false,
-        className: '',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-start">' + cellData + '</div>');
-        }
-      },
-      {
-        data: 'nia',
-        orderable: false,
-        className: '',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-start">' + cellData + '</div>');
-        }
-      },
-      {
-        data: 'jenis_kelamin',
-        orderable: false,
-        className: '',
+        className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-center">' + cellData + '</div>');
         }
       },
       {
-        data: 'kode_agama',
+        data: 'ket_agama',
         orderable: false,
-        className: '',
+        className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-center">' + cellData + '</div>');
         }
@@ -155,7 +202,7 @@
       {
         data: 'alamat',
         orderable: false,
-        className: '',
+        className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-start">' + cellData + '</div>');
         }
@@ -163,29 +210,37 @@
       {
         data: 's_aktif',
         orderable: false,
-        className: '',
+        className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
+          let status_siswa = (cellData == '1') ?
+            '<div class="badge bg-success text-center py-2">Aktif</div>' :
+            '<div class="badge bg-secondary text-center py-2">Non-Aktif</div>'
+          $(td).html('<div class="text-center">' + status_siswa + '</div>');
         }
       },
       {
         data: 'id_siswa',
         orderable: false,
-        className: '',
+        className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
+          let detail_url = "<?= site_url('pdt_peserta_didik/detail/'); ?>";
           let kewenangan_user = '<?= $this->session->userdata('kewenangan'); ?>';
-          // let btn_user_management = '<a href="<?= site_url('user/menu_management/'); ?>' + cellData + '" class="badge bg-secondary clickable me-1" title="Menu Management">' +
-          //   '<i class="fas fa-list"></i></a>';
 
           let btn_edit = '<div onclick="modal(`' + cellData + '`, `edit_peserta_didik`)" class="badge bg-primary clickable me-1" title="Edit">' +
-            '<i class="fas fa-edit"></i></div>';
+            '<i class="fas fa-edit"></i> Edit</div>';
+
+          let btn_detail = '<a href="' + detail_url + cellData + '" class="badge bg-secondary clickable text-white me-1"><i class="fas fa-eye"></i> Detail</a>';
 
           let btn_delete = (kewenangan_user == '00') ?
-            '<div onclick="modal(`' + cellData + '`, `hapus_peserta_didik`)" class="badge bg-danger clickable" title="Hapus">' +
-            '<i class="fas fa-trash"></i></div>' :
+            '<div onclick="modal(`' + cellData + '`, `delete_peserta_didik`)" class="badge bg-danger clickable me-1" title="Hapus">' +
+            '<i class="fas fa-trash"></i> Hapus</div>' :
             '';
 
-          $(td).html('<div class="text-center">' + btn_edit + btn_delete + '</div>');
+          $(td).html('<div class="text-center">' +
+            '<div class="d-grid gap-1 px-2"><div class="row">' + btn_edit + '</div>' +
+            '<div class="row">' + btn_detail + '</div>' +
+            '<div class="row">' + btn_delete + '</div>' +
+            '</div></div>');
         }
       },
     ],

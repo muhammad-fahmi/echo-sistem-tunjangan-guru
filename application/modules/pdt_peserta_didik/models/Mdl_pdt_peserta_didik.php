@@ -45,11 +45,11 @@ class Mdl_pdt_peserta_didik extends CI_Model
 
     /* kalau ada tambahan where condition bisa add lagi di atas */
     // deklarasi query yang digunakan
-    $query_result = $this->db->query("SELECT * FROM progurinda_r_siswa
+    $query_result = $this->db->query("SELECT * FROM v_progurinda_siswa
       WHERE id_siswa IS NOT NULL $where_search
       ORDER BY $data[order_column] $data[order_sort]
       LIMIT $data[start], $data[length]");
-    $query_total = $this->db->query("SELECT * FROM progurinda_r_siswa 
+    $query_total = $this->db->query("SELECT * FROM v_progurinda_siswa 
       WHERE id_siswa IS NOT NULL $where_search");
     // cari total hasil
     $total_count = $query_total->num_rows();
@@ -66,8 +66,8 @@ class Mdl_pdt_peserta_didik extends CI_Model
       $data_result[$index]['nama'] = isset_nn_nes($row['nama'], '-');
       $data_result[$index]['nisn'] = isset_nn_nes($row['nisn'], '-');
       $data_result[$index]['nia'] = isset_nn_nes($row['nia'], '-');
-      $data_result[$index]['jenis_kelamin'] = isset_nn_nes($row['jenis_kelamin'], '-');
-      $data_result[$index]['kode_agama'] = isset_nn_nes($row['kode_agama'], '-');
+      $data_result[$index]['ket_jns_kelamin'] = isset_nn_nes($row['ket_jns_kelamin'], '-');
+      $data_result[$index]['ket_agama'] = isset_nn_nes($row['ket_agama'], '-');
       $data_result[$index]['alamat'] = isset_nn_nes($row['alamat'], '-');
       $data_result[$index]['id_siswa'] = to_rp(isset_nn_nes($row['id_siswa'], '-'), false);
       $no += 1;
@@ -82,8 +82,61 @@ class Mdl_pdt_peserta_didik extends CI_Model
     );
   }
 
-  public function save($data)
+  public function generate_id_siswa()
   {
+    do {
+      $prefix = rand(100000, 999999); // 6-digit random
+      $id_siswa = $prefix . '2025';
+
+      $exists = $this->db->get_where('progurinda_r_siswa', ['id_siswa' => $id_siswa])->num_rows() > 0;
+    } while ($exists);
+
+    return $id_siswa;
+  }
+
+  public function save_peserta_didik($data)
+  {
+    // FORM VALIDATION
+    $this->load->library('form_validation');
+
+    // Define validation rules
+    // $this->form_validation->set_rules('id_siswa', 'ID Siswa', 'required');
+    $this->form_validation->set_rules('nama', 'Nama Lengkap', 'required');
+    $this->form_validation->set_rules('nisn', 'NISN', 'required|numeric');
+    $this->form_validation->set_rules('nik', 'NIK', 'required|numeric');
+    $this->form_validation->set_rules('jenis_kelamin', 'Jenis Kelamin', 'required');
+    $this->form_validation->set_rules('kode_agama', 'Agama', 'required|numeric');
+    $this->form_validation->set_rules('nama_ibu', 'Nama Ibu', 'required');
+    $this->form_validation->set_rules('no_kk', 'No. KK', 'required|numeric');
+    $this->form_validation->set_rules('alamat', 'Alamat', 'required');
+
+    // Validate the input data
+    if ($this->form_validation->run() === FALSE) {
+      // Collect errors
+      $errors = validation_errors('<li>', '</li>'); // This will return a string with errors formatted as HTML
+
+      // Build error list
+      $error_list = '<ul class="mb-0">';
+      $error_list .= $errors;
+      $error_list .= '</ul>';
+
+      // Return response with error details
+      return [
+        'status' => false,
+        'message' => 'Proses tidak bisa dilanjutkan karena form tidak valid.<br>' . $error_list
+      ];
+    }
+
+    // cek apakah data sudah ada di database
+    $is_siswa_exist = fetch_row_data('progurinda_r_siswa', ['nama' => $data['nama']], '');
+    if ($is_siswa_exist) {
+      return [
+        'status' => false,
+        'message' => 'Maaf, Peserta Didik (Siswa) sudah terdaftar dalam database.'
+      ];
+    }
+
+    $cur_user = $this->session->userdata('id_user');
     try {
       //start db transaction
       $this->db->trans_begin();
@@ -91,10 +144,28 @@ class Mdl_pdt_peserta_didik extends CI_Model
       if ($data["id_siswa"] == 0) {
         //insert data
         $this->db->insert("progurinda_r_siswa", $data);
+        $insert_id = $this->db->insert_id();
+
+        // BUATKAN LOG UTK SISTEM (INSERT)
+        log_generator(
+          $cur_user,
+          'progurinda_r_siswa',
+          $insert_id,
+          "Melakukan penambahan data peserta didik (siswa) baru dengan data sebagai berikut :\n\n" . format_log_view($data)
+        );
       } else {
         //update data
         $this->db->where(["id_siswa" => $data["id_siswa"]])->update("progurinda_r_siswa", $data);
+
+        // BUATKAN LOG UTK SISTEM (UPDATE)
+        log_generator(
+          $cur_user,
+          'progurinda_r_siswa',
+          $data['id_siswa'],
+          "Melakukan perubahan data peserta didik (siswa) dengan data sebagai berikut :\n\n" . format_log_view($data)
+        );
       }
+
       if ($this->db->trans_status() === FALSE) {
         // do your error handler here
         $this->db->trans_rollback();
@@ -119,11 +190,43 @@ class Mdl_pdt_peserta_didik extends CI_Model
     return $res;
   }
 
-  public function delete($data)
+  public function delete_peserta_didik($data)
   {
+    // FORM VALIDATION
+    $this->load->library('form_validation');
+
+    // Define validation rules
+    $this->form_validation->set_rules('id_siswa', 'ID Siswa', 'required');
+
+    // Validate the input data
+    if ($this->form_validation->run() === FALSE) {
+      // Collect errors
+      $errors = validation_errors('<li>', '</li>'); // This will return a string with errors formatted as HTML
+
+      // Build error list
+      $error_list = '<ul class="mb-0">';
+      $error_list .= $errors;
+      $error_list .= '</ul>';
+
+      // Return response with error details
+      return [
+        'status' => false,
+        'message' => 'Proses tidak bisa dilanjutkan karena form tidak valid.<br>' . $error_list
+      ];
+    }
+
+    $cur_user = $this->session->userdata('id_user');
     try {
       $this->db->trans_begin();
       $this->db->where(["id_siswa" => $data["id_siswa"]])->delete("progurinda_r_siswa");
+
+      // BUATKAN LOG UTK SISTEM (DELETE)
+      log_generator(
+        $cur_user,
+        'progurinda_r_siswa',
+        $data['id_siswa'],
+        "Melakukan penghapusan data sebagai berikut :\n\n" . format_log_view($data)
+      );
       if ($this->db->trans_status() === FALSE) {
         // do your error handler here
         $this->db->trans_rollback();
@@ -147,4 +250,8 @@ class Mdl_pdt_peserta_didik extends CI_Model
     }
     return $res;
   }
+
+  /// |----------------------------------------------------------------------
+  /// | >> FUNGSI CRUD
+  /// |----------------------------------------------------------------------
 }

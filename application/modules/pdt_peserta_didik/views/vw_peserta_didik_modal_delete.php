@@ -6,41 +6,63 @@
 </div>
 <div class="modal-body">
 
-  <form id="deleteMapel" action="<?= site_url('mapel_guru/delete'); ?>" method="POST" enctype="multipart/form-data">
+  <form id="deletePesertaDidik" action="<?= site_url('pdt_peserta_didik/delete'); ?>" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="type" value="<?= $data['type'] ?>">
-    <input type="hidden" name="id" value="<?= $data['id'] ?>">
+    <input type="hidden" name="id_siswa" value="<?= $data['id_siswa'] ?>">
 
     <div class="row g-2">
 
       <div class="col-12 form_mapel">
-        <div class="mb-3">
-          Apakah anda yakin untuk menghapus data ini?
+        <div class="col-12 mb-3">
+          <div class="alert alert-danger m-0">
+            Apakah anda yakin untuk menghapus data <b>peserta didik</b> ini?
+          </div>
         </div>
         <table>
-          <tr>
-            <td style="min-width: 120px;">NIP</td>
+          <tr class="mb-2">
+            <td style="min-width: 120px; font-weight: 500;">NISN</td>
             <td style="min-width: 10px;">:</td>
-            <td style="width: 100%;"><?= $data['nip'] ?></td>
+            <td style="width: 100%;"><?= check_var($data, 'nisn', '-') ?></td>
           </tr>
-          <tr>
-            <td style="min-width: 120px;">Nama Lengkap</td>
+          <tr class="mb-2">
+            <td style="min-width: 120px; font-weight: 500;">Nama Lengkap</td>
             <td style="min-width: 10px;">:</td>
-            <td style="width: 100%;"><?= $data['nama_lengkap'] ?></td>
+            <td style="width: 100%;"><?= check_var($data, 'nama', '-') ?></td>
           </tr>
-          <tr>
-            <td style="min-width: 120px;">Jabatan</td>
+          <tr class="mb-2">
+            <td style="min-width: 120px; font-weight: 500;">NIK</td>
             <td style="min-width: 10px;">:</td>
-            <td style="width: 100%;"><?= $data['ket_jab'] ?></td>
+            <td style="width: 100%;"><?= check_var($data, 'nik', '-') ?></td>
           </tr>
-          <tr>
-            <td style="min-width: 120px;">Unit Kerja</td>
+          <tr class="mb-2">
+            <td style="min-width: 120px; font-weight: 500;">Jenis Kelamin</td>
             <td style="min-width: 10px;">:</td>
-            <td style="width: 100%;"><?= $data['ket_ukerja'] ?></td>
+            <td style="width: 100%;"><?= check_var($data, 'ket_jns_kelamin', '-') ?></td>
           </tr>
-          <tr>
-            <td style="min-width: 120px;">Mata Pelajaran</td>
+          <tr class="mb-2">
+            <td style="min-width: 120px; font-weight: 500;">Agama</td>
             <td style="min-width: 10px;">:</td>
-            <td style="width: 100%;"><?= $data['mapel'] ?></td>
+            <td style="width: 100%;"><?= check_var($data, 'ket_agama', '-') ?></td>
+          </tr>
+          <tr class="mb-2">
+            <td style="min-width: 120px; font-weight: 500;">Nama Ibu</td>
+            <td style="min-width: 10px;">:</td>
+            <td style="width: 100%;"><?= check_var($data, 'nama_ibu', '-') ?></td>
+          </tr>
+          <tr class="mb-2">
+            <td style="min-width: 120px; font-weight: 500;">No. KK</td>
+            <td style="min-width: 10px;">:</td>
+            <td style="width: 100%;"><?= check_var($data, 'no_kk', '-') ?></td>
+          </tr>
+          <tr class="mb-2">
+            <td style="min-width: 120px; font-weight: 500;">Alamat</td>
+            <td style="min-width: 10px;">:</td>
+            <td style="width: 100%;"><?= check_var($data, 'alamat', '-') ?></td>
+          </tr>
+          <tr class="mb-2">
+            <td style="min-width: 120px; font-weight: 500;">Penyandang Disabilitas</td>
+            <td style="min-width: 10px;">:</td>
+            <td style="width: 100%;"><?= check_var($data, 'pdpd', '-') ?></td>
           </tr>
         </table>
       </div>
@@ -50,13 +72,13 @@
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-sm btn-light-secondary" data-bs-dismiss="modal">Batal</button>
-  <button id="deleteMapelbtn" type="submit" form="deleteMapel" class="btn btn-sm btn-light-success">Hapus</button>
+  <button id="deletePesertaDidikbtn" type="submit" form="deletePesertaDidik" class="btn btn-sm btn-light-success">Hapus</button>
 </div>
 
 <script>
-  $('#deleteMapel').validate($.extend({
+  $('#deletePesertaDidik').validate($.extend({
     submitHandler: function(form, event) {
-      var submit = $('#deleteMapelbtn');
+      var submit = $('#deletePesertaDidikbtn');
       // declare button submit disabling right here if needed
       submit.attr('disabled', true);
       $(form).ajaxSubmit({

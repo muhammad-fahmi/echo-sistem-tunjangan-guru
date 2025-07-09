@@ -192,8 +192,6 @@ class Config extends MY_Controller
       ->set_output(json_encode($data));
   }
 
-
-
   public function select2_shift()
   {
     // ambil data post
@@ -465,6 +463,107 @@ class Config extends MY_Controller
       $data = $result;
     }
     $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
+  /// |----------------------------------------------------------------------
+  /// | >> PROGURINDA
+  /// |----------------------------------------------------------------------
+
+  public function select2_agama()
+  {
+    // ambil data post
+    $search = $this->input->post('search');
+    // kondisi where
+    $where_search = ($search != '')
+      ? "AND (ket_agama LIKE '%$search%' 
+      OR kode_agama LIKE '%$search%')"
+      : "";
+    // query searching
+    $result = $this->db->query("SELECT * FROM m_agama WHERE kode_agama IS NOT NULL $where_search 
+      ORDER BY ket_agama DESC")->result_array();
+    $data = array();
+    $index = 0;
+    if (isset_nn_nes($result)) {
+      foreach ($result as $r) {
+        $data[$index]['id'] = $r['kode_agama'];
+        $data[$index]['text'] = trim($r['ket_agama']);
+
+        // additional param to send back
+        $data[$index]['kode_agama'] = $r['kode_agama'];
+        $data[$index]['ket_agama'] = trim($r['ket_agama']);
+        $index++;
+      }
+    } else {
+      $data = $result;
+    }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
+  public function select2_jenis_kelamin()
+  {
+    // ambil data post
+    $search = $this->input->post('search');
+    // kondisi where
+    $where_search = ($search != '')
+      ? "AND (ket_jns_kelamin LIKE '%$search%' 
+      OR jns_kelamin LIKE '%$search%')"
+      : "";
+    // query searching
+    $result = $this->db->query("SELECT * FROM m_jenis_kelamin WHERE jns_kelamin IS NOT NULL $where_search 
+      ORDER BY ket_jns_kelamin ASC")->result_array();
+    $data = array();
+    $index = 0;
+    if (isset_nn_nes($result)) {
+      foreach ($result as $r) {
+        $data[$index]['id'] = $r['jns_kelamin'];
+        $data[$index]['text'] = trim($r['ket_jns_kelamin']);
+
+        // additional param to send back
+        $data[$index]['jns_kelamin'] = $r['jns_kelamin'];
+        $data[$index]['ket_jns_kelamin'] = $r['ket_jns_kelamin'];
+        $index++;
+      }
+    } else {
+      $data = $result;
+    }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
+  public function select2_disabilitas()
+  {
+    // ambil data post
+    $search = $this->input->post('search');
+    // kondisi where
+    $where_search = ($search != '')
+      ? "AND (ket_disabilitas LIKE '%$search%' 
+      OR id_pd LIKE '%$search%')"
+      : "";
+    // query searching
+    $result = $this->db->query("SELECT * FROM m_penyandang_disabilitas WHERE id_pd IS NOT NULL $where_search 
+      ORDER BY id_pd DESC")->result_array();
+    $data = array();
+    $index = 0;
+    if (isset_nn_nes($result)) {
+      foreach ($result as $r) {
+        $data[$index]['id'] = $r['id_pd'];
+        $data[$index]['text'] = trim($r['ket_disabilitas']);
+
+        // additional param to send back
+        $data[$index]['id_pd'] = $r['id_pd'];
+        $data[$index]['ket_disabilitas'] = trim($r['ket_disabilitas']);
+
+        $index++;
+      }
+    } else {
+      $data = $result;
+    }
+    return $this->output
       ->set_content_type('application/json')
       ->set_output(json_encode($data));
   }
