@@ -295,8 +295,66 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
 
     </div>
 
+    <div class="col-12">
+      <div class="card" style="min-height: 200px;">
+        <div class="card-body">
+          <h4 class="card-title space-between mb-3">
+            <div><i class="fas fa-history me-2"></i>Riwayat Kepala Sekolah</div>
+            <div></div>
+          </h4>
+          <div>
+
+            <div id="row_riwayat_kepsek" class="row g-2 row_riwayat_kepsek">
+
+              <div class="col-12">
+                <div class="_loading loading_riwayat_kepsek behind-navbar">
+                  <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>LOADING...</div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
 </div>
 
-<script></script>
+<script>
+  function request_riwayat_kepsek() {
+    // you may add more than one param to send
+    let loading_riwayat = $('.loading_riwayat_kepsek');
+    let container_riwayat = $('#row_riwayat_kepsek');
+    $.ajax({
+      type: "POST",
+      url: "<?= site_url('pangkalan_data/get_riwayat_kepala_sekolah') ?>",
+      data: {
+        nip: '<?= $data['nip'] ?>'
+      },
+      dataType: 'json',
+      beforeSend: function(e) {
+        loading_riwayat.addClass('show');
+      },
+      success: function(e) {
+        if (e.status) {
+          // what to do when the response status = true
+          container_riwayat.html(e.html);
+          loading_riwayat.removeClass('show');
+        } else {
+          // what to do when the response status = false
+          show_notify('error', e.message);
+        }
+      },
+      error: function(xhr, status, error) {
+        show_notify('error', error);
+        console.error(error);
+      },
+    });
+  }
+  $(document).ready(function() {
+    request_riwayat_kepsek();
+  });
+</script>

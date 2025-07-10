@@ -163,7 +163,26 @@ class Pangkalan_data extends MY_Controller
     // TARIK DATASET DARI MODEL
     $dataset = $this->mdl_pkldata->get_riwayat_kepala_sekolah($nip);
     if (check_var($dataset)) {
-      // kalau ada datanya, tata biar dalam bentuk HTML yang valid kembaliannya
+      $html_riwayat = '';
+      foreach ($dataset as $key => $value) {
+        $html_riwayat .= '<div class="col-12"><div class="desc_block hover">' .
+
+          '<div>' .
+          '<b>' . $value['ket_ukerja'] . ' (' . $value['kode_ukerja'] . ')</b><a target="_blank" href="' . site_url('pdt_profil_kepsek/detail/' . encrypt_id($value['id_dokumen'])) . '" class="badge text-light bg-info ms-1 clickable"><i class="fas fa-eye me-1"></i>Lihat Dokumen</a>' .
+          '</div>' .
+
+          '<label>' .
+          '<span class="me-3"><i class="fas fa-file me-1"></i>' . em_date('j F Y, H:i:s', 'set', $value['create_on']) . '</span>' .
+          '<span class="me-3"><i class="fas fa-check-square me-1"></i>' . em_date('j F Y, H:i:s', 'set', $value['verif_on']) . '</span> ' .
+          '<span class="me-3"><i class="fas fa-sync me-1"></i>Update Periode ' . $value['periode_bln'] . '/' . $value['periode_thn'] . '</span>' .
+          '</label>' .
+
+          '<div>' .
+          'Menjabat sebagai Kepala Sekolah mulai dari <b>' . em_date('j F Y', 'set', $value['masa_penugasan_mulai']) . '</b> s/d <b>' . em_date('j F Y', 'set', $value['masa_penugasan_selesai']) . '</b>' .
+          '</div>' .
+
+          '</div></div>';
+      }
     }
 
     return output_json([
