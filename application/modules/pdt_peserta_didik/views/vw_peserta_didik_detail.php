@@ -1,6 +1,6 @@
 <div class="row page-titles">
   <div class="col-md-4 col-12 align-self-center">
-    <h3 class="text-themecolor mb-0">Detail Dokumen</h3>
+    <h3 class="text-themecolor mb-0">Detail Data Siswa</h3>
     <ol class="breadcrumb mb-0">
       <li class="breadcrumb-item">
         <a href="javascript:void(0)">Pangkalan Data</a>
@@ -36,7 +36,7 @@
     }
     ?>
 
-    <div class="col-12">
+    <!-- <div class="col-12">
       <div class="card">
         <div class="card-body">
           <h4 class="card-title space-between">
@@ -79,9 +79,9 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
-    <div class="col-12">
+    <!-- <div class="col-12">
       <div class="card">
         <div class="card-body">
           <h4 class="card-title space-between mb-3">
@@ -103,7 +103,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <div class="col-12">
       <form id="form_edit_profil_sekolah" action="<?= site_url('pdt_profil_sekolah/edit') ?>" method="POST">
@@ -112,7 +112,7 @@
         <div class="card">
           <div class="card-body">
             <h4 class="card-title space-between mb-3">
-              <div><i class="fas fa-building me-2"></i>Profil Peserta Didik</div>
+              <div><i class="fas fa-user me-2"></i>Detail Data Siswa</div>
               <div></div>
             </h4>
 
@@ -231,37 +231,37 @@
 </div>
 
 <script>
-  function request_riwayat() {
-    // you may add more than one param to send
-    let loading_riwayat = $('.loading_riwayat_dokumen');
-    let container_riwayat = $('#row_riwayat_dokumen');
-    $.ajax({
-      type: "POST",
-      url: "<?= site_url('pangkalan_data/get_riwayat_dokumen') ?>",
-      data: {
-        id_dokumen: '<?= $data['id_dokumen'] ?>',
-        jenis_dokumen: 'PROFIL_SEKOLAH'
-      },
-      dataType: 'json',
-      beforeSend: function(e) {
-        loading_riwayat.addClass('show');
-      },
-      success: function(e) {
-        if (e.status) {
-          // what to do when the response status = true
-          container_riwayat.html(e.html);
-          loading_riwayat.removeClass('show');
-        } else {
-          // what to do when the response status = false
-          show_notify('error', e.message);
-        }
-      },
-      error: function(xhr, status, error) {
-        show_notify('error', error);
-        console.error(error);
-      },
-    });
-  }
+  // function request_riwayat() {
+  //   // you may add more than one param to send
+  //   let loading_riwayat = $('.loading_riwayat_dokumen');
+  //   let container_riwayat = $('#row_riwayat_dokumen');
+  //   $.ajax({
+  //     type: "POST",
+  //     url: "<?= site_url('pangkalan_data/get_riwayat_dokumen') ?>",
+  //     data: {
+  //       id_dokumen: '<?= $data['id_dokumen'] ?>',
+  //       jenis_dokumen: 'PROFIL_SEKOLAH'
+  //     },
+  //     dataType: 'json',
+  //     beforeSend: function(e) {
+  //       loading_riwayat.addClass('show');
+  //     },
+  //     success: function(e) {
+  //       if (e.status) {
+  //         // what to do when the response status = true
+  //         container_riwayat.html(e.html);
+  //         loading_riwayat.removeClass('show');
+  //       } else {
+  //         // what to do when the response status = false
+  //         show_notify('error', e.message);
+  //       }
+  //     },
+  //     error: function(xhr, status, error) {
+  //       show_notify('error', error);
+  //       console.error(error);
+  //     },
+  //   });
+  // }
 
   /// |----------------------------------------
   /// | DOCUMENT READY

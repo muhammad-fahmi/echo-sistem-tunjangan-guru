@@ -83,7 +83,7 @@ class Pdt_peserta_didik extends MY_Controller
   {
     $type = $this->input->post('type');
     $id = $this->input->post('id');
-
+    $decryptedID = decrypt_id(sanitize_string($id));
     /// |----------------------------------------
     /// | DEFAULT VALUE
     /// |----------------------------------------
@@ -116,12 +116,12 @@ class Pdt_peserta_didik extends MY_Controller
             'pdpd' => '',
           ];
           $data = [
-            'modal_title' => "Tambah Peserta Didik",
+            'modal_title' => "Tambah Data Siswa",
             'data' => $dataset,
           ];
           $res = [
             'status' => true,
-            'message' => "Modal Tambah Peserta Didik",
+            'message' => "Modal Tambah Data Siswa",
             'html' => $this->load->view('vw_peserta_didik_modal_save', $data, true)
           ];
           break;
@@ -130,15 +130,15 @@ class Pdt_peserta_didik extends MY_Controller
           /// |----------------------------------------
           /// | EDIT DATA
           /// |----------------------------------------
-          $dataset = $this->mdl_peserta_didik->get('v_progurinda_siswa', "id_siswa = '$id'");
+          $dataset = $this->mdl_peserta_didik->get('v_progurinda_siswa', "id_siswa = '$decryptedID'");
           $data = [
-            'modal_title' => "Edit Peserta Didik",
+            'modal_title' => "Edit Data Siswa",
             'type' => $type,
             'data' => $dataset,
           ];
           $res = [
             'status' => true,
-            'message' => "Modal Edit Peserta Didik",
+            'message' => "Modal Edit Data Siswa",
             'html' => $this->load->view('vw_peserta_didik_modal_save', $data, true)
           ];
           break;
@@ -147,15 +147,15 @@ class Pdt_peserta_didik extends MY_Controller
           /// |----------------------------------------
           /// | DELETE DATA
           /// |----------------------------------------
-          $dataset = $this->mdl_peserta_didik->get('v_progurinda_siswa', "id_siswa = '$id'");
+          $dataset = $this->mdl_peserta_didik->get('v_progurinda_siswa', "id_siswa = '$decryptedID'");
           if (isset_nn_nes($dataset)) {
             $data = [
-              'modal_title' => "Hapus Peserta Didik",
+              'modal_title' => "Hapus Data Siswa",
               'data' => $dataset,
             ];
             $res = [
               'status' => true,
-              'message' => "Modal Hapus Peserta Didik",
+              'message' => "Modal Hapus Data Siswa",
               'html' => $this->load->view('vw_peserta_didik_modal_delete', $data, true)
             ];
           }
