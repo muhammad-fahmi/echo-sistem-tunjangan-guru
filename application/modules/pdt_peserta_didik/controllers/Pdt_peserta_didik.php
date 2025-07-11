@@ -113,7 +113,7 @@ class Pdt_peserta_didik extends MY_Controller
             'nama_ibu' => '',
             'no_kk' => '',
             'alamat' => '',
-            's_aktif' => 1,
+            's_aktif' => '',
             'pdpd' => '',
           ];
           $data = [
@@ -191,16 +191,17 @@ class Pdt_peserta_didik extends MY_Controller
       'nama_ibu' => $post['nama_ibu'],
       'no_kk' => $post['no_kk'],
       'alamat' => $post['alamat'],
-      's_aktif' => $post['s_aktif'],
+      // 's_aktif' => $post['s_aktif'],
+      's_aktif' => 1,
       'tgl_masuk' => em_date('Y-m-d'),
       'pdpd' => $post['pdpd_options'],
     );
 
     // Jika peserta didik di non-aktifkan, lanjutkan proses insert data
-    if ($data_to_save['s_aktif'] == 0) {
-      $data_to_save['alasan_keluar'] = $post['alasan_keluar'];
-      $data_to_save['tgl_keluar'] = em_date('Y-m-d');
-    }
+    // if ($data_to_save['s_aktif'] == 0) {
+    //   $data_to_save['alasan_keluar'] = $post['alasan_keluar'];
+    //   $data_to_save['tgl_keluar'] = em_date('Y-m-d');
+    // }
 
     $res = $this->mdl_peserta_didik->save_peserta_didik($data_to_save);
 

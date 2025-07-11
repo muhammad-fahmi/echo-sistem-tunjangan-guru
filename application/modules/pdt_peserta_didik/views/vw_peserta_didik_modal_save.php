@@ -79,16 +79,16 @@
       </div>
 
       <!-- Status Aktif tampil sesuai kewenangan -->
-      <?php if (in_array($this->session->userdata('kewenangan'), [00, 02]) && $type == 'edit_peserta_didik') { ?>
+      <!-- <?php if (in_array($this->session->userdata('kewenangan'), [00, 02]) && $type == 'edit_peserta_didik') { ?>
         <div class="col-12 col-lg-12 form_mapel mb-2">
           <label for="s_aktif">Status Aktif</label>
           <select name="s_aktif" id="s_aktif" class="form-select form-select-sm">
             <option value="">-- Pilih Status Aktif --</option>
-            <option value="1">Aktif</option>
+            <option value="1" selected>Aktif</option>
             <option value="0">Non-Aktif</option>
           </select>
         </div>
-      <?php } ?>
+      <?php } ?> -->
 
       <div class="col-12 col-lg-12 form_mapel mb-2">
         <input type="checkbox" name="pdpd" id="pdpd" onchange="toggleDisabilitySelect()" <?= isset_nn_nes($data['pdpd']) ? 'checked' : ''; ?>> PD Penyandang Disabilitas?
