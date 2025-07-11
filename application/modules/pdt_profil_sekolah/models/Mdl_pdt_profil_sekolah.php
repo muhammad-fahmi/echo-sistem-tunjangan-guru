@@ -55,6 +55,10 @@ class Mdl_pdt_profil_sekolah extends CI_Model
       // tambah kondisi kode_ukerja karena yang login adalah admin sekolah
       $this->db->where(['kode_ukerja' => $cur_unor]);
     }
+
+    if (check_var($data['f_ukerja']) && $data['f_ukerja'] != 'all') {
+      $this->db->where('kode_ukerja', $data['f_ukerja']);
+    }
   }
 
   public function get_datatable_master($data)
@@ -147,6 +151,18 @@ class Mdl_pdt_profil_sekolah extends CI_Model
     if (!is_admin()) {
       // tambah kondisi kode_ukerja karena yang login adalah admin sekolah
       $this->db->where(['kode_ukerja' => $cur_unor]);
+    }
+
+    if (check_var($data['f_ukerja']) && $data['f_ukerja'] != 'all') {
+      $this->db->where('kode_ukerja', $data['f_ukerja']);
+    }
+
+    if (check_var($data['f_periode_bln']) && $data['f_periode_bln'] != 'all') {
+      $this->db->where('periode_bln', $data['f_periode_bln']);
+    }
+
+    if (check_var($data['f_periode_thn']) && $data['f_periode_thn'] != 'all') {
+      $this->db->where('periode_thn', $data['f_periode_thn']);
     }
   }
 
