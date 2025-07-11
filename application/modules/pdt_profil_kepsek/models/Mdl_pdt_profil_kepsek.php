@@ -337,7 +337,7 @@ class Mdl_pdt_profil_kepsek extends CI_Model
       'periode_ke' => null, /* sumber di v_pns (?) */
       'masa_penugasan_mulai' => null, /* sumber di v_pns (?) */
       'masa_penugasan_selesai' => null, /* sumber di v_pns (?) */
-      's_aktif' => null /* sumber di v_pns (?) */
+      's_aktif' => check_var($post, 's_aktif', null) /* sumber di v_pns (?) */
     ];
 
     try {

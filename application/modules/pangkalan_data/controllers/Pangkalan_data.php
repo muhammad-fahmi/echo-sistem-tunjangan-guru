@@ -127,6 +127,8 @@ class Pangkalan_data extends MY_Controller
 
   public function get_riwayat_update_sekolah()
   {
+    $kode_ukerja = post_safe('kode_ukerja');
+
     $html_riwayat = '<div class="col-12 text-center">Belum ada riwayat untuk Sekolah.</div>';
 
     // CHECK PERMISSION
@@ -136,10 +138,33 @@ class Pangkalan_data extends MY_Controller
       'html' => $html_riwayat
     ]);
 
+    $dataset = $this->mdl_pkldata->get_riwayat_sekolah($kode_ukerja);
+    if (check_var($dataset)) {
+      $html_riwayat = '';
+      foreach ($dataset as $key => $value) {
+        $html_riwayat .= '<div class="col-12"><div class="desc_block hover">' .
+
+          '<div>' .
+          '<b>' . $value['verif_by'] . ' (' . $value['verif_by_kewenangan'] . ')</b><a target="_blank" href="' . site_url('pdt_profil_sekolah/detail/' . encrypt_id($value['id_dokumen'])) . '" class="badge text-light bg-info ms-1 clickable"><i class="fas fa-eye me-1"></i>Lihat Dokumen</a>' .
+          '</div>' .
+
+          '<label>' .
+          '<span class="me-3"><i class="fas fa-file me-1"></i>' . em_date('j F Y, H:i:s', 'set', $value['create_on']) . '</span>' .
+          '<span class="me-3"><i class="fas fa-check-square me-1"></i>' . em_date('j F Y, H:i:s', 'set', $value['verif_on']) . '</span> ' .
+          '<span class="me-3"><i class="fas fa-sync me-1"></i>Update Periode ' . $value['periode_bln'] . '/' . $value['periode_thn'] . '</span>' .
+          '</label>' .
+
+          '<div>' .
+          'Menyetujui Dokumen Update Sekolah ' . $value['ket_ukerja'] . ' untuk Periode <b>' . $value['periode_bln'] . '/' . $value['periode_thn'] . '</b>.' .
+          '</div>' .
+
+          '</div></div>';
+      }
+    }
+
     /// |----------------------------------------
     /// | TATA FORMAT HTMLNYA
     /// |----------------------------------------
-
     return output_json([
       'status' => true,
       'message' => "Riwayat sekolah retrieved",
@@ -179,6 +204,60 @@ class Pangkalan_data extends MY_Controller
 
           '<div>' .
           'Menjabat sebagai Kepala Sekolah mulai dari <b>' . em_date('j F Y', 'set', $value['masa_penugasan_mulai']) . '</b> s/d <b>' . em_date('j F Y', 'set', $value['masa_penugasan_selesai']) . '</b>' .
+          '</div>' .
+
+          '</div></div>';
+      }
+    }
+
+    return output_json([
+      'status' => true,
+      'message' => "Riwayat kepala sekolah retrieved",
+      'html' => $html_riwayat
+    ]);
+  }
+
+  public function get_riwayat_kepala_sekolah_by_ukerja()
+  {
+    $kode_ukerja = post_safe('kode_ukerja');
+
+    $data_ukerja = fetch_row_data('v_ukerja', ['kode_ukerja' => $kode_ukerja], false);
+    if ($data_ukerja == false) {
+      return output_json([
+        'status' => true,
+        'message' => "Riwayat kepala sekolah retrieved",
+        'html' => '<div class="col-12 text-center">Belum ada riwayat Kepala Sekolah.</div>'
+      ]);
+    }
+
+    $html_riwayat = '<div class="col-12 text-center">Belum ada riwayat Kepala Sekolah di ' . $data_ukerja['ket_ukerja'] . '.</div>';
+
+    // CHECK PERMISSION
+    if (!check_perm('read', 'PDT_Dashboard')) return output_json([
+      'status' => true,
+      'message' => "Riwayat kepala sekolah retrieved",
+      'html' => $html_riwayat
+    ]);
+
+    // TARIK DATASET DARI MODEL
+    $dataset = $this->mdl_pkldata->get_riwayat_kepala_sekolah_by_ukerja($kode_ukerja);
+    if (check_var($dataset)) {
+      $html_riwayat = '';
+      foreach ($dataset as $key => $value) {
+        $html_riwayat .= '<div class="col-12"><div class="desc_block hover">' .
+
+          '<div>' .
+          '<b>' . $value['nama'] . ' (' . $value['nip'] . ')</b><a target="_blank" href="' . site_url('pdt_profil_kepsek/detail/' . encrypt_id($value['id_dokumen'])) . '" class="badge text-light bg-info ms-1 clickable"><i class="fas fa-eye me-1"></i>Lihat Dokumen</a>' .
+          '</div>' .
+
+          '<label>' .
+          '<span class="me-3"><i class="fas fa-file me-1"></i>' . em_date('j F Y, H:i:s', 'set', $value['create_on']) . '</span>' .
+          '<span class="me-3"><i class="fas fa-check-square me-1"></i>' . em_date('j F Y, H:i:s', 'set', $value['verif_on']) . '</span> ' .
+          '<span class="me-3"><i class="fas fa-sync me-1"></i>Update Periode ' . $value['periode_bln'] . '/' . $value['periode_thn'] . '</span>' .
+          '</label>' .
+
+          '<div>' .
+          'Menjabat sebagai Kepala Sekolah di ' . $value['ket_ukerja'] . ' mulai dari <b>' . em_date('j F Y', 'set', $value['masa_penugasan_mulai']) . '</b> s/d <b>' . em_date('j F Y', 'set', $value['masa_penugasan_selesai']) . '</b>' .
           '</div>' .
 
           '</div></div>';

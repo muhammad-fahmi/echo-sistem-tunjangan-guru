@@ -37,30 +37,6 @@
     ?>
 
     <div class="col-12">
-      <div class="card">
-        <div class="card-body">
-          <h4 class="card-title space-between mb-3">
-            <div><i class="fas fa-history me-2"></i>Riwayat Profil</div>
-            <div></div>
-          </h4>
-          <div>
-
-            <div id="row_riwayat_dokumen" class="row g-2 row_riwayat_dokumen">
-
-              <div class="col-12">
-                <div class="_loading loading_riwayat_dokumen behind-navbar">
-                  <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>LOADING...</div>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-12">
       <form id="form_edit_profil_sekolah" action="<?= site_url('pdt_profil_sekolah/edit') ?>" method="POST">
         <input type="hidden" name="id_dokumen" value="<?= check_var($data, 'id_dokumen', '') ?>">
 
@@ -323,21 +299,99 @@
       </form>
     </div>
 
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title space-between mb-3">
+            <div><i class="fas fa-history me-2"></i>Riwayat Update Data Sekolah</div>
+            <div></div>
+          </h4>
+          <div>
+
+            <div id="row_riwayat_sekolah" class="row g-2 row_riwayat_sekolah">
+
+              <div class="col-12">
+                <div class="_loading loading_riwayat_sekolah behind-navbar">
+                  <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>LOADING...</div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title space-between mb-3">
+            <div><i class="fas fa-history me-2"></i>Riwayat Kepala Sekolah</div>
+            <div></div>
+          </h4>
+          <div>
+
+            <div id="row_riwayat_kepsek" class="row g-2 row_riwayat_kepsek">
+
+              <div class="col-12">
+                <div class="_loading loading_riwayat_kepsek behind-navbar">
+                  <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>LOADING...</div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
 </div>
 
 <script>
-  function request_riwayat() {
+  function request_riwayat_sekolah() {
     // you may add more than one param to send
-    let loading_riwayat = $('.loading_riwayat_dokumen');
-    let container_riwayat = $('#row_riwayat_dokumen');
+    let loading_riwayat = $('.loading_riwayat_sekolah');
+    let container_riwayat = $('#row_riwayat_sekolah');
     $.ajax({
       type: "POST",
-      url: "<?= site_url('pangkalan_data/get_riwayat_dokumen') ?>",
+      url: "<?= site_url('pangkalan_data/get_riwayat_update_sekolah') ?>",
       data: {
-        id_dokumen: '<?= $data['id_dokumen'] ?>',
-        jenis_dokumen: 'PROFIL_SEKOLAH'
+        kode_ukerja: '<?= $data['kode_ukerja'] ?>'
+      },
+      dataType: 'json',
+      beforeSend: function(e) {
+        loading_riwayat.addClass('show');
+      },
+      success: function(e) {
+        if (e.status) {
+          // what to do when the response status = true
+          container_riwayat.html(e.html);
+          loading_riwayat.removeClass('show');
+        } else {
+          // what to do when the response status = false
+          show_notify('error', e.message);
+        }
+      },
+      error: function(xhr, status, error) {
+        show_notify('error', error);
+        console.error(error);
+      },
+    });
+  }
+
+  function request_riwayat_kepsek() {
+    // you may add more than one param to send
+    let loading_riwayat = $('.loading_riwayat_kepsek');
+    let container_riwayat = $('#row_riwayat_kepsek');
+    $.ajax({
+      type: "POST",
+      url: "<?= site_url('pangkalan_data/get_riwayat_kepala_sekolah_by_ukerja') ?>",
+      data: {
+        kode_ukerja: '<?= $data['kode_ukerja'] ?>'
       },
       dataType: 'json',
       beforeSend: function(e) {
@@ -403,6 +457,7 @@
     }).addTo(map);
 
     // REQUEST RIWAYAT
-    request_riwayat();
+    request_riwayat_sekolah();
+    request_riwayat_kepsek();
   });
 </script>

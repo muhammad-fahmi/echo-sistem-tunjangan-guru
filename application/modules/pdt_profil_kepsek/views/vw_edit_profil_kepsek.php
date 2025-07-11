@@ -320,8 +320,8 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                       <label for="s_aktif">Status Riwayat</label>
                       <select name="s_aktif" id="s_aktif" class="form-select">
                         <option value="" default hidden>- Pilih Status Riwayat -</option>
-                        <option value="1">Riwayat Terbaru (Aktif)</option>
-                        <option value="0">Bukan Riwayat Terbaru (Non-Aktif)</option>
+                        <option value="1" <?= (check_var($data, 's_aktif', null) == '1') ? 'selected' : '' ?>>Riwayat Terbaru (Aktif)</option>
+                        <option value="0" <?= (check_var($data, 's_aktif', null) == '0') ? 'selected' : '' ?>>Bukan Riwayat Terbaru (Non-Aktif)</option>
                       </select>
                       <div class="invalid-feedback" id="error_s_aktif"></div>
                     </div>

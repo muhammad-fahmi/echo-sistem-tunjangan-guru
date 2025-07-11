@@ -74,20 +74,11 @@ class Pdt_profil_sekolah extends MY_Controller
   public function detail($encryptedID = '')
   {
     $decryptedID = decrypt_id(sanitize_string($encryptedID));
-    $cur_unor = $this->session->userdata('kode_unor');
 
     // CEK VALIDASI DATA
     $dataset = fetch_row_data('vr_profil_sekolah', ['id_dokumen' => $decryptedID], false);
     if ($dataset == false) {
       $this->session->set_userdata('flash_data', "Maaf, data dokumen usulan Profil Sekolah yang akan dilihat detailnya tidak valid.");
-      redirect(site_url('pdt_profil_sekolah'));
-      return;
-    }
-
-    // CEK PERM
-    $same_ukerja = ($dataset['kode_ukerja'] == $cur_unor);
-    if (!is_admin() && !$same_ukerja) {
-      $this->session->set_userdata('flash_data', "Maaf, Anda tidak memiliki ijin untuk melihat data Profil Sekolah tersebut.");
       redirect(site_url('pdt_profil_sekolah'));
       return;
     }
@@ -107,20 +98,11 @@ class Pdt_profil_sekolah extends MY_Controller
   public function detail_master($kode_ukerja = '')
   {
     $kode_ukerja = sanitize_string($kode_ukerja);
-    $cur_unor = $this->session->userdata('kode_unor');
 
     // CEK VALIDASI DATA
     $dataset = fetch_row_data('vm_profil_sekolah', ['kode_ukerja' => $kode_ukerja], false);
     if ($dataset == false) {
       $this->session->set_userdata('flash_data', "Maaf, data Profil Sekolah yang akan dilihat detailnya tidak valid.");
-      redirect(site_url('pdt_profil_sekolah'));
-      return;
-    }
-
-    // CEK PERM
-    $same_ukerja = ($dataset['kode_ukerja'] == $cur_unor);
-    if (!is_admin() && !$same_ukerja) {
-      $this->session->set_userdata('flash_data', "Maaf, Anda tidak memiliki ijin untuk melihat data Profil Sekolah tersebut.");
       redirect(site_url('pdt_profil_sekolah'));
       return;
     }
