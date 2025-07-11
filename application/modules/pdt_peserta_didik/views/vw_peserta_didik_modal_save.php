@@ -42,6 +42,7 @@
         <br>
         <select name="jenis_kelamin" id="jenis_kelamin" class="form-select form-select" style="width:100%">
           <?php $selected = ($data["jenis_kelamin"] != "") ? "selected" : ""; ?>
+          <option value="<?php echo $data["jenis_kelamin"]; ?>" <?php echo $selected ?>><?php echo $data["ket_jns_kelamin"]; ?></option>
         </select>
       </div>
 
@@ -50,6 +51,7 @@
         <br>
         <select name="kode_agama" id="kode_agama" class="form-select form-select" style="width:100%">
           <?php $selected = ($data["kode_agama"] != "") ? "selected" : ""; ?>
+          <option value="<?php echo $data["kode_agama"]; ?>" <?php echo $selected ?>><?php echo $data["ket_agama"]; ?></option>
         </select>
       </div>
 
@@ -73,11 +75,11 @@
 
       <div class="col-12 col-lg-12 form_mapel mb-2">
         <label for="alamat">Alamat</label>
-        <textarea type="text" name="alamat" id="alamat" rows="3" class="form-control form-control-sm" value="<?= $data['alamat'] ?>"></textarea>
+        <input type="text" name="alamat" id="alamat" rows="3" class="form-control form-control-sm" value="<?= $data['alamat'] ?>">
       </div>
 
       <!-- Status Aktif tampil sesuai kewenangan -->
-      <?php if ($this->session->userdata('kewenangan') == 00 && $type == 'edit_peserta_didik') { ?>
+      <?php if (in_array($this->session->userdata('kewenangan'), [00, 02]) && $type == 'edit_peserta_didik') { ?>
         <div class="col-12 col-lg-12 form_mapel mb-2">
           <label for="s_aktif">Status Aktif</label>
           <select name="s_aktif" id="s_aktif" class="form-select form-select-sm">
@@ -89,13 +91,14 @@
       <?php } ?>
 
       <div class="col-12 col-lg-12 form_mapel mb-2">
-        <input type="checkbox" name="pdpd" id="pdpd" onchange="toggleDisabilitySelect()"> PD Penyandang Disabilitas?
+        <input type="checkbox" name="pdpd" id="pdpd" onchange="toggleDisabilitySelect()" <?= isset_nn_nes($data['pdpd']) ? 'checked' : ''; ?>> PD Penyandang Disabilitas?
       </div>
 
       <div id="pdpd_container" class="col-12 col-lg-12 form_mapel mb-2" style="display: none; margin-top: 10px;">
         <label for="pdpd_options">Ragam Disabilitas</label>
         <select id="pdpd_options" name="pdpd_options" class="form-select form-select">
           <?php $selected = ($data["pdpd"] != "") ? "selected" : ""; ?>
+          <option value="<?php echo $data["pdpd"]; ?>" <?php echo $selected ?>><?php echo $data["ket_disabilitas"]; ?></option>
         </select>
       </div>
 
