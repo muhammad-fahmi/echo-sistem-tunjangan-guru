@@ -40,4 +40,27 @@ class Mdl_pangkalan_data extends CI_Model
 
     return $dataset;
   }
+
+  public function get_riwayat_kepala_sekolah_by_ukerja($kode_ukerja = '0000')
+  {
+    $kode_ukerja = sanitize_string($kode_ukerja);
+    $dataset = $this->db->from('vr_profil_kepsek')
+      ->where(['kode_ukerja' => $kode_ukerja, 'status_dokumen' => 'DITRM'])
+      ->order_by('masa_penugasan_selesai', 'DESC')
+      ->get()->result_array();
+
+    return $dataset;
+  }
+
+  public function get_riwayat_sekolah($kode_ukerja = '0000')
+  {
+    $kode_ukerja = sanitize_string($kode_ukerja);
+    $dataset = $this->db->from('vr_profil_sekolah')
+      ->where(['kode_ukerja' => $kode_ukerja, 'status_dokumen' => 'DITRM'])
+      ->order_by('periode_thn', 'DESC')
+      ->order_by('periode_bln', 'DESC')
+      ->get()->result_array();
+
+    return $dataset;
+  }
 }
