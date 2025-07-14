@@ -34,7 +34,6 @@ class Mdl_pdt_profil_kepsek extends CI_Model
   /// |----------------------------------------------------------------------
   private function query_m_profil_kepsek($data)
   {
-    $cur_kewenangan = $this->session->userdata('kewenangan');
     $cur_unor = $this->session->userdata('kode_unor');
 
     // declare table
@@ -51,9 +50,13 @@ class Mdl_pdt_profil_kepsek extends CI_Model
         ->group_end();
     }
 
-    if ($cur_kewenangan == '10') {
+    if (!is_admin()) {
       // tambah kondisi kode_ukerja karena yang login adalah admin sekolah
       $this->db->where(['kode_ukerja' => $cur_unor]);
+    }
+
+    if (check_var($data['f_ukerja']) && $data['f_ukerja'] != 'all') {
+      $this->db->where('kode_ukerja', $data['f_ukerja']);
     }
   }
 
@@ -131,7 +134,6 @@ class Mdl_pdt_profil_kepsek extends CI_Model
   /// |----------------------------------------------------------------------
   private function query_r_profil_kepsek($data)
   {
-    $cur_kewenangan = $this->session->userdata('kewenangan');
     $cur_unor = $this->session->userdata('kode_unor');
 
     // declare table
@@ -148,9 +150,21 @@ class Mdl_pdt_profil_kepsek extends CI_Model
         ->group_end();
     }
 
-    if ($cur_kewenangan == '10') {
+    if (!is_admin()) {
       // tambah kondisi kode_ukerja karena yang login adalah admin sekolah
       $this->db->where(['kode_ukerja' => $cur_unor]);
+    }
+
+    if (check_var($data['f_ukerja']) && $data['f_ukerja'] != 'all') {
+      $this->db->where('kode_ukerja', $data['f_ukerja']);
+    }
+
+    if (check_var($data['f_periode_bln']) && $data['f_periode_bln'] != 'all') {
+      $this->db->where('periode_bln', $data['f_periode_bln']);
+    }
+
+    if (check_var($data['f_periode_thn']) && $data['f_periode_thn'] != 'all') {
+      $this->db->where('periode_thn', $data['f_periode_thn']);
     }
   }
 

@@ -945,6 +945,31 @@ function menu_loader($echo = true)
           $onclick = '';
         }
 
+        $child_container_class = '';
+        $child_link_class = '';
+        if ($v['is_child'] == 'YES') {
+          $child_container_class = 'child_container';
+          $child_link_class = 'child_link';
+        }
+
+        // kalau menu yang ditampilkan saat ini adalah menu logout
+        // jika yg login saat ini adalah super admin, tambahkan menu
+        // manajemen perm
+        if ($cur_kewenangan == '00' && $v['id_menu'] == 'PDT_Logout') {
+          // sisipkan menu manajemen perm
+          $perm_active = ($cur_menu == 'PDT_ManajemenPerm') ? 'selected' : '';
+          $html .= '<li class="bz_sidebar_item ' . $child_container_class . ' PDT_ManajemenPerm ' . $perm_active . '">
+              <a href="' . site_url('pdt_manajemen_perm') . '" class="sidebar_link ' . $child_link_class . '">
+                <div class="icon"><i class="fas fa-list"></i></div>
+                <div class="hide-menu">
+                  <div class="main">Hak Akses</div>
+                  <div class="sub">Manajemen Akses Menu</div>
+                </div>
+              </a>
+            </li>';
+        }
+
+
         //_____ ORIGINAL STYLE
         // $html .= '<li class="sidebar-item ' . $v['id_menu'] . ' ' . $active . '">
         //     <a ' . $href . ' ' . $onclick . ' class="sidebar-link"><i class="' . $icon . '"></i><span class="hide-menu">
@@ -953,8 +978,8 @@ function menu_loader($echo = true)
         //   </li>';
 
         //_____ MODIFIED STYLE
-        $html .= '<li class="bz_sidebar_item ' . $v['id_menu'] . ' ' . $active . '">
-            <a ' . $href . ' ' . $onclick . ' class="sidebar_link">
+        $html .= '<li class="bz_sidebar_item ' . $child_container_class . ' ' . $v['id_menu'] . ' ' . $active . '">
+            <a ' . $href . ' ' . $onclick . ' class="sidebar_link '. $child_link_class .'">
               <div class="icon"><i class="' . $icon . '"></i></div>
               <div class="hide-menu">
                 <div class="main">' . check_var($v, 'menu_title', 'UNKNOWN') . '</div>

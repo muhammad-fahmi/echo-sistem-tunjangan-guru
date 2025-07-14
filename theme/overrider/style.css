@@ -193,6 +193,8 @@ label.is-invalid {
 }
 #main-wrapper nav.sidebar-nav .bz_sidebar_item a .menu_title .sub,
 #main-wrapper nav.sidebar-nav .bz_sidebar_item a .hide-menu .sub {
+  font-size: 0.65rem;
+  margin-top: -4px;
   position: relative;
 }
 #main-wrapper nav.sidebar-nav .bz_sidebar_item ul {
@@ -319,4 +321,23 @@ a.badge.text-white:hover {
   height: 30px !important;
   font-size: 0.8rem !important;
   line-height: 30px !important;
+}
+
+.parent_item > .sidebar_link,
+#main-wrapper.mini-sidebar li.parent_item > .sidebar_link {
+  margin-bottom: 4px;
+}
+.parent_item > .collapse.first-level.in,
+#main-wrapper.mini-sidebar li.parent_item > .collapse.first-level.in {
+  display: block !important;
+}
+
+#main-wrapper.mini-sidebar li.parent_item.selected ul {
+  display: block !important;
+}
+#main-wrapper.mini-sidebar li.parent_item .child_container {
+  margin-left: -13px;
+}
+#main-wrapper.mini-sidebar li.parent_item .child_link {
+  margin-left: -11px;
 }/*# sourceMappingURL=style.css.map */

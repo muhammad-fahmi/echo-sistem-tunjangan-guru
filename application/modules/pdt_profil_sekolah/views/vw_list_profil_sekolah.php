@@ -1,5 +1,6 @@
 <?php
 $cur_kewenangan = $this->session->userdata('kewenangan');
+$cur_unor = $this->session->userdata('kode_unor');
 ?>
 <div class="row page-titles">
   <div class="col-md-4 col-12 align-self-center">
@@ -50,6 +51,29 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
               <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>
             </div>
 
+            <div class="row g-2">
+
+              <?php
+              if (is_admin()) {
+              ?>
+                <div class="col-12 col-md-6 col-lg-3 col-xl-2">
+                  <div class="input_block">
+                    <label for="f_master_ukerja"><i class="fas fa-filter me-1"></i>Sekolah / Unit Kerja</label>
+                    <select name="f_master_ukerja" id="f_master_ukerja" class="form-select form-select-sm select2 select2-sm select2_f_master_ukerja">
+                      <option value="all" default selected>- SEMUA -</option>
+                    </select>
+                  </div>
+                </div>
+              <?php
+              } else {
+              ?>
+                <input type="hidden" name="f_master_ukerja" id="f_master_ukerja" value="<?= $cur_unor ?>">
+              <?php
+              }
+              ?>
+
+            </div>
+
             <table id="tabel_m_profil_sekolah" class="table table-bordered table-hover fs-3" style="width:100%;">
               <thead>
                 <tr class="text-center">
@@ -75,17 +99,63 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
     <div class="col-12">
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title mb-2">Usulan Profil Sekolah</h4>
+          <h4 class="card-title space-between mb-2">
+            <div>Usulan Profil Sekolah</div>
+            <div>
+              <div class="btn btn-sm btn-success me-1" onclick="modal(`tambah_usulan_profil`)">
+                <i class="fas fa-plus-square me-2"></i>Tambah Profil Baru
+              </div>
+            </div>
+          </h4>
 
           <div class="table-responsive mt-4">
             <div class="_loading loading_tabel_r_profil_sekolah">
               <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>
             </div>
 
-            <div>
-              <div class="btn btn-sm btn-success me-1" onclick="modal(`tambah_usulan_profil`)">
-                <i class="fas fa-plus-square me-2"></i>Tambah Profil Baru
+            <div class="row g-2">
+
+              <?php
+              if (is_admin()) {
+              ?>
+                <div class="col-12 col-md-6 col-lg-3 col-xl-2">
+                  <div class="input_block">
+                    <label for="f_usulan_ukerja"><i class="fas fa-filter me-1"></i>Sekolah / Unit Kerja</label>
+                    <select name="f_usulan_ukerja" id="f_usulan_ukerja" class="form-select form-select-sm select2 select2-sm select2_f_usulan_ukerja">
+                      <option value="all" default selected>- SEMUA -</option>
+                    </select>
+                  </div>
+                </div>
+              <?php
+              } else {
+              ?>
+                <input type="hidden" name="f_usulan_ukerja" id="f_usulan_ukerja" value="<?= $cur_unor ?>">
+              <?php
+              }
+              ?>
+
+              <div class="col-12 col-md-6 col-lg-3 col-xl-2">
+                <?php $arr_bulan = array_periode_bulan(); ?>
+                <div class="input_block">
+                  <label for="f_usulan_periode_bln"><i class="fas fa-filter me-1"></i>Periode Bulan</label>
+                  <select name="f_usulan_periode_bln" id="f_usulan_periode_bln" class="form-select form-select-sm">
+                    <option value="all">- SEMUA -</option>
+                    <?php
+                    foreach ($arr_bulan as $key => $value) {
+                      echo '<option value="' . $key . '">' . $value . '</option>';
+                    }
+                    ?>
+                  </select>
+                </div>
               </div>
+
+              <div class="col-12 col-md-6 col-lg-3 col-xl-2">
+                <div class="input_block">
+                  <label for="f_usulan_periode_thn"><i class="fas fa-filter me-1"></i>Periode Tahun</label>
+                  <input type="number" min="2000" step="1" name="f_usulan_periode_thn" id="f_usulan_periode_thn" class="form-control form-control-sm" placeholder="- SEMUA -" value="">
+                </div>
+              </div>
+
             </div>
 
             <table id="tabel_r_profil_sekolah" class="table table-bordered table-hover fs-3" style="width:100%;">
@@ -136,7 +206,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
   }
 
   /// |----------------------------------------------------------------------
-  /// | >> MASTER PROFIL KEPSEK
+  /// | >> MASTER PROFIL SEKOLAH
   /// |----------------------------------------------------------------------
   var m_profil_sekolah = $("#tabel_m_profil_sekolah").DataTable({
     responsive: true,
@@ -160,9 +230,9 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
       url: '<?= site_url('pdt_profil_sekolah/get_data_master') ?>',
       /* parameter yang dikirimkan ke controller */
       data: {
-        param1: function() {
-          return $('#id_atau_class_element').val();
-        },
+        f_ukerja: function() {
+          return $('#f_master_ukerja').val();
+        }
       },
       type: 'POST',
       beforeSend: function() {
@@ -236,7 +306,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
   }
 
   /// |----------------------------------------------------------------------
-  /// | >> USULAN PROFIL KEPSEK
+  /// | >> USULAN PROFIL SEKOLAH
   /// |----------------------------------------------------------------------
   var r_profil_sekolah = $("#tabel_r_profil_sekolah").DataTable({
     responsive: true,
@@ -260,9 +330,15 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
       url: '<?= site_url('pdt_profil_sekolah/get_data_usulan') ?>',
       /* parameter yang dikirimkan ke controller */
       data: {
-        param1: function() {
-          return $('#id_atau_class_element').val();
+        f_ukerja: function() {
+          return $('#f_usulan_ukerja').val();
         },
+        f_periode_bln: function() {
+          return $('#f_usulan_periode_bln').val();
+        },
+        f_periode_thn: function() {
+          return $('#f_usulan_periode_thn').val();
+        }
       },
       type: 'POST',
       beforeSend: function() {
@@ -353,5 +429,57 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
 
   $(document).ready(function() {
     // do something on document ready
+
+    /// |----------------------------------------
+    /// | LISTENER & SELECT2 MASTER
+    /// |----------------------------------------
+    <?php
+    if (is_admin()) {
+    ?>
+      // init select2
+      init_select2('#f_master_ukerja',
+        'Pilih Sekolah...',
+        '<?= site_url('config/select2_sekolah') ?>',
+        () => ({
+          include_semua: 'yes',
+        })
+      );
+    <?php
+    }
+    ?>
+
+    // filter listener
+    $('#f_master_ukerja').on('change', function() {
+      reload_m_profil_table();
+    });
+
+    /// |----------------------------------------
+    /// | LISTENER & SELECT2 USULAN
+    /// |----------------------------------------
+    <?php
+    if (is_admin()) {
+    ?>
+      // init select2
+      init_select2('#f_usulan_ukerja',
+        'Pilih Sekolah...',
+        '<?= site_url('config/select2_sekolah') ?>',
+        () => ({
+          include_semua: 'yes',
+        })
+      );
+    <?php
+    }
+    ?>
+
+    // filter listener
+    $('#f_usulan_ukerja, #f_usulan_periode_bln').on('change', function() {
+      reload_r_profil_table();
+    });
+    $('#f_usulan_periode_thn').on('input', debounce(reload_r_profil_table, 500));
+
+    // change size select2-sm
+    $('.select2-sm').siblings('.select2-container')
+      .find('.select2-selection--single, .select2-selection__rendered, .select2-selection__arrow')
+      .addClass('select2-sm-style');
   });
 </script>
