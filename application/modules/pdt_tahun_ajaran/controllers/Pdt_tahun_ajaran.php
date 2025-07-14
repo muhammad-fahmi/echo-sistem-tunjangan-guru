@@ -72,53 +72,55 @@ class Pdt_tahun_ajaran extends MY_Controller
     /// | COMMANDS
     /// |----------------------------------------
     switch ($type) {
-      case 'tambah_rombel': {
+      case 'tambah_data_tahun_ajar': {
           /// |----------------------------------------
           /// | INSERT DATA
           /// |----------------------------------------
           $dataset = [];
           $data = [
-            'modal_title' => "Tambah Rombongan Belajar",
+            'modal_title' => "Tambah Data Tahun Ajaran",
+            'type' => 'add',
             'data' => $dataset,
           ];
           $res = [
             'status' => true,
-            'message' => "Modal Tambah Rombongan Belajar",
-            'html' => $this->load->view('vw_peserta_didik_modal_save', $data, true)
+            'message' => "Modal Tambah Data Tahun Ajaran",
+            'html' => $this->load->view('vwm_crud_tahun_ajaran', $data, true)
           ];
           break;
         }
-      case 'edit_rombel': {
+      case 'update_data_tahun_ajar': {
           /// |----------------------------------------
           /// | EDIT DATA
           /// |----------------------------------------
           $dataset = $this->mdl_peserta_didik->get('v_progurinda_siswa', "id_siswa = '$decryptedID'");
           $data = [
-            'modal_title' => "Edit Rombongan Belajar",
-            'type' => $type,
+            'modal_title' => "Update Data Tahun Ajaran",
+            'type' => 'update',
             'data' => $dataset,
           ];
           $res = [
             'status' => true,
-            'message' => "Modal Edit Rombongan Belajar",
-            'html' => $this->load->view('vw_peserta_didik_modal_save', $data, true)
+            'message' => "Modal Update Data Tahun Ajaran",
+            'html' => $this->load->view('vwm_crud_tahun_ajaran', $data, true)
           ];
           break;
         }
-      case 'delete_rombel': {
+      case 'delete_data_tahun_ajar': {
           /// |----------------------------------------
           /// | DELETE DATA
           /// |----------------------------------------
           $dataset = $this->mdl_peserta_didik->get('v_progurinda_siswa', "id_siswa = '$decryptedID'");
           if (isset_nn_nes($dataset)) {
             $data = [
-              'modal_title' => "Hapus Rombongan Belajar",
+              'modal_title' => "Hapus Data Tahun Ajaran",
+              'type' => 'delete',
               'data' => $dataset,
             ];
             $res = [
               'status' => true,
-              'message' => "Modal Hapus Rombongan Belajar",
-              'html' => $this->load->view('vw_peserta_didik_modal_delete', $data, true)
+              'message' => "Modal Hapus Data Tahun Ajaran",
+              'html' => $this->load->view('vwm_crud_tahun_ajaran', $data, true)
             ];
           }
           break;

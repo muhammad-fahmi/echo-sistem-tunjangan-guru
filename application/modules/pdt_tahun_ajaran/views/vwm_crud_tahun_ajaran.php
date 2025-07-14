@@ -18,9 +18,9 @@ switch ($type) {
 
             <div class="col-12">
               <div class="input_block">
-                <label for="jenjang">Jenjang</label>
-                <select name="jenjang" id="jenjang" class="form-select">
-                  <option value="" default hidden>- Pilih Jenjang Sekolah -</option>
+                <label for="tingkat">Tingkat</label>
+                <select name="tingkat" id="tingkat" class="form-select">
+                  <option value="" default hidden>- Pilih Tingkat Sekolah -</option>
                   <option value="TK">TK</option>
                   <option value="SD">SD</option>
                   <option value="SMP">SMP</option>
@@ -35,7 +35,7 @@ switch ($type) {
               <div class="col-12">
                 <div class="input_block">
                   <label for="kode_ukerja">Nama Sekolah</label>
-                  <select name="kode_ukerja" id="kode_ukerja" class="form-select select2_ukerja"></select>
+                  <select name="kode_ukerja" id="kode_ukerja" class="form-select"></select>
                 </div>
               </div>
             <?php
@@ -58,23 +58,20 @@ switch ($type) {
               $array_bulan = array_periode_bulan();
               ?>
               <div class="input_block">
-                <label for="periode_bln">Periode (Bulan)</label>
-                <select name="periode_bln" id="periode_bln" class="form-select">
-                  <option value="" default>- Bulan -</option>
-                  <?php
-                  foreach ($array_bulan as $key => $value) {
-                    $selected = (em_date('m') == $key) ? 'selected default' : '';
-                    echo '<option value="' .  $key . '" ' . $selected . '>' . $value . '</option>';
-                  }
-                  ?>
+                <label for="semester">Semester</label>
+                <select name="semester" id="semester" class="form-select">
+                  <option value="" default>- Semester -</option>
+                  <option value="1" default>I</option>
+                  <option value="2" default>II</option>
+                  <option value="3" default>III</option>
                 </select>
               </div>
             </div>
 
             <div class="col-6">
               <div class="input_block">
-                <label for="periode_thn">Periode (Tahun)</label>
-                <input name="periode_thn" id="periode_thn" type="number" step="1" min="1" class="form-control" placeholder="- Tahun -" value="<?= em_date('Y') ?>">
+                <label for="tahun_ajar">Tahun Ajaran</label>
+                <input name="tahun_ajar" id="tahun_ajar" type="number" step="1" min="1" class="form-control" placeholder="- Tahun -" value="<?= em_date('Y') ?>">
               </div>
             </div>
 
@@ -96,7 +93,7 @@ switch ($type) {
           <?php
           if (is_admin()) {
           ?>
-            init_select2('#kode_ukerja', 'Pilih Sekolah...', '<?= site_url('config/select2_sekolah') ?>');
+            init_select2('#kode_ukerja', '- Pilih Sekolah -', '<?= site_url('config/select2_sekolah') ?>');
           <?php
           }
           ?>
@@ -154,7 +151,7 @@ switch ($type) {
 
   case 'update': {
     ?>
-      <form id="form_update_usulan_profil_sekolah" action="<?= site_url('pdt_profil_sekolah/save') ?>" method="POST">
+      <form id="form_update_data_tahun_ajaran" action="<?= site_url('pdt_profil_sekolah/save') ?>" method="POST">
         <input type="hidden" name="type" value="<?= $type ?>">
 
         <div class="modal-header d-flex align-items-center">
@@ -201,8 +198,8 @@ switch ($type) {
 
             <div class="col-6">
               <div class="input_block">
-                <label for="periode_thn">Periode (Tahun)</label>
-                <input name="periode_thn" id="periode_thn" type="number" step="1" min="1" class="form-control" placeholder="- Tahun -" value="<?= em_date('Y') ?>">
+                <label for="tahun_ajar">Periode (Tahun)</label>
+                <input name="tahun_ajar" id="tahun_ajar" type="number" step="1" min="1" class="form-control" placeholder="- Tahun -" value="<?= em_date('Y') ?>">
               </div>
             </div>
 
@@ -220,7 +217,7 @@ switch ($type) {
       <script>
         // UPDATE TYPE SCRIPT
         $(document).ready(function() {
-          $('#form_update_usulan_profil_sekolah').validate($.extend({
+          $('#form_update_data_tahun_ajaran').validate($.extend({
             submitHandler: function(form, event) {
               var submit = $('[type="submit"]');
               submit.attr('disabled', true);
@@ -273,7 +270,7 @@ switch ($type) {
 
   case 'delete': {
     ?>
-      <form id="form_delete_usulan_profil_sekolah" action="<?= site_url('pdt_profil_sekolah/delete') ?>" method="POST">
+      <form id="form_delete_data_tahun_ajar" action="<?= site_url('pdt_data_tahun_ajaran/delete') ?>" method="POST">
         <input type="hidden" name="id_dokumen" value="<?= check_var($data, 'id_dokumen', '') ?>">
 
         <div class="modal-header d-flex align-items-center">
@@ -286,7 +283,7 @@ switch ($type) {
           <div class="row g-2">
 
             <div class="col-12">
-              <div class="alert alert-danger mb-0">Apakah Anda yakin ingin menghapus dokumen usulan profil sekolah ini?</div>
+              <div class="alert alert-danger mb-0">Apakah Anda yakin ingin menghapus data tahun ajaran ini?</div>
             </div>
 
             <div class="col-12">
@@ -332,7 +329,7 @@ switch ($type) {
       <script>
         // DELETE TYPE SCRIPT
         $(document).ready(function() {
-          $('#form_delete_usulan_profil_sekolah').validate($.extend({
+          $('#form_delete_data_tahun_ajar').validate($.extend({
             submitHandler: function(form, event) {
               var submit = $('[type="submit"]');
               submit.attr('disabled', true);

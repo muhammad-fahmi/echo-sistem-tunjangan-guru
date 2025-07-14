@@ -76,13 +76,12 @@
 
               <thead class="bg-info text-white">
                 <tr class="text-center">
-                  <th class="vam" style="min-width: 35px;">#</th>
+                  <th class="vam" style="min-width: 30px;">#</th>
                   <th class="vam" style="min-width: 100px;">Nama Lengkap</th>
                   <th class="vam" style="min-width: 150px;">Orang Tua PD</th>
                   <th class="vam" style="min-width: 80px;">NIK</th>
                   <th class="vam" style="min-width: 80px;">Jenis Kelamin</th>
                   <th class="vam" style="min-width: 60px;">Agama</th>
-                  <th class="vam" style="min-width: 150px;">Alamat</th>
                   <th class="vam" style="min-width: 40px;">Status</th>
                   <th class="vam" style="min-width: 60px;">Aksi</th>
                 </tr>
@@ -197,14 +196,6 @@
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-center">' + cellData + '</div>');
-        }
-      },
-      {
-        data: 'alamat',
-        orderable: false,
-        className: 'vat',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-start">' + cellData + '</div>');
         }
       },
       {

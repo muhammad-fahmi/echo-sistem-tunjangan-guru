@@ -34,7 +34,7 @@
               <label for="select2_sekolah">Sekolah</label>
             </div>
             <div class="col-8 col-lg-9">
-              <select type="text" name="select2_sekolah" class="form-select form-select-sm" style="width:100%" id="select2_sekolah">
+              <select type="text" name="select2_sekolah" class="form-select" style="width:100%" id="select2_sekolah">
                 <option value="<?= $this->session->userdata("kode_instansi"); ?>"><?= $this->session->userdata("ket_ukerja"); ?></option>
                 <option value="sekolah"></option>
               </select>
@@ -47,7 +47,7 @@
               <label for="semester">Semester</label>
             </div>
             <div class="col-8 col-lg-9">
-              <select type="text" name="semester" class="form-select form-select-sm" style="width:100%" id="semester">
+              <select type="text" name="semester" class="form-select" style="width:100%" id="semester">
                 <option value="1">I</option>
                 <option value="2">II</option>
                 <option value="3">III</option>
@@ -61,7 +61,7 @@
               <label for="tahun_ajar">Tahun Ajaran</label>
             </div>
             <div class="col-8 col-lg-9">
-              <select type="text" name="tahun_ajar" class="form-select form-select-sm" style="width:100%" id="tahun_ajar">
+              <select type="text" name="tahun_ajar" class="form-select" style="width:100%" id="tahun_ajar">
                 <?php for ($i = 2023; $i <= date("Y"); $i++) {
                   $selected = ($i == date('Y')) ? "selected" : "";
                 ?>
@@ -129,7 +129,7 @@
     ],
     /* set placeholder dari input search */
     language: {
-      searchPlaceholder: "Keyword"
+      searchPlaceholder: "Cari data tahun ajar..."
     },
     ajax: {
       url: urlDatatable,

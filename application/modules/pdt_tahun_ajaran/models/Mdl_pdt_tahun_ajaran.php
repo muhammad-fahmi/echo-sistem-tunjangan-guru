@@ -60,9 +60,10 @@ class Mdl_pdt_tahun_ajaran extends CI_Model
       /// | PENATAAN DATA SEBELUM DIMASUKKAN KE DALAM RESULT_ARRAY
       /// |----------------------------------------------------------------------
       $data_result[$index]['no'] = $no;
-      // $data_result[$index]['kolom_1'] = $row->kolom_1;
-      // $data_result[$index]['kolom_2'] = $row->kolom_2;
-      // $data_result[$index]['kolom_3'] = $row->kolom_3;
+      $data_result[$index]['tahun_ajar'] = isset_nn_nes($row['tahun_ajar'], '-');
+      $data_result[$index]['nama_sekolah'] = isset_nn_nes($row['nama_sekolah'], '-');
+      $data_result[$index]['tingkat'] = isset_nn_nes($row['tingkat'], '-');
+      $data_result[$index]['jumlah_rombel'] = isset_nn_nes($row['jumlah_rombel'], '-');
 
       $no += 1;
       $index += 1;
