@@ -323,25 +323,21 @@ a.badge.text-white:hover {
   line-height: 30px !important;
 }
 
-#main-wrapper.mini-sidebar li.parent_item.selected ul {
-  display: block !important;
-}
-#main-wrapper.mini-sidebar li.parent_item.selected ul .child_container {
-  margin-left: -14px;
-}
-#main-wrapper.mini-sidebar li.parent_item.selected ul .child_link {
-  margin-left: -11px;
-}
-
-.parent_item > .sidebar_link.active {
-  margin-bottom: 4px;
-}
-
-.parent_item > .sidebar_link.active,
-#main-wrapper.mini-sidebar li.parent_item > .sidebar_link.active {
+.parent_item > .sidebar_link,
+#main-wrapper.mini-sidebar li.parent_item > .sidebar_link {
   margin-bottom: 4px;
 }
 .parent_item > .collapse.first-level.in,
 #main-wrapper.mini-sidebar li.parent_item > .collapse.first-level.in {
   display: block !important;
+}
+
+#main-wrapper.mini-sidebar li.parent_item.selected ul {
+  display: block !important;
+}
+#main-wrapper.mini-sidebar li.parent_item .child_container {
+  margin-left: -13px;
+}
+#main-wrapper.mini-sidebar li.parent_item .child_link {
+  margin-left: -11px;
 }/*# sourceMappingURL=style.css.map */

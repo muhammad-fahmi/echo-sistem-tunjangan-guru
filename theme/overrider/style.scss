@@ -379,33 +379,27 @@ a.badge.text-white {
 	line-height: 30px !important;
 }
 
-#main-wrapper.mini-sidebar li.parent_item {
-	&.selected ul {
-		display: block !important;
-
-		.child_container {
-			margin-left: -14px;
-		}
-
-		.child_link {
-			margin-left: -11px;
-		}
-	}
-}
-
-.parent_item {
-	> .sidebar_link.active {
-		margin-bottom: 4px;
-	}
-}
-
 .parent_item,
 #main-wrapper.mini-sidebar li.parent_item {
-	> .sidebar_link.active {
+	> .sidebar_link {
 		margin-bottom: 4px;
 	}
 
 	> .collapse.first-level.in {
 		display: block !important;
+	}
+}
+
+#main-wrapper.mini-sidebar li.parent_item {
+	&.selected ul {
+		display: block !important;
+	}
+
+	.child_container {
+		margin-left: -13px;
+	}
+
+	.child_link {
+		margin-left: -11px;
 	}
 }
