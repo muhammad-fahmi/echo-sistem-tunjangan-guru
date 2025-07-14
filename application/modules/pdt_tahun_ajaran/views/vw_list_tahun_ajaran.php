@@ -31,40 +31,37 @@
           <!-- Unit Kerja -->
           <div class="row mb-2">
             <div class="col-4 col-lg-3">
-              <label for="select_ukerja">Sekolah</label>
+              <label for="select2_sekolah">Sekolah</label>
             </div>
             <div class="col-8 col-lg-9">
-              <select type="text" name="select_ukerja" class="form-select form-select-sm" style="width:100%" id="select_ukerja">
-                <option value="<?= $this->session->userdata("kode_unor"); ?>"><?= $this->session->userdata("ket_unor"); ?></option>
+              <select type="text" name="select2_sekolah" class="form-select form-select-sm" style="width:100%" id="select2_sekolah">
+                <option value="<?= $this->session->userdata("kode_instansi"); ?>"><?= $this->session->userdata("ket_ukerja"); ?></option>
+                <option value="sekolah"></option>
               </select>
             </div>
           </div>
 
-          <!-- Bulan -->
+          <!-- Semester -->
           <div class="row mb-2">
             <div class="col-4 col-lg-3">
-              <label for="bulan">Bulan</label>
+              <label for="semester">Semester</label>
             </div>
             <div class="col-8 col-lg-9">
-              <select type="text" name="filter_bln" class="form-select form-select-sm" style="width:100%" id="filter_bln">
-                <?php
-                $bln_now = date("n");
-                for ($i = 1; $i <= 12; $i++) {
-                  $selected = ($i == $bln_now) ? "selected" : "";
-                ?>
-                  <option value="<?= $i ?>" <?= $selected ?>><?= getBulan($i) ?></option>
-                <?php } ?>
+              <select type="text" name="semester" class="form-select form-select-sm" style="width:100%" id="semester">
+                <option value="1">I</option>
+                <option value="2">II</option>
+                <option value="3">III</option>
               </select>
             </div>
           </div>
 
-          <!-- Tahun -->
+          <!-- Tahun Ajar -->
           <div class="row mb-4">
             <div class="col-4 col-lg-3">
-              <label for="tahun">Tahun Ajaran</label>
+              <label for="tahun_ajar">Tahun Ajaran</label>
             </div>
             <div class="col-8 col-lg-9">
-              <select type="text" name="filter_thn" class="form-select form-select-sm" style="width:100%" id="filter_thn">
+              <select type="text" name="tahun_ajar" class="form-select form-select-sm" style="width:100%" id="tahun_ajar">
                 <?php for ($i = 2023; $i <= date("Y"); $i++) {
                   $selected = ($i == date('Y')) ? "selected" : "";
                 ?>
@@ -89,11 +86,10 @@
 
               <thead class="bg-info text-white">
                 <tr class="text-center">
-                  <th>Peserta Didik / NISN</th>
-                  <th>Kelas</th>
-                  <th>Rombel</th>
-                  <th>Sekolah</th>
-                  <th>Agama</th>
+                  <th>Tahun Ajar</th>
+                  <th>Nama Sekolah</th>
+                  <th>Tingkat</th>
+                  <th>Jumlah Rombel</th>
                   <th>Aksi</th>
                 </tr>
               </thead>
@@ -139,11 +135,11 @@
       url: urlDatatable,
       /* parameter yang dikirimkan ke controller */
       data: {
-        filter_bln: function() {
-          return $('#filter_bln').val();
+        semester: function() {
+          return $('#semester').val();
         },
-        filter_thn: function() {
-          return $('#filter_thn').val();
+        tahun_ajar: function() {
+          return $('#tahun_ajar').val();
         },
         select_ukerja: function() {
           return $('#select_ukerja').val();
@@ -157,16 +153,15 @@
     },
     /* Sesuaikan jumlah kolom dengan id table yang digunakan */
     columns: [{
-        data: 'nama',
+        data: 'tahun_ajaran',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-start">' + cellData + '</div><br><b>' + rowData.nama_lengkap + '</b>');
         },
       },
-
       {
-        data: 'nama',
+        data: 'nama_sekolah',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -174,7 +169,7 @@
         },
       },
       {
-        data: 'nama',
+        data: 'tingkat',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -182,7 +177,7 @@
         },
       },
       {
-        data: 'nama',
+        data: 'jumlah_rombel',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -190,23 +185,7 @@
         },
       },
       {
-        data: 'nama',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-end">' + cellData + '</div>');
-        },
-      },
-      // {
-      //   data: 'ket_agama',
-      //   orderable: false,
-      //   className: 'vam',
-      //   createdCell: function(td, cellData, rowData, row, col) {
-      //     $(td).html('<div class="text-end">' + cellData + '</div>');
-      //   },
-      // },
-      {
-        data: 'id',
+        data: 'id_tahun_ajaran',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -233,8 +212,8 @@
       /* parameter callback untuk kostumisasi fungsi */
       $('.loading_tabel_tahun_ajaran').removeClass('show');
 
-      let btn_add = '<button class="btn btn-sm btn-success me-2" onclick="modal(`0`,`tambah_peserta_rombel`)">' +
-        '<i class="fas fa-plus me-1"></i>Tambah Peserta Didik' +
+      let btn_add = '<button class="btn btn-sm btn-success me-2" onclick="modal(`0`,`tambah_data_tahun_ajar`)">' +
+        '<i class="fas fa-plus me-1"></i>Tambah Data Tahun Ajar' +
         '</button>';
 
       if (!init_btn_add) {
@@ -248,6 +227,36 @@
   function reload_table() {
     tabel_tahun_ajaran.ajax.reload();
   }
+
+  // Select2 Instansi Sekolah
+  $('#select2_sekolah').select2({
+    allowClear: true,
+    placeholder: '--- Pilih Sekolah ---',
+    ajax: {
+      type: 'POST',
+      dataType: 'json',
+      url: '<?= site_url('config/select2_sekolah') ?>',
+      delay: 800,
+      /* delay before sending ajax request */
+      data: function(params) {
+        return {
+          search: params.term,
+        }
+      },
+      processResults: function(data) {
+        return {
+          results: data
+        };
+      },
+    }
+  }).on('select2:select', function(e) {
+    // what to do when option selected
+  }).on('select2:close', function(e) {
+    // what to do when selection closed
+  }).on('select2:clear', function(e) {
+    $('select2_sekolah').empty();
+    // what to do when clearing (only if allowClear: true)
+  });
 
   function modal(id, type) {
     var url = "<?= site_url('pdt_tahun_ajaran/modal') ?>";

@@ -29,24 +29,22 @@ class Mdl_pdt_tahun_ajaran extends CI_Model
   }
 
   /* fungsi untuk menarik data dari DB dan konversi ke dataset untuk jquery datatable */
-  public function get_datatable($data, $primary_key = 'id')
+  public function get_datatable($data, $primary_key = 'id_tahun_ajar')
   {
     // lakukan filtering data
     // deklarasi where condition
     $where_search = (isset_nn_nes($data['search']))
-      ? "AND (nisn LIKE '%$data[search]%' 
-      OR nama LIKE '%$data[search]%'
-      OR ket_u_kerja LIKE '%$data[search]%'
-      OR ket_kelas LIKE '%$data[search]%'
-      OR nama_rombel LIKE '%$data[search]%')"
+      ? "AND (tahun_ajaran LIKE '%$data[search]%' 
+      OR tingkat LIKE '%$data[search]%'      
+      OR nama_sekolah LIKE '%$data[search]%')"
       : "";
     /* kalau ada tambahan where condition bisa add lagi di atas */
     // deklarasi query yang digunakan
-    $query_result = $this->db->query("SELECT * FROM `v_progurinda_siswa` 
+    $query_result = $this->db->query("SELECT * FROM `progurinda_r_tahun_ajar` 
       WHERE $primary_key IS NOT NULL $where_search 
       ORDER BY $data[order_column] $data[order_sort]
       LIMIT $data[start], $data[length]");
-    $query_total = $this->db->query("SELECT * FROM `v_progurinda_siswa` 
+    $query_total = $this->db->query("SELECT * FROM `progurinda_r_tahun_ajar` 
       WHERE $primary_key IS NOT NULL $where_search");
     // cari total hasil
     $total_count = 0;

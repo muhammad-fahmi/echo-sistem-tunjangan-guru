@@ -54,4 +54,82 @@ class Pdt_tahun_ajaran extends MY_Controller
       ->set_content_type('application/json')
       ->set_output(json_encode($data));
   }
+
+  public function modal()
+  {
+    $type = $this->input->post('type');
+    $id = $this->input->post('id');
+    $decryptedID = decrypt_id(sanitize_string($id));
+    /// |----------------------------------------
+    /// | DEFAULT VALUE
+    /// |----------------------------------------
+    $res = [
+      'status' => false,
+      'message' => "Sorry this feature is under development."
+    ];
+
+    /// |----------------------------------------
+    /// | COMMANDS
+    /// |----------------------------------------
+    switch ($type) {
+      case 'tambah_rombel': {
+          /// |----------------------------------------
+          /// | INSERT DATA
+          /// |----------------------------------------
+          $dataset = [];
+          $data = [
+            'modal_title' => "Tambah Rombongan Belajar",
+            'data' => $dataset,
+          ];
+          $res = [
+            'status' => true,
+            'message' => "Modal Tambah Rombongan Belajar",
+            'html' => $this->load->view('vw_peserta_didik_modal_save', $data, true)
+          ];
+          break;
+        }
+      case 'edit_rombel': {
+          /// |----------------------------------------
+          /// | EDIT DATA
+          /// |----------------------------------------
+          $dataset = $this->mdl_peserta_didik->get('v_progurinda_siswa', "id_siswa = '$decryptedID'");
+          $data = [
+            'modal_title' => "Edit Rombongan Belajar",
+            'type' => $type,
+            'data' => $dataset,
+          ];
+          $res = [
+            'status' => true,
+            'message' => "Modal Edit Rombongan Belajar",
+            'html' => $this->load->view('vw_peserta_didik_modal_save', $data, true)
+          ];
+          break;
+        }
+      case 'delete_rombel': {
+          /// |----------------------------------------
+          /// | DELETE DATA
+          /// |----------------------------------------
+          $dataset = $this->mdl_peserta_didik->get('v_progurinda_siswa', "id_siswa = '$decryptedID'");
+          if (isset_nn_nes($dataset)) {
+            $data = [
+              'modal_title' => "Hapus Rombongan Belajar",
+              'data' => $dataset,
+            ];
+            $res = [
+              'status' => true,
+              'message' => "Modal Hapus Rombongan Belajar",
+              'html' => $this->load->view('vw_peserta_didik_modal_delete', $data, true)
+            ];
+          }
+          break;
+        }
+      default: {
+          break;
+        }
+    }
+
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($res));
+  }
 }
