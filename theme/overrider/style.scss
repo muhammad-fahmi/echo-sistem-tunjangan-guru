@@ -208,6 +208,8 @@ label.is-invalid {
 					}
 
 					.sub {
+						font-size: 0.65rem;
+						margin-top: -4px;
 						position: relative;
 					}
 				}
@@ -375,4 +377,35 @@ a.badge.text-white {
 	height: 30px !important;
 	font-size: 0.8rem !important;
 	line-height: 30px !important;
+}
+
+#main-wrapper.mini-sidebar li.parent_item {
+	&.selected ul {
+		display: block !important;
+
+		.child_container {
+			margin-left: -14px;
+		}
+
+		.child_link {
+			margin-left: -11px;
+		}
+	}
+}
+
+.parent_item {
+	> .sidebar_link.active {
+		margin-bottom: 4px;
+	}
+}
+
+.parent_item,
+#main-wrapper.mini-sidebar li.parent_item {
+	> .sidebar_link.active {
+		margin-bottom: 4px;
+	}
+
+	> .collapse.first-level.in {
+		display: block !important;
+	}
 }
