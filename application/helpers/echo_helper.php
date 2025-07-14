@@ -600,7 +600,17 @@ function is_admin()
   $CI = &get_instance();
   $cur_kewenangan = $CI->session->userdata('kewenangan');
 
-  return ($cur_kewenangan == '00' || $cur_kewenangan == '02')
+  return ($cur_kewenangan == '00' || $cur_kewenangan == '01' || $cur_kewenangan == '02')
+    ? true : false;
+}
+
+/** fungsi untuk ngecek kewenangan di sesi dan menentukan apakah yg login saat ini merupakan super admin (output: true / false) */
+function is_super_admin()
+{
+  $CI = &get_instance();
+  $cur_kewenangan = $CI->session->userdata('kewenangan');
+
+  return ($cur_kewenangan == '00')
     ? true : false;
 }
 
@@ -876,6 +886,7 @@ function menu_loader($echo = true)
 
   $html = '';
   $cur_parent_dropdown = false;
+  $is_super_admin = is_super_admin();
   if (isset_nn_nes($data)) {
     foreach ($data as $v) {
       if ($v['id_menu'] == '-') {
@@ -955,11 +966,15 @@ function menu_loader($echo = true)
         // kalau menu yang ditampilkan saat ini adalah menu logout
         // jika yg login saat ini adalah super admin, tambahkan menu
         // manajemen perm
-        if ($cur_kewenangan == '00' && $v['id_menu'] == 'PDT_Logout') {
+        if ($is_super_admin && $v['id_menu'] == 'PDT_Logout') {
+          $on_dev = true;
+          $href = ($on_dev)
+            ? 'onclick="on_dev()"'
+            : 'href="' . site_url('pdt_manajemen_perm') . '"';
           // sisipkan menu manajemen perm
           $perm_active = ($cur_menu == 'PDT_ManajemenPerm') ? 'selected' : '';
           $html .= '<li class="bz_sidebar_item ' . $child_container_class . ' PDT_ManajemenPerm ' . $perm_active . '">
-              <a href="' . site_url('pdt_manajemen_perm') . '" class="sidebar_link ' . $child_link_class . '">
+              <a ' . $href . ' class="sidebar_link ' . $child_link_class . '">
                 <div class="icon"><i class="fas fa-list"></i></div>
                 <div class="hide-menu">
                   <div class="main">Hak Akses</div>
@@ -979,7 +994,7 @@ function menu_loader($echo = true)
 
         //_____ MODIFIED STYLE
         $html .= '<li class="bz_sidebar_item ' . $child_container_class . ' ' . $v['id_menu'] . ' ' . $active . '">
-            <a ' . $href . ' ' . $onclick . ' class="sidebar_link '. $child_link_class .'">
+            <a ' . $href . ' ' . $onclick . ' class="sidebar_link ' . $child_link_class . '">
               <div class="icon"><i class="' . $icon . '"></i></div>
               <div class="hide-menu">
                 <div class="main">' . check_var($v, 'menu_title', 'UNKNOWN') . '</div>

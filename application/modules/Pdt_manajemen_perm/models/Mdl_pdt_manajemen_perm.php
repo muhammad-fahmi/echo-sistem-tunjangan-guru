@@ -1,0 +1,215 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+
+class Mdl_pdt_manajemen_perm extends CI_Model
+{
+  /** fungsi untuk menarik data dari database */
+  public function get($table, $where = null, $result_array = false)
+  {
+    if ($where != null) {
+      if ($result_array) {
+        $result = $this->db->get_where($table, $where)->result_array();
+      } else {
+        $result = $this->db->get_where($table, $where)->row_array();
+      }
+    } else {
+      $result = $this->db->select('*')->from($table)->get()->result_array();
+    }
+    return $result;
+  }
+
+  /** fungsi untuk mengecek num_rows return int */
+  public function check($table, $where = null)
+  {
+    if ($where != null) {
+      $result = $this->db->get_where($table, $where)->num_rows();
+    } else {
+      $result = $this->db->select('*')->from($table)->get()->num_rows();
+    }
+    return $result;
+  }
+
+  private function query_m_kewenangan($data)
+  {
+    // declare table
+    $this->db->from('m_kewenangan');
+
+    // where condition
+    if (check_var($data, 'search')) {
+      $this->db->group_start()
+        ->like('id_kewenangan', $data['search'])
+        ->or_like('ket_kewenangan', $data['search'])
+        ->group_end();
+    }
+  }
+
+  public function get_datatable($data)
+  {
+    // START DB BUILDER
+    $this->query_m_kewenangan($data);
+
+    // ORDER
+    $order_col = $data['order_column'];
+    $order_sort = strtolower($data['order_sort']) === 'desc' ? 'DESC' : 'ASC';
+    $this->db->order_by($order_col, $order_sort);
+
+    // LIMIT
+    $this->db->limit((int)$data['length'], (int)$data['start']);
+
+    // RESULT DATA
+    $query_result = $this->db->get()->result_array();
+
+    // RE-BUILD FOR TOTAL
+    $this->query_m_kewenangan($data);
+    $total_count = $this->db->get()->num_rows();
+
+    // RE-ARRANGE RESULT DATA
+    $no = $data['start'] + 1;
+    $data_result = [];
+
+    foreach ($query_result as $row) {
+      $row['no'] = $no++;
+
+      // tampilan tombol aksi
+      $fixed_list = ['00', '01', '02', '10'];
+      $tombol_edit =  (!in_array($row['id_kewenangan'], $fixed_list))
+        ? '<a onclick="on_dev()" class="clickable text-white badge bg-primary"><i class="fas fa-edit me-1"></i>Edit</a>'
+        : '<span class="text-white badge bg-warning"><i class="fas fa-lock me-1"></i>Locked</span>';
+      $tombol_delete = (!in_array($row['id_kewenangan'], $fixed_list))
+        ? '<span class="clickable text-white badge bg-danger" onclick="on_dev()"><i class="fas fa-trash me-1"></i>Hapus</span>'
+        : '';
+      $row['aksi_display'] = '<div class="d-grid gap-1">' .
+        $tombol_edit . $tombol_delete .
+        '</div>';
+
+      $data_result[] = $row;
+    }
+
+    return array(
+      'total' => $total_count,         // total after search
+      'filtered' => $total_count,      // assuming no global filter for now
+      'data' => $data_result,
+      'draw' => (int)$data['draw']
+    );
+  }
+
+  private function get_list_kewenangan_menu_as_html($base_kewenangan_menu)
+  {
+    $html = '<input type="hidden" name="error" value="NO">';
+
+    $perm_list = ['read', 'insert', 'update', 'delete', 'verif'];
+    $icon_classes = [
+      'YES' => 'fas fa-check-square text-success',
+      'NO'  => 'fas fa-window-close text-danger',
+      'DEFAULT' => 'fas fa-minus-square text-secondary'
+    ];
+
+    foreach ($base_kewenangan_menu as $value) {
+      $menu_icon = check_var($value, 'icon', 'mdi mdi-dashboard');
+      $id_menu = $value['id_menu'];
+
+      $is_child_prefix = ($value['is_child'] === 'YES')
+        ? '&#92;<span class="me-2" style="font-family: monospace;">__</span>'
+        : '';
+
+      $menu_title = $is_child_prefix . '<i class="' . $menu_icon . ' me-1"></i>' . $value['menu_title'];
+
+      $html .= '<tr>';
+      $html .= '<td class="text-start vam">' . $menu_title . '</td>';
+
+      foreach ($perm_list as $perm_key) {
+        $val = isset($value[$perm_key]) ? $value[$perm_key] : '';
+        $toggle_class = isset($icon_classes[$val]) ? $icon_classes[$val] : $icon_classes['DEFAULT'];
+
+        $html .= '
+        <td class="text-center vam">
+          <input type="hidden" id="' . $id_menu . '__' . $perm_key . '" name="' . $id_menu . '[' . $perm_key . ']" value="' . $val . '">
+          <div onclick="toggle_value(`' . $id_menu . '`, `' . $perm_key . '`)" class="d-block clickable" style="font-size: 2rem;">
+            <i id="' . $id_menu . '__' . $perm_key . '__icon" class="' . $toggle_class . '"></i>
+          </div>
+        </td>';
+      }
+
+      $html .= '<td class="text-center vam">
+          <input type="hidden" id="' . $id_menu . '__all">
+          <div onclick="toggle_all(`' . $id_menu . '`, `all`)" class="d-block clickable" style="font-size: 2rem;">
+            <i id="' . $id_menu . '__all__icon" class="' . $icon_classes['DEFAULT'] . '"></i>
+          </div>
+        </td>';
+
+      $html .= '</tr>';
+    }
+
+    return $html;
+  }
+
+  public function get_kewenangan_menu($selected_kewenangan)
+  {
+    $base_menu = $this->db->from('m_menu')
+      ->order_by('order', 'asc')
+      ->get()->result_array();
+
+    $default_html = '<input type="hidden" name="error" value="YES">' .
+      '<tr>
+        <td class="text-start vam"><i class="fas fa-edit me-1"></i>Menu belum di-set Admin</td>
+        <td class="text-center vam">
+          <div class="d-block" style="font-size: 2rem; opacity: 0.6;"><i class="fas fa-minus-square text-secondary"></i></div>
+        </td>
+        <td class="text-center vam">
+          <div class="d-block" style="font-size: 2rem; opacity: 0.6;"><i class="fas fa-minus-square text-secondary"></i></div>
+        </td>
+        <td class="text-center vam">
+          <div class="d-block" style="font-size: 2rem; opacity: 0.6;"><i class="fas fa-minus-square text-secondary"></i></div>
+        </td>
+        <td class="text-center vam">
+          <div class="d-block" style="font-size: 2rem; opacity: 0.6;"><i class="fas fa-minus-square text-secondary"></i></div>
+        </td>
+        <td class="text-center vam">
+          <div class="d-block" style="font-size: 2rem; opacity: 0.6;"><i class="fas fa-minus-square text-secondary"></i></div>
+        </td>
+      </tr>';
+
+    if (!check_var($base_menu)) return [
+      'status' => true,
+      'message' => "Maaf, Daftar menu belum di setting Admin. tidak bisa melanjutkan proses",
+      'html' => $default_html
+    ];
+
+    $base_kewenangan_menu = [];
+    foreach ($base_menu as $key => $value) {
+      $data_kewenangan_existing = $this->db->from('m_kewenangan_menu')
+        ->group_start()
+        ->where('id_kewenangan', 'OK')
+        ->or_where('id_kewenangan', $selected_kewenangan)
+        ->group_end()
+        ->where('id_menu', $value['id_menu'])
+        ->get()->row_array();
+
+      $base_kewenangan_menu[$key] = $value;
+
+      if (check_var($data_kewenangan_existing)) {
+        $base_kewenangan_menu[$key]['read'] = check_var($data_kewenangan_existing, 'read', '');
+        $base_kewenangan_menu[$key]['insert'] = check_var($data_kewenangan_existing, 'insert', '');
+        $base_kewenangan_menu[$key]['update'] = check_var($data_kewenangan_existing, 'update', '');
+        $base_kewenangan_menu[$key]['delete'] = check_var($data_kewenangan_existing, 'delete', '');
+        $base_kewenangan_menu[$key]['verif'] = check_var($data_kewenangan_existing, 'verif', '');
+      } else {
+        $base_kewenangan_menu[$key]['read'] = '';
+        $base_kewenangan_menu[$key]['insert'] = '';
+        $base_kewenangan_menu[$key]['update'] = '';
+        $base_kewenangan_menu[$key]['delete'] = '';
+        $base_kewenangan_menu[$key]['verif'] = '';
+      }
+    }
+
+    $html_output = $this->get_list_kewenangan_menu_as_html($base_kewenangan_menu);
+
+    return [
+      'status' => true,
+      'message' => 'List Kewenangan Menu retrieved.',
+      'base_menu' => $base_menu,
+      'base_kewenangan' => $base_kewenangan_menu,
+      'html' => $html_output
+    ];
+  }
+}
