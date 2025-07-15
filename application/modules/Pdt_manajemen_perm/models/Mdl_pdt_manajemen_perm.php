@@ -105,7 +105,7 @@ class Mdl_pdt_manajemen_perm extends CI_Model
     ];
 
     foreach ($base_kewenangan_menu as $value) {
-      $menu_icon = check_var($value, 'icon', 'mdi mdi-dashboard');
+      $menu_icon = check_var($value, 'icon', 'mdi mdi-view-dashboard');
       $id_menu = $value['id_menu'];
 
       $is_child_prefix = ($value['is_child'] === 'YES')
@@ -131,7 +131,7 @@ class Mdl_pdt_manajemen_perm extends CI_Model
       }
 
       $html .= '<td class="text-center vam">
-          <input type="hidden" id="' . $id_menu . '__all">
+          <input type="hidden" id="' . $id_menu . '__all" value="">
           <div onclick="toggle_all(`' . $id_menu . '`, `all`)" class="d-block clickable" style="font-size: 2rem;">
             <i id="' . $id_menu . '__all__icon" class="' . $icon_classes['DEFAULT'] . '"></i>
           </div>
@@ -187,19 +187,11 @@ class Mdl_pdt_manajemen_perm extends CI_Model
 
       $base_kewenangan_menu[$key] = $value;
 
-      if (check_var($data_kewenangan_existing)) {
-        $base_kewenangan_menu[$key]['read'] = check_var($data_kewenangan_existing, 'read', '');
-        $base_kewenangan_menu[$key]['insert'] = check_var($data_kewenangan_existing, 'insert', '');
-        $base_kewenangan_menu[$key]['update'] = check_var($data_kewenangan_existing, 'update', '');
-        $base_kewenangan_menu[$key]['delete'] = check_var($data_kewenangan_existing, 'delete', '');
-        $base_kewenangan_menu[$key]['verif'] = check_var($data_kewenangan_existing, 'verif', '');
-      } else {
-        $base_kewenangan_menu[$key]['read'] = '';
-        $base_kewenangan_menu[$key]['insert'] = '';
-        $base_kewenangan_menu[$key]['update'] = '';
-        $base_kewenangan_menu[$key]['delete'] = '';
-        $base_kewenangan_menu[$key]['verif'] = '';
-      }
+      $base_kewenangan_menu[$key]['read'] = check_var($data_kewenangan_existing, 'read', '');
+      $base_kewenangan_menu[$key]['insert'] = check_var($data_kewenangan_existing, 'insert', '');
+      $base_kewenangan_menu[$key]['update'] = check_var($data_kewenangan_existing, 'update', '');
+      $base_kewenangan_menu[$key]['delete'] = check_var($data_kewenangan_existing, 'delete', '');
+      $base_kewenangan_menu[$key]['verif'] = check_var($data_kewenangan_existing, 'verif', '');
     }
 
     $html_output = $this->get_list_kewenangan_menu_as_html($base_kewenangan_menu);
@@ -211,5 +203,83 @@ class Mdl_pdt_manajemen_perm extends CI_Model
       'base_kewenangan' => $base_kewenangan_menu,
       'html' => $html_output
     ];
+  }
+
+  public function save_hak_akses($data)
+  {
+    $id_kewenangan = $data['id_kewenangan'];
+
+    $existing_menu = $this->db->from('m_kewenangan_menu')
+      ->where([
+        'id_kewenangan' => $id_kewenangan
+      ])->get()->result_array();
+
+    if (check_var($existing_menu)) {
+      foreach ($existing_menu as $key => $value) {
+        unset($existing_menu[$key]['id']); // unset kolom id (auto-increment)
+      }
+    }
+
+    $new_menu = [];
+
+    // remove fields that are not menus
+    unset($data['id_kewenangan'], $data['error']);
+
+    foreach ($data as $menu_id => $permissions) {
+      $new_menu[] = [
+        'id_kewenangan' => $id_kewenangan,
+        'id_menu' => $menu_id,
+        'read'    => isset($permissions['read']) ? $permissions['read'] : '',
+        'insert'  => isset($permissions['insert']) ? $permissions['insert'] : '',
+        'update'  => isset($permissions['update']) ? $permissions['update'] : '',
+        'delete'  => isset($permissions['delete']) ? $permissions['delete'] : '',
+        'verif'   => isset($permissions['verif']) ? $permissions['verif'] : '',
+      ];
+    }
+
+    $changed_data = summarize_permission_changes($existing_menu, $new_menu);
+
+    try {
+      $this->db->trans_begin();
+      // DELETE ALL EXISTING MENU
+      $proc = 1;
+      $this->db->where('id_kewenangan', $id_kewenangan)->delete('m_kewenangan_menu');
+
+      // SAVE NEW MENU
+      $proc = 2;
+      $this->db->insert_batch('m_kewenangan_menu', $new_menu);
+
+      // BUAT LOG
+      $proc = 3;
+      $ket_kewenangan = fetch_single_data('m_kewenangan', 'ket_kewenangan', ['id_kewenangan' => $id_kewenangan], 'INVALID KEWENANGAN');
+      log_generator(
+        $this->session->userdata('id_user'),
+        'm_kewenangan_menu',
+        'BATCH',
+        "Melakukan perubahan Hak Akses menu untuk Kewenangan {$ket_kewenangan} [{$id_kewenangan}] dengan rincian sebagai berikut:\n\nNew Menu: {$changed_data['new_menu']}\nModified Menu: {$changed_data['changed_permission']}\nDeleted Menu: {$changed_data['deleted_menu']}"
+      );
+
+      if ($this->db->trans_status() === FALSE) {
+        // do your error handler here
+        $this->db->trans_rollback();
+        return [
+          'status' => false,
+          'message' => "Maaf, terjadi kesalahan saat proses penyimpanan hak akses.\nROLLBACK ISSUE #{$proc}"
+        ];
+      } else {
+        // do your success handler here
+        $this->db->trans_commit();
+        return [
+          'status' => true,
+          'message' => "Proses penyimpanan hak akses berhasil dilakukan."
+        ];
+      }
+    } catch (\Throwable $th) {
+      $catch_msg = sanitize_string($th->getMessage());
+      return [
+        'status' => false,
+        'message' => "Maaf, terjadi kesalahan pada proses penyimpanan hak akses.\n{$catch_msg}"
+      ];
+    }
   }
 }

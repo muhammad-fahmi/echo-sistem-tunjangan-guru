@@ -423,3 +423,10 @@ a.badge.text-white {
 		margin-bottom: 0;
 	}
 }
+
+.sticky_header tr th {
+	position: sticky;
+	top: 70px;
+	background-color: #fff;
+	z-index: 10;
+}

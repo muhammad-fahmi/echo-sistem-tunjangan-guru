@@ -86,7 +86,7 @@ class Pangkalan_data extends MY_Controller
     $html_riwayat = '<div class="col-12 text-center">Belum ada riwayat untuk dokumen ini.</div>';
 
     // CHECK PERMISSION
-    if (!check_perm('read', 'PDT_Dashboard')) return output_json([
+    if (!is_logged_in()) return output_json([
       'status' => true,
       'message' => "Riwayat dokumen retrieved",
       'html' => $html_riwayat
@@ -132,7 +132,7 @@ class Pangkalan_data extends MY_Controller
     $html_riwayat = '<div class="col-12 text-center">Belum ada riwayat untuk Sekolah.</div>';
 
     // CHECK PERMISSION
-    if (!check_perm('read', 'PDT_Dashboard')) return output_json([
+    if (!is_logged_in()) return output_json([
       'status' => true,
       'message' => "Riwayat sekolah retrieved",
       'html' => $html_riwayat
@@ -179,7 +179,7 @@ class Pangkalan_data extends MY_Controller
     $html_riwayat = '<div class="col-12 text-center">Belum ada riwayat untuk Kepala Sekolah.</div>';
 
     // CHECK PERMISSION
-    if (!check_perm('read', 'PDT_Dashboard')) return output_json([
+    if (!is_logged_in()) return output_json([
       'status' => true,
       'message' => "Riwayat kepala sekolah retrieved",
       'html' => $html_riwayat
@@ -233,7 +233,7 @@ class Pangkalan_data extends MY_Controller
     $html_riwayat = '<div class="col-12 text-center">Belum ada riwayat Kepala Sekolah di ' . $data_ukerja['ket_ukerja'] . '.</div>';
 
     // CHECK PERMISSION
-    if (!check_perm('read', 'PDT_Dashboard')) return output_json([
+    if (!is_logged_in()) return output_json([
       'status' => true,
       'message' => "Riwayat kepala sekolah retrieved",
       'html' => $html_riwayat

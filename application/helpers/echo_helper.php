@@ -877,10 +877,7 @@ function menu_loader($echo = true)
 
   // query untuk tarik data menu
   $data = $CI->db->select('*')->from($table)
-    ->group_start()
     ->where(['id_kewenangan' => $cur_kewenangan])
-    ->or_where(['id_kewenangan' => 'OK'])
-    ->group_end()
     ->where(['read' => 'YES'])
     ->order_by('order', 'asc')->get()->result_array();
 
@@ -963,28 +960,6 @@ function menu_loader($echo = true)
           $child_link_class = 'child_link';
         }
 
-        // kalau menu yang ditampilkan saat ini adalah menu logout
-        // jika yg login saat ini adalah super admin, tambahkan menu
-        // manajemen perm
-        if ($is_super_admin && $v['id_menu'] == 'PDT_Logout') {
-          $on_dev = true;
-          $href = ($on_dev)
-            ? 'onclick="on_dev()"'
-            : 'href="' . site_url('pdt_manajemen_perm') . '"';
-          // sisipkan menu manajemen perm
-          $perm_active = ($cur_menu == 'PDT_ManajemenPerm') ? 'selected' : '';
-          $html .= '<li class="bz_sidebar_item ' . $child_container_class . ' PDT_ManajemenPerm ' . $perm_active . '">
-              <a ' . $href . ' class="sidebar_link ' . $child_link_class . '">
-                <div class="icon"><i class="fas fa-list"></i></div>
-                <div class="hide-menu">
-                  <div class="main">Hak Akses</div>
-                  <div class="sub">Manajemen Akses Menu</div>
-                </div>
-              </a>
-            </li>';
-        }
-
-
         //_____ ORIGINAL STYLE
         // $html .= '<li class="sidebar-item ' . $v['id_menu'] . ' ' . $active . '">
         //     <a ' . $href . ' ' . $onclick . ' class="sidebar-link"><i class="' . $icon . '"></i><span class="hide-menu">
@@ -1009,6 +984,50 @@ function menu_loader($echo = true)
     if ($cur_parent_dropdown) {
       $html .= '</ul></li>';
     }
+
+    /// |----------------------------------------
+    /// | OUTPUT MENU DASHBOARD & LOGOUT
+    /// | dua menu yang pasti ada di semua user
+    /// |----------------------------------------
+    // dashboard
+    $dashboard_active = ($cur_menu == 'PDT_Dashboard') ? 'selected' : '';
+    $html = '<li class="bz_sidebar_item PDT_Dashboard ' . $dashboard_active . '">
+        <a href="' . site_url('pangkalan_data') . '" class="sidebar_link">
+          <div class="icon"><i class="mdi mdi-view-dashboard"></i></div>
+          <div class="hide-menu">
+            <div class="main">Dashboard</div>
+          </div>
+        </a>
+      </li>' . $html;
+
+    // manajemen hak akses
+    if ($is_super_admin) {
+      $on_dev = false;
+      $href = ($on_dev)
+        ? 'onclick="on_dev()"'
+        : 'href="' . site_url('pdt_manajemen_perm') . '"';
+      // sisipkan menu manajemen perm
+      $perm_active = ($cur_menu == 'PDT_ManajemenPerm') ? 'selected' : '';
+      $html .= '<li class="bz_sidebar_item PDT_ManajemenPerm ' . $perm_active . '">
+          <a ' . $href . ' class="sidebar_link">
+            <div class="icon"><i class="fas fa-list"></i></div>
+            <div class="hide-menu">
+              <div class="main">Hak Akses</div>
+              <div class="sub">Manajemen Akses Menu</div>
+            </div>
+          </a>
+        </li>';
+    }
+
+    // logout
+    $html = $html . '<li class="bz_sidebar_item PDT_Logout ' . $dashboard_active . '">
+        <a href="' . site_url('login/logout') . '" class="sidebar_link">
+          <div class="icon"><i class="fas fa-arrow-left"></i></div>
+          <div class="hide-menu">
+            <div class="main">Logout</div>
+          </div>
+        </a>
+      </li>';
   }
 
   if ($echo) {
@@ -1016,6 +1035,83 @@ function menu_loader($echo = true)
   } else {
     return $html;
   }
+}
+
+function summarize_permission_changes($old_data, $new_data)
+{
+  // Index both arrays by id_menu
+  $old = array_column($old_data, null, 'id_menu');
+  $new = array_column($new_data, null, 'id_menu');
+
+  $summary = [
+    'new_menu' => 0,
+    'changed_permission' => 0,
+    'deleted_menu' => 0,
+  ];
+
+  // Check for new or changed menus
+  foreach ($new as $menu_id => $new_row) {
+    if (!isset($old[$menu_id])) {
+      // completely new menu
+      $summary['new_menu']++;
+    } else {
+      // exists in both, compare permissions
+      $permissions = ['read', 'insert', 'update', 'delete', 'verif'];
+      foreach ($permissions as $perm) {
+        if ($old[$menu_id][$perm] !== $new_row[$perm]) {
+          $summary['changed_permission']++;
+          break; // count only once per menu
+        }
+      }
+    }
+  }
+
+  // Check for deleted menus
+  foreach ($old as $menu_id => $old_row) {
+    if (!isset($new[$menu_id])) {
+      $summary['deleted_menu']++;
+    }
+  }
+
+  return $summary;
+}
+
+function clean_empty_or_all_no_permissions($data)
+{
+  $permissions = ['read', 'insert', 'update', 'delete', 'verif'];
+
+  foreach ($data as $key => &$value) {
+    if (!is_array($value)) continue; // skip 'id_kewenangan', 'error', etc.
+
+    $all_blank_or_no = true;
+    $has_yes = false;
+
+    // First pass: detect permission states
+    foreach ($permissions as $perm) {
+      if (isset($value[$perm])) {
+        if ($value[$perm] === 'YES') {
+          $has_yes = true;
+          $all_blank_or_no = false;
+        } elseif ($value[$perm] !== '' && $value[$perm] !== 'NO') {
+          // Unexpected value (e.g., 'MAYBE') — treat it as not blank/no
+          $all_blank_or_no = false;
+        }
+      }
+    }
+
+    if ($all_blank_or_no) {
+      unset($data[$key]); // remove this menu completely
+    } elseif ($has_yes) {
+      // Normalize: convert '' to 'NO'
+      foreach ($permissions as $perm) {
+        if (!isset($value[$perm]) || $value[$perm] === '') {
+          $value[$perm] = 'NO';
+        }
+      }
+    }
+  }
+
+  return $data;
 }
 
 /** fungsi utk output array sebagai json response, parameter kedua merupakan response code (default: 200) */

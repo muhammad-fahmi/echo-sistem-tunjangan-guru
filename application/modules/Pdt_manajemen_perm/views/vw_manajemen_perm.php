@@ -46,7 +46,7 @@ $cur_unor = $this->session->userdata('kode_unor');
         <div class="card-title space-between">
           <div>Daftar Kewenangan</div>
           <div>
-            <div class="btn btn-sm btn-success"><i class="fas fa-plus-square me-1"></i>Tambah Baru</div>
+            <div class="btn btn-sm btn-success" onclick="on_dev()"><i class="fas fa-plus-square me-1"></i>Tambah Baru</div>
           </div>
         </div>
         <div class="card-body">
@@ -78,7 +78,7 @@ $cur_unor = $this->session->userdata('kode_unor');
     /// |----------------------------------------------------------------------
     ?>
     <div class="col-12">
-      <form id="form_save_kewenangan_menu" action="<?= site_url('pdt_manajemen_perm/save') ?>" method="POST">
+      <form id="form_save_kewenangan_menu" action="<?= site_url('pdt_manajemen_perm/save_hak_akses') ?>" method="POST">
         <div class="card">
           <div class="card-title space-between mb-0">
             <div>Manajemen Hak Akses</div>
@@ -93,7 +93,7 @@ $cur_unor = $this->session->userdata('kode_unor');
             </div>
 
             <table class="table table-sm table-bordered table-hover">
-              <thead>
+              <thead class="sticky_header">
                 <tr class="text-center">
                   <th style="width: 100%;">Menu</th>
                   <th style="min-width: 90px;">Read</th>
@@ -105,11 +105,13 @@ $cur_unor = $this->session->userdata('kode_unor');
                 </tr>
               </thead>
               <tbody id="list_kewenangan_menu">
-                <td colspan="7" class="text-center">Kewenangan yang ingin diberikan Hak Akses belum di-set.</td>
+                <tr>
+                  <td colspan="7" class="text-center">Kewenangan yang ingin diberikan Hak Akses belum di-set.</td>
+                </tr>
               </tbody>
             </table>
           </div>
-          <div class="card-footer text-end">
+          <div id="btn_submit_container" class="card-footer text-end d-none">
             <button id="btn_submit_form_kewenangan_menu" type="submit" class="btn btn-sm btn-success"><i class="fas fa-save me-1"></i>Simpan Perubahan</button>
           </div>
         </div>
@@ -121,14 +123,14 @@ $cur_unor = $this->session->userdata('kode_unor');
 </div>
 
 <script>
-  function modal(d_action, d_id) {
+  function modal(the_action, the_id) {
     var url = "<?= site_url('pdt_manajemen_perm/modal') ?>";
     $.ajax({
       type: "POST",
       url: url,
       data: {
-        action: d_action,
-        id: d_id
+        action: the_action,
+        id: the_id
       },
       success: function(res) {
         if (res.status) {
@@ -167,6 +169,42 @@ $cur_unor = $this->session->userdata('kode_unor');
         icon_id.removeClass().addClass('fas fa-minus-square text-secondary');
         break;
       }
+    }
+  }
+
+  function toggle_all(this_menu_id, the_perm) {
+    const permList = ['read', 'insert', 'update', 'delete', 'verif'];
+    const target_id = `${this_menu_id}__${the_perm}`;
+    const $target = $(`#${target_id}`);
+    const current = $target.val();
+
+    let newVal, iconClass;
+
+    switch (current) {
+      case '':
+        newVal = 'YES';
+        iconClass = 'fas fa-check-square text-success';
+        break;
+      case 'YES':
+        newVal = 'NO';
+        iconClass = 'fas fa-window-close text-danger';
+        break;
+      default:
+        newVal = '';
+        iconClass = 'fas fa-minus-square text-secondary';
+        break;
+    }
+
+    // Apply to main toggled permission
+    $target.val(newVal);
+    $(`#${target_id}__icon`).removeClass().addClass(iconClass);
+
+    // Apply to all standard permissions
+    for (let perm of permList) {
+      const inputId = `${this_menu_id}__${perm}`;
+      const iconId = `${inputId}__icon`;
+      $(`#${inputId}`).val(newVal);
+      $(`#${iconId}`).removeClass().addClass(iconClass);
     }
   }
 
@@ -299,6 +337,62 @@ $cur_unor = $this->session->userdata('kode_unor');
 
   $(document).ready(function() {
     // do something on document ready
+    /// |----------------------------------------
+    /// | FORM SUBMIT VIA AJAX
+    /// |----------------------------------------
+    $('#form_save_kewenangan_menu').validate($.extend({
+      submitHandler: function(form, event) {
+        // declare element that will be affected
+        // by every state of the form submission
+        // right here
+        let submit = $('#btn_submit_form_kewenangan_menu');
+
+        // declare button submit disabling right here if needed
+        submit.attr('disabled', true);
+
+        $(form).ajaxSubmit({
+          success: function(e) {
+            if (e.status) {
+              // what to do when the response status = true
+              show_notify('success', e.message);
+              get_kewenangan_menu();
+              submit.attr('disabled', false);
+            } else {
+              // what to do when the response status = false
+              show_notify('error', e.message);
+              submit.attr('disabled', false);
+            }
+          },
+          error: function(xhr, status, error) {
+            show_notify('error', xhr.status + ' : ' + error);
+            console.error(error);
+            submit.attr('disabled', false);
+          },
+          dataType: 'json'
+        });
+      },
+      rules: {},
+      errorClass: 'is-invalid',
+      validClass: 'mv-valid',
+      /* if there's select2 element, please use this errorPlacement */
+      errorPlacement: function(error, element) {
+        const feedback = element.closest('.form-floating').find('.invalid-feedback');
+        if (feedback.length) {
+          feedback.text(error.text());
+        }
+      },
+      highlight: function(element) {
+        $(element).addClass('is-invalid');
+      },
+
+      unhighlight: function(element) {
+        const $el = $(element);
+        const closest = $el.closest('.input_block');
+        closest.find('.is-invalid').removeClass('is-invalid');
+        $('#error_' + $el.attr('id')).html('');
+      },
+      messages: {},
+    }));
 
     /// |----------------------------------------
     /// | LISTENER & SELECT2
@@ -314,6 +408,7 @@ $cur_unor = $this->session->userdata('kode_unor');
     // filter listener
     $('#id_kewenangan').on('change', function() {
       get_kewenangan_menu();
+      $('#btn_submit_container').removeClass('d-none');
     });
 
     // change size select2-sm

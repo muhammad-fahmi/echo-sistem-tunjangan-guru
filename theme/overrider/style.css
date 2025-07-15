@@ -358,4 +358,11 @@ a.badge.text-white:hover {
   border-bottom: 1px solid #efefef;
   padding: 1rem 1.25rem;
   margin-bottom: 0;
+}
+
+.sticky_header tr th {
+  position: sticky;
+  top: 70px;
+  background-color: #fff;
+  z-index: 10;
 }/*# sourceMappingURL=style.css.map */

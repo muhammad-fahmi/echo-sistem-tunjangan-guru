@@ -41,6 +41,38 @@ class Pdt_manajemen_perm extends MY_Controller
   /// |----------------------------------------------------------------------
   /// | >> AJAX REQUEST FUNCTIONS
   /// |----------------------------------------------------------------------
+  public function modal()
+  {
+    if (!is_super_admin()) return output_json([
+      'status' => false,
+      'message' => 'Maaf, Anda tidak memiliki permission utk memanggil modal pada modul ini.'
+    ], 403);
+
+    $id = post_safe('id');
+    $action = post_safe('action');
+
+    switch ($action) {
+      case 'tambah_kewenangan': {
+          break;
+        }
+
+      case 'edit_kewenangan': {
+          break;
+        }
+
+      case 'hapus_kewenangan': {
+          break;
+        }
+
+      default:
+        return output_json([
+          'status' => false,
+          'message' => "Invalid modal command."
+        ]);
+        break;
+    }
+  }
+
   public function get_data()
   {
     /// |----------------------------------------
@@ -91,6 +123,35 @@ class Pdt_manajemen_perm extends MY_Controller
     $selected_kewenangan = post_safe('id_kewenangan');
 
     $response = $this->mdl_mp->get_kewenangan_menu($selected_kewenangan);
+
+    return output_json($response);
+  }
+
+  public function save_kewenangan()
+  {
+    if (!is_super_admin()) return output_json([
+      'status' => false,
+      'message' => 'Maaf, Anda tidak memiliki permission utk melakukan modifikasi pada data kewenangan.'
+    ], 403);
+  }
+
+  public function save_hak_akses()
+  {
+    if (!is_super_admin()) return output_json([
+      'status' => false,
+      'message' => 'Maaf, Anda tidak memiliki permission utk melakukan modifikasi pada hak akses kewenangan.'
+    ], 403);
+
+    $post = post_safe();
+
+    if ($post['error'] == 'YES') return output_json([
+      'status' => false,
+      'message' => "Maaf, tidak bisa melanjutkan proses karena daftar menu tidak valid."
+    ]);
+
+    $cleaned_post = clean_empty_or_all_no_permissions($post);
+
+    $response = $this->mdl_mp->save_hak_akses($cleaned_post);
 
     return output_json($response);
   }
