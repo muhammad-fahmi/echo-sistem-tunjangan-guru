@@ -51,26 +51,81 @@ class Pdt_manajemen_perm extends MY_Controller
     $id = post_safe('id');
     $action = post_safe('action');
 
+    $res = [
+      'status' => false,
+      'message' => "Modal command tidak valid."
+    ];
+
     switch ($action) {
       case 'tambah_kewenangan': {
+          $modal_data = [
+            'modal_title' => 'Tambah Kewenangan Baru',
+            'type' => 'add',
+            'data' => []
+          ];
+
+          $res = [
+            'status' => true,
+            'message' => "Modal utk tambah kewenangan baru",
+            'html' => $this->load->view('vwm_crud_kewenangan', $modal_data, TRUE)
+          ];
           break;
         }
 
       case 'edit_kewenangan': {
+          /// |----------------------------------------
+          /// | PASTIKAN DATA KEWENANGAN EXIST
+          /// |----------------------------------------
+          $is_exist = fetch_row_data('m_kewenangan', ['id_kewenangan' => $id], false);
+          if (!$is_exist) return [
+            'status' => false,
+            'message' => "Data yang akan di-edit tidak valid.\nCoba refresh halaman."
+          ];
+
+          $modal_data = [
+            'modal_title' => 'Edit Kewenangan',
+            'type' => 'edit',
+            'data' => $is_exist
+          ];
+
+          $res = [
+            'status' => true,
+            'message' => "Modal utk edit kewenangan",
+            'html' => $this->load->view('vwm_crud_kewenangan', $modal_data, TRUE)
+          ];
           break;
         }
 
       case 'hapus_kewenangan': {
+          /// |----------------------------------------
+          /// | PASTIKAN DATA KEWENANGAN EXIST
+          /// |----------------------------------------
+          $is_exist = fetch_row_data('m_kewenangan', ['id_kewenangan' => $id], false);
+          if (!$is_exist) return [
+            'status' => false,
+            'message' => "Data yang akan di-hapus tidak valid.\nCoba refresh halaman."
+          ];
+
+          $modal_data = [
+            'modal_title' => 'Hapus Kewenangan',
+            'type' => 'delete',
+            'data' => $is_exist
+          ];
+
+          $res = [
+            'status' => true,
+            'message' => "Modal utk hapus kewenangan",
+            'html' => $this->load->view('vwm_crud_kewenangan', $modal_data, TRUE)
+          ];
+
           break;
         }
 
       default:
-        return output_json([
-          'status' => false,
-          'message' => "Invalid modal command."
-        ]);
         break;
     }
+
+    output_json($res);
   }
 
   public function get_data()
@@ -133,6 +188,26 @@ class Pdt_manajemen_perm extends MY_Controller
       'status' => false,
       'message' => 'Maaf, Anda tidak memiliki permission utk melakukan modifikasi pada data kewenangan.'
     ], 403);
+
+    $post = post_safe();
+
+    $response = $this->mdl_mp->save_kewenangan($post);
+
+    return output_json($response);
+  }
+
+  public function delete_kewenangan()
+  {
+    if (!is_super_admin()) return output_json([
+      'status' => false,
+      'message' => 'Maaf, Anda tidak memiliki permission utk menghapus data kewenangan.'
+    ], 403);
+
+    $post = post_safe();
+
+    $response = $this->mdl_mp->delete_kewenangan($post);
+
+    return output_json($response);
   }
 
   public function save_hak_akses()

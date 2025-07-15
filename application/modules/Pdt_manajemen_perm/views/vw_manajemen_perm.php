@@ -46,7 +46,7 @@ $cur_unor = $this->session->userdata('kode_unor');
         <div class="card-title space-between">
           <div>Daftar Kewenangan</div>
           <div>
-            <div class="btn btn-sm btn-success" onclick="on_dev()"><i class="fas fa-plus-square me-1"></i>Tambah Baru</div>
+            <div class="btn btn-sm btn-success" onclick="modal(`tambah_kewenangan`)"><i class="fas fa-plus-square me-1"></i>Tambah Baru</div>
           </div>
         </div>
         <div class="card-body">
@@ -83,7 +83,7 @@ $cur_unor = $this->session->userdata('kode_unor');
           <div class="card-title space-between mb-0">
             <div>Manajemen Hak Akses</div>
             <div>
-              <select name="id_kewenangan" id="id_kewenangan" class="form-select form-select-sm minw-200 select2 select2-sm select2_id_kewenangan"></select>
+              <select name="f_id_kewenangan" id="f_id_kewenangan" class="form-select form-select-sm minw-200 select2 select2-sm select2_f_id_kewenangan"></select>
             </div>
           </div>
           <div class="card-body">
@@ -123,7 +123,7 @@ $cur_unor = $this->session->userdata('kode_unor');
 </div>
 
 <script>
-  function modal(the_action, the_id) {
+  function modal(the_action, the_id = '') {
     var url = "<?= site_url('pdt_manajemen_perm/modal') ?>";
     $.ajax({
       type: "POST",
@@ -215,7 +215,7 @@ $cur_unor = $this->session->userdata('kode_unor');
       url: "<?= site_url('pdt_manajemen_perm/get_kewenangan_menu') ?>",
       data: {
         id_kewenangan: function() {
-          return $('#id_kewenangan').val();
+          return $('#f_id_kewenangan').val();
         },
       },
       dataType: 'json',
@@ -286,7 +286,7 @@ $cur_unor = $this->session->userdata('kode_unor');
     columns: [{
         data: 'no', // index 0
         orderable: false,
-        className: 'vat',
+        className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-center">' + cellData + '</div>');
         }
@@ -294,7 +294,7 @@ $cur_unor = $this->session->userdata('kode_unor');
       {
         data: 'id_kewenangan', // index 1
         orderable: true,
-        className: 'vat',
+        className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-center">' + cellData + '</div>');
         }
@@ -302,7 +302,7 @@ $cur_unor = $this->session->userdata('kode_unor');
       {
         data: 'ket_kewenangan', // index 2
         orderable: false,
-        className: 'true',
+        className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-center">' + cellData + '</div>');
         }
@@ -310,7 +310,7 @@ $cur_unor = $this->session->userdata('kode_unor');
       {
         data: 'id_kewenangan', // index 3
         orderable: false,
-        className: 'vat',
+        className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-center">' + rowData.aksi_display + '</div>');
         }
@@ -397,7 +397,7 @@ $cur_unor = $this->session->userdata('kode_unor');
     /// |----------------------------------------
     /// | LISTENER & SELECT2
     /// |----------------------------------------
-    init_select2('#id_kewenangan',
+    init_select2('#f_id_kewenangan',
       'Pilih Kewenangan...',
       '<?= site_url('config/select2_kewenangan') ?>',
       () => ({
@@ -406,7 +406,7 @@ $cur_unor = $this->session->userdata('kode_unor');
     );
 
     // filter listener
-    $('#id_kewenangan').on('change', function() {
+    $('#f_id_kewenangan').on('change', function() {
       get_kewenangan_menu();
       $('#btn_submit_container').removeClass('d-none');
     });

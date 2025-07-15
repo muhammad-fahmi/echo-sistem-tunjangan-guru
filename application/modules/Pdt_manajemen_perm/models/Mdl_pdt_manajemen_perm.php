@@ -73,10 +73,10 @@ class Mdl_pdt_manajemen_perm extends CI_Model
       // tampilan tombol aksi
       $fixed_list = ['00', '01', '02', '10'];
       $tombol_edit =  (!in_array($row['id_kewenangan'], $fixed_list))
-        ? '<a onclick="on_dev()" class="clickable text-white badge bg-primary"><i class="fas fa-edit me-1"></i>Edit</a>'
+        ? '<a onclick="modal(`edit_kewenangan`, `' . $row['id_kewenangan'] . '`)" class="clickable text-white badge bg-primary"><i class="fas fa-edit me-1"></i>Edit</a>'
         : '<span class="text-white badge bg-warning"><i class="fas fa-lock me-1"></i>Locked</span>';
       $tombol_delete = (!in_array($row['id_kewenangan'], $fixed_list))
-        ? '<span class="clickable text-white badge bg-danger" onclick="on_dev()"><i class="fas fa-trash me-1"></i>Hapus</span>'
+        ? '<span class="clickable text-white badge bg-danger" onclick="modal(`hapus_kewenangan`, `' . $row['id_kewenangan'] . '`)"><i class="fas fa-trash me-1"></i>Hapus</span>'
         : '';
       $row['aksi_display'] = '<div class="d-grid gap-1">' .
         $tombol_edit . $tombol_delete .
@@ -207,7 +207,7 @@ class Mdl_pdt_manajemen_perm extends CI_Model
 
   public function save_hak_akses($data)
   {
-    $id_kewenangan = $data['id_kewenangan'];
+    $id_kewenangan = $data['f_id_kewenangan'];
 
     $existing_menu = $this->db->from('m_kewenangan_menu')
       ->where([
@@ -223,7 +223,7 @@ class Mdl_pdt_manajemen_perm extends CI_Model
     $new_menu = [];
 
     // remove fields that are not menus
-    unset($data['id_kewenangan'], $data['error']);
+    unset($data['f_id_kewenangan'], $data['error']);
 
     foreach ($data as $menu_id => $permissions) {
       $new_menu[] = [
@@ -279,6 +279,181 @@ class Mdl_pdt_manajemen_perm extends CI_Model
       return [
         'status' => false,
         'message' => "Maaf, terjadi kesalahan pada proses penyimpanan hak akses.\n{$catch_msg}"
+      ];
+    }
+  }
+
+  public function save_kewenangan($data)
+  {
+    // Form validation
+    $this->load->library('form_validation');
+
+    // Define validation rules
+    $this->form_validation->set_rules('id_kewenangan', 'ID Kewenangan', 'required|numeric|max_length[2]');
+    $this->form_validation->set_rules('ket_kewenangan', 'Nama Kewenangan', 'required');
+
+    // Validate the input data
+    if ($this->form_validation->run() === FALSE) {
+      // Get raw error array (field => message)
+      $error_value = $this->form_validation->error_array();
+
+      // Optional: Also format for general display
+      $error_text = '<ul class="mb-0">';
+      foreach ($error_value as $field => $error) {
+        $error_text .= "<li>{$error}</li>";
+      }
+      $error_text .= '</ul>';
+
+      // Return response with error details
+      return [
+        'status' => false,
+        'message' => "Maaf, tidak bisa melakukan submit karena form tidak valid.\n{$error_text}",
+        'error_value' => $error_value
+      ];
+    }
+
+    $process = ($data['type'] == 'add') ? 'tambah' : 'edit';
+
+    /// |----------------------------------------
+    /// | CEK EXISTING ID (IF INSERT)
+    /// |----------------------------------------
+    if ($data['type'] == 'add') {
+      $existing_id = fetch_row_data('m_kewenangan', [
+        'id_kewenangan' => $data['id_kewenangan']
+      ], false);
+
+      if ($existing_id !== false) return [
+        'status' => false,
+        'message' => "Maaf, sudah ada Kewenangan dengan ID: {$existing_id['id_kewenangan']} terdaftar dalam database."
+      ];
+    }
+
+    /// |----------------------------------------
+    /// | CEK EXISTING NAMA (INSERT / UPDATE)
+    /// |----------------------------------------
+    $existing_name = fetch_row_data('m_kewenangan', [
+      'ket_kewenangan' => $data['ket_kewenangan'],
+      'id_kewenangan <>' => $data['id_kewenangan']
+    ], false);
+    if ($existing_name !== false) return [
+      'status' => false,
+      'message' => "Maaf, sudah ada Kewenangan dengan Nama: {$existing_name['ket_kewenangan']} terdaftar dalam database."
+    ];
+
+    try {
+      $this->db->trans_begin();
+      /// |----------------------------------------
+      /// | PROSES DB
+      /// |----------------------------------------
+      $target_id = $data['id_kewenangan'];
+      if ($data['type'] == 'add') {
+        // DO INSERT
+        $proc = 1;
+        $this->db->insert('m_kewenangan', [
+          'id_kewenangan' => $data['id_kewenangan'],
+          'ket_kewenangan' => $data['ket_kewenangan']
+        ]);
+      } else {
+        // DO UPDATE
+        $proc = 2;
+        $this->db->update('m_kewenangan', [
+          'ket_kewenangan' => $data['ket_kewenangan']
+        ], [
+          'id_kewenangan' => $data['id_kewenangan']
+        ]);
+      }
+
+      /// |----------------------------------------
+      /// | BUAT LOG
+      /// |----------------------------------------
+      $proc = 3;
+      log_generator(
+        $this->session->userdata('id_user'),
+        'm_kewenangan',
+        $target_id,
+        "Proses {$process} Kewenangan dengan data sebagai berikut:\n\nID: {$data['id_kewenangan']}\nNama: {$data['ket_kewenangan']}"
+      );
+
+      if ($this->db->trans_status() === FALSE) {
+        // do your error handler here
+        $this->db->trans_rollback();
+        return [
+          'status' => true,
+          'message' => "Proses {$process} kewenangan gagal dilakukan.\nROLLBACK ISSUE #{$proc}"
+        ];
+      } else {
+        // do your success handler here
+        $this->db->trans_commit();
+        return [
+          'status' => true,
+          'message' => "Proses {$process} kewenangan berhasil dilakukan."
+        ];
+      }
+    } catch (\Throwable $th) {
+      $catch_msg = sanitize_string($th->getMessage());
+      return [
+        'status' => false,
+        'message' => "Maaf, proses penyimpanan data kewenangan mengalami error.\n{$catch_msg}"
+      ];
+    }
+  }
+
+  public function delete_kewenangan($data)
+  {
+    /// |----------------------------------------
+    /// | PASTIKAN DATA EXIST
+    /// |----------------------------------------
+    $existing_data = fetch_row_data('m_kewenangan', [
+      'id_kewenangan' => $data['id_kewenangan']
+    ], false);
+    if ($existing_data === false) return [
+      'status' => false,
+      'message' => "Maaf, data yang akan dihapus tidak valid. coba refresh halaman."
+    ];
+
+    try {
+      $this->db->trans_begin();
+      // do your db process here
+      // HAPUS KEWENANGAN
+      $proc = 1;
+      $this->db->delete('m_kewenangan', [
+        'id_kewenangan' => $existing_data['id_kewenangan']
+      ]);
+
+      // HAPUS MENU TERKAIT
+      $proc = 2;
+      $this->db->delete('m_kewenangan_menu', [
+        'id_kewenangan' => $existing_data['id_kewenangan']
+      ]);
+
+      // BUAT LOG
+      $proc = 3;
+      log_generator(
+        $this->session->userdata('id_user'),
+        'm_kewenangan',
+        $existing_data['id_kewenangan'],
+        "Menghapus data kewenangan dan semua hak akses menu terkait dengan data berikut ini:\n\nID: {$existing_data['id_kewenangan']}\nNama: {$existing_data['ket_kewenangan']}"
+      );
+      if ($this->db->trans_status() === FALSE) {
+        // do your error handler here
+        $this->db->trans_rollback();
+        return [
+          'status' => false,
+          'message' => "Maaf, terjadi kesalahan saat proses penghapusan data kewenangan.\nROLLBACK ISSUE #{$proc}"
+        ];
+      } else {
+        // do your success handler here
+        $this->db->trans_commit();
+        return [
+          'status' => true,
+          'message' => "Proses hapus data kewenangan berhasil dilakukan."
+        ];
+      }
+    } catch (\Throwable $th) {
+      $catch_msg = sanitize_string($th->getMessage());
+      return [
+        'status' => false,
+        'message' => "Maaf, terjadi kesalahan dalam proses hapus data kewenangan.\n{$catch_msg}"
       ];
     }
   }
