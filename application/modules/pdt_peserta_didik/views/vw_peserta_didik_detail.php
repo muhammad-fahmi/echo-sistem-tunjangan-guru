@@ -1,6 +1,6 @@
 <div class="row page-titles">
   <div class="col-md-4 col-12 align-self-center">
-    <h3 class="text-themecolor mb-0">Detail Data Siswa</h3>
+    <h3 class="text-themecolor mb-0">Detail Peserta Didik</h3>
     <ol class="breadcrumb mb-0">
       <li class="breadcrumb-item">
         <a href="javascript:void(0)">Pangkalan Data</a>
@@ -36,11 +36,11 @@
     }
     ?>
 
-    <!-- <div class="col-12">
+    <div class="col-12">
       <div class="card">
         <div class="card-body">
           <h4 class="card-title space-between">
-            <div><i class="fas fa-file me-2"></i>Data Peserta Didik</div>
+            <div><i class="fas fa-building me-2"></i>Profil Sekolah Peserta Didik</div>
             <div></div>
           </h4>
           <div>
@@ -49,27 +49,21 @@
 
               <table style="width: 100%;" class="table table-hover mb-1">
                 <tr>
-                  <td style="min-width: 150px;">Periode</td>
+                  <td style="min-width: 150px;">Sekolah</td>
                   <td style="min-width: 15px; text-align: center;">:</td>
-                  <td style="width: 100%;"><?= check_var($data, 'periode_bln', '-') . '/' . check_var($data, 'periode_thn', '-')  ?></td>
+                  <td style="width: 100%;"><?= check_var($data, 'nama_sekolah', '-') ?></td>
                 </tr>
 
                 <tr>
-                  <td style="min-width: 150px;">Dibuat Pada</td>
+                  <td style="min-width: 150px;">Kelas / Rombel</td>
                   <td style="min-width: 15px; text-align: center;">:</td>
-                  <td style="width: 100%;"><?= em_date('j F Y, H:i:s', 'set', check_var($data, 'create_on', '')) ?></td>
+                  <td style="width: 100%;"><?= check_var($data, 'tingkat', '-') . '/' . check_var($data, 'ket_rombel', '-')  ?></td>
                 </tr>
 
                 <tr>
-                  <td style="min-width: 150px;">Status Dokumen</td>
+                  <td style="min-width: 150px;">Semester</td>
                   <td style="min-width: 15px; text-align: center;">:</td>
-                  <td style="width: 100%;">
-                    <?php
-                    $ket_status = check_var($data, 'ket_status_dokumen', '-');
-                    $col_status = check_var($data, 'col_status_dokumen', 'secondary');
-                    echo '<span class="badge bg-' . $col_status . '">' . $ket_status . '</span>';
-                    ?>
-                  </td>
+                  <td style="width: 100%;"><?= check_var($data, 'semester', '-') ?></td>
                 </tr>
 
               </table>
@@ -79,7 +73,7 @@
           </div>
         </div>
       </div>
-    </div> -->
+    </div>
 
     <!-- <div class="col-12">
       <div class="card">
@@ -112,7 +106,7 @@
         <div class="card">
           <div class="card-body">
             <h4 class="card-title space-between mb-3">
-              <div><i class="fas fa-user me-2"></i>Detail Data Siswa</div>
+              <div><i class="fas fa-user me-2"></i>Profil Peserta Didik</div>
               <div></div>
             </h4>
 
