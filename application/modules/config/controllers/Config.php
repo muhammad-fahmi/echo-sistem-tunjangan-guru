@@ -655,4 +655,49 @@ class Config extends MY_Controller
       ->set_content_type('application/json')
       ->set_output(json_encode($data));
   }
+
+  public function select2_kewenangan()
+  {
+    // ambil data post
+    $search = post_safe('search');
+    $include_semua = post_safe('include_semua');
+
+    $this->db->from('m_kewenangan');
+
+    // kondisi where
+    if (check_var($search)) {
+      $this->db->group_start();
+      $this->db->like('id_kewenangan', $search);
+      $this->db->or_like('ket_kewenangan', $search);
+      $this->db->group_end();
+    }
+
+    // order & limit
+    $this->db->order_by('id_kewenangan', 'ASC');
+    $this->db->limit(20);
+
+    // get results
+    $result = $this->db->get()->result_array();
+
+    $data = array();
+    $index = 0;
+
+    if ($include_semua == 'yes') {
+      $data[$index]['id'] = 'all';
+      $data[$index]['text'] = '- SEMUA -';
+      $index++;
+    }
+
+    if (isset_nn_nes($result)) {
+      foreach ($result as $r) {
+        $data[$index]['id'] = $r['id_kewenangan'];
+        $data[$index]['text'] = $r['ket_kewenangan'] . ' [' . $r['id_kewenangan'] . ']';
+        $index++;
+      }
+    } else {
+      $data = $result;
+    }
+
+    return output_json($data);
+  }
 }

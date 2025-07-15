@@ -68,6 +68,18 @@
 	vertical-align: middle;
 }
 
+.minw-120 {
+	min-width: 120px !important;
+}
+
+.minw-150 {
+	min-width: 150px !important;
+}
+
+.minw-200 {
+	min-width: 200px !important;
+}
+
 label.is-invalid {
 	color: #fc4b6c;
 	font-size: 9px;
@@ -402,4 +414,19 @@ a.badge.text-white {
 	.child_link {
 		margin-left: -11px;
 	}
+}
+
+.card {
+	div.card-title {
+		border-bottom: 1px solid #efefef;
+		padding: 1rem 1.25rem;
+		margin-bottom: 0;
+	}
+}
+
+.sticky_header tr th {
+	position: sticky;
+	top: 70px;
+	background-color: #fff;
+	z-index: 10;
 }
