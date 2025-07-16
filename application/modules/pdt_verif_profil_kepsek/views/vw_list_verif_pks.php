@@ -42,20 +42,19 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
     ?>
     <div class="col-12">
       <div class="card">
-        <div class="card-body">
-          <div class="card-title space-between">
-            <div>
-              Verifikasi Profil Kepala Sekolah
-            </div>
-            <div>
-              <select name="is_history" id="is_history" class="form-select form-select-sm" style="cursor: pointer;">
-                <option value="NO">Perlu Verifikasi</option>
-                <option value="YES">History Verifikasi</option>
-              </select>
-            </div>
+        <div class="card-title space-between">
+          <div>
+            Verifikasi Profil Kepala Sekolah
           </div>
-
-          <div class="table-responsive mt-4">
+          <div>
+            <select name="is_history" id="is_history" class="form-select form-select-sm" style="cursor: pointer;">
+              <option value="NO">Perlu Verifikasi</option>
+              <option value="YES">History Verifikasi</option>
+            </select>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
             <div class="_loading loading_tabel_r_profil_kepsek">
               <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>
             </div>
@@ -109,7 +108,6 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
               </thead>
             </table>
           </div>
-
         </div>
       </div>
     </div>

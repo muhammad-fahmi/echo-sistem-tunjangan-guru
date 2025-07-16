@@ -871,6 +871,7 @@ function menu_loader($echo = true)
   // dan pastikan ada order, untuk mengurutkan menunya
   $CI = &get_instance();
   $table = 'v_kewenangan_menu';
+  $hr = '<hr style="border: 1px solid #efefef; opacity: 1;">';
 
   $cur_kewenangan = $CI->session->userdata('kewenangan');
   $cur_menu = $CI->session->userdata('menu');
@@ -886,98 +887,93 @@ function menu_loader($echo = true)
   $is_super_admin = is_super_admin();
   if (isset_nn_nes($data)) {
     foreach ($data as $v) {
-      if ($v['id_menu'] == '-') {
-        // output hr separator
-        $html .= '<hr>';
-      } else {
-        // output menu
-        $active = ($cur_menu == $v['id_menu']) ? 'selected' : '';
-        $icon = check_var($v, 'icon', 'mdi mdi-view-dashboard');
-        $subs = (check_var($v, 'menu_sub', false) === false)
-          ? ''
-          : '<div class="sub">' . $v['menu_sub'] . '</div>';
+      // output menu
+      $active = ($cur_menu == $v['id_menu']) ? 'selected' : '';
+      $icon = check_var($v, 'icon', 'mdi mdi-view-dashboard');
+      $subs = (check_var($v, 'menu_sub', false) === false)
+        ? ''
+        : '<div class="sub">' . $v['menu_sub'] . '</div>';
 
-        if ($cur_parent_dropdown && $v['is_child'] == 'NO') {
-          /// |----------------------------------------
-          /// | CLOSE THE DROPDOWN
-          /// |----------------------------------------
-          $html .= '</ul></li>';
-          $cur_parent_dropdown = false;
-        }
-
-        if (
-          !$cur_parent_dropdown &&
-          $v['is_parent'] == 'YES'
-          && $v['is_child'] == 'NO'
-        ) {
-          /// |----------------------------------------
-          /// | BUATKAN OPENER UNTUK DROPDOWN
-          /// |----------------------------------------
-          $cur_parent_dropdown = true;
-          if (strpos($cur_menu, $v['id_menu']) !== false) {
-            $parent_active = 'selected';
-            $a_expand = 'true';
-            $c_open = 'expand';
-          } else {
-            $parent_active = '';
-            $a_expand = 'false';
-            $c_open = 'collapse';
-          }
-
-          //_____ ORIGINAL STYLE
-          // $html .= '<li class="sidebar-item parent_item ' . $v['id_menu'] . ' ' . $parent_active . '">
-          //   <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="' . $a_expand . '"><i class="' . $icon . '"></i><span class="hide-menu">' . check_var($v, 'menu_title', 'UNKNOWN') . '<small>' . $subs . '</small></span></a>
-          //   <ul aria-expanded="false" class="' . $c_open . ' first-level">';
-
-          //_____ MODIFIED STYLE
-          $html .= '<li class="bz_sidebar_item parent_item ' . $v['id_menu'] . ' ' . $parent_active . '">
-            <a class="sidebar_link" href="javascript:void(0)" aria-expanded="' . $a_expand . '">
-              <div class="icon"><i class="' . $icon . '"></i></div>
-              <div class="hide-menu">
-                <div class="main">' . check_var($v, 'menu_title', 'UNKNOWN') . '<i class="dropdown-arrow dropdown-arrow-' . $v['id_menu'] . ' fas fa-chevron-down"></i></div>
-                ' . $subs . '
-              </div>
-              <ul aria-expanded="' . $a_expand . '" class="' . $c_open . ' first-level">';
-
-          continue;
-        }
-
+      if ($cur_parent_dropdown && $v['is_child'] == 'NO') {
         /// |----------------------------------------
-        /// | OUTPUT MENU NORMALLY
+        /// | CLOSE THE DROPDOWN
         /// |----------------------------------------
-        if (check_var($v, 'on_dev', 'NO') == 'YES') {
-          $href = 'href="#"';
-          $onclick = 'onclick="on_dev()"';
+        $html .= '</ul></li>';
+        $cur_parent_dropdown = false;
+      }
+
+      if (
+        !$cur_parent_dropdown &&
+        $v['is_parent'] == 'YES'
+        && $v['is_child'] == 'NO'
+      ) {
+        /// |----------------------------------------
+        /// | BUATKAN OPENER UNTUK DROPDOWN
+        /// |----------------------------------------
+        $cur_parent_dropdown = true;
+        if (strpos($cur_menu, $v['id_menu']) !== false) {
+          $parent_active = 'selected';
+          $a_expand = 'true';
+          $c_open = 'expand';
         } else {
-          $href = 'href="' . site_url(check_var($v, 'url', '#')) . '"';
-          $onclick = '';
-        }
-
-        $child_container_class = '';
-        $child_link_class = '';
-        if ($v['is_child'] == 'YES') {
-          $child_container_class = 'child_container';
-          $child_link_class = 'child_link';
+          $parent_active = '';
+          $a_expand = 'false';
+          $c_open = 'collapse';
         }
 
         //_____ ORIGINAL STYLE
-        // $html .= '<li class="sidebar-item ' . $v['id_menu'] . ' ' . $active . '">
-        //     <a ' . $href . ' ' . $onclick . ' class="sidebar-link"><i class="' . $icon . '"></i><span class="hide-menu">
-        //         ' . check_var($v, 'menu_title', 'UNKNOWN') . '<small>' . $subs . '</small>
-        //       </span></a>
-        //   </li>';
+        // $html .= '<li class="sidebar-item parent_item ' . $v['id_menu'] . ' ' . $parent_active . '">
+        //   <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="' . $a_expand . '"><i class="' . $icon . '"></i><span class="hide-menu">' . check_var($v, 'menu_title', 'UNKNOWN') . '<small>' . $subs . '</small></span></a>
+        //   <ul aria-expanded="false" class="' . $c_open . ' first-level">';
 
         //_____ MODIFIED STYLE
-        $html .= '<li class="bz_sidebar_item ' . $child_container_class . ' ' . $v['id_menu'] . ' ' . $active . '">
-            <a ' . $href . ' ' . $onclick . ' class="sidebar_link ' . $child_link_class . '">
-              <div class="icon"><i class="' . $icon . '"></i></div>
-              <div class="hide-menu">
-                <div class="main">' . check_var($v, 'menu_title', 'UNKNOWN') . '</div>
-                ' . $subs . '
-              </div>
-            </a>
-          </li>';
+        $html .= '<li class="bz_sidebar_item parent_item ' . $v['id_menu'] . ' ' . $parent_active . '">
+          <a class="sidebar_link" href="javascript:void(0)" aria-expanded="' . $a_expand . '">
+            <div class="icon"><i class="' . $icon . '"></i></div>
+            <div class="hide-menu">
+              <div class="main">' . check_var($v, 'menu_title', 'UNKNOWN') . '<i class="dropdown-arrow dropdown-arrow-' . $v['id_menu'] . ' fas fa-chevron-down"></i></div>
+              ' . $subs . '
+            </div>
+            <ul aria-expanded="' . $a_expand . '" class="' . $c_open . ' first-level">';
+
+        continue;
       }
+
+      /// |----------------------------------------
+      /// | OUTPUT MENU NORMALLY
+      /// |----------------------------------------
+      if (check_var($v, 'on_dev', 'NO') == 'YES') {
+        $href = 'href="#"';
+        $onclick = 'onclick="on_dev()"';
+      } else {
+        $href = 'href="' . site_url(check_var($v, 'url', '#')) . '"';
+        $onclick = '';
+      }
+
+      $child_container_class = '';
+      $child_link_class = '';
+      if ($v['is_child'] == 'YES') {
+        $child_container_class = 'child_container';
+        $child_link_class = 'child_link';
+      }
+
+      //_____ ORIGINAL STYLE
+      // $html .= '<li class="sidebar-item ' . $v['id_menu'] . ' ' . $active . '">
+      //     <a ' . $href . ' ' . $onclick . ' class="sidebar-link"><i class="' . $icon . '"></i><span class="hide-menu">
+      //         ' . check_var($v, 'menu_title', 'UNKNOWN') . '<small>' . $subs . '</small>
+      //       </span></a>
+      //   </li>';
+
+      //_____ MODIFIED STYLE
+      $html .= '<li class="bz_sidebar_item ' . $child_container_class . ' ' . $v['id_menu'] . ' ' . $active . '">
+          <a ' . $href . ' ' . $onclick . ' class="sidebar_link ' . $child_link_class . '">
+            <div class="icon"><i class="' . $icon . '"></i></div>
+            <div class="hide-menu">
+              <div class="main">' . check_var($v, 'menu_title', 'UNKNOWN') . '</div>
+              ' . $subs . '
+            </div>
+          </a>
+        </li>';
     }
 
     // FIX: Close any remaining open dropdown after the loop
@@ -998,7 +994,22 @@ function menu_loader($echo = true)
             <div class="main">Dashboard</div>
           </div>
         </a>
-      </li>' . $html;
+      </li>' . $hr . $html;
+
+    // profile
+    $profile_on_dev = true;
+    $href_profile = ($profile_on_dev)
+      ? 'onclick="on_dev()"' : 'href="' . site_url('pdt_profile') . '"';
+    $profile_active = ($cur_menu == 'PDT_Profile') ? 'selected' : '';
+    $html = $html . $hr . '<li class="bz_sidebar_item PDT_Profile ' . $profile_active . '">
+        <a ' . $href_profile . ' class="sidebar_link">
+          <div class="icon"><i class="fas fa-id-card"></i></div>
+          <div class="hide-menu">
+            <div class="main">Profile</div>
+            <div class="sub">Setting Akun</div>
+          </div>
+        </a>
+      </li>';
 
     // manajemen hak akses
     if ($is_super_admin) {
@@ -1020,7 +1031,7 @@ function menu_loader($echo = true)
     }
 
     // logout
-    $html = $html . '<li class="bz_sidebar_item PDT_Logout ' . $dashboard_active . '">
+    $html = $html . $hr . '<li class="bz_sidebar_item PDT_Logout">
         <a href="' . site_url('login/logout') . '" class="sidebar_link">
           <div class="icon"><i class="fas fa-arrow-left"></i></div>
           <div class="hide-menu">

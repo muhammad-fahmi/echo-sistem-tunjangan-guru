@@ -145,9 +145,10 @@ class Mdl_pdt_manajemen_perm extends CI_Model
 
   public function get_kewenangan_menu($selected_kewenangan)
   {
-    $base_menu = $this->db->from('m_menu')
-      ->order_by('order', 'asc')
-      ->get()->result_array();
+
+    $this->db->from('m_menu');
+    $this->db->order_by('order', 'asc');
+    $base_menu = $this->db->get()->result_array();
 
     $default_html = '<input type="hidden" name="error" value="YES">' .
       '<tr>
