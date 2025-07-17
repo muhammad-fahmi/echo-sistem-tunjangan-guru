@@ -229,7 +229,9 @@
             ">
           <!-- User profile image -->
           <div class="profile-img">
-            <img src="<?= base_url("theme/assets/images/logo/logo_tut_wuri_handayani.png") ?>" alt="user" class="w-100" style="border-radius: 50%;" />
+            <div class="profil_img_container sm">
+              <img id="sidebar_profile_img" src="<?= site_url('pdt_profile/image/') ?>" onerror="this.onerror=null; this.src='<?= base_url('theme/assets/images/logo/logo_tut_wuri_handayani.png') ?>';" alt="user" class="w-100" style="border-radius: 50%;">
+            </div>
           </div>
           <!-- User profile text-->
           <div class="profile-text pt-1 dropdown">
@@ -242,19 +244,19 @@
                   position-relative
                 " id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><?= $this->session->userdata("username"); ?></a>
             <div class="dropdown-menu animated flipInY" aria-labelledby="dropdownMenuLink">
-              <a class="dropdown-item" href="#"><i data-feather="user" class="feather-sm text-info me-1 ms-1"></i>
+              <a class="dropdown-item" href="<?= site_url('pdt_profile') ?>"><i data-feather="user" class="feather-sm text-info me-1 ms-1"></i>
                 My Profile</a>
               <!-- <a class="dropdown-item" href="#"><i data-feather="mail" class="feather-sm text-success me-1 ms-1"></i>
                 Inbox</a> -->
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#"><i data-feather="settings" class="feather-sm text-warning me-1 ms-1"></i>
+              <a class="dropdown-item" href="<?= site_url('pdt_profile') ?>"><i data-feather="settings" class="feather-sm text-warning me-1 ms-1"></i>
                 Account Setting</a>
               <div class="dropdown-divider"></div>
               <!-- <a class="dropdown-item" href="authentication-login3.html"><i data-feather="log-out" class="feather-sm text-danger me-1 ms-1"></i>
                 Logout</a> -->
               <div class="dropdown-divider"></div>
               <div class="ps-4 p-2">
-                <a href="#" class="btn d-block w-100 btn-info rounded-pill">View Profile</a>
+                <a href="<?= site_url('pdt_profile') ?>" class="btn d-block w-100 btn-info rounded-pill">View Profile</a>
               </div>
             </div>
           </div>
