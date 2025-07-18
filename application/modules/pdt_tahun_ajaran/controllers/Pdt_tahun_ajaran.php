@@ -4,7 +4,6 @@ class Pdt_tahun_ajaran extends MY_Controller
 {
   public function __construct()
   {
-    parent::__construct();
     // lakukan proses verifikasi user disini
     parent::__construct();
     $priv = $this->session->userdata('kewenangan');
@@ -93,7 +92,7 @@ class Pdt_tahun_ajaran extends MY_Controller
           /// |----------------------------------------
           /// | EDIT DATA
           /// |----------------------------------------
-          $dataset = $this->mdl_peserta_didik->get('v_progurinda_siswa', "id_siswa = '$decryptedID'");
+          $dataset = $this->mdl_tahun_ajaran->get('v_progurinda_siswa', "id_siswa = '$decryptedID'");
           $data = [
             'modal_title' => "Update Data Tahun Ajaran",
             'type' => 'update',
@@ -110,7 +109,7 @@ class Pdt_tahun_ajaran extends MY_Controller
           /// |----------------------------------------
           /// | DELETE DATA
           /// |----------------------------------------
-          $dataset = $this->mdl_peserta_didik->get('v_progurinda_siswa', "id_siswa = '$decryptedID'");
+          $dataset = $this->mdl_tahun_ajaran->get('v_progurinda_siswa', "id_siswa = '$decryptedID'");
           if (isset_nn_nes($dataset)) {
             $data = [
               'modal_title' => "Hapus Data Tahun Ajaran",

@@ -4,7 +4,7 @@ $cur_ket_unor = $this->session->userdata('ket_unor');
 switch ($type) {
   case 'add': {
 ?>
-      <form id="form_add_usulan_profil_sekolah" action="<?= site_url('pdt_profil_sekolah/save') ?>" method="POST" enctype="multipart/form-data">
+      <form id="form_add_data_tahun_ajaran" action="<?= site_url('pdt_tahun_ajaran/save') ?>" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="type" value="<?= $type ?>">
 
         <div class="modal-header d-flex align-items-center">
@@ -20,7 +20,7 @@ switch ($type) {
               <div class="input_block">
                 <label for="tingkat">Tingkat</label>
                 <select name="tingkat" id="tingkat" class="form-select">
-                  <option value="" default hidden>- Pilih Tingkat Sekolah -</option>
+                  <option value="" default>- Pilih Tingkat Sekolah -</option>
                   <option value="TK">TK</option>
                   <option value="SD">SD</option>
                   <option value="SMP">SMP</option>
@@ -54,9 +54,6 @@ switch ($type) {
             ?>
 
             <div class="col-6">
-              <?php
-              $array_bulan = array_periode_bulan();
-              ?>
               <div class="input_block">
                 <label for="semester">Semester</label>
                 <select name="semester" id="semester" class="form-select">
@@ -98,7 +95,7 @@ switch ($type) {
           }
           ?>
 
-          $('#form_add_usulan_profil_sekolah').validate($.extend({
+          $('#form_add_data_tahun_ajaran').validate($.extend({
             submitHandler: function(form, event) {
               var submit = $('[type="submit"]');
               submit.attr('disabled', true);
@@ -151,7 +148,7 @@ switch ($type) {
 
   case 'update': {
     ?>
-      <form id="form_update_data_tahun_ajaran" action="<?= site_url('pdt_profil_sekolah/save') ?>" method="POST">
+      <form id="form_update_data_tahun_ajaran" action="<?= site_url('pdt_tahun_ajaran/save') ?>" method="POST">
         <input type="hidden" name="type" value="<?= $type ?>">
 
         <div class="modal-header d-flex align-items-center">
@@ -165,8 +162,14 @@ switch ($type) {
 
             <div class="col-12">
               <div class="input_block">
-                <label for="jenjang">Jenjang</label>
-                <div class="form-control"><?= check_var($data, 'jenjang', '-') ?></div>
+                <label for="tingkat">Tingkat</label>
+                <div class="form-control"><?= check_var($data, 'tingkat', '-') ?></div>
+                <select name="tingkat" id="tingkat" class="form-select">
+                  <option value="" default>- Pilih Tingkat Sekolah -</option>
+                  <option value="TK">TK</option>
+                  <option value="SD">SD</option>
+                  <option value="SMP">SMP</option>
+                </select>
               </div>
             </div>
 
@@ -179,26 +182,20 @@ switch ($type) {
             </div>
 
             <div class="col-6">
-              <?php
-              $array_bulan = array_periode_bulan();
-              ?>
               <div class="input_block">
-                <label for="periode_bln">Periode (Bulan)</label>
-                <select name="periode_bln" id="periode_bln" class="form-select">
-                  <option value="" default>- Bulan -</option>
-                  <?php
-                  foreach ($array_bulan as $key => $value) {
-                    $selected = (em_date('m') == $key) ? 'selected default' : '';
-                    echo '<option value="' .  $key . '" ' . $selected . '>' . $value . '</option>';
-                  }
-                  ?>
+                <label for="semester">Semester</label>
+                <select name="semester" id="semester" class="form-select">
+                  <option value="" default>- Semester -</option>
+                  <option value="1" default>I</option>
+                  <option value="2" default>II</option>
+                  <option value="3" default>III</option>
                 </select>
               </div>
             </div>
 
             <div class="col-6">
               <div class="input_block">
-                <label for="tahun_ajar">Periode (Tahun)</label>
+                <label for="tahun_ajar">Tahun Ajaran</label>
                 <input name="tahun_ajar" id="tahun_ajar" type="number" step="1" min="1" class="form-control" placeholder="- Tahun -" value="<?= em_date('Y') ?>">
               </div>
             </div>
@@ -271,7 +268,7 @@ switch ($type) {
   case 'delete': {
     ?>
       <form id="form_delete_data_tahun_ajar" action="<?= site_url('pdt_data_tahun_ajaran/delete') ?>" method="POST">
-        <input type="hidden" name="id_dokumen" value="<?= check_var($data, 'id_dokumen', '') ?>">
+        <input type="hidden" name="id_tahun_ajar" value="<?= check_var($data, 'id_tahun_ajar', '') ?>">
 
         <div class="modal-header d-flex align-items-center">
           <div>
@@ -291,26 +288,27 @@ switch ($type) {
                 <tr>
                   <td style="min-width: 150px;">Nama Sekolah</td>
                   <td style="min-width: 15px; text-align: center;">:</td>
-                  <td style="width: 100%;"><?= check_var($data, 'ket_ukerja', '-') ?></td>
+                  <td style="width: 100%;"><?= check_var($data, 'nama_sekolah', '-') ?></td>
                 </tr>
                 <tr>
-                  <td style="min-width: 150px;">Jenjang</td>
+                  <td style="min-width: 150px;">Tingkat</td>
                   <td style="min-width: 15px; text-align: center;">:</td>
-                  <td style="width: 100%;"><?= check_var($data, 'jenjang', '-') ?></td>
+                  <td style="width: 100%;"><?= check_var($data, 'tingkat', '-') ?></td>
                 </tr>
                 <tr>
-                  <td style="min-width: 150px;">Periode</td>
+                  <td style="min-width: 150px;">Jumlah Rombel</td>
                   <td style="min-width: 15px; text-align: center;">:</td>
-                  <td style="width: 100%;">
-                    <?= check_var($data, 'periode_bln', '-') . '/' .
-                      check_var($data, 'periode_thn', '-');
-                    ?>
-                  </td>
+                  <td style="width: 100%;"><?= check_var($data, 'jml_rombel', '-') ?></td>
                 </tr>
                 <tr>
-                  <td style="min-width: 150px;">Dibuat Pada</td>
+                  <td style="min-width: 150px;">Semester</td>
                   <td style="min-width: 15px; text-align: center;">:</td>
-                  <td style="width: 100%;"><?= em_date('j F Y, H:i:s', 'set', check_var($data, 'create_on', '')) ?></td>
+                  <td style="width: 100%;"><?= check_var($data, 'semester', '-') ?></td>
+                </tr>
+                <tr>
+                  <td style="min-width: 150px;">Tahun Ajar</td>
+                  <td style="min-width: 15px; text-align: center;">:</td>
+                  <td style="width: 100%;"><?= check_var($data, 'tahun_ajar', '-') ?></td>
                 </tr>
               </table>
             </div>
