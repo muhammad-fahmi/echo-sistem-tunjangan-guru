@@ -568,6 +568,106 @@ class Config extends MY_Controller
       ->set_output(json_encode($data));
   }
 
+  public function select2_jenjang()
+  {
+    // ambil data post
+    $search = $this->input->post('search');
+    // kondisi where
+    $where_search = ($search != '')
+      ? "AND (ket_sekolah LIKE '%$search%' 
+      OR id LIKE '%$search%')"
+      : "";
+    // query searching
+    $result = $this->db->query("SELECT * FROM m_jenjang WHERE id IS NOT NULL $where_search 
+      ORDER BY id DESC LIMIT 10")->result_array();
+    $data = array();
+    $index = 0;
+    if (isset_nn_nes($result)) {
+      foreach ($result as $r) {
+        $data[$index]['id'] = $r['id'];
+        $data[$index]['text'] = $r['id'] . ' - ' . trim($r['ket_sekolah']);
+
+        // additional param to send back
+        $data[$index]['id'] = $r['id'];
+        $data[$index]['ket_sekolah'] = trim($r['ket_sekolah']);
+
+        $index++;
+      }
+    } else {
+      $data = $result;
+    }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
+  public function select2_kelas()
+  {
+    // ambil data post
+    $search = $this->input->post('search');
+    // kondisi where
+    $where_search = ($search != '')
+      ? "AND (ket_kelas LIKE '%$search%' 
+      OR id_kelas LIKE '%$search%')"
+      : "";
+    // query searching
+    $result = $this->db->query("SELECT * FROM m_kelas WHERE id_kelas IS NOT NULL $where_search 
+      ORDER BY ket_kelas DESC LIMIT 10")->result_array();
+    $data = array();
+    $index = 0;
+    if (isset_nn_nes($result)) {
+      foreach ($result as $r) {
+        $data[$index]['id'] = $r['id_kelas'];
+        $data[$index]['text'] = trim($r['ket_kelas']);
+
+        // additional param to send back
+        $data[$index]['id_kelas'] = $r['id_kelas'];
+        $data[$index]['ket_kelas'] = trim($r['ket_kelas']);
+
+        $index++;
+      }
+    } else {
+      $data = $result;
+    }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
+  public function select2_rombel()
+  {
+    // ambil data post
+    $search = $this->input->post('search');
+    // kondisi where
+    $where_search = ($search != '')
+      ? "AND (nama_lengkap LIKE '%$search%' 
+      OR nip LIKE '%$search%')"
+      : "";
+    // query searching
+    $result = $this->db->query("SELECT * FROM v_pns WHERE nip IS NOT NULL $where_search 
+      ORDER BY kode_eselon DESC LIMIT 10")->result_array();
+    $data = array();
+    $index = 0;
+    if (isset_nn_nes($result)) {
+      foreach ($result as $r) {
+        $data[$index]['id'] = $r['nip'];
+        $data[$index]['text'] = $r['nip'] . ' - ' . trim($r['nama_lengkap']);
+
+        // additional param to send back
+        $data[$index]['nip'] = $r['nip'];
+        $data[$index]['nama_lengkap'] = trim($r['nama_lengkap']);
+        $data[$index]['kode_gol'] = $r['kode_gol'];
+
+        $index++;
+      }
+    } else {
+      $data = $result;
+    }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
   public function select2_status_sekolah()
   {
     // ambil data post
