@@ -1135,6 +1135,29 @@ function output_json($response_array, $status_code = 200)
     ->set_output(json_encode($response_array));
 }
 
+function output_error($message)
+{
+  echo '<style>';
+  echo 'body{
+      background-color: #343434;
+      color: #EFEFEF;
+      font-family: sans-serif;
+    }';
+  echo '.container{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      width: calc(100vw - 25px);
+      height: calc(100vh - 25px);
+      overflow: hidden;
+    }';
+  echo '</style>';
+
+  echo '<div class="container"><h3>' . $message . '</h3></div>';
+}
+
 /**
  * Mencatat aktivitas log dengan menggunakan sesi CodeIgniter.
  *

@@ -880,4 +880,15 @@ class Mdl_pdt_profil_kepsek extends CI_Model
       'data' => $data
     ];
   }
+
+  public function get_riwayat_kepala_sekolah($nip = '0000')
+  {
+    $nip = sanitize_string($nip);
+    $dataset = $this->db->from('vr_profil_kepsek')
+      ->where(['nip' => $nip, 'status_dokumen' => 'DITRM'])
+      ->order_by('masa_penugasan_selesai', 'ASC')
+      ->get()->result_array();
+
+    return $dataset;
+  }
 }
