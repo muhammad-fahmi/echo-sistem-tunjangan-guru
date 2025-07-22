@@ -3,6 +3,7 @@
 use PhpOffice\PhpSpreadsheet\Worksheet\MemoryDrawing;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Shared\Drawing as DrawingHelper;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 
 class Pdt_profil_kepsek extends MY_Controller
 {
@@ -209,58 +210,126 @@ class Pdt_profil_kepsek extends MY_Controller
       $imgUrl = "http://36.66.236.83/simpeg/foto/" . check_var($data_kepsek, 'nip', '0000') . ".jpg";
       $this->insert_image_to_spreadsheet($sheet, $imgUrl, 'A3', 'A14');
 
-      $sheet->setCellValue("D3", check_var($data_kepsek, 'nama', ''));
-      $sheet->setCellValue("F3", check_var($data_kepsek, 'gelar_dpn', ''));
-      $sheet->setCellValue("H3", check_var($data_kepsek, 'gelar_blk', ''));
+      $use_new_logic = true;
 
-      $sheet->setCellValue("D4", check_var($data_kepsek, 'nip', ''));
-      $sheet->setCellValue("D5", check_var($data_kepsek, 'nuptr', ''));
-      $sheet->setCellValue("D6", check_var($data_kepsek, 'nurs', ''));
-      $sheet->setCellValue("D7", check_var($data_kepsek, 'nrg', ''));
-      $sheet->setCellValue("D8", check_var($data_kepsek, 'nik', ''));
-      $sheet->setCellValue("D9", em_date('j F Y', 'set', check_var($data_kepsek, 'tgl_lahir', '')));
-      $sheet->setCellValue("D10", check_var($data_kepsek, 'ket_jenis_kelamin', ''));
-      $sheet->setCellValue("D11", check_var($data_kepsek, 'alamat_saat_ini', ''));
-      $sheet->setCellValue("D12", check_var($data_kepsek, 'ket_status_pernikahan', ''));
-      $sheet->setCellValue("D13", check_var($data_kepsek, 'pendidikan', ''));
-      $sheet->setCellValue("D14", check_var($data_kepsek, 'no_sertifikat_pendidik', ''));
-      $sheet->setCellValue("D15", check_var($data_kepsek, 'no_sertifikat_gp', ''));
-      $sheet->setCellValue("D16", check_var($data_kepsek, 'no_sertifikat_crs', ''));
-      $sheet->setCellValue("D17", check_var($data_kepsek, 'no_rek_bank', ''));
-      $sheet->setCellValue("D18", check_var($data_kepsek, 'nama_rek_bank', ''));
-      $sheet->setCellValue("D19", check_var($data_kepsek, 'nama_bank', ''));
-      $sheet->setCellValue("D20", check_var($data_kepsek, 'npwp', ''));
-      $sheet->setCellValue("D21", check_var($data_kepsek, 'menerima_ttp_insentif', ''));
-      $sheet->setCellValue("D22", check_var($data_kepsek, 'pangkat_gol_ruang', ''));
-      $sheet->setCellValue("D23", check_var($data_kepsek, 'jenjang_jabatan', ''));
-      $sheet->setCellValue("D24", check_var($data_kepsek, 'ket_status', ''));
-      $sheet->setCellValue("D25", check_var($data_kepsek, 'email', ''));
-      $sheet->setCellValue("D26", check_var($data_kepsek, 'no_hp', ''));
-      $sheet->setCellValue("D27", check_var($data_kepsek, 'ket_agama', ''));
-      $sheet->setCellValue("D28", check_var($data_kepsek, 'periode_ke', ''));
+      if (!$use_new_logic) {
+        // DEFAULT SET CELL VALUE
+        $sheet->setCellValue("D3", check_var($data_kepsek, 'nama', ''));
+        $sheet->setCellValue("F3", check_var($data_kepsek, 'gelar_dpn', ''));
+        $sheet->setCellValue("H3", check_var($data_kepsek, 'gelar_blk', ''));
 
-      $mpm = em_date('j F Y', 'set', check_var($data_kepsek, 'masa_penugasan_mulai', ''));
-      $mps = em_date('j F Y', 'set', check_var($data_kepsek, 'masa_penugasan_selesai', ''));
-      $dates = $mpm . ' s/d ' . $mps;
-      $sheet->setCellValue("D29", $dates);
+        $sheet->setCellValue("D4", check_var($data_kepsek, 'nip', ''));
+        $sheet->setCellValue("D5", check_var($data_kepsek, 'nuptr', ''));
+        $sheet->setCellValue("D6", check_var($data_kepsek, 'nurs', ''));
+        $sheet->setCellValue("D7", check_var($data_kepsek, 'nrg', ''));
+        $sheet->setCellValue("D8", check_var($data_kepsek, 'nik', ''));
+        $sheet->setCellValue("D9", em_date('j F Y', 'set', check_var($data_kepsek, 'tgl_lahir', '')));
+        $sheet->setCellValue("D10", check_var($data_kepsek, 'ket_jenis_kelamin', ''));
+        $sheet->setCellValue("D11", check_var($data_kepsek, 'alamat_saat_ini', ''));
+        $sheet->setCellValue("D12", check_var($data_kepsek, 'ket_status_pernikahan', ''));
+        $sheet->setCellValue("D13", check_var($data_kepsek, 'pendidikan', ''));
+        $sheet->setCellValue("D14", check_var($data_kepsek, 'no_sertifikat_pendidik', ''));
+        $sheet->setCellValue("D15", check_var($data_kepsek, 'no_sertifikat_gp', ''));
+        $sheet->setCellValue("D16", check_var($data_kepsek, 'no_sertifikat_crs', ''));
+        $sheet->setCellValue("D17", check_var($data_kepsek, 'no_rek_bank', ''));
+        $sheet->setCellValue("D18", check_var($data_kepsek, 'nama_rek_bank', ''));
+        $sheet->setCellValue("D19", check_var($data_kepsek, 'nama_bank', ''));
+        $sheet->setCellValue("D20", check_var($data_kepsek, 'npwp', ''));
+        $sheet->setCellValue("D21", check_var($data_kepsek, 'menerima_ttp_insentif', ''));
+        $sheet->setCellValue("D22", check_var($data_kepsek, 'pangkat_gol_ruang', ''));
+        $sheet->setCellValue("D23", check_var($data_kepsek, 'jenjang_jabatan', ''));
+        $sheet->setCellValue("D24", check_var($data_kepsek, 'ket_status', ''));
+        $sheet->setCellValue("D25", check_var($data_kepsek, 'email', ''));
+        $sheet->setCellValue("D26", check_var($data_kepsek, 'no_hp', ''));
+        $sheet->setCellValue("D27", check_var($data_kepsek, 'ket_agama', ''));
+        $sheet->setCellValue("D28", check_var($data_kepsek, 'periode_ke', ''));
 
-      $startRow = 6;
-      $styledRow = 6;
-      $num = 1;
-      foreach ($data_riwayat as $riwayat) {
-        if ($startRow > $styledRow) {
-          foreach (range('J', 'P') as $col) {
-            $style = $sheet->getStyle("{$col}{$styledRow}");
-            $sheet->duplicateStyle($style, "{$col}{$startRow}");
+        $mpm = em_date('j F Y', 'set', check_var($data_kepsek, 'masa_penugasan_mulai', ''));
+        $mps = em_date('j F Y', 'set', check_var($data_kepsek, 'masa_penugasan_selesai', ''));
+        $dates = $mpm . ' s/d ' . $mps;
+        $sheet->setCellValue("D29", $dates);
+
+        $startRow = 6;
+        $styledRow = 6;
+        $num = 1;
+        foreach ($data_riwayat as $riwayat) {
+          if ($startRow > $styledRow) {
+            foreach (range('J', 'P') as $col) {
+              $style = $sheet->getStyle("{$col}{$styledRow}");
+              $sheet->duplicateStyle($style, "{$col}{$startRow}");
+            }
           }
-        }
 
-        $sheet->setCellValue("J{$startRow}", $num);
-        $sheet->setCellValue("K{$startRow}", $riwayat['ket_ukerja']);
-        $sheet->setCellValue("L{$startRow}", em_date('j F Y', 'set', $riwayat['masa_penugasan_mulai']));
-        $sheet->setCellValue("M{$startRow}", em_date('j F Y', 'set', $riwayat['masa_penugasan_selesai']));
-        $startRow++;
-        $num++;
+          $sheet->setCellValue("J{$startRow}", $num);
+          $sheet->setCellValue("K{$startRow}", $riwayat['ket_ukerja']);
+          $sheet->setCellValue("L{$startRow}", em_date('j F Y', 'set', $riwayat['masa_penugasan_mulai']));
+          $sheet->setCellValue("M{$startRow}", em_date('j F Y', 'set', $riwayat['masa_penugasan_selesai']));
+          $startRow++;
+          $num++;
+        }
+      } else {
+        // CUSTOM SET CELL VALUE (OVEERIDE STRING TYPE)
+        setStrCellValue($sheet, 'D3', check_var($data_kepsek, 'nama', ''));
+        setStrCellValue($sheet, 'F3', check_var($data_kepsek, 'gelar_dpn', ''));
+        setStrCellValue($sheet, 'H3', check_var($data_kepsek, 'gelar_blk', ''));
+
+        setStrCellValue($sheet, 'D4', check_var($data_kepsek, 'nip', ''));
+        setStrCellValue($sheet, 'D5', check_var($data_kepsek, 'nuptr', ''));
+        setStrCellValue($sheet, 'D6', check_var($data_kepsek, 'nurs', ''));
+        setStrCellValue($sheet, 'D7', check_var($data_kepsek, 'nrg', ''));
+        setStrCellValue($sheet, 'D8', check_var($data_kepsek, 'nik', ''));
+        setStrCellValue($sheet, 'D9', em_date('j F Y', 'set', check_var($data_kepsek, 'tgl_lahir', '')));
+        setStrCellValue($sheet, 'D10', check_var($data_kepsek, 'ket_jenis_kelamin', ''));
+        setStrCellValue($sheet, 'D11', check_var($data_kepsek, 'alamat_saat_ini', ''));
+        setStrCellValue($sheet, 'D12', check_var($data_kepsek, 'ket_status_pernikahan', ''));
+        setStrCellValue($sheet, 'D13', check_var($data_kepsek, 'pendidikan', ''));
+        setStrCellValue($sheet, 'D14', check_var($data_kepsek, 'no_sertifikat_pendidik', ''));
+        setStrCellValue($sheet, 'D15', check_var($data_kepsek, 'no_sertifikat_gp', ''));
+        setStrCellValue($sheet, 'D16', check_var($data_kepsek, 'no_sertifikat_crs', ''));
+        setStrCellValue($sheet, 'D17', check_var($data_kepsek, 'no_rek_bank', ''));
+        setStrCellValue($sheet, 'D18', check_var($data_kepsek, 'nama_rek_bank', ''));
+        setStrCellValue($sheet, 'D19', check_var($data_kepsek, 'nama_bank', ''));
+        setStrCellValue($sheet, 'D20', check_var($data_kepsek, 'npwp', ''));
+        setStrCellValue($sheet, 'D21', check_var($data_kepsek, 'menerima_ttp_insentif', ''));
+        setStrCellValue($sheet, 'D22', check_var($data_kepsek, 'pangkat_gol_ruang', ''));
+        setStrCellValue($sheet, 'D23', check_var($data_kepsek, 'jenjang_jabatan', ''));
+        setStrCellValue($sheet, 'D24', check_var($data_kepsek, 'ket_status', ''));
+        setStrCellValue($sheet, 'D25', check_var($data_kepsek, 'email', ''));
+        setStrCellValue($sheet, 'D26', check_var($data_kepsek, 'no_hp', ''));
+        setStrCellValue($sheet, 'D27', check_var($data_kepsek, 'ket_agama', ''));
+        setStrCellValue($sheet, 'D28', check_var($data_kepsek, 'periode_ke', ''));
+
+        $mpm = em_date('j F Y', 'set', check_var($data_kepsek, 'masa_penugasan_mulai', ''));
+        $mps = em_date('j F Y', 'set', check_var($data_kepsek, 'masa_penugasan_selesai', ''));
+        $dates = $mpm . ' s/d ' . $mps;
+        setStrCellValue($sheet, 'D29', $dates);
+
+        $startRow = 6;
+        $styledRow = 6;
+        $num = 1;
+        foreach ($data_riwayat as $riwayat) {
+
+          // Store the base style for the row (entire J:P range)
+          $baseStyle = $sheet->getStyle("J{$styledRow}:P{$styledRow}");
+
+          if ($startRow > $styledRow) {
+            // Apply the style to the full row range in one go
+            $sheet->duplicateStyle($baseStyle, "J{$startRow}:P{$startRow}");
+          }
+
+          setStrCellValue($sheet, "J{$startRow}", $num);
+          setStrCellValue($sheet, "K{$startRow}", check_var($riwayat, 'ket_ukerja', ''));
+          $mpm = em_date('j F Y', 'set', check_var($riwayat, 'masa_penugasan_mulai', ''));
+          setStrCellValue($sheet, "L{$startRow}", $mpm);
+          $mps = em_date('j F Y', 'set', check_var($riwayat, 'masa_penugasan_selesai', ''));
+          setStrCellValue($sheet, "M{$startRow}", $mps);
+          setStrCellValue($sheet, "N{$startRow}", check_var($riwayat, 'no_sk_kepsek', ''));
+          setStrCellValue($sheet, "O{$startRow}", check_var($riwayat, 'tgl_sk_kepsek', ''));
+          setStrCellValue($sheet, "P{$startRow}", check_var($riwayat, 'ttd_sk_kepsek', ''));
+
+          $startRow++;
+          $num++;
+        }
       }
 
       header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -272,7 +341,7 @@ class Pdt_profil_kepsek extends MY_Controller
       exit;
     } catch (\Throwable $th) {
       $cm = sanitize_string($th->getMessage());
-      output_error("Maaf, terjadi kesalahan saat akan mencetak laporan.\n$cm");
+      return output_error("Maaf, terjadi kesalahan saat akan mencetak laporan.\n\n$cm");
     }
   }
 

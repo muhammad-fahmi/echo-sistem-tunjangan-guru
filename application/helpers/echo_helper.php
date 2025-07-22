@@ -1159,6 +1159,28 @@ function output_error($message)
 }
 
 /**
+ * Set cell value with protection against Excel auto-format (e.g., scientific notation or lost leading zeros).
+ *
+ * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $sheet
+ * @param string $cells     Cell reference like "D8"
+ * @param mixed  $data      The value to be written
+ *
+ * @return void
+ */
+function setStrCellValue($sheet, $cells, $data)
+{
+  $datatype = \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING;
+  $value = $data;
+  if ((is_numeric($value) && strlen($value) >= 15) ||
+    (is_string($value) && preg_match('/^0\d+$/', $value))
+  ) {
+    $sheet->setCellValueExplicit($cells, $value, $datatype);
+  } else {
+    $sheet->setCellValue($cells, $value);
+  }
+}
+
+/**
  * Mencatat aktivitas log dengan menggunakan sesi CodeIgniter.
  *
  * Fungsi ini mencatat aktivitas log dengan format kunci yang terdiri dari waktu mikro dan nama fungsi.
