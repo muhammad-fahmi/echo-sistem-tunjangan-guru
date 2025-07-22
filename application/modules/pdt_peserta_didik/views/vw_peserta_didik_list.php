@@ -23,43 +23,6 @@
   <!-- Start Page Content -->
   <!-- -------------------------------------------------------------- -->
   <!-- basic table -->
-  <!-- <div class="row">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-body">
-          <h4 class="card-title">Daftar Peserta Didik</h4>
-
-          <div class="table-responsive mt-4">
-
-            <div class="_loading loading_table_pd">
-              <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>
-            </div>
-
-            <table id="table_pd" class="table table-bordered table-hover fs-3" style="width:100%;">
-
-              <thead class="bg-info text-white">
-                <tr class="text-center">
-                  <th scope="col">#</th>
-                  <th scope="col">Peserta Didik</th>
-                  <th scope="col">Jenis Kelamin</th>
-                  <th scope="col">Sekolah</th>
-                  <th scope="col">Kelas</th>
-                  <th scope="col">Rombel</th>
-                  <th scope="col">Penyandang Disabilitas</th>
-                  <th scope="col">Aktif</th>
-                  <th scope="col">Aksi</th>
-                </tr>
-              </thead>
-
-              <tbody style="font-size: 11px;"></tbody>
-
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div> -->
-
   <div class="row">
     <div class="col-12">
       <div class="card">

@@ -142,7 +142,7 @@
                   <div class="col-12">
                     <div class="desc_block">
                       <label for="ket_jenis_kelamin">Jenis Kelamin</label>
-                      <div class="text_value"><?= check_var($data, 'ket_jenis_kelamin', '-') ?></div>
+                      <div class="text_value"><?= check_var($data, 'ket_jns_kelamin', '-') ?></div>
                     </div>
                   </div>
 
@@ -261,45 +261,7 @@
   /// | DOCUMENT READY
   /// |----------------------------------------
   $(document).ready(function() {
-    /// |----------------------------------------
-    /// | MAP FUNCTIONALITY
-    /// |----------------------------------------
-    // Default coordinates if no value is set
-    const defaultLat = <?= check_var($data, 'lat', ' -0.492215') ?>;
-    const defaultLng = <?= check_var($data, 'long', '117.1432875') ?>;
-
-    // Get initial coordinates
-    let lat = $('#lat').val() || defaultLat;
-    let lng = $('#long').val() || defaultLng;
-
-    // Init map
-    const map = L.map('map_location').setView([lat, lng], 17);
-
-    // STADIAMAPS
-    // L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
-    //   maxZoom: 20,
-    //   attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, © OpenMapTiles, © OpenStreetMap contributors'
-    // }).addTo(map);
-
-    // CARTO VOYAGER
-    // L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-    //   attribution: '&copy; <a href="https://carto.com/">CARTO</a> © OpenStreetMap contributors',
-    //   subdomains: 'abcd',
-    //   maxZoom: 20
-    // }).addTo(map);
-
-    // OPEN STREET MAP
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors',
-      maxZoom: 19
-    }).addTo(map);
-
-    // Marker
-    let marker = L.marker([lat, lng], {
-      draggable: false
-    }).addTo(map);
-
     // REQUEST RIWAYAT
-    request_riwayat();
+    // request_riwayat();
   });
 </script>
