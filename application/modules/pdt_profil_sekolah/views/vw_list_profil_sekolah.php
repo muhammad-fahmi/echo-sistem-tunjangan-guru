@@ -43,10 +43,9 @@ $cur_unor = $this->session->userdata('kode_unor');
     ?>
     <div class="col-12">
       <div class="card">
+        <div class="card-title">Daftar Profil Sekolah</div>
         <div class="card-body">
-          <h4 class="card-title mb-2">Daftar Profil Sekolah</h4>
-
-          <div class="table-responsive mt-4">
+          <div class="table-responsive">
             <div class="_loading loading_tabel_m_profil_sekolah">
               <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>
             </div>
@@ -98,17 +97,16 @@ $cur_unor = $this->session->userdata('kode_unor');
     ?>
     <div class="col-12">
       <div class="card">
-        <div class="card-body">
-          <h4 class="card-title space-between mb-2">
-            <div>Usulan Profil Sekolah</div>
-            <div>
-              <div class="btn btn-sm btn-success me-1" onclick="modal(`tambah_usulan_profil`)">
-                <i class="fas fa-plus-square me-2"></i>Tambah Profil Baru
-              </div>
+        <div class="card-title space-between">
+          <div>Usulan Profil Sekolah</div>
+          <div>
+            <div class="btn btn-sm btn-success me-1" onclick="modal(`tambah_usulan_profil`)">
+              <i class="fas fa-plus-square me-2"></i>Tambah Profil Baru
             </div>
-          </h4>
-
-          <div class="table-responsive mt-4">
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
             <div class="_loading loading_tabel_r_profil_sekolah">
               <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>
             </div>

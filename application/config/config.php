@@ -535,8 +535,9 @@ $config['modules_locations'] = array(
 /// |----------------------------------------------------------------------
 /// | PROJECT CONFIG
 /// |----------------------------------------------------------------------
-$config['upload_path'] = $_SERVER['DOCUMENT_ROOT'] . '/progurinda/upload/';
-$config['efile_path'] = $_SERVER['DOCUMENT_ROOT'] . "/progurinda/";
+$config['upload_path'] = $_SERVER['DOCUMENT_ROOT'] . '/progurinda-files/upload/';
+$config['template_path'] = $_SERVER['DOCUMENT_ROOT'] . '/progurinda-files/template/';
+$config['efile_path'] = $_SERVER['DOCUMENT_ROOT'] . '/progurinda-files/efile/';
 
 /// |----------------------------------------------------------------------
 /// | SERVER CONFIG

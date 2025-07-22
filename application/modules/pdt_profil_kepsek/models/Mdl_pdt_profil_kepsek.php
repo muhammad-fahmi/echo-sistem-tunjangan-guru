@@ -114,8 +114,9 @@ class Mdl_pdt_profil_kepsek extends CI_Model
         ? '<span onclick="modal(`update_existing_profil`, `' . $row['id_kepsek'] . '`)" class="clickable text-white badge bg-warning"><i class="fas fa-sync me-1"></i>Update</span>'
         : '';
       $tombol_detail = '<a href="' . site_url('pdt_profil_kepsek/detail_master/' . $row['id_kepsek']) . '" class="clickable text-white badge bg-secondary"><i class="fas fa-file me-1"></i>Detail</a>';
+      $tombol_cetak = '<a target="_blank" href="' . site_url('pdt_profil_kepsek/cetak/' . $row['nip']) . '" class="clickable text-white badge bg-primary"><i class="fas fa-print me-1"></i>Cetak</a>';
       $row['aksi_display'] = '<div class="d-grid gap-1">' .
-        $tombol_update . $tombol_detail .
+        $tombol_update . $tombol_detail . $tombol_cetak .
         '</div>';
 
       $data_result[] = $row;
@@ -879,5 +880,16 @@ class Mdl_pdt_profil_kepsek extends CI_Model
       'message' => 'DEBUG MDL : delete_profil_kepsek',
       'data' => $data
     ];
+  }
+
+  public function get_riwayat_kepala_sekolah($nip = '0000')
+  {
+    $nip = sanitize_string($nip);
+    $dataset = $this->db->from('vr_profil_kepsek')
+      ->where(['nip' => $nip, 'status_dokumen' => 'DITRM'])
+      ->order_by('masa_penugasan_selesai', 'ASC')
+      ->get()->result_array();
+
+    return $dataset;
   }
 }

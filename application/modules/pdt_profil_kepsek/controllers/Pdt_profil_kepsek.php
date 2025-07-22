@@ -1,5 +1,10 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
+use PhpOffice\PhpSpreadsheet\Worksheet\MemoryDrawing;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\Shared\Drawing as DrawingHelper;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+
 class Pdt_profil_kepsek extends MY_Controller
 {
   /// |----------------------------------------------------------------------
@@ -23,6 +28,72 @@ class Pdt_profil_kepsek extends MY_Controller
   /// |----------------------------------------------------------------------
   /// | >> PRIVATE FUNCTION
   /// |----------------------------------------------------------------------
+  private function insert_image_to_spreadsheet($sheet, $imageUrl, $startCell, $endCell)
+  {
+    // Step 1: Check if URL is a valid image
+    $headers = @get_headers($imageUrl, 1);
+    if (!$headers || strpos($headers[0], '200') === false) return;
+
+    $contentType = $headers['Content-Type'] ?? '';
+    if (is_array($contentType)) $contentType = $contentType[0];
+    if (strpos($contentType, 'image/') !== 0) return;
+
+    // Step 2: Download image to a temp file
+    $imgData = @file_get_contents($imageUrl);
+    if (!$imgData) return;
+
+    $ext = pathinfo(parse_url($imageUrl, PHP_URL_PATH), PATHINFO_EXTENSION);
+    if (!in_array(strtolower($ext), ['png', 'jpg', 'jpeg', 'gif'])) return;
+
+    $tempFolderPath = $this->config->item('template_path') . 'temp/';
+    if (!is_dir($tempFolderPath)) mkdir($tempFolderPath, 0755, true);
+    $tmpFile = $tempFolderPath . 'temp_img.' . $ext;
+    file_put_contents($tmpFile, $imgData);
+
+    // Step 3: Get merged cell size
+    [$startColLetter, $startRow] = Coordinate::coordinateFromString($startCell);
+    [$endColLetter, $endRow] = Coordinate::coordinateFromString($endCell);
+    $startCol = Coordinate::columnIndexFromString($startColLetter);
+    $endCol = Coordinate::columnIndexFromString($endColLetter);
+    $defaultFont = $sheet->getParent()->getDefaultStyle()->getFont();
+
+    $totalWidth = 0;
+    for ($col = $startCol; $col <= $endCol; $col++) {
+      $colLetter = Coordinate::stringFromColumnIndex($col);
+      $totalWidth += $sheet->getColumnDimension($colLetter)->getWidth();
+    }
+    $totalWidthPx = DrawingHelper::cellDimensionToPixels($totalWidth, $defaultFont);
+
+    $totalHeight = 0;
+    for ($row = $startRow; $row <= $endRow; $row++) {
+      $totalHeight += $sheet->getRowDimension($row)->getRowHeight() ?: 15; // default row height
+    }
+    $totalHeightPx = DrawingHelper::cellDimensionToPixels($totalHeight, $defaultFont);
+
+    // Step 4: Get original image size & scale proportionally
+    [$imgWidth, $imgHeight] = getimagesize($tmpFile);
+    $scale = min($totalWidthPx / $imgWidth, $totalHeightPx / $imgHeight);
+
+    $resizedWidth = (int) round($imgWidth * $scale);
+
+    $offsetX = ($totalWidthPx - $resizedWidth) / 2;
+
+    // Step 5: Insert image
+    $drawing = new MemoryDrawing();
+    $drawing->setRenderingFunction(MemoryDrawing::RENDERING_PNG);
+    $drawing->setMimeType(MemoryDrawing::MIMETYPE_PNG);
+    $imageResource = imagecreatefromstring($imgData);
+    $drawing->setImageResource($imageResource);
+    $drawing->setMimeType("image/{$ext}");
+
+    $drawing->setCoordinates($startCell);
+    $drawing->setResizeProportional(true);
+    $drawing->setWidth($resizedWidth);
+    $drawing->setOffsetX($offsetX);
+    $drawing->setWorksheet($sheet);
+
+    unlink($tmpFile);
+  }
 
   /// |----------------------------------------------------------------------
   /// | >> PAGE LOAD FUNCTION
@@ -116,6 +187,162 @@ class Pdt_profil_kepsek extends MY_Controller
       'data' => $dataset
     );
     echo Modules::run('layout/backend', $data);
+  }
+
+  public function cetak($nip)
+  {
+    $nip = sanitize_string($nip);
+
+    $data_kepsek = fetch_row_data('vm_profil_kepsek', [
+      'nip' => $nip
+    ], false);
+    if (!$data_kepsek) return output_error('Maaf, data Kepala Seolah tidak valid.');
+
+    $data_riwayat = $this->mdl_profkepsek->get_riwayat_kepala_sekolah($nip);
+
+    try {
+      $template_file = $this->config->item('template_path') . 'laporan_kepsek.xlsx';
+      if (!file_exists($template_file)) return output_error('Maaf, file template untuk cetak laporan Kepala Sekolah tidak ditemukan.');
+
+      $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($template_file);
+      $sheet = $spreadsheet->getActiveSheet();
+
+      $imgUrl = "http://36.66.236.83/simpeg/foto/" . check_var($data_kepsek, 'nip', '0000') . ".jpg";
+      $this->insert_image_to_spreadsheet($sheet, $imgUrl, 'A3', 'A14');
+
+      $use_new_logic = true;
+
+      if (!$use_new_logic) {
+        // DEFAULT SET CELL VALUE
+        $sheet->setCellValue("D3", check_var($data_kepsek, 'nama', ''));
+        $sheet->setCellValue("F3", check_var($data_kepsek, 'gelar_dpn', ''));
+        $sheet->setCellValue("H3", check_var($data_kepsek, 'gelar_blk', ''));
+
+        $sheet->setCellValue("D4", check_var($data_kepsek, 'nip', ''));
+        $sheet->setCellValue("D5", check_var($data_kepsek, 'nuptr', ''));
+        $sheet->setCellValue("D6", check_var($data_kepsek, 'nurs', ''));
+        $sheet->setCellValue("D7", check_var($data_kepsek, 'nrg', ''));
+        $sheet->setCellValue("D8", check_var($data_kepsek, 'nik', ''));
+        $sheet->setCellValue("D9", em_date('j F Y', 'set', check_var($data_kepsek, 'tgl_lahir', '')));
+        $sheet->setCellValue("D10", check_var($data_kepsek, 'ket_jenis_kelamin', ''));
+        $sheet->setCellValue("D11", check_var($data_kepsek, 'alamat_saat_ini', ''));
+        $sheet->setCellValue("D12", check_var($data_kepsek, 'ket_status_pernikahan', ''));
+        $sheet->setCellValue("D13", check_var($data_kepsek, 'pendidikan', ''));
+        $sheet->setCellValue("D14", check_var($data_kepsek, 'no_sertifikat_pendidik', ''));
+        $sheet->setCellValue("D15", check_var($data_kepsek, 'no_sertifikat_gp', ''));
+        $sheet->setCellValue("D16", check_var($data_kepsek, 'no_sertifikat_crs', ''));
+        $sheet->setCellValue("D17", check_var($data_kepsek, 'no_rek_bank', ''));
+        $sheet->setCellValue("D18", check_var($data_kepsek, 'nama_rek_bank', ''));
+        $sheet->setCellValue("D19", check_var($data_kepsek, 'nama_bank', ''));
+        $sheet->setCellValue("D20", check_var($data_kepsek, 'npwp', ''));
+        $sheet->setCellValue("D21", check_var($data_kepsek, 'menerima_ttp_insentif', ''));
+        $sheet->setCellValue("D22", check_var($data_kepsek, 'pangkat_gol_ruang', ''));
+        $sheet->setCellValue("D23", check_var($data_kepsek, 'jenjang_jabatan', ''));
+        $sheet->setCellValue("D24", check_var($data_kepsek, 'ket_status', ''));
+        $sheet->setCellValue("D25", check_var($data_kepsek, 'email', ''));
+        $sheet->setCellValue("D26", check_var($data_kepsek, 'no_hp', ''));
+        $sheet->setCellValue("D27", check_var($data_kepsek, 'ket_agama', ''));
+        $sheet->setCellValue("D28", check_var($data_kepsek, 'periode_ke', ''));
+
+        $mpm = em_date('j F Y', 'set', check_var($data_kepsek, 'masa_penugasan_mulai', ''));
+        $mps = em_date('j F Y', 'set', check_var($data_kepsek, 'masa_penugasan_selesai', ''));
+        $dates = $mpm . ' s/d ' . $mps;
+        $sheet->setCellValue("D29", $dates);
+
+        $startRow = 6;
+        $styledRow = 6;
+        $num = 1;
+        foreach ($data_riwayat as $riwayat) {
+          if ($startRow > $styledRow) {
+            foreach (range('J', 'P') as $col) {
+              $style = $sheet->getStyle("{$col}{$styledRow}");
+              $sheet->duplicateStyle($style, "{$col}{$startRow}");
+            }
+          }
+
+          $sheet->setCellValue("J{$startRow}", $num);
+          $sheet->setCellValue("K{$startRow}", $riwayat['ket_ukerja']);
+          $sheet->setCellValue("L{$startRow}", em_date('j F Y', 'set', $riwayat['masa_penugasan_mulai']));
+          $sheet->setCellValue("M{$startRow}", em_date('j F Y', 'set', $riwayat['masa_penugasan_selesai']));
+          $startRow++;
+          $num++;
+        }
+      } else {
+        // CUSTOM SET CELL VALUE (OVEERIDE STRING TYPE)
+        setStrCellValue($sheet, 'D3', check_var($data_kepsek, 'nama', ''));
+        setStrCellValue($sheet, 'F3', check_var($data_kepsek, 'gelar_dpn', ''));
+        setStrCellValue($sheet, 'H3', check_var($data_kepsek, 'gelar_blk', ''));
+
+        setStrCellValue($sheet, 'D4', check_var($data_kepsek, 'nip', ''));
+        setStrCellValue($sheet, 'D5', check_var($data_kepsek, 'nuptr', ''));
+        setStrCellValue($sheet, 'D6', check_var($data_kepsek, 'nurs', ''));
+        setStrCellValue($sheet, 'D7', check_var($data_kepsek, 'nrg', ''));
+        setStrCellValue($sheet, 'D8', check_var($data_kepsek, 'nik', ''));
+        setStrCellValue($sheet, 'D9', em_date('j F Y', 'set', check_var($data_kepsek, 'tgl_lahir', '')));
+        setStrCellValue($sheet, 'D10', check_var($data_kepsek, 'ket_jenis_kelamin', ''));
+        setStrCellValue($sheet, 'D11', check_var($data_kepsek, 'alamat_saat_ini', ''));
+        setStrCellValue($sheet, 'D12', check_var($data_kepsek, 'ket_status_pernikahan', ''));
+        setStrCellValue($sheet, 'D13', check_var($data_kepsek, 'pendidikan', ''));
+        setStrCellValue($sheet, 'D14', check_var($data_kepsek, 'no_sertifikat_pendidik', ''));
+        setStrCellValue($sheet, 'D15', check_var($data_kepsek, 'no_sertifikat_gp', ''));
+        setStrCellValue($sheet, 'D16', check_var($data_kepsek, 'no_sertifikat_crs', ''));
+        setStrCellValue($sheet, 'D17', check_var($data_kepsek, 'no_rek_bank', ''));
+        setStrCellValue($sheet, 'D18', check_var($data_kepsek, 'nama_rek_bank', ''));
+        setStrCellValue($sheet, 'D19', check_var($data_kepsek, 'nama_bank', ''));
+        setStrCellValue($sheet, 'D20', check_var($data_kepsek, 'npwp', ''));
+        setStrCellValue($sheet, 'D21', check_var($data_kepsek, 'menerima_ttp_insentif', ''));
+        setStrCellValue($sheet, 'D22', check_var($data_kepsek, 'pangkat_gol_ruang', ''));
+        setStrCellValue($sheet, 'D23', check_var($data_kepsek, 'jenjang_jabatan', ''));
+        setStrCellValue($sheet, 'D24', check_var($data_kepsek, 'ket_status', ''));
+        setStrCellValue($sheet, 'D25', check_var($data_kepsek, 'email', ''));
+        setStrCellValue($sheet, 'D26', check_var($data_kepsek, 'no_hp', ''));
+        setStrCellValue($sheet, 'D27', check_var($data_kepsek, 'ket_agama', ''));
+        setStrCellValue($sheet, 'D28', check_var($data_kepsek, 'periode_ke', ''));
+
+        $mpm = em_date('j F Y', 'set', check_var($data_kepsek, 'masa_penugasan_mulai', ''));
+        $mps = em_date('j F Y', 'set', check_var($data_kepsek, 'masa_penugasan_selesai', ''));
+        $dates = $mpm . ' s/d ' . $mps;
+        setStrCellValue($sheet, 'D29', $dates);
+
+        $startRow = 6;
+        $styledRow = 6;
+        $num = 1;
+        foreach ($data_riwayat as $riwayat) {
+
+          // Store the base style for the row (entire J:P range)
+          $baseStyle = $sheet->getStyle("J{$styledRow}:P{$styledRow}");
+
+          if ($startRow > $styledRow) {
+            // Apply the style to the full row range in one go
+            $sheet->duplicateStyle($baseStyle, "J{$startRow}:P{$startRow}");
+          }
+
+          setStrCellValue($sheet, "J{$startRow}", $num);
+          setStrCellValue($sheet, "K{$startRow}", check_var($riwayat, 'ket_ukerja', ''));
+          $mpm = em_date('j F Y', 'set', check_var($riwayat, 'masa_penugasan_mulai', ''));
+          setStrCellValue($sheet, "L{$startRow}", $mpm);
+          $mps = em_date('j F Y', 'set', check_var($riwayat, 'masa_penugasan_selesai', ''));
+          setStrCellValue($sheet, "M{$startRow}", $mps);
+          setStrCellValue($sheet, "N{$startRow}", check_var($riwayat, 'no_sk_kepsek', ''));
+          setStrCellValue($sheet, "O{$startRow}", check_var($riwayat, 'tgl_sk_kepsek', ''));
+          setStrCellValue($sheet, "P{$startRow}", check_var($riwayat, 'ttd_sk_kepsek', ''));
+
+          $startRow++;
+          $num++;
+        }
+      }
+
+      header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      header('Content-Disposition: attachment;filename="Cetak Laporan Kepala Sekolah.xlsx"');
+      header('Cache-Control: max-age=0');
+
+      $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+      $writer->save('php://output');
+      exit;
+    } catch (\Throwable $th) {
+      $cm = sanitize_string($th->getMessage());
+      return output_error("Maaf, terjadi kesalahan saat akan mencetak laporan.\n\n$cm");
+    }
   }
 
   /// |----------------------------------------------------------------------

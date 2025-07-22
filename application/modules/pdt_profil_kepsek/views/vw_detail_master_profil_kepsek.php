@@ -46,7 +46,11 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
         <div class="card-body">
           <h4 class="card-title space-between mb-3">
             <div><i class="fas fa-user me-2"></i>Profil Kepala Sekolah</div>
-            <div></div>
+            <div>
+              <a target="_blank" href="<?= site_url('pdt_profil_kepsek/cetak/' . check_var($data, 'nip', '0000')) ?>" class="btn btn-sm btn-primary">
+                <i class="fas fa-print me-1"></i>Cetak Laporan
+              </a>
+            </div>
           </h4>
 
           <div class="row g-2">

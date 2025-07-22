@@ -44,7 +44,6 @@
           <div class="card-body">
             <h4 class="card-title space-between mb-3">
               <div><i class="fas fa-building me-2"></i>Profil Sekolah</div>
-              <div></div>
             </h4>
 
             <div class="row g-2">

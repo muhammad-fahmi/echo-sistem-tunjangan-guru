@@ -34,8 +34,8 @@ class Mdl_ganti_password extends CI_Model
     // lakukan filtering data
     // deklarasi where condition
     $where_search = (isset_nn_nes($data['search']))
-      ? "AND (username LIKE '%$data[search]%' 
-      OR nama_lengkap LIKE '%$data[search]%'
+      ? "AND (id_user LIKE '%$data[search]%' 
+      OR username LIKE '%$data[search]%'
       OR kewenangan LIKE '%$data[search]%'
       OR no_hp LIKE '%$data[search]%'
       )"
@@ -62,10 +62,10 @@ class Mdl_ganti_password extends CI_Model
       /// | PENATAAN DATA SEBELUM DIMASUKKAN KE DALAM RESULT_ARRAY
       /// |----------------------------------------------------------------------
       $data_result[$index]['no'] = $no;
-      $data_result[$index]['username'] = $row->username;
-      $data_result[$index]['nama_lengkap'] = $row->nama_lengkap;
+      $data_result[$index]['id_user'] = $row->username;
+      $data_result[$index]['username'] = $row->nama_lengkap;
       $data_result[$index]['kewenangan'] = $row->ket_kewenangan;
-      $data_result[$index]['ket_ukerja'] = $row->ket_ukerja; //tambah keterangan unit kerja
+      $data_result[$index]['kode_unor'] = $row->ket_ukerja; //tambah keterangan unit kerja
       $data_result[$index]['no_hp'] = $row->no_hp;
       $data_result[$index]['tgl_daftar'] = $row->tgl_daftar;
       $data_result[$index]['aktif'] = $row->aktif;
@@ -88,8 +88,8 @@ class Mdl_ganti_password extends CI_Model
     $response = array();
 
     // Check apakah username sudah ada ..
-    $cek = $this->db->get_where('m_user', array(
-      'username' => $this->input->post('username')
+    $cek = $this->db->get_where('proguinda_m_user', array(
+      'id_user' => $this->input->post('username')
     ))->num_rows();
     if ($cek > 0 || $this->input->post('username') == 'system') {
       // Kalau sudah, kembalikan error message
@@ -98,11 +98,11 @@ class Mdl_ganti_password extends CI_Model
     } else {
       // Kalau belum, insert data
       $data = [
-        'username' => htmlspecialchars($this->input->post('username', TRUE)),
+        'id_user' => htmlspecialchars($this->input->post('username', TRUE)),
         'password' => encrypt_pwd($this->input->post('password')),
-        'nama_lengkap' => $this->input->post('nama_lengkap'),
+        'username' => $this->input->post('nama_lengkap'),
         'kewenangan' => $this->input->post('kewenangan'),
-        'kode_ukerja' => $this->input->post('kode_ukerja'),
+        'kode_unor' => $this->input->post('kode_ukerja'),
         'salt' => micin(),
         'no_hp' => $this->input->post('no_hp'),
         'tgl_daftar' => datetime_now(),
@@ -111,12 +111,12 @@ class Mdl_ganti_password extends CI_Model
 
       $this->db->trans_start();
       // do your db process here
-      $this->db->insert('m_user', $data);
+      $this->db->insert('progruinda_m_user', $data);
       log_generator(
         $this->session->userdata('username'),
-        '|m_user|',
-        '|' . $data['username'] . '|',
-        'Melakukan penambahan data pada user admin dengan nama ' . $data['nama_lengkap'] . '.'
+        '|progurinda_m_user|',
+        '|' . $data['id_user'] . '|',
+        'Melakukan penambahan data pada user admin dengan nama ' . $data['id_user'] . '.'
       );
       $this->db->trans_complete();
       if ($this->db->trans_status() === FALSE) {
@@ -139,9 +139,9 @@ class Mdl_ganti_password extends CI_Model
     $response = array();
 
     //Cek jika ada username sebelum edit
-    $cek_user = $this->db->get_where('m_user', array(
-      'username' => $this->input->post('username'),
-      'username <>' => $username_lama
+    $cek_user = $this->db->get_where('progurinda_m_user', array(
+      'id_user' => $this->input->post('username'),
+      'id_user <>' => $username_lama
     ))->num_rows();
 
     if ($cek_user > 0) {
@@ -165,10 +165,10 @@ class Mdl_ganti_password extends CI_Model
     } */
     $new_pass = $this->input->post('password2');
     $data = [
-      'username' => htmlspecialchars($this->input->post('username', TRUE)),
-      'nama_lengkap' => $this->input->post('nama_lengkap'),
+      'id_user' => htmlspecialchars($this->input->post('username', TRUE)),
+      'username' => $this->input->post('nama_lengkap'),
       'kewenangan' => $this->input->post('kewenangan'),
-      'kode_ukerja' => $this->input->post('kode_ukerja'),
+      'kode_unor' => $this->input->post('kode_ukerja'),
       'no_hp' => $this->input->post('no_hp'),
       'aktif' => $this->input->post('aktif') ? 'Y' : 'N'
     ];
@@ -178,12 +178,12 @@ class Mdl_ganti_password extends CI_Model
 
     $this->db->trans_start();
     // Proses query update ke database
-    $this->db->update('m_user', $data, array('username' => $username_lama));
+    $this->db->update('progurinda_m_user', $data, array('id_user' => $username_lama));
     log_generator(
-      $this->session->userdata('username'),
-      '|m_user|',
-      '|' . $data['username'] . '|',
-      'Mengupdate data pada user admin dengan nama ' . $data['nama_lengkap'] . '.'
+      $this->session->userdata('id_user'),
+      '|progurinda_m_user|',
+      '|' . $data['id_user'] . '|',
+      'Mengupdate data pada user admin dengan nama ' . $data['username'] . '.'
     );
     $this->db->trans_complete();
     if ($this->db->trans_status() === FALSE) {
@@ -204,16 +204,16 @@ class Mdl_ganti_password extends CI_Model
     $response = array();
 
     $this->db->trans_start();
-    $data = $this->db->get_where('m_user', "username = '$username'")->row_array();
+    $data = $this->db->get_where('progurinda_m_user', "id_user = '$username'")->row_array();
     // do your db process here
-    $this->db->delete('m_user', array(
-      'username' => $username
+    $this->db->delete('progurinda_m_user', array(
+      'id_user' => $username
     ));
     log_generator(
-      $this->session->userdata('username'),
-      '|m_user|',
+      $this->session->userdata('id_user'),
+      '|progurinda_m_user|',
       '|' . $username . '|',
-      'Melakukan penghapusan data pada user admin dengan nama ' . $data['nama_lengkap'] . '.'
+      'Melakukan penghapusan data pada user admin dengan nama ' . $data['username'] . '.'
     );
     $this->db->trans_complete();
     if ($this->db->trans_status() === FALSE) {
@@ -232,15 +232,15 @@ class Mdl_ganti_password extends CI_Model
     $res = array();
     if ($type == 'user') {
       // user
-      $table = 'v_user_menu';
+      $table = 'v_progurinda_user';
       $where = array('username' => $id);
     } else {
       // kewenangan
-      $table = 'v_user_menu_kewenangan';
+      $table = 'v_kewenangan_menu';
       $where = array('kewenangan' => $id);
     }
     $data_menu = $this->db->from($table)->where($where)
-      ->order_by('no_urut', 'asc')->get()->result_array();
+      ->order_by('order', 'asc')->get()->result_array();
     $count = count($data_menu);
     if ($count < 1) {
       // data tidak ditemukan
@@ -252,7 +252,7 @@ class Mdl_ganti_password extends CI_Model
     // tata datanya
     $key_value = array();
     foreach ($data_menu as $k => $v) {
-      array_push($key_value, $v['module_id']);
+      array_push($key_value, $v['id_menu']);
     }
     $res['status'] = true;
     $res['message'] = "Data menu berhasil diperoleh dan akan diterapkan ke kolom Preview.";
@@ -265,36 +265,36 @@ class Mdl_ganti_password extends CI_Model
   {
     $res = array();
     $err = 2;
-    $subject = $this->session->userdata('username');
-    $userdata = $this->get('m_user', "username = '$username'");
-    $nama_user = $userdata['nama_lengkap'];
+    $subject = $this->session->userdata('id_user');
+    $userdata = $this->get('progurinda_m_user', "id_user = '$username'");
+    $nama_user = $userdata['username'];
     $this->db->trans_begin();
-    // cek apakah sudah ada terdaftar di v_user_menu?
+    // cek apakah sudah ada terdaftar di progurinda_m_user?
     // kalau sudah hapus yang lama
-    $cek = $this->check('v_user_menu', "username = '$username'");
+    $cek = $this->check('v_progurinda_user', "id_user = '$username'");
     if ($cek > 0) {
-      $this->db->delete('m_user_menu', "username = '$username'");
+      $this->db->delete('progurinda_m_user', "id_user = '$username'");
     }
     // lakukan loop untuk insert konfigurasi menu baru
     $len = count($array_menu);
     $obj = '|';
     for ($i = 0; $i < $len; $i++) {
       $data_insert = array(
-        'no_urut' => ($i + 1),
-        'module_id' => $array_menu[$i],
-        'username' => $username,
+        'order' => ($i + 1),
+        'id_menu' => $array_menu[$i],
+        'id_user' => $username,
         'id_parent' => 0,
         's_aktif' => -1
       );
       $err++;
-      $this->db->insert('m_user_menu', $data_insert);
+      $this->db->insert('m_kewenangan_menu', $data_insert);
       $newid = $this->db->insert_id();
       $obj .= "$newid|";
     }
     $err++;
     log_generator(
       $subject,
-      "|m_user_menu|",
+      "|m_kewenangan_menu|",
       $obj,
       "Melakukan update Hak Akses Menu pada user dengan nama $nama_user."
     );
