@@ -145,8 +145,22 @@
 
                 <div class="col-12">
                   <div class="desc_block">
+                    <label>Gelar Depan</label>
+                    <div><?= check_var($data, 'gelar_dpn', '-') ?></div>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="desc_block">
                     <label>Nama</label>
                     <div><?= check_var($data, 'nama', '-') ?></div>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="desc_block">
+                    <label>Gelar Belakang</label>
+                    <div><?= check_var($data, 'gelar_blk', '-') ?></div>
                   </div>
                 </div>
 
@@ -193,6 +207,20 @@
                   <div class="desc_block">
                     <label>Status Pernikahan</label>
                     <div><?= check_var($data, 'ket_status_pernikahan', '-') ?></div>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="desc_block">
+                    <label>Pangkat / Gol. Ruang</label>
+                    <div><?= check_var($data, 'pangkat', '-') . ' / ' . check_var($data, 'gol_ruang', '-') ?></div>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="desc_block">
+                    <label>Jabatan</label>
+                    <div><?= check_var($data, 'jenjang_jabatan', '-') ?></div>
                   </div>
                 </div>
 
@@ -261,6 +289,20 @@
 
                 <div class="col-12">
                   <div class="desc_block">
+                    <label>Nama Rekening Bank</label>
+                    <div><?= check_var($data, 'nama_rek_bank', '-') ?></div>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="desc_block">
+                    <label>Nama Bank</label>
+                    <div><?= check_var($data, 'nama_bank', '-') ?></div>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="desc_block">
                     <label>NPWP</label>
                     <div><?= check_var($data, 'npwp', '-') ?></div>
                   </div>
@@ -311,6 +353,30 @@
 
                 <div class="col-12">
                   <div class="desc_block">
+                    <label>No. SK Kepala Sekolah</label>
+                    <div><?= check_var($data, 'no_sk_kepsek', '-') ?></div>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="desc_block">
+                    <label>Tgl. SK Kepala Sekolah</label>
+                    <?php
+                    $tgl_sk_kepsek = em_date('j F Y', 'set', check_var($data, 'tgl_sk_kepsek', ''));
+                    ?>
+                    <div><?= check_var($tgl_sk_kepsek, null, '-') ?></div>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="desc_block">
+                    <label>Penandatangan SK Kepala Sekolah</label>
+                    <div><?= check_var($data, 'nama_ttd_sk_kepsek', '-') ?></div>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="desc_block">
                     <label>Masa / Tgl. Penugasan (Mulai)</label>
                     <div>
                       <?php
@@ -341,8 +407,9 @@
                     <div>
                       <?php
                       $s_aktif = check_var($data, 's_aktif', '-');
-                      if ($s_aktif == '1') echo 'Riwayat Terbaru (Aktif)';
-                      if ($s_aktif == '0') echo 'Bukan Riwayat Terbaru (Non-Aktif)';
+                      if ($s_aktif == '1') $s_aktif = 'Riwayat Terbaru (Aktif)';
+                      if ($s_aktif == '0') $s_aktif = 'Bukan Riwayat Terbaru (Non-Aktif)';
+                      echo $s_aktif;
                       ?>
                     </div>
                   </div>

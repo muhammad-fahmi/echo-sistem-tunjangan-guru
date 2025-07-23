@@ -309,12 +309,11 @@ class Pdt_profil_kepsek extends MY_Controller
         $num = 1;
         foreach ($data_riwayat as $riwayat) {
 
-          // Store the base style for the row (entire J:P range)
-          $baseStyle = $sheet->getStyle("J{$styledRow}:P{$styledRow}");
-
           if ($startRow > $styledRow) {
-            // Apply the style to the full row range in one go
-            $sheet->duplicateStyle($baseStyle, "J{$startRow}:P{$startRow}");
+            foreach (range('J', 'P') as $col) {
+              $style = $sheet->getStyle("{$col}{$styledRow}");
+              $sheet->duplicateStyle($style, "{$col}{$startRow}");
+            }
           }
 
           setStrCellValue($sheet, "J{$startRow}", $num);
@@ -615,13 +614,6 @@ class Pdt_profil_kepsek extends MY_Controller
     $response = $this->mdl_profkepsek->edit_profil_kepsek($post);
 
     return output_json($response);
-
-    // DEBUG
-    return output_json([
-      'status' => false,
-      'message' => 'DEBUG EDIT DRAFT : PDT_ProfilKepsek',
-      'data' => $post
-    ]);
   }
 
   public function submit_draft()

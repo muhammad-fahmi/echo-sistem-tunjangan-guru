@@ -44,7 +44,6 @@ class Mdl_pdt_profil_kepsek extends CI_Model
       $this->db->group_start()
         ->like('nip', $data['search'])
         ->or_like('nama', $data['search'])
-        ->or_like('alamat', $data['search'])
         ->or_like('kode_ukerja', $data['search'])
         ->or_like('ket_ukerja', $data['search'])
         ->group_end();
@@ -145,7 +144,6 @@ class Mdl_pdt_profil_kepsek extends CI_Model
       $this->db->group_start()
         ->like('nip', $data['search'])
         ->or_like('nama', $data['search'])
-        ->or_like('alamat', $data['search'])
         ->or_like('kode_ukerja', $data['search'])
         ->or_like('ket_ukerja', $data['search'])
         ->group_end();
@@ -328,7 +326,9 @@ class Mdl_pdt_profil_kepsek extends CI_Model
       'status_dokumen' => 'DRAFT',
       'kode_ukerja' => $post['kode_ukerja'],
       'nip' => $post['nip'],
+      'gelar_dpn' => check_var($data_pegawai, 'gelar_dpn', null),
       'nama' => str_alphanumeric_space(trim(strtoupper($data_pegawai['nama']))),
+      'gelar_blk' => check_var($data_pegawai, 'gelar_blk', null),
       'nuptr' => null, /* sumber di v_pns (?) */
       'nurs' => null, /* sumber di v_pns (?) */
       'nrg' => null, /* sumber di v_pns (?) */
@@ -337,12 +337,20 @@ class Mdl_pdt_profil_kepsek extends CI_Model
       'jenis_kelamin' => check_var($data_pegawai, 'j_kelamin', null),
       'alamat_saat_ini' => check_var($data_pegawai, 'tt_alamat', null),
       'status_pernikahan' => check_var($data_pegawai, 'kode_kawin', null),
+      'kode_gol' => check_var($data_pegawai, 'kode_gol', null),
+      'pangkat' => check_var($data_pegawai, 'nama_gol', null),
+      'gol_ruang' => check_var($data_pegawai, 'ket_gol', null),
+      'kode_jab' => check_var($data_pegawai, 'kode_jab', null),
+      'jns_jab' => check_var($data_pegawai, 'jns_jab', null),
+      'jenjang_jabatan' => check_var($data_pegawai, 'ket_jab', null),
       'kode_didik' => check_var($data_pegawai, 'kode_didik', null),
       'pendidikan' => check_var($data_pegawai, 'ket_didik', null),
       'no_sertifikat_pendidik' => null, /* sumber di v_pns (?) */
       'no_sertifikat_gp' => null, /* sumber di v_pns (?) */
       'no_sertifikat_crs' => null, /* sumber di v_pns (?) */
       'no_rek_bank' => null, /* sumber di v_pns (?) */
+      'nama_rek_bank' => null, /* sumber di v_pns (?) */
+      'nama_bank' => null, /* sumber di v_pns (?) */
       'npwp' => check_var($data_pegawai, 'no_npwp', null),
       'menerima_ttp_insentif' => null, /* sumber di v_pns (?) */
       'status' => check_var($data_pegawai, 'kode_status', null),
@@ -350,6 +358,9 @@ class Mdl_pdt_profil_kepsek extends CI_Model
       'no_hp' => check_var($data_pegawai, 'no_hp', null),
       'kode_agama' => check_var($data_pegawai, 'kode_agama', null),
       'periode_ke' => null, /* sumber di v_pns (?) */
+      'no_sk_kepsek' => null, /* sumber di v_pns (?) */
+      'tgl_sk_kepsek' => null, /* sumber di v_pns (?) */
+      'ttd_sk_kepsek' => null, /* sumber di v_pns (?) */
       'masa_penugasan_mulai' => null, /* sumber di v_pns (?) */
       'masa_penugasan_selesai' => null, /* sumber di v_pns (?) */
       's_aktif' => check_var($post, 's_aktif', null) /* sumber di v_pns (?) */
@@ -498,13 +509,6 @@ class Mdl_pdt_profil_kepsek extends CI_Model
         'message' => "Maaf, terjadi kesalahan dalam proses.<br>{$catch_error}"
       ];
     }
-
-    // DEBUG
-    return [
-      'status' => false,
-      'message' => 'DEBUG MDL : edit_profil_kepsek',
-      'data' => $data
-    ];
   }
 
   public function update_profil_kepsek($data)
@@ -664,6 +668,9 @@ class Mdl_pdt_profil_kepsek extends CI_Model
     $this->form_validation->set_rules('email', 'E-mail', 'required|valid_email');
     $this->form_validation->set_rules('no_hp', 'No. HP', 'required');
     $this->form_validation->set_rules('periode_ke', 'Periode Ke', 'required');
+    $this->form_validation->set_rules('no_sk_kepsek', 'No. SK Kepala Sekolah', 'required');
+    $this->form_validation->set_rules('tgl_sk_kepsek', 'Tgl. SK Kepala Sekolah', 'required');
+    $this->form_validation->set_rules('ttd_sk_kepsek', 'Penandatangan SK Kepala Sekolah', 'required');
     $this->form_validation->set_rules('masa_penugasan_mulai', 'Masa / Tgl. Penugasan (Mulai)', 'required');
     $this->form_validation->set_rules('masa_penugasan_selesai', 'Masa / Tgl. Penugasan (Selesai)', 'required');
     $this->form_validation->set_rules('s_aktif', 'Status Riwayat', 'required|numeric');

@@ -102,9 +102,23 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
               </div>
 
               <div class="col-12">
+                <div class="desc_block old_data old_gelar_dpn" attr-data="gelar_dpn">
+                  <label>Gelar Depan</label>
+                  <div><?= check_var($data, 'gelar_dpn', '-') ?></div>
+                </div>
+              </div>
+
+              <div class="col-12">
                 <div class="desc_block old_data old_nama" attr-data="nama">
                   <label>Nama</label>
                   <div><?= check_var($data, 'nama', '-') ?></div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_gelar_blk" attr-data="gelar_blk">
+                  <label>Gelar Belakang</label>
+                  <div><?= check_var($data, 'gelar_blk', '-') ?></div>
                 </div>
               </div>
 
@@ -151,6 +165,20 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                 <div class="desc_block old_data old_status_pernikahan" attr-data="status_pernikahan">
                   <label>Status Pernikahan</label>
                   <div><?= check_var($data, 'ket_status_pernikahan', '-') ?></div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_pangkat" attr-data="pangkat">
+                  <label>Pangkat / Gol. Ruang</label>
+                  <div><?= check_var($data, 'pangkat', '-') . ' / ' . check_var($data, 'gol_ruang', '-') ?></div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_jenjang_jabatan" attr-data="jenjang_jabatan">
+                  <label>Jabatan</label>
+                  <div><?= check_var($data, 'jenjang_jabatan', '-') ?></div>
                 </div>
               </div>
 
@@ -218,6 +246,20 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
               </div>
 
               <div class="col-12">
+                <div class="desc_block old_data old_nama_rek_bank" attr-data="nama_rek_bank">
+                  <label>Nama Rekening Bank</label>
+                  <div><?= check_var($data, 'nama_rek_bank', '-') ?></div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_nama_bank" attr-data="nama_bank">
+                  <label>Nama Bank</label>
+                  <div><?= check_var($data, 'nama_bank', '-') ?></div>
+                </div>
+              </div>
+
+              <div class="col-12">
                 <div class="desc_block old_data old_npwp" attr-data="npwp">
                   <label>NPWP</label>
                   <div><?= check_var($data, 'npwp', '-') ?></div>
@@ -264,6 +306,30 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                 <div class="desc_block old_data old_periode_ke" attr-data="periode_ke">
                   <label>Periode Ke</label>
                   <div><?= check_var($data, 'periode_ke', '-') ?></div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_no_sk_kepsek" attr-data="no_sk_kepsek">
+                  <label>No. SK Kepala Sekolah</label>
+                  <div><?= check_var($data, 'no_sk_kepsek', '-') ?></div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_tgl_sk_kepsek" attr-data="tgl_sk_kepsek">
+                  <label>Tgl. SK Kepala Sekolah</label>
+                  <?php
+                  $tgl_sk_kepsek = em_date('j F Y', 'set', check_var($data, 'tgl_sk_kepsek', ''));
+                  ?>
+                  <div><?= check_var($tgl_sk_kepsek, null, '-') ?></div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="desc_block old_data old_nama_ttd_sk_kepsek" attr-data="nama_ttd_sk_kepsek">
+                  <label>Penandatangan SK Kepala Sekolah</label>
+                  <div><?= check_var($data, 'nama_ttd_sk_kepsek', '-') ?></div>
                 </div>
               </div>
 
@@ -363,9 +429,23 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
             </div>
 
             <div class="col-12">
+              <div class="desc_block new_data new_gelar_dpn" attr-data="gelar_dpn">
+                <label>Gelar Depan</label>
+                <div><?= check_var($dokumen, 'gelar_dpn', '-') ?></div>
+              </div>
+            </div>
+
+            <div class="col-12">
               <div class="desc_block new_data new_nama" attr-data="nama">
                 <label>Nama</label>
                 <div><?= check_var($dokumen, 'nama', '-') ?></div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="desc_block new_data new_gelar_blk" attr-data="gelar_blk">
+                <label>Gelar Belakang</label>
+                <div><?= check_var($dokumen, 'gelar_blk', '-') ?></div>
               </div>
             </div>
 
@@ -412,6 +492,20 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
               <div class="desc_block new_data new_status_pernikahan" attr-data="status_pernikahan">
                 <label>Status Pernikahan</label>
                 <div><?= check_var($dokumen, 'ket_status_pernikahan', '-') ?></div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="desc_block new_data new_pangkat" attr-data="pangkat">
+                <label>Pangkat / Gol. Ruang</label>
+                <div><?= check_var($dokumen, 'pangkat', '-') . ' / ' . check_var($dokumen, 'gol_ruang', '-') ?></div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="desc_block new_data new_jenjang_jabatan" attr-data="jenjang_jabatan">
+                <label>Jabatan</label>
+                <div><?= check_var($dokumen, 'jenjang_jabatan', '-') ?></div>
               </div>
             </div>
 
@@ -479,6 +573,20 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
             </div>
 
             <div class="col-12">
+              <div class="desc_block new_data new_nama_rek_bank" attr-data="nama_rek_bank">
+                <label>Nama Rekening Bank</label>
+                <div><?= check_var($dokumen, 'nama_rek_bank', '-') ?></div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="desc_block new_data new_nama_bank" attr-data="nama_bank">
+                <label>Nama Bank</label>
+                <div><?= check_var($dokumen, 'nama_bank', '-') ?></div>
+              </div>
+            </div>
+
+            <div class="col-12">
               <div class="desc_block new_data new_npwp" attr-data="npwp">
                 <label>NPWP</label>
                 <div><?= check_var($dokumen, 'npwp', '-') ?></div>
@@ -525,6 +633,30 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
               <div class="desc_block new_data new_periode_ke" attr-data="periode_ke">
                 <label>Periode Ke</label>
                 <div><?= check_var($dokumen, 'periode_ke', '-') ?></div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="desc_block new_data new_no_sk_kepsek" attr-data="no_sk_kepsek">
+                <label>No. SK Kepala Sekolah</label>
+                <div><?= check_var($dokumen, 'no_sk_kepsek', '-') ?></div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="desc_block new_data new_tgl_sk_kepsek" attr-data="tgl_sk_kepsek">
+                <label>Tgl. SK Kepala Sekolah</label>
+                <?php
+                $tgl_sk_kepsek = em_date('j F Y', 'set', check_var($data, 'tgl_sk_kepsek', ''));
+                ?>
+                <div><?= check_var($tgl_sk_kepsek, null, '-') ?></div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="desc_block new_data nama_ttd_sk_kepsek" attr-data="nama_ttd_sk_kepsek">
+                <label>Penandatangan SK Kepala Sekolah</label>
+                <div><?= check_var($dokumen, 'nama_ttd_sk_kepsek', '-') ?></div>
               </div>
             </div>
 
