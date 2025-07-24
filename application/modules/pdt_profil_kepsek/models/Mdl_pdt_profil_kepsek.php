@@ -417,13 +417,6 @@ class Mdl_pdt_profil_kepsek extends CI_Model
         'message' => "Maaf, proses mengalami error.\n{$catch_error}"
       ];
     }
-
-    // DEBUG
-    return [
-      'status' => false,
-      'message' => 'DEBUG MDL : tambah_profil_kepsek',
-      'data' => $post
-    ];
   }
 
   public function edit_profil_kepsek($data)
@@ -639,13 +632,6 @@ class Mdl_pdt_profil_kepsek extends CI_Model
         'message' => "Maaf, terjadi kesalahan saat proses.\n{$catch_error}"
       ];
     }
-
-    // DEBUG
-    return [
-      'status' => false,
-      'message' => 'DEBUG MDL : update_profil_kepsek',
-      'data' => $data
-    ];
   }
 
   public function submit_profil_kepsek($data)
@@ -787,13 +773,6 @@ class Mdl_pdt_profil_kepsek extends CI_Model
         'message' => "Maaf, terjadi kesalahan dalam proses.<br>{$catch_error}"
       ];
     }
-
-    // DEBUG
-    return [
-      'status' => false,
-      'message' => 'DEBUG MDL : submit_profil_kepsek',
-      'data' => $data
-    ];
   }
 
   public function delete_profil_kepsek($data)
@@ -880,13 +859,6 @@ class Mdl_pdt_profil_kepsek extends CI_Model
         'message' => "Maaf, proses mengalami error.\n{$catch_error}"
       ];
     }
-
-    // DEBUG
-    return [
-      'status' => false,
-      'message' => 'DEBUG MDL : delete_profil_kepsek',
-      'data' => $data
-    ];
   }
 
   public function get_riwayat_kepala_sekolah($nip = '0000')

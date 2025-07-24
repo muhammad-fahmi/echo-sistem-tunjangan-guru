@@ -371,6 +371,55 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     </div>
                   </div>
 
+                  <div class="col-12">
+                    <table class="table table-sm table-bordered table-hover">
+                      <thead class="text-center">
+                        <tr>
+                          <th style="width: 40%;" class="vam">GEDUNG</th>
+                          <th style="width: 10%;" class="vam">Baik</th>
+                          <th style="width: 10%;" class="vam">Rusak<br>Ringan</th>
+                          <th style="width: 10%;" class="vam">Rusak<br>Sedang</th>
+                          <th style="width: 10%;" class="vam">Rusak<br>Berat</th>
+                          <th style="width: 10%;" class="vam">Rusak<br>Total</th>
+                          <th style="width: 10%;" class="vam">JUMLAH</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php
+                        $items = get_inventaris_items();
+                        $fields = get_inventaris_fields();
+
+                        foreach ($items as $key => $value) {
+                          echo '<tr>';
+                          echo ($key == 'total')
+                            ? '<td class="text-start vam"><b>' . $value . '</b></td>'
+                            : '<td class="text-start vam">' . $value . '</td>';
+                          foreach ($fields as $field_name) {
+                            $default_value = 0;
+
+                            if ($key != 'total' && $field_name != 'jumlah') {
+                              echo '<td>' .
+
+                                '<input type="number" step="1" min="0" name="inventaris[' . $key . '][' . $field_name . ']" class="form-control form-control-sm input_inventaris ' . $key . ' ' . $field_name . '" style="width: 100%;" value="' . $default_value . '">' .
+
+                                '</td>';
+                            } else {
+                              echo '<td>' .
+
+                                '<input type="hidden" name="inventaris[' . $key . '][' . $field_name . ']" class="hidden_input ' . $key . ' ' . $field_name . '" value="' . $default_value . '">' .
+
+                                '<div class="display_value ' . $key . ' ' . $field_name . '" style="font-weight: bold;">' . $default_value . '</div>' .
+
+                                '</td>';
+                            }
+                          }
+                          echo '</tr>';
+                        }
+                        ?>
+                      </tbody>
+                    </table>
+                  </div>
+
                 </div>
               </div>
 
@@ -498,6 +547,50 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
           return false;
         }
       }
+    });
+
+    /// |----------------------------------------
+    /// | INVENTARIS LISTENER
+    /// |----------------------------------------
+    $('.input_inventaris').on('input', function() {
+      const items = <?= json_encode(array_keys(get_inventaris_items())); ?>;
+      const fields = <?= json_encode(get_inventaris_fields()); ?>;
+
+      if ($(this).val() > 0) {
+        $(this).addClass('dataset');
+      } else {
+        $(this).removeClass('dataset');
+      }
+
+      items.forEach(function(item) {
+        let total_row = 0;
+
+        // Sum all inputs of the same items (same column)
+        $('.input_inventaris.' + item).each(function() {
+          const val = parseInt($(this).val()) || 0;
+          total_row += val;
+        });
+
+        // Update the display div and hidden input in the "jumlah" column
+        $('.display_value.' + item + '.jumlah').text(total_row);
+        $('input[name="inventaris[' + item + '][jumlah]"]').val(total_row);
+      });
+
+      fields.forEach(function(field) {
+        let total_col = 0;
+        let selector = (field == 'jumlah') ?
+          '.hidden_input.' + field :
+          '.input_inventaris.' + field;
+
+        $(selector).each(function() {
+          const val = parseInt($(this).val()) || 0;
+          total_col += val;
+        });
+
+        // Update the display div and hidden input in the "jumlah" row
+        $('.display_value.total.' + field).text(total_col);
+        $('input[name="inventaris[total][' + field + ']"]').val(total_col);
+      });
     });
 
     $('#form_edit_profil_sekolah').validate($.extend({
