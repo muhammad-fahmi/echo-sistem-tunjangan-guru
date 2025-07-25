@@ -26,8 +26,8 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
     ?>
       <div class="col-12">
         <div class="card">
+          <div class="card-title">DATA (DEBUG)</div>
           <div class="card-body">
-            <h4 class="card-title">DATA (DEBUG)</h4>
             <small>
               <?php highlight_string("<?php\nSESSION = " . var_export($this->session->userdata(), true) . ";\n\n?>"); ?>
               <?php highlight_string("<?php\nDATA = " . var_export($data, true) . ";\n\n?>"); ?>
@@ -41,11 +41,11 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
 
     <div class="col-12">
       <div class="card">
+        <div class="card-title space-between">
+          <div><i class="fas fa-file me-2"></i>Data Dokumen</div>
+          <div></div>
+        </div>
         <div class="card-body">
-          <h4 class="card-title space-between">
-            <div><i class="fas fa-file me-2"></i>Data Dokumen</div>
-            <div></div>
-          </h4>
           <div>
 
             <div class="row g-1">
@@ -89,11 +89,11 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
         <input type="hidden" name="id_dokumen" value="<?= check_var($data, 'id_dokumen', '') ?>">
 
         <div class="card">
+          <div class="card-title space-between">
+            <div><i class="fas fa-building me-2"></i>Profil Sekolah</div>
+            <div></div>
+          </div>
           <div class="card-body">
-            <h4 class="card-title space-between mb-3">
-              <div><i class="fas fa-building me-2"></i>Profil Sekolah</div>
-              <div></div>
-            </h4>
 
             <div class="row g-2">
 
@@ -371,70 +371,72 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     </div>
                   </div>
 
-                  <div class="col-12">
-                    <table class="table table-sm table-bordered table-hover">
-                      <thead class="text-center">
-                        <tr>
-                          <th style="width: 40%;" class="vam">GEDUNG</th>
-                          <th style="width: 10%;" class="vam">Baik</th>
-                          <th style="width: 10%;" class="vam">Rusak<br>Ringan</th>
-                          <th style="width: 10%;" class="vam">Rusak<br>Sedang</th>
-                          <th style="width: 10%;" class="vam">Rusak<br>Berat</th>
-                          <th style="width: 10%;" class="vam">Rusak<br>Total</th>
-                          <th style="width: 10%;" class="vam">JUMLAH</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <?php
-                        $items = get_inventaris_items();
-                        $fields = get_inventaris_fields();
-
-                        foreach ($items as $key => $value) {
-                          echo '<tr>';
-                          echo ($key == 'total')
-                            ? '<td class="text-start vam"><b>' . $value . '</b></td>'
-                            : '<td class="text-start vam">' . $value . '</td>';
-                          foreach ($fields as $field_name) {
-                            $data_inv = $data['inventaris'];
-                            $default_value = (isset($data['inventaris'][$key][$field_name]))
-                              ? $data['inventaris'][$key][$field_name]
-                              : 0;
-
-                            $exist_class = ($default_value > 0) ? 'exist' : '';
-
-                            if ($key != 'total' && $field_name != 'jumlah') {
-                              echo '<td>' .
-
-                                '<input type="number" step="1" min="0" name="inventaris[' . $key . '][' . $field_name . ']" class="form-control form-control-sm input_inventaris ' . $exist_class . ' ' . $key . ' ' . $field_name . '" style="width: 100%;" value="' . $default_value . '">' .
-
-                                '</td>';
-                            } else {
-                              echo '<td>' .
-
-                                '<input type="hidden" name="inventaris[' . $key . '][' . $field_name . ']" class="hidden_input ' . $key . ' ' . $field_name . '" value="' . $default_value . '">' .
-
-                                '<div class="display_value ' . $key . ' ' . $field_name . '" style="font-weight: bold;">' . $default_value . '</div>' .
-
-                                '</td>';
-                            }
-                          }
-                          echo '</tr>';
-                        }
-                        ?>
-                      </tbody>
-                    </table>
-                  </div>
-
                 </div>
               </div>
-
-              <div class="col-12 text-end">
-                <button type="button" class="form_action_button btn btn-info ms-2" onclick="save_draft()"><i class="fas fa-save me-2"></i>Simpan Draft</button>
-                <button type="button" class="form_action_button btn btn-success ms-2" onclick="submit_draft()"><i class="fas fa-paper-plane me-2"></i>Submit Draft</button>
-              </div>
-
             </div>
+          </div>
 
+          <div class="card-title">
+            <div><i class="fas fa-list me-2"></i>Data Inventarisasi</div>
+          </div>
+
+          <div class="card-body">
+            <table class="table table-sm table-bordered table-hover">
+              <thead class="text-center">
+                <tr>
+                  <th style="width: 40%;" class="vam">GEDUNG</th>
+                  <th style="width: 10%;" class="vam">Baik</th>
+                  <th style="width: 10%;" class="vam">Rusak<br>Ringan</th>
+                  <th style="width: 10%;" class="vam">Rusak<br>Sedang</th>
+                  <th style="width: 10%;" class="vam">Rusak<br>Berat</th>
+                  <th style="width: 10%;" class="vam">Rusak<br>Total</th>
+                  <th style="width: 10%;" class="vam">JUMLAH</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php
+                $items = get_inventaris_items();
+                $fields = get_inventaris_fields();
+
+                foreach ($items as $key => $value) {
+                  echo '<tr>';
+                  echo ($key == 'total')
+                    ? '<td class="text-start vam"><b>' . $value . '</b></td>'
+                    : '<td class="text-start vam">' . $value . '</td>';
+                  foreach ($fields as $field_name) {
+                    $data_inv = $data['inventaris'];
+                    $default_value = (isset($data['inventaris'][$key][$field_name]))
+                      ? $data['inventaris'][$key][$field_name]
+                      : 0;
+
+                    $exist_class = ($default_value > 0) ? 'exist' : '';
+
+                    if ($key != 'total' && $field_name != 'jumlah') {
+                      echo '<td>' .
+
+                        '<input type="number" step="1" min="0" name="inventaris[' . $key . '][' . $field_name . ']" class="form-control form-control-sm input_inventaris ' . $exist_class . ' ' . $key . ' ' . $field_name . '" style="width: 100%;" value="' . $default_value . '">' .
+
+                        '</td>';
+                    } else {
+                      echo '<td>' .
+
+                        '<input type="hidden" name="inventaris[' . $key . '][' . $field_name . ']" class="hidden_input ' . $key . ' ' . $field_name . '" value="' . $default_value . '">' .
+
+                        '<div class="display_value ' . $key . ' ' . $field_name . '" style="font-weight: bold;">' . $default_value . '</div>' .
+
+                        '</td>';
+                    }
+                  }
+                  echo '</tr>';
+                }
+                ?>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card-footer text-end">
+            <button type="button" class="form_action_button btn btn-info ms-2" onclick="save_draft()"><i class="fas fa-save me-2"></i>Simpan Draft</button>
+            <button type="button" class="form_action_button btn btn-success ms-2" onclick="submit_draft()"><i class="fas fa-paper-plane me-2"></i>Submit Draft</button>
           </div>
         </div>
 
