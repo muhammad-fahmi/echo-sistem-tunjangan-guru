@@ -39,12 +39,11 @@
 
               <thead class="bg-info text-white">
                 <tr class="text-center">
-                  <th class="vam" style="min-width: 30px;">#</th>
-                  <th class="vam" style="min-width: 100px;">Sekolah</th>
-                  <th class="vam" style="min-width: 150px;">Kelas</th>
-                  <th class="vam" style="min-width: 80px;">Rombel</th>
-                  <th class="vam" style="min-width: 80px;">Jml Peserta</th>
-                  <th class="vam" style="min-width: 60px;">Aksi</th>
+                  <th class="vat" style="min-width: 30px;">#</th>
+                  <th class="vat" style="min-width: 100px;">Sekolah</th>
+                  <th class="vat" style="min-width: 150px;">Kelas</th>
+                  <th class="vat" style="min-width: 80px;">Rombel</th>
+                  <th class="vat" style="min-width: 60px;">Aksi</th>
                 </tr>
               </thead>
 
@@ -63,8 +62,6 @@
 <!-- -------------------------------------------------------------- -->
 <!-- End Container fluid  -->
 <!-- -------------------------------------------------------------- -->
-
-
 <script>
   var init_btn_add = false;
   let urlDatatable = "<?= site_url('pdt_rombongan_belajar/get_data') ?>";
@@ -110,53 +107,11 @@
         }
       },
       {
-        data: 'nama',
+        data: 'id_kelas',
         orderable: true,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-start">' +
-            '<div class="badge bg-secondary mb-1" style="opacity: 0.65;">' + rowData['nisn'] + '</div><br>' + cellData +
-            '</div>'
-          );
-        }
-      },
-      {
-        data: 'nama_ibu',
-        orderable: false,
-        className: 'vat',
-        createdCell: function(td, cellData, rowData, row, col) {
-          let nama_ayah = '<div class="mb-2">' + rowData['nama_ayah'] ? rowData['nama_ayah'] : '-' + '</div>';
-          let nama_ibu = '<div class="mb-2">' + cellData ? cellData : '-' + '</div>';
-
-          $(td).html('<div class="text-start">' +
-            '<div class="badge bg-success mb-1 me-1">Ayah</div>' + nama_ayah + '<br>' +
-            '<div class="badge bg-primary mb-1 me-1">Ibu</div>' + nama_ibu +
-            '</div>'
-          );
-        }
-      },
-      {
-        data: 'nik',
-        orderable: false,
-        className: 'vat',
-        createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-start">' + cellData + '</div>');
-        }
-      },
-      {
-        data: 'ket_jns_kelamin',
-        orderable: false,
-        className: 'vat',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        }
-      },
-      {
-        data: 'ket_agama',
-        orderable: false,
-        className: 'vat',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
         }
       },
       {
@@ -164,26 +119,42 @@
         orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
-          let id = cellData;
-          let id_encrypt = '<?= encrypt_id($id); ?>';
-          let detail_url = "<?= site_url('pdt_rombongan_belajar/detail/'); ?>";
-          let kewenangan_user = '<?= $this->session->userdata('kewenangan'); ?>';
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        }
+      },
+      {
+        data: 'nama_rombel',
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-start">' + cellData + '</div>');
+        }
+      },
+      {
+        data: 'id',
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          // let id = cellData;
+          // let id_encrypt = '<?= encrypt_id($id); ?>';
+          // let detail_url = "<?= site_url('pdt_rombongan_belajar/detail/'); ?>";
+          // let kewenangan_user = '<?= $this->session->userdata('kewenangan'); ?>';
 
-          let btn_edit = '<div onclick="modal(`' + cellData + '`, `edit_peserta_didik`)" class="badge bg-primary clickable me-1" title="Edit">' +
-            '<i class="fas fa-edit"></i> Edit</div>';
+          // let btn_edit = '<div onclick="modal(`' + cellData + '`, `edit_rombongan_belajar`)" class="badge bg-primary clickable me-1" title="Edit">' +
+          //   '<i class="fas fa-edit"></i> Edit</div>';
 
-          let btn_detail = '<a href="' + detail_url + cellData + '" class="badge bg-secondary clickable text-white me-1"><i class="fas fa-eye"></i> Detail</a>';
+          // let btn_detail = '<a href="' + detail_url + cellData + '" class="badge bg-secondary clickable text-white me-1"><i class="fas fa-eye"></i> Detail</a>';
 
-          let btn_delete = (kewenangan_user == '00') ?
-            '<div onclick="modal(`' + cellData + '`, `delete_peserta_didik`)" class="badge bg-danger clickable me-1" title="Hapus">' +
-            '<i class="fas fa-trash"></i> Hapus</div>' :
-            '';
+          // let btn_delete = (kewenangan_user == '02') ?
+          //   '<div onclick="modal(`' + cellData + '`, `delete_rombongan_belajar`)" class="badge bg-danger clickable me-1" title="Hapus">' +
+          //   '<i class="fas fa-trash"></i> Hapus</div>' :
+          //   '';
 
-          $(td).html('<div class="text-center">' +
-            '<div class="d-grid gap-1 px-2"><div class="row">' + btn_edit + '</div>' +
-            '<div class="row">' + btn_detail + '</div>' +
-            '<div class="row">' + btn_delete + '</div>' +
-            '</div></div>');
+          // $(td).html('<div class="text-center">' +
+          //   '<div class="d-grid gap-1 px-2"><div class="row">' + btn_edit + '</div>' +
+          //   '<div class="row">' + btn_detail + '</div>' +
+          //   '<div class="row">' + btn_delete + '</div>' +
+          //   '</div></div>');
         }
       },
     ],
@@ -213,10 +184,10 @@
 
   /* fungsi untuk reload datatable ajax */
   function reload_table() {
-    table_siswa.ajax.reload();
+    table_rombel.ajax.reload();
   }
 
-  function modal(id_siswa, type) {
+  function modal(id_rombel, type) {
     var url = "<?= site_url('pdt_rombongan_belajar/modal') ?>";
     $.ajax({
       type: "POST",

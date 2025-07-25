@@ -6,11 +6,17 @@
 </div>
 <div class="modal-body">
 
-  <form id="savePesertaDidik" action="<?= site_url('pdt_rombongan_belajar/save'); ?>" method="POST">
+  <form id="saveRombel" action="<?= site_url('pdt_rombongan_belajar/save'); ?>" method="POST">
     <input type="hidden" name="type" value="<?= $data['type']; ?>">
     <!-- <input type="hidden" name="id_siswa" value="<?= $data['id_siswa']; ?>"> -->
 
     <div class="row g-2">
+      <div class="col-12 form_mapel mb-2">
+        <label for="id_ukerja">Sekolah</label>
+        <input type="text" name="id_ukerja" id="id_ukerja" class="form-control form-control-sm" value="<?= $data['id_ukerja']; ?>">
+        <div class="invalid-feedback"></div>
+      </div>
+
       <div class="col-12 form_mapel mb-2">
         <label for="id_jenjang">Jenjang</label>
         <br>
@@ -39,12 +45,6 @@
       </div>
 
       <div class="col-12 form_mapel mb-2">
-        <label for="nama_ayah">Nama Ayah</label>
-        <input type="text" name="nama_ayah" id="nama_ayah" class="form-control form-control-sm" value="<?= $data['nama_ayah']; ?>">
-        <div class="invalid-feedback"></div>
-      </div>
-
-      <div class="col-12 form_mapel mb-2">
         <label for="tahun">Tahun Ajar</label>
         <input type="text" name="tahun" id="tahun" class="form-control form-control-sm" value="<?= $data['tahun']; ?>">
         <div class="invalid-feedback"></div>
@@ -55,7 +55,7 @@
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-sm btn-light-secondary" data-bs-dismiss="modal">Batal</button>
-  <button id="savePesertaDidikbtn" type="submit" form="savePesertaDidik" class="btn btn-sm btn-light-success">Simpan</button>
+  <button id="saveRombelbtn" type="submit" form="saveRombel" class="btn btn-sm btn-light-success">Simpan</button>
 </div>
 
 <script>
@@ -128,14 +128,14 @@
   /// |----------------------------------------------------------------------
   /// | >> SELECT2 ROMBEL
   /// |----------------------------------------------------------------------
-  var select_pdpd = $('#pdpd_options');
-  $('#pdpd_options').select2({
+  var select_rombel = $('#id_rombel');
+  $('#id_rombel').select2({
     allowClear: true,
-    placeholder: '-- Pilih Ragam Disabilitas --',
+    placeholder: '-- Pilih Rombel --',
     ajax: {
       type: 'POST',
       dataType: 'json',
-      url: '<?= site_url('config/select2_disabilitas') ?>',
+      url: '<?= site_url('config/select2_rombel') ?>',
       delay: 800,
       /* delay before sending ajax request */
       data: function(params) {
@@ -155,18 +155,12 @@
     // what to do when selection closed
   }).on('select2:clear', function(e) {
     // what to do when clearing (only if allowClear: true)
-    select_pdpd.empty();
+    select_rombel.empty();
   });
 
-  // Custom Validator
-  $.validator.addMethod("noTitles", function(value, element) {
-    const titlePattern = /\b(prof|dr|drs|mrs|mr|ms|ir|hj|haji|habib|ustadz|kyai|s\.pd|s\.kom|s\.e|s\.h|s\.ag|m\.pd|m\.kom|m\.si|m\.sc|m\.m|phd|msc|b\.eng|b\.sc)\b/i;
-    return this.optional(element) || !titlePattern.test(value);
-  });
-
-  $('#savePesertaDidik').validate($.extend({
+  $('#saveRombel').validate($.extend({
     submitHandler: function(form, event) {
-      var submit = $('#savePesertaDidikbtn');
+      var submit = $('#saveRombelbtn');
       submit.attr('disabled', true);
       $(form).ajaxSubmit({
         error: function(e) {
@@ -193,33 +187,19 @@
       });
     },
     rules: {
-      nisn: {
+      id_ukerja: {
         required: true
       },
-      nama: {
+      id_jenjang: {
         required: true
       },
-      nik: {
+      id_kelas: {
         required: true
       },
-      jenis_kelamin: {
+      id_rombel: {
         required: true
       },
-      kode_agama: {
-        required: true
-      },
-      nama_ayah: {
-        required: true,
-        noTitles: true
-      },
-      nama_ibu: {
-        required: true,
-        noTitles: true
-      },
-      no_kk: {
-        required: true
-      },
-      alamat: {
+      tahun: {
         required: true
       }
     },
@@ -234,34 +214,20 @@
       }
     },
     messages: {
-      nisn: {
-        required: "NISN tidak boleh kosong"
+      id_ukerja: {
+        required: "ID Unit Kerja tidak boleh kosong!"
       },
-      nama: {
-        required: "Nama Lengkap tidak boleh kosong"
+      id_jenjang: {
+        required: "ID Jenjang tidak boleh kosong!"
       },
-      nik: {
-        required: "NIK tidak boleh kosong"
+      id_kelas: {
+        required: "ID Kelas tidak boleh kosong"
       },
-      jenis_kelamin: {
-        required: "Jenis Kelamin tidak boleh kosong"
+      id_rombel: {
+        required: "ID Rombel tidak boleh kosong"
       },
-      kode_agama: {
-        required: "Agama tidak boleh kosong"
-      },
-      nama_ayah: {
-        required: "Nama Ayah tidak boleh kosong",
-        noTitles: "Nama Ayah tidak boleh mengandung gelar seperti Prof, Dr, PhD, dll."
-      },
-      nama_ibu: {
-        required: "Nama Ibu tidak boleh kosong",
-        noTitles: "Nama Ayah tidak boleh mengandung gelar seperti Prof, Dr, PhD, dll."
-      },
-      no_kk: {
-        required: "No. KK tidak boleh kosong"
-      },
-      alamat: {
-        required: "Alamat tidak boleh kosong"
+      tahun: {
+        required: "Tahun Ajaran tidak boleh kosong"
       }
     },
   }));

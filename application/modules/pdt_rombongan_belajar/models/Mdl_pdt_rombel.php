@@ -29,22 +29,23 @@ class Mdl_pdt_rombel extends CI_Model
   }
 
   /* fungsi untuk menarik data dari DB dan konversi ke dataset untuk jquery datatable */
-  public function get_datatable($data, $primary_key = 'id_rombel')
+  public function get_datatable($data)
   {
     // lakukan filtering data
     // deklarasi where condition
     $where_search = (isset_nn_nes($data['search']))
-      ? "AND (ket_sekolah LIKE '%$data[search]%' 
-      OR ket_kelas LIKE '%$data[search]%')"
+      ? "AND (id_kelas LIKE '%$data[search]%' 
+      OR id_rombel LIKE '%$data[search]%' 
+      OR nama_rombel LIKE '%$data[search]%')"
       : "";
     /* kalau ada tambahan where condition bisa add lagi di atas */
     // deklarasi query yang digunakan
-    $query_result = $this->db->query("SELECT * FROM `v_rombongan_belajar` 
-      WHERE $primary_key IS NOT NULL $where_search 
+    $query_result = $this->db->query("SELECT * FROM `r_rombongan_belajar` 
+      WHERE id IS NOT NULL $where_search 
       ORDER BY $data[order_column] $data[order_sort] 
       LIMIT $data[start], $data[length]");
-    $query_total = $this->db->query("SELECT * FROM `v_rombongan_belajar` 
-      WHERE $primary_key IS NOT NULL $where_search");
+    $query_total = $this->db->query("SELECT * FROM `r_rombongan_belajar` 
+      WHERE id IS NOT NULL $where_search");
     // cari total hasil
     $total_count = 0;
     while ($row = $query_total->unbuffered_row()) {
@@ -59,10 +60,11 @@ class Mdl_pdt_rombel extends CI_Model
       /// | PENATAAN DATA SEBELUM DIMASUKKAN KE DALAM RESULT_ARRAY
       /// |----------------------------------------------------------------------
       $data_result[$index]['no'] = $no;
-      $data_result[$index]['ket_sekolah'] = isset_nn_nes($row['ket_sekolah'], '-');
+      // $data_result[$index]['jenjang_id'] = isset_nn_nes($row['jenjang_id'], '-');
+      // $data_result[$index]['ket_sekolah'] = isset_nn_nes($row['ket_sekolah'], '-');
+      // $data_result[$index]['kelas_id'] = isset_nn_nes($row['kelas_id'], '-');
       // $data_result[$index]['ket_kelas'] = isset_nn_nes($row['ket_kelas'], '-');
       // $data_result[$index]['nama_rombel'] = isset_nn_nes($row['nama_rombel'], '-');
-      // $data_result[$index]['jumlah_rombel'] = isset_nn_nes($row['jumlah_rombel'], '-');
 
       $no += 1;
       $index += 1;

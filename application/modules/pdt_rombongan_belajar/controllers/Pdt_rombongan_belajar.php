@@ -11,7 +11,7 @@ class Pdt_rombongan_belajar extends MY_Controller
     if ($log != true) {
       redirect(site_url('login'));
     } else {
-      $this->load->model('mdl_pdt_rombel', 'mdl_rombel');
+      $this->load->model('mdl_pdt_rombel', 'mdl_rombongan_belajar');
     }
   }
 
@@ -43,7 +43,7 @@ class Pdt_rombongan_belajar extends MY_Controller
       /* additional data can be declared here */
     );
     // move the db operation to the designated models
-    $result = $this->mdl_rombel->get_datatable($param);
+    $result = $this->mdl_rombongan_belajar->get_datatable($param);
     // return the data back to the views
     $data["recordsTotal"] = $result['total'];
     $data["recordsFiltered"] = $result['filtered'];
@@ -53,5 +53,68 @@ class Pdt_rombongan_belajar extends MY_Controller
     $this->output
       ->set_content_type('application/json')
       ->set_output(json_encode($data));
+  }
+
+  public function modal()
+  {
+    $type = $this->input->post('type');
+    $id = $this->input->post('id_rombel');
+    $decryptedID = decrypt_id(sanitize_string($id));
+    /// |----------------------------------------
+    /// | DEFAULT VALUE
+    /// |----------------------------------------
+    $res = [
+      'status' => false,
+      'message' => "Sorry this feature is under development."
+    ];
+
+    /// |----------------------------------------
+    /// | COMMANDS
+    /// |----------------------------------------
+    switch ($type) {
+      case 'tambah_rombongan_belajar': {
+          /// |----------------------------------------
+          /// | INSERT DATA
+          /// |----------------------------------------
+          $dataset = [];
+          $data = [
+            'modal_title' => "Tambah Rombongan Belajar",
+            'type' => 'add',
+            'data' => $dataset,
+          ];
+          $res = [
+            'status' => true,
+            'message' => "Modal Tambah Rombongan Belajar",
+            'html' => $this->load->view('vwm_add_rombongan_belajar', $data, true)
+          ];
+          break;
+        }
+      case 'delete_rombongan_belajar': {
+          /// |----------------------------------------
+          /// | DELETE DATA
+          /// |----------------------------------------
+          $dataset = $this->mdl_rombongan_belajar->get('v_rombongan_belajar', "id_rombel = '$decryptedID'");
+          if (isset_nn_nes($dataset)) {
+            $data = [
+              'modal_title' => "Hapus Rombongan Belajar",
+              'type' => 'delete',
+              'data' => $dataset,
+            ];
+            $res = [
+              'status' => true,
+              'message' => "Modal Hapus Rombongan Belajar",
+              'html' => $this->load->view('vwm_delete_rombongan_belajar', $data, true)
+            ];
+          }
+          break;
+        }
+      default: {
+          break;
+        }
+    }
+
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($res));
   }
 }
