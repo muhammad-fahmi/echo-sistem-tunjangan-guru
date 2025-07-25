@@ -671,23 +671,23 @@ class Config extends MY_Controller
     $search = $this->input->post('search');
     // kondisi where
     $where_search = ($search != '')
-      ? "AND (nama_lengkap LIKE '%$search%' 
-      OR nip LIKE '%$search%')"
+      ? "AND (nama_rombel LIKE '%$search%' 
+      OR jenjang_id LIKE '%$search%')"
       : "";
     // query searching
-    $result = $this->db->query("SELECT * FROM v_pns WHERE nip IS NOT NULL $where_search 
-      ORDER BY kode_eselon DESC LIMIT 10")->result_array();
+    $result = $this->db->query("SELECT * FROM m_rombongan_belajar WHERE id_rombel IS NOT NULL $where_search 
+      ORDER BY id_rombel DESC LIMIT 10")->result_array();
     $data = array();
     $index = 0;
     if (isset_nn_nes($result)) {
       foreach ($result as $r) {
-        $data[$index]['id'] = $r['nip'];
-        $data[$index]['text'] = $r['nip'] . ' - ' . trim($r['nama_lengkap']);
+        $data[$index]['id'] = $r['id_rombel'];
+        $data[$index]['text'] = trim($r['nama_rombel']);
 
         // additional param to send back
-        $data[$index]['nip'] = $r['nip'];
-        $data[$index]['nama_lengkap'] = trim($r['nama_lengkap']);
-        $data[$index]['kode_gol'] = $r['kode_gol'];
+        $data[$index]['id_rombel'] = $r['id_rombel'];
+        $data[$index]['nama_rombel'] = trim($r['nama_rombel']);
+        // $data[$index]['kode_gol'] = $r['kode_gol'];
 
         $index++;
       }

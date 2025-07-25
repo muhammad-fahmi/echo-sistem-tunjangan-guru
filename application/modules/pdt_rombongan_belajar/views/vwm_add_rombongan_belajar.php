@@ -46,7 +46,7 @@
 
       <div class="col-12 form_mapel mb-2">
         <label for="tahun">Tahun Ajar</label>
-        <input type="text" name="tahun" id="tahun" class="form-control form-control-sm" value="<?= $data['tahun']; ?>">
+        <input type="text" name="tahun" id="tahun" class="form-control form-control-sm" value="<?= em_date('Y'); ?>">
         <div class="invalid-feedback"></div>
       </div>
 
@@ -102,7 +102,7 @@
     ajax: {
       type: 'POST',
       dataType: 'json',
-      url: '<?= site_url('config/select2_id_kelas'); ?>',
+      url: '<?= site_url('config/select2_kelas'); ?>',
       delay: 800,
       /* delay before sending ajax request */
       data: function(params) {
