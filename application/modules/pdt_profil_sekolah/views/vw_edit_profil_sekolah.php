@@ -395,12 +395,17 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                             ? '<td class="text-start vam"><b>' . $value . '</b></td>'
                             : '<td class="text-start vam">' . $value . '</td>';
                           foreach ($fields as $field_name) {
-                            $default_value = 0;
+                            $data_inv = $data['inventaris'];
+                            $default_value = (isset($data['inventaris'][$key][$field_name]))
+                              ? $data['inventaris'][$key][$field_name]
+                              : 0;
+
+                            $exist_class = ($default_value > 0) ? 'exist' : '';
 
                             if ($key != 'total' && $field_name != 'jumlah') {
                               echo '<td>' .
 
-                                '<input type="number" step="1" min="0" name="inventaris[' . $key . '][' . $field_name . ']" class="form-control form-control-sm input_inventaris ' . $key . ' ' . $field_name . '" style="width: 100%;" value="' . $default_value . '">' .
+                                '<input type="number" step="1" min="0" name="inventaris[' . $key . '][' . $field_name . ']" class="form-control form-control-sm input_inventaris ' . $exist_class . ' ' . $key . ' ' . $field_name . '" style="width: 100%;" value="' . $default_value . '">' .
 
                                 '</td>';
                             } else {
@@ -441,6 +446,42 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
 </div>
 
 <script>
+  function recalculate_inventaris_total() {
+    const items = <?= json_encode(array_keys(get_inventaris_items())); ?>;
+    const fields = <?= json_encode(get_inventaris_fields()); ?>;
+
+    items.forEach(function(item) {
+      let total_row = 0;
+
+      // Sum all inputs of the same items (same column)
+      $('.input_inventaris.' + item).each(function() {
+        const val = parseInt($(this).val()) || 0;
+        total_row += val;
+      });
+
+      // Update the display div and hidden input in the "jumlah" column
+      $('.display_value.' + item + '.jumlah').text(total_row);
+      $('input[name="inventaris[' + item + '][jumlah]"]').val(total_row);
+    });
+
+    fields.forEach(function(field) {
+      let total_col = 0;
+      let selector = (field == 'jumlah') ?
+        '.hidden_input.' + field :
+        '.input_inventaris.' + field;
+
+      $(selector).each(function() {
+        const val = parseInt($(this).val()) || 0;
+        total_col += val;
+      });
+
+      // Update the display div and hidden input in the "jumlah" row
+      $('.display_value.total.' + field).text(total_col);
+      $('input[name="inventaris[total][' + field + ']"]').val(total_col);
+    });
+  }
+
+
   function modal(d_action, d_id) {
     var url = "<?= site_url('pdt_profil_sekolah/modal') ?>";
     $.ajax({
@@ -536,6 +577,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
   /// | DOCUMENT READY
   /// |----------------------------------------
   $(document).ready(function() {
+
     /// |----------------------------------------
     /// | FORM SUBMISSION
     /// |----------------------------------------
@@ -549,48 +591,17 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
       }
     });
 
-    /// |----------------------------------------
-    /// | INVENTARIS LISTENER
-    /// |----------------------------------------
+    recalculate_inventaris_total();
+
     $('.input_inventaris').on('input', function() {
-      const items = <?= json_encode(array_keys(get_inventaris_items())); ?>;
-      const fields = <?= json_encode(get_inventaris_fields()); ?>;
 
       if ($(this).val() > 0) {
-        $(this).addClass('dataset');
+        $(this).addClass('exist');
       } else {
-        $(this).removeClass('dataset');
+        $(this).removeClass('exist');
       }
 
-      items.forEach(function(item) {
-        let total_row = 0;
-
-        // Sum all inputs of the same items (same column)
-        $('.input_inventaris.' + item).each(function() {
-          const val = parseInt($(this).val()) || 0;
-          total_row += val;
-        });
-
-        // Update the display div and hidden input in the "jumlah" column
-        $('.display_value.' + item + '.jumlah').text(total_row);
-        $('input[name="inventaris[' + item + '][jumlah]"]').val(total_row);
-      });
-
-      fields.forEach(function(field) {
-        let total_col = 0;
-        let selector = (field == 'jumlah') ?
-          '.hidden_input.' + field :
-          '.input_inventaris.' + field;
-
-        $(selector).each(function() {
-          const val = parseInt($(this).val()) || 0;
-          total_col += val;
-        });
-
-        // Update the display div and hidden input in the "jumlah" row
-        $('.display_value.total.' + field).text(total_col);
-        $('input[name="inventaris[total][' + field + ']"]').val(total_col);
-      });
+      recalculate_inventaris_total();
     });
 
     $('#form_edit_profil_sekolah').validate($.extend({

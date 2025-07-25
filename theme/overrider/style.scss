@@ -477,3 +477,13 @@ a.badge.text-white {
 		}
 	}
 }
+
+.input_inventaris {
+	opacity: 0.3;
+	border: 1px solid #ececec;
+
+	&.exist {
+		opacity: 1;
+		border: 1px solid #36a936;
+	}
+}

@@ -270,4 +270,20 @@ class Pangkalan_data extends MY_Controller
       'html' => $html_riwayat
     ]);
   }
+
+  public function get_inventaris()
+  {
+    $id = decrypt_id(post_safe('id'));
+
+    $is_master = (post_safe('is_master') == 'yes') ? true : false;
+    $rearrange_data = true;
+
+    $dataset = $this->mdl_pkldata->get_data_inventaris($id, $is_master, $rearrange_data);
+
+    return output_json([
+      'status' => true,
+      'message' => 'Hasil request data inventaris',
+      'data' => $dataset
+    ]);
+  }
 }

@@ -63,4 +63,39 @@ class Mdl_pangkalan_data extends CI_Model
 
     return $dataset;
   }
+
+  public function get_data_inventaris($id, $is_master = false, $rearrange_data = false)
+  {
+    $this->db->from('r_inventaris');
+
+    if ($is_master) {
+      $this->db->where('id_m_profil_sekolah', $id);
+    } else {
+      $this->db->where('id_r_profil_sekolah', $id);
+    }
+
+    $this->db->order_by('id', 'ASC');
+    $dataset = $this->db->get()->result_array();
+
+    if ($rearrange_data && check_var($dataset)) {
+      $arranged_data = [];
+
+      foreach ($dataset as $value) {
+        $key = $value['inventaris'];
+
+        $arranged_data[$key] = [
+          'baik' => (int) $value['baik'],
+          'rusak_ringan' => (int) $value['rusak_ringan'],
+          'rusak_sedang' => (int) $value['rusak_sedang'],
+          'rusak_berat' => (int) $value['rusak_berat'],
+          'rusak_total' => (int) $value['rusak_total'],
+          'jumlah' => (int) $value['jumlah']
+        ];
+      }
+
+      $dataset = $arranged_data;
+    }
+
+    return $dataset;
+  }
 }
