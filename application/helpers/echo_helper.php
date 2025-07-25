@@ -1281,6 +1281,55 @@ function menu_auth_sipedal($username, $module, $kewenangan)
   }
 }
 
+/**
+ * Get the list of inventory items used for building/facility names.
+ *
+ * Each key represents the internal name used in form inputs or data processing,
+ * while the value is the display label shown in the UI.
+ *
+ * @return array<string, string> Associative array of item keys and their display names
+ */
+function get_inventaris_items()
+{
+  return [
+    'bertingkat' => 'Bertingkat',
+    'ruang_kelas' => 'Ruang Kelas',
+    'ruang_perpustakaan' => 'Ruang Perpustakaan',
+    'ruang_uks' => 'Ruang UKS',
+    'lab_komputer' => 'Lab. Komputer',
+    'lab_bahasa' => 'Lab. Bahasa',
+    'lab_ipa' => 'Lab. IPA',
+    'lab_fisika' => 'Lab. Fisika',
+    'lab_biologi' => 'Lab. Biologi',
+    'ruang_kepala_sekolah' => 'Ruang Kepala Sekolah',
+    'ruang_guru' => 'Ruang Guru',
+    'ruang_tata_usaha' => 'Ruang Tata Usaha',
+    'wc_guru_laki_laki' => 'WC Guru Laki-Laki',
+    'wc_guru_perempuan' => 'WC Guru Perumpuan',
+    'wc_siswa_laki_laki' => 'WC Siswa Laki-Laki',
+    'wc_siswa_perempuan' => 'WC Siswa Perempuan',
+    'ruang_konseling' => 'Ruang Konseling',
+    'ruang_osis' => 'Ruang Osis',
+    'ruang_ibadah' => 'Ruang Ibadah',
+    'ruang_praktik' => 'Ruang Praktik',
+    'gudang' => 'Gudang',
+    'total' => 'JUMLAH'
+  ];
+}
+
+/**
+ * Get the list of condition/status fields used for inventory input.
+ *
+ * These correspond to the condition of an inventory item and
+ * are used both in HTML form inputs and in data processing.
+ *
+ * @return string[] List of field names like 'baik', 'rusak_ringan', etc.
+ */
+function get_inventaris_fields()
+{
+  return ['baik', 'rusak_ringan', 'rusak_sedang', 'rusak_berat', 'rusak_total', 'jumlah'];
+}
+
 function compress_image($path, $image_type)
 {
   list($width, $height) = getimagesize($path);

@@ -412,4 +412,13 @@ a.badge.text-white:hover {
 }
 .profil_img_container:hover ~ .edit_profile_icon {
   opacity: 1;
+}
+
+.input_inventaris {
+  opacity: 0.3;
+  border: 1px solid #ececec;
+}
+.input_inventaris.exist {
+  opacity: 1;
+  border: 1px solid #36a936;
 }/*# sourceMappingURL=style.css.map */

@@ -272,6 +272,37 @@ class Config extends MY_Controller
       ->set_output(json_encode($data));
   }
 
+  public function select2_pegawai_ttd()
+  {
+    // ambil data post
+    $search = post_safe('search');
+    // kondisi where
+    $where_search = isset(($search)) ? "AND (nip LIKE '%$search%' OR nama_lengkap LIKE '%$search%')" : "";
+    // $where_aktif = "AND s_aktif = '-1'";
+    $where_aktif = "";
+    // query searching
+    $result = $this->db->query("SELECT nip, nama_lengkap, kode_ukerja,kode_jab,ket_jab, ket_ukerja FROM v_pns 
+      WHERE nip IS NOT NULL $where_search $where_aktif 
+      ORDER BY 'nip' ASC 
+      LIMIT 10")->result_array();
+    $data = array();
+    $index = 0;
+    if (isset_nn_nes($result)) {
+      foreach ($result as $r) {
+        $nip = $r['nip'];
+        $nama_lengkap = trim($r['nama_lengkap']);
+        $data[$index]['id'] = $nip;
+        $data[$index]['text'] = "$nip - $nama_lengkap";
+        $index++;
+      }
+    } else {
+      $data = $result;
+    }
+    $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
   public function select2_pegawai_jab()
   {
     // ambil data post

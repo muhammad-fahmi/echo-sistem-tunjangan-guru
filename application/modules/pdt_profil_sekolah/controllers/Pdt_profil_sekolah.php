@@ -18,6 +18,7 @@ class Pdt_profil_sekolah extends MY_Controller
     }
 
     $this->load->model('mdl_pdt_profil_sekolah', 'mdl_profsekolah');
+    $this->load->model('pangkalan_data/mdl_pangkalan_data', 'mdl_pkldata');
   }
 
   /// |----------------------------------------------------------------------
@@ -54,6 +55,10 @@ class Pdt_profil_sekolah extends MY_Controller
 
     $dataset['id_dokumen'] = encrypt_id($dataset['id_dokumen']);
     $dataset['id_kepsek'] = encrypt_id($dataset['id_kepsek']);
+
+    $is_master = false;
+    $rearrange_data = true;
+    $dataset['inventaris'] = $this->mdl_pkldata->get_data_inventaris($decryptedID, $is_master, $rearrange_data);
 
     // CEK STATUS DOKUMEN
     if ($dataset['status_dokumen'] != 'DRAFT') {

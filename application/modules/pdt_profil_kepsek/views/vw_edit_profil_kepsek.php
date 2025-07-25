@@ -129,8 +129,22 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
 
                   <div class="col-12">
                     <div class="desc_block">
+                      <label>Gelar Depan</label>
+                      <div><?= check_var($data, 'gelar_dpn', '-') ?></div>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <div class="desc_block">
                       <label>Nama</label>
                       <div><?= check_var($data, 'nama', '-') ?></div>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <div class="desc_block">
+                      <label>Gelar Belakang</label>
+                      <div><?= check_var($data, 'gelar_blk', '-') ?></div>
                     </div>
                   </div>
 
@@ -170,6 +184,20 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     <div class="desc_block">
                       <label>Status Pernikahan</label>
                       <div><?= check_var($data, 'ket_status_pernikahan', '-') ?></div>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <div class="desc_block">
+                      <label>Pangkat / Gol. Ruang</label>
+                      <div><?= check_var($data, 'pangkat', '-') . ' / ' . check_var($data, 'gol_ruang', '-') ?></div>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <div class="desc_block">
+                      <label>Jabatan</label>
+                      <div><?= check_var($data, 'jenjang_jabatan', '-') ?></div>
                     </div>
                   </div>
 
@@ -254,6 +282,22 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
 
                   <div class="col-12">
                     <div class="input_block">
+                      <label for="nama_rek_bank">Nama Rekening Bank</label>
+                      <input type="text" class="form-control form-input-bg" id="nama_rek_bank" name="nama_rek_bank" value="<?= check_var($data, "nama_rek_bank", '') ?>" />
+                      <div class="invalid-feedback" id="error_nama_rek_bank"></div>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <div class="input_block">
+                      <label for="nama_bank">Nama Bank</label>
+                      <input type="text" class="form-control form-input-bg" id="nama_bank" name="nama_bank" value="<?= check_var($data, "nama_bank", '') ?>" />
+                      <div class="invalid-feedback" id="error_nama_bank"></div>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <div class="input_block">
                       <label for="npwp">NPWP</label>
                       <input type="text" class="form-control form-input-bg" id="npwp" name="npwp" value="<?= check_var($data, "npwp", '') ?>" />
                       <div class="invalid-feedback" id="error_npwp"></div>
@@ -296,6 +340,39 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                       <label for="periode_ke">Periode Ke</label>
                       <input type="text" class="form-control form-input-bg" id="periode_ke" name="periode_ke" value="<?= check_var($data, "periode_ke", '') ?>" />
                       <div class="invalid-feedback" id="error_periode_ke"></div>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <div class="input_block">
+                      <label for="no_sk_kepsek">No. SK Kepala Sekolah</label>
+                      <input type="text" class="form-control form-input-bg" id="no_sk_kepsek" name="no_sk_kepsek" value="<?= check_var($data, "no_sk_kepsek", '') ?>" />
+                      <div class="invalid-feedback" id="error_no_sk_kepsek"></div>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <div class="input_block">
+                      <label for="tgl_sk_kepsek">Tgl. SK Kepala Sekolah</label>
+                      <input type="text" class="form-control form-input-bg flatpickr" id="tgl_sk_kepsek" name="tgl_sk_kepsek" value="<?= check_var($data, "tgl_sk_kepsek", '') ?>" />
+                      <div class="invalid-feedback" id="error_tgl_sk_kepsek"></div>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <div class="input_block">
+                      <label for="ttd_sk_kepsek">Penandatangan SK Kepala Sekolah</label>
+                      <select name="ttd_sk_kepsek" id="ttd_sk_kepsek" class="form-select select2_ttd_sk_kepsek">
+                        <?php
+                        $selected_option = '<option value="" default selected>- Pilih Penandatangan -</option>';
+                        if (check_var($data, 'ttd_sk_kepsek') && check_var($data, 'nama_ttd_sk_kepsek')) {
+                          $selected_option = '<option value="' . $data['ttd_sk_kepsek'] . '" default selected>' . $data['ttd_sk_kepsek'] . ' - ' . $data['nama_ttd_sk_kepsek'] . '</option>';
+                        }
+
+                        echo $selected_option;
+                        ?>
+                      </select>
+                      <div class="invalid-feedback" id="error_ttd_sk_kepsek"></div>
                     </div>
                   </div>
 
@@ -412,6 +489,12 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
         }
       }
     });
+
+    init_select2(
+      '.select2_ttd_sk_kepsek',
+      '- Pilih Penandatangan -',
+      '<?= site_url('config/select2_pegawai_ttd') ?>'
+    );
 
     // do something on document ready
     $('#form_edit_profil_kepsek').validate($.extend({
