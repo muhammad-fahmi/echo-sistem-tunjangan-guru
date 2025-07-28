@@ -286,6 +286,22 @@ class Mdl_pdt_profil_sekolah extends CI_Model
     return $dataset;
   }
 
+  public function get_latest_update_sekolah($kode_ukerja)
+  {
+    $kode_ukerja = sanitize_string($kode_ukerja);
+
+    $dataset = $this->db->from('vr_profil_sekolah')
+      ->where([
+        'kode_ukerja' => $kode_ukerja,
+        'status_dokumen' => 'DITRM'
+      ])
+      ->order_by('periode_thn', 'DESC')
+      ->order_by('periode_bln', 'DESC')
+      ->get()->row_array();
+
+    return $dataset;
+  }
+
   public function replace_inventaris($id, $posted_data, $is_master = false)
   {
     $foreign_key = ($is_master)

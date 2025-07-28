@@ -1303,11 +1303,12 @@ function get_inventaris_items()
     'lab_biologi' => 'Lab. Biologi',
     'ruang_kepala_sekolah' => 'Ruang Kepala Sekolah',
     'ruang_guru' => 'Ruang Guru',
-    'ruang_tata_usaha' => 'Ruang Tata Usaha',
+    'ruang_tata_usaha' => 'Ruang Tata Usaha (TU)',
     'wc_guru_laki_laki' => 'WC Guru Laki-Laki',
     'wc_guru_perempuan' => 'WC Guru Perumpuan',
     'wc_siswa_laki_laki' => 'WC Siswa Laki-Laki',
     'wc_siswa_perempuan' => 'WC Siswa Perempuan',
+    'tempat_bermain_olahraga' => 'Tempat Bermain / Olahraga',
     'ruang_konseling' => 'Ruang Konseling',
     'ruang_osis' => 'Ruang Osis',
     'ruang_ibadah' => 'Ruang Ibadah',
@@ -1328,6 +1329,47 @@ function get_inventaris_items()
 function get_inventaris_fields()
 {
   return ['baik', 'rusak_ringan', 'rusak_sedang', 'rusak_berat', 'rusak_total', 'jumlah'];
+}
+
+/**
+ * Set inventory data into the spreadsheet cells based on item and condition mapping.
+ *
+ * This function dynamically calculates the target cell for each inventory item
+ * and condition (e.g., 'baik', 'rusak_ringan', etc.), starting from a defined column and row.
+ * Values are only set if they exist in the $arranged_inventaris array and are not zero.
+ *
+ * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $sheet The worksheet object to write data into.
+ * @param array<string, array<string, int>> $arranged_inventaris Associative array of inventory data,
+ *        where the first key is the item (e.g., 'bertingkat'), and the second key is the field (e.g., 'baik').
+ * @param string $columnStart Starting column letter in the spreadsheet (default is 'I').
+ * @param int $rowStart Starting row number in the spreadsheet (default is 7).
+ *
+ * @return void
+ */
+function set_inventaris_cells($sheet, $arranged_inventaris, $columnStart = 'I', $rowStart = 7)
+{
+  $items = array_keys(get_inventaris_items());   // List of inventory item keys
+  $fields = get_inventaris_fields();             // List of condition/status fields
+
+  foreach ($items as $rowIndex => $itemKey) {
+    foreach ($fields as $colIndex => $fieldKey) {
+      // Convert column index to column letter, e.g., 0 => 'I', 1 => 'J', ...
+      $columnLetter = chr(ord($columnStart) + $colIndex);
+
+      // Combine column and row to get the cell reference, e.g., 'I7'
+      $cell = $columnLetter . ($rowStart + $rowIndex);
+
+      // Check if the value exists in the arranged data
+      if (isset($arranged_inventaris[$itemKey][$fieldKey])) {
+        $numValue = $arranged_inventaris[$itemKey][$fieldKey];
+
+        // Only set value if it's not zero (skip zero values)
+        if ($numValue != 0) {
+          $sheet->setCellValue($cell, $numValue);
+        }
+      }
+    }
+  }
 }
 
 function compress_image($path, $image_type)
