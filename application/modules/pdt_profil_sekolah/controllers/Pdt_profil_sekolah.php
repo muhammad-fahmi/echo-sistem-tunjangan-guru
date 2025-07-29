@@ -440,13 +440,6 @@ class Pdt_profil_sekolah extends MY_Controller
     $response = $this->mdl_profsekolah->delete_profil_sekolah($post);
 
     return output_json($response);
-
-    // DEBUG
-    return output_json([
-      'status' => false,
-      'message' => 'DEBUG MESSAGE',
-      'data' => $post
-    ]);
   }
 
   public function edit_draft()
@@ -462,13 +455,6 @@ class Pdt_profil_sekolah extends MY_Controller
     $response = $this->mdl_profsekolah->edit_profil_sekolah($post);
 
     return output_json($response);
-
-    // DEBUG
-    return output_json([
-      'status' => false,
-      'message' => 'DEBUG EDIT DRAFT : PDT_ProfilSekolah',
-      'data' => $post
-    ]);
   }
 
   public function submit_draft()
@@ -484,12 +470,5 @@ class Pdt_profil_sekolah extends MY_Controller
     $response = $this->mdl_profsekolah->submit_profil_sekolah($post);
 
     return output_json($response);
-
-    // DEBUG
-    return output_json([
-      'status' => false,
-      'message' => 'DEBUG SUBMIT DRAFT : PDT_ProfilSekolah',
-      'data' => $post
-    ]);
   }
 }

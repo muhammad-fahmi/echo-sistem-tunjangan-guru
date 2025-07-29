@@ -18,6 +18,7 @@ class Pdt_verif_profil_sekolah extends MY_Controller
     }
 
     $this->load->model('mdl_pdt_verif_profil_sekolah', 'mdl_vrfprofsekolah');
+    $this->load->model('pdt_profil_sekolah/mdl_pdt_profil_sekolah', 'mdl_profsekolah');
   }
 
   /// |----------------------------------------------------------------------
@@ -102,6 +103,10 @@ class Pdt_verif_profil_sekolah extends MY_Controller
       redirect(site_url('pdt_verif_profil_sekolah'));
       return;
     }
+
+    $is_master = false;
+    $rearrange_data = true;
+    $dataset['inventaris'] = $this->mdl_profsekolah->get_data_inventaris($decryptedID, $is_master, $rearrange_data);
 
     $dataset['id_dokumen'] = encrypt_id($dataset['id_dokumen']);
     $dataset['id_kepsek'] = encrypt_id($dataset['id_kepsek']);

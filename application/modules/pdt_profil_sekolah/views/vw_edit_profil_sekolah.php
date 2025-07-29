@@ -350,7 +350,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                   <div class="col-12">
                     <div class="input_block">
                       <label for="luas_tanah">Luas Tanah</label>
-                      <input id="luas_tanah" name="luas_tanah" type="text" class="form-control" value="<?= check_var($data, 'luas_tanah', '') ?>">
+                      <input id="luas_tanah" type="number" step="0.01" min="0" name="luas_tanah" type="text" class="form-control" value="<?= check_var($data, 'luas_tanah', '') ?>">
                       <div class="invalid-feedback" id="error_luas_tanah"></div>
                     </div>
                   </div>

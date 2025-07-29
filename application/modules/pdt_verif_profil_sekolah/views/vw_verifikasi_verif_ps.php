@@ -676,10 +676,17 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     ? $dokumen['inventaris'][$key][$field_name]
                     : 0;
 
+                  $value_ori = (isset($data['inventaris'][$key][$field_name]))
+                    ? $data['inventaris'][$key][$field_name] : null;
+                  $value_dokumen = (isset($dokumen['inventaris'][$key][$field_name]))
+                    ? $data['inventaris'][$key][$field_name] : null;
+                  $changed_data_class = ($value_dokumen != $value_ori)
+                    ? 'new_change' : '';
+
                   $exist_class = ($default_value > 0) ? 'exist' : '';
 
                   if ($key != 'total' && $field_name != 'jumlah') {
-                    echo '<td>' .
+                    echo '<td class="' . $changed_data_class . '">' .
 
                       '<div class="text-end vam input_inventaris ' . $exist_class . ' ' . $key . ' ' . $field_name . '" style="width: 100%;">' . $default_value . '</div>' .
 

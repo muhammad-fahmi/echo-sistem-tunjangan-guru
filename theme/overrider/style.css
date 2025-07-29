@@ -424,4 +424,11 @@ a.badge.text-white:hover {
 }
 .input_inventaris:not(.form-control) {
   border: none;
+}
+
+td.new_change {
+  background-color: #ecfefa;
+}
+td.new_change .input_inventaris {
+  opacity: 1;
 }/*# sourceMappingURL=style.css.map */
