@@ -115,7 +115,7 @@ class Mdl_pdt_manajemen_perm extends CI_Model
       $menu_title = $is_child_prefix . '<i class="' . $menu_icon . ' me-1"></i>' . $value['menu_title'];
 
       $html .= '<tr>';
-      $html .= '<td class="text-start vam">' . $menu_title . '</td>';
+      $html .= '<td class="text-center vam">' . $menu_title . '</td>';
 
       foreach ($perm_list as $perm_key) {
         $val = isset($value[$perm_key]) ? $value[$perm_key] : '';
@@ -152,7 +152,7 @@ class Mdl_pdt_manajemen_perm extends CI_Model
 
     $default_html = '<input type="hidden" name="error" value="YES">' .
       '<tr>
-        <td class="text-start vam"><i class="fas fa-edit me-1"></i>Menu belum di-set Admin</td>
+        <td class="text-center vam"><i class="fas fa-edit me-1"></i>Menu belum di-set Admin</td>
         <td class="text-center vam">
           <div class="d-block" style="font-size: 2rem; opacity: 0.6;"><i class="fas fa-minus-square text-secondary"></i></div>
         </td>

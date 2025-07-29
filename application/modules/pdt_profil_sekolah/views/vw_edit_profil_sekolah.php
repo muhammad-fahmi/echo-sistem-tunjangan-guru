@@ -414,7 +414,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     if ($key != 'total' && $field_name != 'jumlah') {
                       echo '<td>' .
 
-                        '<input type="number" step="1" min="0" name="inventaris[' . $key . '][' . $field_name . ']" class="form-control form-control-sm input_inventaris ' . $exist_class . ' ' . $key . ' ' . $field_name . '" style="width: 100%;" value="' . $default_value . '">' .
+                        '<input type="number" step="1" min="0" name="inventaris[' . $key . '][' . $field_name . ']" class="form-control form-control-sm vam text-end input_inventaris ' . $exist_class . ' ' . $key . ' ' . $field_name . '" style="width: 100%;" value="' . $default_value . '">' .
 
                         '</td>';
                     } else {
@@ -422,7 +422,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
 
                         '<input type="hidden" name="inventaris[' . $key . '][' . $field_name . ']" class="hidden_input ' . $key . ' ' . $field_name . '" value="' . $default_value . '">' .
 
-                        '<div class="display_value ' . $key . ' ' . $field_name . '" style="font-weight: bold;">' . $default_value . '</div>' .
+                        '<div class="display_value vam text-end ' . $key . ' ' . $field_name . '" style="font-weight: bold;">' . $default_value . '</div>' .
 
                         '</td>';
                     }

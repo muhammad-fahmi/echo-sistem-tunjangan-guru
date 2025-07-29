@@ -68,11 +68,12 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
     <div class="col-12 col-lg-6">
 
       <div class="card">
+        <div class="card-title space-between">
+          <div><i class="fas fa-building me-2"></i>Profil Sekolah (Saat Ini)</div>
+          <div></div>
+        </div>
+
         <div class="card-body">
-          <h4 class="card-title space-between mb-3">
-            <div><i class="fas fa-building me-2"></i>Profil Sekolah (Saat Ini)</div>
-            <div></div>
-          </h4>
 
           <div class="row g-2">
 
@@ -326,6 +327,64 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
           </div>
 
         </div>
+
+        <div class="card-title space-between">
+          <div>Data Inventaris (Saat Ini)</div>
+        </div>
+
+        <div class="card-body">
+          <table class="table table-sm table-bordered table-hover" style="font-size: 0.65rem;">
+            <thead class="text-center">
+              <tr>
+                <th style="width: 40%;" class="vam">GEDUNG</th>
+                <th style="width: 10%;" class="vam">Baik</th>
+                <th style="width: 10%;" class="vam">Rusak<br>Ringan</th>
+                <th style="width: 10%;" class="vam">Rusak<br>Sedang</th>
+                <th style="width: 10%;" class="vam">Rusak<br>Berat</th>
+                <th style="width: 10%;" class="vam">Rusak<br>Total</th>
+                <th style="width: 10%;" class="vam">JUMLAH</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+              $items = get_inventaris_items();
+              $fields = get_inventaris_fields();
+
+              foreach ($items as $key => $value) {
+                echo '<tr>';
+                echo ($key == 'total')
+                  ? '<td class="text-start vam"><b>' . $value . '</b></td>'
+                  : '<td class="text-start vam">' . $value . '</td>';
+                foreach ($fields as $field_name) {
+                  $data_inv = $data['inventaris'];
+                  $default_value = (isset($data['inventaris'][$key][$field_name]))
+                    ? $data['inventaris'][$key][$field_name]
+                    : 0;
+
+                  $exist_class = ($default_value > 0) ? 'exist' : '';
+
+                  if ($key != 'total' && $field_name != 'jumlah') {
+                    echo '<td>' .
+
+                      '<div class="text-end vam input_inventaris ' . $exist_class . ' ' . $key . ' ' . $field_name . '" style="width: 100%;">' . $default_value . '</div>' .
+
+                      '</td>';
+                  } else {
+                    echo '<td>' .
+
+                      '<div class="text-end vam display_value ' . $key . ' ' . $field_name . '" style="font-weight: bold;">' . $default_value . '</div>' .
+
+                      '</td>';
+                  }
+                }
+                echo '</tr>';
+              }
+              ?>
+            </tbody>
+          </table>
+        </div>
+
+
       </div>
 
 
@@ -339,11 +398,11 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
     <div class="col-12 col-lg-6">
 
       <div class="card">
+        <div class="card-title space-between">
+          <div><i class="fas fa-building me-2"></i>Profil Sekolah (Baru)</div>
+          <div></div>
+        </div>
         <div class="card-body">
-          <h4 class="card-title space-between mb-3">
-            <div><i class="fas fa-building me-2"></i>Profil Sekolah (Baru)</div>
-            <div></div>
-          </h4>
 
           <div class="row g-2">
 
@@ -582,6 +641,62 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
 
           </div>
 
+        </div>
+
+        <div class="card-title space-between">
+          <div>Data Inventaris (Baru)</div>
+        </div>
+
+        <div class="card-body">
+          <table class="table table-sm table-bordered table-hover" style="font-size: 0.65rem;">
+            <thead class="text-center">
+              <tr>
+                <th style="width: 40%;" class="vam">GEDUNG</th>
+                <th style="width: 10%;" class="vam">Baik</th>
+                <th style="width: 10%;" class="vam">Rusak<br>Ringan</th>
+                <th style="width: 10%;" class="vam">Rusak<br>Sedang</th>
+                <th style="width: 10%;" class="vam">Rusak<br>Berat</th>
+                <th style="width: 10%;" class="vam">Rusak<br>Total</th>
+                <th style="width: 10%;" class="vam">JUMLAH</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+              $items = get_inventaris_items();
+              $fields = get_inventaris_fields();
+
+              foreach ($items as $key => $value) {
+                echo '<tr>';
+                echo ($key == 'total')
+                  ? '<td class="text-start vam"><b>' . $value . '</b></td>'
+                  : '<td class="text-start vam">' . $value . '</td>';
+                foreach ($fields as $field_name) {
+                  $dokumen_inv = $dokumen['inventaris'];
+                  $default_value = (isset($dokumen['inventaris'][$key][$field_name]))
+                    ? $dokumen['inventaris'][$key][$field_name]
+                    : 0;
+
+                  $exist_class = ($default_value > 0) ? 'exist' : '';
+
+                  if ($key != 'total' && $field_name != 'jumlah') {
+                    echo '<td>' .
+
+                      '<div class="text-end vam input_inventaris ' . $exist_class . ' ' . $key . ' ' . $field_name . '" style="width: 100%;">' . $default_value . '</div>' .
+
+                      '</td>';
+                  } else {
+                    echo '<td>' .
+
+                      '<div class="text-end vam display_value ' . $key . ' ' . $field_name . '" style="font-weight: bold;">' . $default_value . '</div>' .
+
+                      '</td>';
+                  }
+                }
+                echo '</tr>';
+              }
+              ?>
+            </tbody>
+          </table>
         </div>
       </div>
 

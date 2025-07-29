@@ -151,6 +151,43 @@ class Mdl_pdt_verif_profil_sekolah extends CI_Model
   /// |----------------------------------------------------------------------
   /// | >> FUNGSI CRUD
   /// |----------------------------------------------------------------------
+  public function get_data_inventaris($id, $is_master = false, $rearrange_data = false)
+  {
+    $this->db->from('r_inventaris');
+
+    if ($is_master) {
+      $this->db->where('kode_ukerja', $id);
+    } else {
+      $this->db->where('id_dokumen', $id);
+    }
+
+    $this->db->order_by('id', 'ASC');
+    $dataset = $this->db->get()->result_array();
+
+    if (
+      $rearrange_data && check_var($dataset)
+    ) {
+      $arranged_data = [];
+
+      foreach ($dataset as $value) {
+        $key = $value['inventaris'];
+
+        $arranged_data[$key] = [
+          'baik' => (int) $value['baik'],
+          'rusak_ringan' => (int) $value['rusak_ringan'],
+          'rusak_sedang' => (int) $value['rusak_sedang'],
+          'rusak_berat' => (int) $value['rusak_berat'],
+          'rusak_total' => (int) $value['rusak_total'],
+          'jumlah' => (int) $value['jumlah']
+        ];
+      }
+
+      $dataset = $arranged_data;
+    }
+
+    return $dataset;
+  }
+
   /** fungsi untuk menyetujui verifikasi disdik return row_array (status / message) */
   private function setuju_vrfdd($data_dokumen, $post_data, &$proc_vrfdd)
   {

@@ -421,4 +421,7 @@ a.badge.text-white:hover {
 .input_inventaris.exist {
   opacity: 1;
   border: 1px solid #36a936;
+}
+.input_inventaris:not(.form-control) {
+  border: none;
 }/*# sourceMappingURL=style.css.map */
