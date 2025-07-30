@@ -115,7 +115,7 @@ class Mdl_pdt_manajemen_perm extends CI_Model
       $menu_title = $is_child_prefix . '<i class="' . $menu_icon . ' me-1"></i>' . $value['menu_title'];
 
       $html .= '<tr>';
-      $html .= '<td class="text-center vam">' . $menu_title . '</td>';
+      $html .= '<td class="text-start vam">' . $menu_title . '</td>';
 
       foreach ($perm_list as $perm_key) {
         $val = isset($value[$perm_key]) ? $value[$perm_key] : '';
