@@ -687,7 +687,8 @@ class Mdl_pdt_profil_sekolah extends CI_Model
         $this->db->trans_commit();
         return [
           'status' => true,
-          'message' => "Usulan Update Profil Sekolah berhasil dibuat dengan status Draft."
+          'message' => "Usulan Update Profil Sekolah berhasil dibuat dengan status Draft.",
+          'ID' => encrypt_id($insert_id)
         ];
       }
     } catch (\Throwable $th) {

@@ -111,8 +111,9 @@ switch ($type) {
                     show_notify('success', e.message);
                     reload_r_profil_table();
                     setTimeout(() => {
-                      $('#whole_modal_id').modal('hide');
-                    }, 500);
+                      //   $('#whole_modal_id').modal('hide');
+                      window.location.href = '<?= site_url('pdt_profil_sekolah/edit') ?>/' + e.ID;
+                    }, 800);
                   } else {
                     show_notify('error', e.message);
                     submit.attr('disabled', false);
@@ -230,8 +231,9 @@ switch ($type) {
                     show_notify('success', e.message);
                     reload_r_profil_table();
                     setTimeout(() => {
-                      $('#whole_modal_id').modal('hide');
-                    }, 500);
+                      // $('#whole_modal_id').modal('hide');
+                      window.location.href = '<?= site_url('pdt_profil_sekolah/edit') ?>/' + e.ID;
+                    }, 800);
                   } else {
                     show_notify('error', e.message);
                     submit.attr('disabled', false);
