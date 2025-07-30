@@ -679,7 +679,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                   $value_ori = (isset($data['inventaris'][$key][$field_name]))
                     ? $data['inventaris'][$key][$field_name] : null;
                   $value_dokumen = (isset($dokumen['inventaris'][$key][$field_name]))
-                    ? $data['inventaris'][$key][$field_name] : null;
+                    ? $dokumen['inventaris'][$key][$field_name] : null;
                   $changed_data_class = ($value_dokumen != $value_ori)
                     ? 'new_change' : '';
 

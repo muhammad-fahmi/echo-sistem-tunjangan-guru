@@ -151,41 +151,24 @@ class Mdl_pdt_verif_profil_sekolah extends CI_Model
   /// |----------------------------------------------------------------------
   /// | >> FUNGSI CRUD
   /// |----------------------------------------------------------------------
-  public function get_data_inventaris($id, $is_master = false, $rearrange_data = false)
+  /** fungsi untuk update data inventaris apabila dokumen usulan sudah disetujui
+   * -- remove kode_ukerja di semua inventaris yang bukan id_dokumen terkait (jadikan `null`)
+   * -- set kode_ukerja ke semua data inventaris dengan id_dokumen terkait
+   */
+  public function update_inventaris_master($id_dokumen, $kode_ukerja)
   {
-    $this->db->from('r_inventaris');
+    $this->db->update('r_inventaris', [
+      'kode_ukerja' => null
+    ], [
+      'id_dokumen <>' => $id_dokumen,
+      'kode_ukerja' => $kode_ukerja
+    ]);
 
-    if ($is_master) {
-      $this->db->where('kode_ukerja', $id);
-    } else {
-      $this->db->where('id_dokumen', $id);
-    }
-
-    $this->db->order_by('id', 'ASC');
-    $dataset = $this->db->get()->result_array();
-
-    if (
-      $rearrange_data && check_var($dataset)
-    ) {
-      $arranged_data = [];
-
-      foreach ($dataset as $value) {
-        $key = $value['inventaris'];
-
-        $arranged_data[$key] = [
-          'baik' => (int) $value['baik'],
-          'rusak_ringan' => (int) $value['rusak_ringan'],
-          'rusak_sedang' => (int) $value['rusak_sedang'],
-          'rusak_berat' => (int) $value['rusak_berat'],
-          'rusak_total' => (int) $value['rusak_total'],
-          'jumlah' => (int) $value['jumlah']
-        ];
-      }
-
-      $dataset = $arranged_data;
-    }
-
-    return $dataset;
+    $this->db->update('r_inventaris', [
+      'kode_ukerja' => $kode_ukerja
+    ], [
+      'id_dokumen' => $id_dokumen
+    ]);
   }
 
   /** fungsi untuk menyetujui verifikasi disdik return row_array (status / message) */
@@ -252,8 +235,12 @@ class Mdl_pdt_verif_profil_sekolah extends CI_Model
     ];
     $this->db->update('r_profil_sekolah', $data_update_dok, ['id_dokumen' => $data_dokumen['id_dokumen']]);
 
-    // BUAT LOG SISTEM
+    // UPDATE DATA INVENTARIS
     $proc_vrfdd = 7;
+    $this->update_inventaris_master($data_dokumen['id_dokumen'], $data_dokumen['kode_ukerja']);
+
+    // BUAT LOG SISTEM
+    $proc_vrfdd = 8;
     log_generator(
       $cur_user,
       'r_profil_sekolah',
@@ -262,7 +249,7 @@ class Mdl_pdt_verif_profil_sekolah extends CI_Model
     );
 
     // BUAT RIWAYAT DOKUMEN
-    $proc_vrfdd = 8;
+    $proc_vrfdd = 9;
     $this->db->insert('r_log_dokumen', [
       'jenis_dokumen' => 'PROFIL_SEKOLAH',
       'id_dokumen' => $data_dokumen['id_dokumen'],
@@ -285,7 +272,7 @@ class Mdl_pdt_verif_profil_sekolah extends CI_Model
     $cur_user = $this->session->userdata('id_user');
 
     // UPDATE R_PROFIL_SEKOLAH (GANTI STATUS JADI DITOLAK)
-    $proc_vrfdd = 9;
+    $proc_vrfdd = 10;
     $data_update_dok = [
       'verif_by' => $cur_user,
       'verif_on' => em_date('Y-m-d H:i:s'),
@@ -294,7 +281,7 @@ class Mdl_pdt_verif_profil_sekolah extends CI_Model
     $this->db->update('r_profil_sekolah', $data_update_dok, ['id_dokumen' => $data_dokumen['id_dokumen']]);
 
     // BUAT LOG SISTEM
-    $proc_vrfdd = 10;
+    $proc_vrfdd = 11;
     log_generator(
       $cur_user,
       'r_profil_sekolah',
@@ -303,7 +290,7 @@ class Mdl_pdt_verif_profil_sekolah extends CI_Model
     );
 
     // BUAT RIWAYAT DOKUMEN
-    $proc_vrfdd = 11;
+    $proc_vrfdd = 12;
     $this->db->insert('r_log_dokumen', [
       'jenis_dokumen' => 'PROFIL_SEKOLAH',
       'id_dokumen' => $data_dokumen['id_dokumen'],

@@ -58,10 +58,10 @@ class Pdt_verif_profil_sekolah extends MY_Controller
 
     $is_master = true;
     $rearrange_data = true;
-    $data_ori['inventaris'] = $this->mdl_vrfprofsekolah->get_data_inventaris($data_ori['kode_ukerja'], $is_master, $rearrange_data);
+    $data_ori['inventaris'] = $this->mdl_profsekolah->get_data_inventaris($data_ori['kode_ukerja'], $is_master, $rearrange_data);
 
     $is_master = false;
-    $dataset['inventaris'] = $this->mdl_vrfprofsekolah->get_data_inventaris($dataset['id_dokumen'], $is_master, $rearrange_data);
+    $dataset['inventaris'] = $this->mdl_profsekolah->get_data_inventaris($dataset['id_dokumen'], $is_master, $rearrange_data);
 
     $dataset['id_dokumen'] = encrypt_id($dataset['id_dokumen']);
     $dataset['id_kepsek'] = encrypt_id($dataset['id_kepsek']);
