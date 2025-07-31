@@ -196,7 +196,7 @@ class Pdt_profil_kepsek extends MY_Controller
     $data_kepsek = fetch_row_data('vm_profil_kepsek', [
       'nip' => $nip
     ], false);
-    if (!$data_kepsek) return output_error('Maaf, data Kepala Seolah tidak valid.');
+    if (!$data_kepsek) return output_error('Maaf, data Kepala Sekolah tidak valid.');
 
     $data_riwayat = $this->mdl_profkepsek->get_riwayat_kepala_sekolah($nip);
 

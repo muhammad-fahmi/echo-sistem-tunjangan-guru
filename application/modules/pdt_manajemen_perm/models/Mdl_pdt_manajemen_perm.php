@@ -152,7 +152,7 @@ class Mdl_pdt_manajemen_perm extends CI_Model
 
     $default_html = '<input type="hidden" name="error" value="YES">' .
       '<tr>
-        <td class="text-start vam"><i class="fas fa-edit me-1"></i>Menu belum di-set Admin</td>
+        <td class="text-center vam"><i class="fas fa-edit me-1"></i>Menu belum di-set Admin</td>
         <td class="text-center vam">
           <div class="d-block" style="font-size: 2rem; opacity: 0.6;"><i class="fas fa-minus-square text-secondary"></i></div>
         </td>

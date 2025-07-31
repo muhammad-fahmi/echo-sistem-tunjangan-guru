@@ -167,7 +167,15 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                   <div class="col-12">
                     <div class="input_block">
                       <label for="akreditasi">Akreditasi</label>
-                      <input id="akreditasi" name="akreditasi" type="text" class="form-control" value="<?= check_var($data, 'akreditasi', '') ?>">
+                      <?php
+                      $akr = check_var($data, 'akreditasi', '');
+                      ?>
+                      <select name="akreditasi" id="akreditasi" class="form-select">
+                        <option value="" default hidden>- Pilih Akreditasi -</option>
+                        <option value="A" <?= ($akr == 'A') ? 'selected' : ''; ?>>Akreditasi A</option>
+                        <option value="B" <?= ($akr == 'B') ? 'selected' : ''; ?>>Akreditasi B</option>
+                        <option value="C" <?= ($akr == 'C') ? 'selected' : ''; ?>>Akreditasi C</option>
+                      </select>
                       <div class="invalid-feedback" id="error_akreditasi"></div>
                     </div>
                   </div>
@@ -350,7 +358,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                   <div class="col-12">
                     <div class="input_block">
                       <label for="luas_tanah">Luas Tanah</label>
-                      <input id="luas_tanah" name="luas_tanah" type="text" class="form-control" value="<?= check_var($data, 'luas_tanah', '') ?>">
+                      <input id="luas_tanah" type="number" step="0.01" min="0" name="luas_tanah" type="text" class="form-control" value="<?= check_var($data, 'luas_tanah', '') ?>">
                       <div class="invalid-feedback" id="error_luas_tanah"></div>
                     </div>
                   </div>
@@ -414,7 +422,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                     if ($key != 'total' && $field_name != 'jumlah') {
                       echo '<td>' .
 
-                        '<input type="number" step="1" min="0" name="inventaris[' . $key . '][' . $field_name . ']" class="form-control form-control-sm input_inventaris ' . $exist_class . ' ' . $key . ' ' . $field_name . '" style="width: 100%;" value="' . $default_value . '">' .
+                        '<input type="number" step="1" min="0" name="inventaris[' . $key . '][' . $field_name . ']" class="form-control form-control-sm vam text-end input_inventaris ' . $exist_class . ' ' . $key . ' ' . $field_name . '" style="width: 100%;" value="' . $default_value . '">' .
 
                         '</td>';
                     } else {
@@ -422,7 +430,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
 
                         '<input type="hidden" name="inventaris[' . $key . '][' . $field_name . ']" class="hidden_input ' . $key . ' ' . $field_name . '" value="' . $default_value . '">' .
 
-                        '<div class="display_value ' . $key . ' ' . $field_name . '" style="font-weight: bold;">' . $default_value . '</div>' .
+                        '<div class="display_value vam text-end ' . $key . ' ' . $field_name . '" style="font-weight: bold;">' . $default_value . '</div>' .
 
                         '</td>';
                     }

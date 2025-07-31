@@ -109,9 +109,10 @@ class Mdl_pdt_profil_sekolah extends CI_Model
       // tampilan aksi
       $tombol_update = '<div class="badge bg-warning clickable" onclick="modal(`update_existing_profil`, `' . $row['kode_ukerja'] . '`)"><i class="fas fa-sync me-1"></i>Update</div>';
       $tombol_detail = '<a href="' . site_url('pdt_profil_sekolah/detail_master/' . $row['kode_ukerja']) . '" class="clickable text-white badge bg-secondary"><i class="fas fa-file me-1"></i>Detail</a>';
+      $tombol_cetak = '<a target="_blank" href="' . site_url('pdt_profil_sekolah/cetak/' . $row['kode_ukerja']) . '" class="clickable text-white badge bg-primary"><i class="fas fa-print me-1"></i>Cetak</a>';
 
       $row['aksi_display'] = '<div class="d-grid gap-1">' .
-        $tombol_update . $tombol_detail .
+        $tombol_update . $tombol_detail . $tombol_cetak .
         '</div>';
 
       // store modified data into the result
@@ -286,20 +287,36 @@ class Mdl_pdt_profil_sekolah extends CI_Model
     return $dataset;
   }
 
+  public function get_latest_update_sekolah($kode_ukerja)
+  {
+    $kode_ukerja = sanitize_string($kode_ukerja);
+
+    $dataset = $this->db->from('vr_profil_sekolah')
+      ->where([
+        'kode_ukerja' => $kode_ukerja,
+        'status_dokumen' => 'DITRM'
+      ])
+      ->order_by('periode_thn', 'DESC')
+      ->order_by('periode_bln', 'DESC')
+      ->get()->row_array();
+
+    return $dataset;
+  }
+
   public function replace_inventaris($id, $posted_data, $is_master = false)
   {
     $foreign_key = ($is_master)
       ? 'kode_ukerja'
       : 'id_dokumen';
 
+    $this->db->delete('r_inventaris', [$foreign_key => $id]);
+
     $inventaris = check_var($posted_data, 'inventaris', false);
     if (!$inventaris) return;
 
-    $this->db->delete('r_inventaris', [$foreign_key => $id]);
-
     $inventaris_batch = [];
     foreach ($inventaris as $key => $value) {
-      if ((int)$value['jumlah'] <= 0) continue;
+      if ((int)check_var($value, 'jumlah', 0) <= 0) continue;
 
       $inventaris_batch[] = [
         $foreign_key => $id,
@@ -313,7 +330,7 @@ class Mdl_pdt_profil_sekolah extends CI_Model
       ];
     }
 
-    $this->db->insert_batch('r_inventaris', $inventaris_batch);
+    if (check_var($inventaris_batch)) $this->db->insert_batch('r_inventaris', $inventaris_batch);
   }
 
   public function tambah_profil_sekolah($post)
@@ -670,7 +687,8 @@ class Mdl_pdt_profil_sekolah extends CI_Model
         $this->db->trans_commit();
         return [
           'status' => true,
-          'message' => "Usulan Update Profil Sekolah berhasil dibuat dengan status Draft."
+          'message' => "Usulan Update Profil Sekolah berhasil dibuat dengan status Draft.",
+          'ID' => encrypt_id($insert_id)
         ];
       }
     } catch (\Throwable $th) {
@@ -813,6 +831,10 @@ class Mdl_pdt_profil_sekolah extends CI_Model
           'datetime' => em_date('Y-m-d H:i:s'),
           'message' => "Melakukan Submit Usulan Profil Sekolah ({$dataset['ket_ukerja']}) dengan jenjang {$data['jenjang']} untuk periode {$periode_text}."
         ]);
+
+        // insert data existing inventaris ke dokumen baru
+        $is_master = false;
+        $this->replace_inventaris($decryptedID, $new_data, $is_master);
       }
 
       if ($this->db->trans_status() === FALSE) {

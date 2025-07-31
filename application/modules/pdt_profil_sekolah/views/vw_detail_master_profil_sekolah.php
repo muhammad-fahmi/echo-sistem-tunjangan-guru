@@ -40,14 +40,12 @@
       <div class="card">
         <div class="card-title space-between">
           <div><i class="fas fa-building me-2"></i>Profil Sekolah</div>
+          <a target="_blank" href="<?= site_url('pdt_profil_sekolah/cetak/' . check_var($data, 'kode_ukerja', '0000')) ?>" class="btn btn-sm btn-primary"><i class="fas fa-print me-2"></i>Cetak Laporan</a>
         </div>
         <div class="card-body">
 
           <div class="row g-2">
 
-            <!-- <div class="col-12 col-lg-3 col-xl-1"></div> -->
-
-            <!-- <div class="col-12 col-lg-9 col-xl-11"> -->
             <div class="col-12">
               <div class="row g-2">
 
@@ -328,13 +326,13 @@
                   if ($key != 'total' && $field_name != 'jumlah') {
                     echo '<td>' .
 
-                      '<div class="form-control form-control-sm input_inventaris ' . $exist_class . ' ' . $key . ' ' . $field_name . '" style="width: 100%;">' . $default_value . '</div>' .
+                      '<div class="form-control form-control-sm vam text-end input_inventaris ' . $exist_class . ' ' . $key . ' ' . $field_name . '" style="width: 100%;">' . $default_value . '</div>' .
 
                       '</td>';
                   } else {
                     echo '<td>' .
 
-                      '<div class="display_value ' . $key . ' ' . $field_name . '" style="font-weight: bold;">' . $default_value . '</div>' .
+                      '<div class="display_value vam text-end ' . $key . ' ' . $field_name . '" style="font-weight: bold;">' . $default_value . '</div>' .
 
                       '</td>';
                   }

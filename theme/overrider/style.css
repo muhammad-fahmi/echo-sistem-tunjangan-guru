@@ -421,4 +421,14 @@ a.badge.text-white:hover {
 .input_inventaris.exist {
   opacity: 1;
   border: 1px solid #36a936;
+}
+.input_inventaris:not(.form-control) {
+  border: none;
+}
+
+td.new_change {
+  background-color: #ecfefa;
+}
+td.new_change .input_inventaris {
+  opacity: 1;
 }/*# sourceMappingURL=style.css.map */

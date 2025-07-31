@@ -486,4 +486,16 @@ a.badge.text-white {
 		opacity: 1;
 		border: 1px solid #36a936;
 	}
+
+	&:not(.form-control) {
+		border: none;
+	}
+}
+
+td.new_change {
+	background-color: #ecfefa;
+
+	.input_inventaris {
+		opacity: 1;
+	}
 }

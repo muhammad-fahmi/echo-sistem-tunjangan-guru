@@ -131,6 +131,58 @@ class Pdt_profil_sekolah extends MY_Controller
     echo Modules::run('layout/backend', $data);
   }
 
+  public function cetak($kode_ukerja)
+  {
+    $kode_ukerja = sanitize_string($kode_ukerja);
+
+    $data_sekolah = fetch_row_data('vm_profil_sekolah', [
+      'kode_ukerja' => $kode_ukerja
+    ], false);
+    if (!$data_sekolah) return output_error('Maaf, data Sekolah tidak valid.');
+
+    $data_dokumen = $this->mdl_profsekolah->get_latest_update_sekolah($kode_ukerja);
+
+    $is_master = true;
+    $rearrange_data = true;
+    $arranged_inventaris = $this->mdl_profsekolah->get_data_inventaris($kode_ukerja, $is_master, $rearrange_data);
+
+    try {
+      $template_file = $this->config->item('template_path') . 'laporan_sekolah.xlsx';
+      if (!file_exists($template_file)) return output_error('Maaf, file template untuk cetak laporan Sekolah tidak ditemukan.');
+
+      $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($template_file);
+      $sheet = $spreadsheet->getActiveSheet();
+
+      $arr_periode_bln = array_periode_bulan();
+      $periode_bln_text = check_var($arr_periode_bln, check_var(
+        $data_dokumen,
+        'periode_bln',
+        'XX'
+      ), '');
+      $sheet->setCellValue('D3', $periode_bln_text);
+      $sheet->setCellValue('D4', check_var($data_dokumen, 'periode_thn', ''));
+      $sheet->setCellValue('D6', check_var($data_sekolah, 'ket_ukerja', ''));
+      $sheet->setCellValue('D7', check_var($data_sekolah, 'jenjang', ''));
+      $sheet->setCellValue('D8', check_var($data_sekolah, 'ket_status_sekolah', ''));
+      $sheet->setCellValue('D9', check_var($data_sekolah, 'npsn', ''));
+      $sheet->setCellValue('D10', check_var($data_sekolah, 'nss', ''));
+
+      // set data inventaris
+      set_inventaris_cells($sheet, $arranged_inventaris);
+
+      header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      header('Content-Disposition: attachment;filename="Cetak Laporan Sekolah ' . $data_sekolah['ket_ukerja'] . '.xlsx"');
+      header('Cache-Control: max-age=0');
+
+      $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+      $writer->save('php://output');
+      exit;
+    } catch (\Throwable $th) {
+      $cm = sanitize_string($th->getMessage());
+      return output_error("Maaf, terjadi kesalahan saat akan mencetak laporan.\n\n$cm");
+    }
+  }
+
   /// |----------------------------------------------------------------------
   /// | >> AJAX REQUEST FUNCTIONS
   /// |----------------------------------------------------------------------
@@ -388,13 +440,6 @@ class Pdt_profil_sekolah extends MY_Controller
     $response = $this->mdl_profsekolah->delete_profil_sekolah($post);
 
     return output_json($response);
-
-    // DEBUG
-    return output_json([
-      'status' => false,
-      'message' => 'DEBUG MESSAGE',
-      'data' => $post
-    ]);
   }
 
   public function edit_draft()
@@ -410,13 +455,6 @@ class Pdt_profil_sekolah extends MY_Controller
     $response = $this->mdl_profsekolah->edit_profil_sekolah($post);
 
     return output_json($response);
-
-    // DEBUG
-    return output_json([
-      'status' => false,
-      'message' => 'DEBUG EDIT DRAFT : PDT_ProfilSekolah',
-      'data' => $post
-    ]);
   }
 
   public function submit_draft()
@@ -432,12 +470,5 @@ class Pdt_profil_sekolah extends MY_Controller
     $response = $this->mdl_profsekolah->submit_profil_sekolah($post);
 
     return output_json($response);
-
-    // DEBUG
-    return output_json([
-      'status' => false,
-      'message' => 'DEBUG SUBMIT DRAFT : PDT_ProfilSekolah',
-      'data' => $post
-    ]);
   }
 }
