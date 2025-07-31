@@ -117,7 +117,9 @@
   function toggleDisabilitySelect() {
     const checkbox = document.getElementById('pdpd');
     const select_pd = document.getElementById('pdpd_container');
-    select_pd.style.display = checkbox.checked ? 'block' : 'none';
+    if (checkbox && select_pd) {
+      select_pd.style.display = checkbox.checked ? 'block' : 'none';
+    }
   }
 
   /// |----------------------------------------------------------------------
@@ -223,6 +225,10 @@
   $.validator.addMethod("noTitles", function(value, element) {
     const titlePattern = /\b(prof|dr|drs|mrs|mr|ms|ir|hj|haji|habib|ustadz|kyai|s\.pd|s\.kom|s\.e|s\.h|s\.ag|m\.pd|m\.kom|m\.si|m\.sc|m\.m|phd|msc|b\.eng|b\.sc)\b/i;
     return this.optional(element) || !titlePattern.test(value);
+  });
+
+  $('#whole_modal_id').on('shown.bs.modal', function() {
+    toggleDisabilitySelect();
   });
 
   $('#savePesertaDidik').validate($.extend({
