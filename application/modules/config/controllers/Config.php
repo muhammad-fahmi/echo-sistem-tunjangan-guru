@@ -605,7 +605,7 @@ class Config extends MY_Controller
     $search = $this->input->post('search');
     // kondisi where
     $where_search = ($search != '')
-      ? "AND (ket_sekolah LIKE '%$search%' 
+      ? "AND (ket_jenjang LIKE '%$search%' 
       OR id LIKE '%$search%')"
       : "";
     // query searching
@@ -616,11 +616,11 @@ class Config extends MY_Controller
     if (isset_nn_nes($result)) {
       foreach ($result as $r) {
         $data[$index]['id'] = $r['id'];
-        $data[$index]['text'] = $r['id'] . ' - ' . trim($r['ket_sekolah']);
+        $data[$index]['text'] = $r['id'] . ' - ' . trim($r['ket_jenjang']);
 
         // additional param to send back
         $data[$index]['id'] = $r['id'];
-        $data[$index]['ket_sekolah'] = trim($r['ket_sekolah']);
+        $data[$index]['ket_jenjang'] = trim($r['ket_jenjang']);
 
         $index++;
       }
@@ -687,7 +687,6 @@ class Config extends MY_Controller
         // additional param to send back
         $data[$index]['id_rombel'] = $r['id_rombel'];
         $data[$index]['nama_rombel'] = trim($r['nama_rombel']);
-        // $data[$index]['kode_gol'] = $r['kode_gol'];
 
         $index++;
       }

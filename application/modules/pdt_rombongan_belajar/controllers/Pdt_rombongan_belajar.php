@@ -28,6 +28,19 @@ class Pdt_rombongan_belajar extends MY_Controller
     echo Modules::run('layout/backend', $data);
   }
 
+  public function detail($id)
+  {
+    // lakukan proses init halaman
+    $sent_data = array();
+    $data = array(
+      'page_title' => "Update Rombongan Belajar | PROGURINDA",
+      'module' => "pdt_rombongan_belajar",
+      'view' => "vw_update_rombongan_belajar",
+      'data' => $sent_data
+    );
+    echo Modules::run('layout/backend', $data);
+  }
+
   public function get_data()
   {
     // get index value
@@ -58,7 +71,7 @@ class Pdt_rombongan_belajar extends MY_Controller
   public function modal()
   {
     $type = $this->input->post('type');
-    $id = $this->input->post('id_rombel');
+    $id = $this->input->post('id');
     $decryptedID = decrypt_id(sanitize_string($id));
     /// |----------------------------------------
     /// | DEFAULT VALUE
@@ -112,6 +125,54 @@ class Pdt_rombongan_belajar extends MY_Controller
           break;
         }
     }
+
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($res));
+  }
+
+  public function save()
+  {
+    /// |----------------------------------------
+    /// | AMBIL DATA POST
+    /// |----------------------------------------
+    $post = $this->input->post();
+
+    // set data array utk proses insert
+    $data_to_save = array(
+      'id' => $post['id'],
+      'jenjang' => $post['id_jenjang'],
+      'kelas' => $post['id_kelas'],
+      'rombel' => $post['id_rombel'],
+      'ket_jenjang' => $post['ket_jenjang'],
+      'ket_kelas' => $post['ket_kelas'],
+      'nama_rombel' => $post['nama_rombel'],
+      'created_by' => $this->session->userdata('username'),
+      'created_at' => em_date('Y-m-d'),
+    );
+
+    // Jika peserta didik di non-aktifkan, lanjutkan proses insert data
+    // if ($data_to_save['s_aktif'] == 0) {
+    //   $data_to_save['alasan_keluar'] = $post['alasan_keluar'];
+    //   $data_to_save['tgl_keluar'] = em_date('Y-m-d');
+    // }
+
+    $res = $this->mdl_rombongan_belajar->save_rombel($data_to_save);
+
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($res));
+  }
+
+  public function delete()
+  {
+    $res = [
+      'status' => false,
+      'message' => "Maaf, proses penghapusan data rombongan belajar gagal dilakukan!"
+    ];
+
+    $data["id"] = $this->input->post('id');
+    $res = $this->mdl_rombongan_belajar->delete_rombel($data);
 
     return $this->output
       ->set_content_type('application/json')

@@ -107,15 +107,15 @@
         }
       },
       {
-        data: 'id_kelas',
-        orderable: true,
+        data: 'jenjang',
+        orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-start">' + cellData + '</div>');
         }
       },
       {
-        data: 'id_rombel',
+        data: 'kelas',
         orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -123,7 +123,7 @@
         }
       },
       {
-        data: 'nama_rombel',
+        data: 'rombel',
         orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -135,26 +135,24 @@
         orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
-          // let id = cellData;
-          // let id_encrypt = '<?= encrypt_id($id); ?>';
-          // let detail_url = "<?= site_url('pdt_rombongan_belajar/detail/'); ?>";
-          // let kewenangan_user = '<?= $this->session->userdata('kewenangan'); ?>';
+          let id = cellData;
+          let id_encrypt = '<?= encrypt_id($id); ?>';
+          let detail_url = "<?= site_url('pdt_rombongan_belajar/detail/'); ?>";
+          let kewenangan_user = '<?= $this->session->userdata('kewenangan'); ?>';
 
-          // let btn_edit = '<div onclick="modal(`' + cellData + '`, `edit_rombongan_belajar`)" class="badge bg-primary clickable me-1" title="Edit">' +
-          //   '<i class="fas fa-edit"></i> Edit</div>';
+          let btn_update = '<a href="' + detail_url + cellData + '" class="badge bg-warning clickable text-white me-1 py-1"><i class="fas fa-upload"></i> Update</a>';
+          let btn_detail = '<a href="' + detail_url + cellData + '" class="badge bg-secondary clickable text-white me-1"><i class="fas fa-eye"></i> Detail</a>';
 
-          // let btn_detail = '<a href="' + detail_url + cellData + '" class="badge bg-secondary clickable text-white me-1"><i class="fas fa-eye"></i> Detail</a>';
+          let btn_delete = (kewenangan_user == '02') ?
+            '<div onclick="modal(`' + cellData + '`, `delete_rombongan_belajar`)" class="badge bg-danger clickable me-1" title="Hapus">' +
+            '<i class="fas fa-trash"></i> Hapus</div>' :
+            '';
 
-          // let btn_delete = (kewenangan_user == '02') ?
-          //   '<div onclick="modal(`' + cellData + '`, `delete_rombongan_belajar`)" class="badge bg-danger clickable me-1" title="Hapus">' +
-          //   '<i class="fas fa-trash"></i> Hapus</div>' :
-          //   '';
-
-          // $(td).html('<div class="text-center">' +
-          //   '<div class="d-grid gap-1 px-2"><div class="row">' + btn_edit + '</div>' +
-          //   '<div class="row">' + btn_detail + '</div>' +
-          //   '<div class="row">' + btn_delete + '</div>' +
-          //   '</div></div>');
+          $(td).html('<div class="text-center">' +
+            '<div class="d-grid gap-1 px-2"><div class="row">' + btn_update + '</div>' +
+            '<div class="row">' + btn_detail + '</div>' +
+            '<div class="row">' + btn_delete + '</div>' +
+            '</div></div>');
         }
       },
     ],
@@ -187,13 +185,13 @@
     table_rombel.ajax.reload();
   }
 
-  function modal(id_rombel, type) {
+  function modal(id, type) {
     var url = "<?= site_url('pdt_rombongan_belajar/modal') ?>";
     $.ajax({
       type: "POST",
       url: url,
       data: {
-        id: id_rombel,
+        id: id,
         type: type
       },
       success: function(res) {

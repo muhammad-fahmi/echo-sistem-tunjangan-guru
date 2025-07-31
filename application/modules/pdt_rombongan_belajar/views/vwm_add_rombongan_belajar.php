@@ -11,9 +11,33 @@
     <!-- <input type="hidden" name="id_siswa" value="<?= $data['id_siswa']; ?>"> -->
 
     <div class="row g-2">
+
+      <?php
+      $data_kepsek = check_var($data, 'kepsek', []);
+      $data_sekolah = check_var($data, 'sekolah', []);
+      $show_debug = false;
+      if ($show_debug) {
+      ?>
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">SESSION DATA (DEBUG)</h4>
+              <small>
+                <?php highlight_string("<?php\nSESSION = " . var_export($this->session->userdata(), true) . ";\n\n?>"); ?>
+                <?php highlight_string("<?php\nDATA = " . var_export($data, true) . ";\n\n?>"); ?>
+              </small>
+            </div>
+          </div>
+        </div>
+      <?php
+      }
+      ?>
+
       <div class="col-12 form_mapel mb-2">
         <label for="id_ukerja">Sekolah</label>
-        <input type="text" name="id_ukerja" id="id_ukerja" class="form-control form-control-sm" value="<?= $data['id_ukerja']; ?>">
+        <select name="id_ukerja" id="id_ukerja" class="form-select form-select" disabled>
+          <option value="<?= $this->session->userdata("id_unor"); ?>" selected><?= $this->session->userdata("ket_unor"); ?></option>
+        </select>
         <div class="invalid-feedback"></div>
       </div>
 
@@ -22,7 +46,7 @@
         <br>
         <select name="id_jenjang" id="id_jenjang" class="form-select form-select" style="width:100%">
           <?php $selected = ($data["id_jenjang"] != "") ? "selected" : ""; ?>
-          <option value="<?php echo $data["id_jenjang"]; ?>" <?php echo $selected ?>><?php echo $data["ket_kelas"]; ?></option>
+          <option value="<?php echo $data["id_jenjang"]; ?>" <?php echo $selected ?>><?php echo $data["ket_jenjang"]; ?></option>
         </select>
       </div>
 
@@ -40,7 +64,7 @@
         <br>
         <select name="id_rombel" id="id_rombel" class="form-select form-select" style="width:100%">
           <?php $selected = ($data["id_rombel"] != "") ? "selected" : ""; ?>
-          <option value="<?php echo $data["id_rombel"]; ?>" <?php echo $selected ?>><?php echo $data["ket_agama"]; ?></option>
+          <option value="<?php echo $data["id_rombel"]; ?>" <?php echo $selected ?>><?php echo $data["nama_rombel"]; ?></option>
         </select>
       </div>
 
@@ -128,7 +152,7 @@
   /// |----------------------------------------------------------------------
   /// | >> SELECT2 ROMBEL
   /// |----------------------------------------------------------------------
-  var select_rombel = $('#id_rombel');
+  var select2_rombel = $('#id_rombel');
   $('#id_rombel').select2({
     allowClear: true,
     placeholder: '-- Pilih Rombel --',
@@ -155,7 +179,7 @@
     // what to do when selection closed
   }).on('select2:clear', function(e) {
     // what to do when clearing (only if allowClear: true)
-    select_rombel.empty();
+    select2_rombel.empty();
   });
 
   $('#saveRombel').validate($.extend({
