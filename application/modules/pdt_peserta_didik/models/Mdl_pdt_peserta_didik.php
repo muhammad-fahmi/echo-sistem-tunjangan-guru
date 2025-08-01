@@ -65,11 +65,11 @@ class Mdl_pdt_peserta_didik extends CI_Model
       $data_result[$index]['no'] = $no;
       $data_result[$index]['nama'] = isset_nn_nes($row['nama'], '-');
       $data_result[$index]['nisn'] = isset_nn_nes($row['nisn'], '-');
-      $data_result[$index]['nia'] = isset_nn_nes($row['nia'], '-');
+      $data_result[$index]['nik'] = isset_nn_nes($row['nik'], '-');
       $data_result[$index]['ket_jns_kelamin'] = isset_nn_nes($row['ket_jns_kelamin'], '-');
       $data_result[$index]['ket_agama'] = isset_nn_nes($row['ket_agama'], '-');
-      $data_result[$index]['alamat'] = isset_nn_nes($row['alamat'], '-');
-      $data_result[$index]['id_siswa'] = to_rp(isset_nn_nes($row['id_siswa'], '-'), false);
+      // $data_result[$index]['alamat'] = isset_nn_nes($row['alamat'], '-');
+      $data_result[$index]['id_siswa'] = isset_nn_nes(encrypt_id($row['id_siswa']), '-');
       $no += 1;
       $index += 1;
     }

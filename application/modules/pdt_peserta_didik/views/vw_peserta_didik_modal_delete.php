@@ -62,7 +62,7 @@
           <tr class="mb-2">
             <td style="min-width: 120px; font-weight: 500;">Penyandang Disabilitas</td>
             <td style="min-width: 10px;">:</td>
-            <td style="width: 100%;"><?= check_var($data, 'pdpd', '-') ?></td>
+            <td style="width: 100%;"><?= check_var($data, 'ket_disabilitas', 'Tidak') ?></td>
           </tr>
         </table>
       </div>

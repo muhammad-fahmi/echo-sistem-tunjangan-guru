@@ -84,7 +84,7 @@ class Pdt_peserta_didik extends MY_Controller
   {
     $type = $this->input->post('type');
     $id = $this->input->post('id');
-
+    $decryptedID = decrypt_id(sanitize_string($id));
     /// |----------------------------------------
     /// | DEFAULT VALUE
     /// |----------------------------------------
@@ -113,16 +113,16 @@ class Pdt_peserta_didik extends MY_Controller
             'nama_ibu' => '',
             'no_kk' => '',
             'alamat' => '',
-            's_aktif' => 1,
+            's_aktif' => '',
             'pdpd' => '',
           ];
           $data = [
-            'modal_title' => "Tambah Peserta Didik",
+            'modal_title' => "Tambah Data Siswa",
             'data' => $dataset,
           ];
           $res = [
             'status' => true,
-            'message' => "Modal Tambah Peserta Didik",
+            'message' => "Modal Tambah Data Siswa",
             'html' => $this->load->view('vw_peserta_didik_modal_save', $data, true)
           ];
           break;
@@ -131,15 +131,15 @@ class Pdt_peserta_didik extends MY_Controller
           /// |----------------------------------------
           /// | EDIT DATA
           /// |----------------------------------------
-          $dataset = $this->mdl_peserta_didik->get('v_progurinda_siswa', "id_siswa = '$id'");
+          $dataset = $this->mdl_peserta_didik->get('v_progurinda_siswa', "id_siswa = '$decryptedID'");
           $data = [
-            'modal_title' => "Edit Peserta Didik",
+            'modal_title' => "Edit Data Siswa",
             'type' => $type,
             'data' => $dataset,
           ];
           $res = [
             'status' => true,
-            'message' => "Modal Edit Peserta Didik",
+            'message' => "Modal Edit Data Siswa",
             'html' => $this->load->view('vw_peserta_didik_modal_save', $data, true)
           ];
           break;
@@ -148,15 +148,15 @@ class Pdt_peserta_didik extends MY_Controller
           /// |----------------------------------------
           /// | DELETE DATA
           /// |----------------------------------------
-          $dataset = $this->mdl_peserta_didik->get('v_progurinda_siswa', "id_siswa = '$id'");
+          $dataset = $this->mdl_peserta_didik->get('v_progurinda_siswa', "id_siswa = '$decryptedID'");
           if (isset_nn_nes($dataset)) {
             $data = [
-              'modal_title' => "Hapus Peserta Didik",
+              'modal_title' => "Hapus Data Siswa",
               'data' => $dataset,
             ];
             $res = [
               'status' => true,
-              'message' => "Modal Hapus Peserta Didik",
+              'message' => "Modal Hapus Data Siswa",
               'html' => $this->load->view('vw_peserta_didik_modal_delete', $data, true)
             ];
           }
@@ -191,16 +191,17 @@ class Pdt_peserta_didik extends MY_Controller
       'nama_ibu' => $post['nama_ibu'],
       'no_kk' => $post['no_kk'],
       'alamat' => $post['alamat'],
-      's_aktif' => $post['s_aktif'],
+      // 's_aktif' => $post['s_aktif'],
+      's_aktif' => 1,
       'tgl_masuk' => em_date('Y-m-d'),
       'pdpd' => $post['pdpd_options'],
     );
 
     // Jika peserta didik di non-aktifkan, lanjutkan proses insert data
-    if ($data_to_save['s_aktif'] == 0) {
-      $data_to_save['alasan_keluar'] = $post['alasan_keluar'];
-      $data_to_save['tgl_keluar'] = em_date('Y-m-d');
-    }
+    // if ($data_to_save['s_aktif'] == 0) {
+    //   $data_to_save['alasan_keluar'] = $post['alasan_keluar'];
+    //   $data_to_save['tgl_keluar'] = em_date('Y-m-d');
+    // }
 
     $res = $this->mdl_peserta_didik->save_peserta_didik($data_to_save);
 

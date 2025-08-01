@@ -23,66 +23,28 @@
   <!-- Start Page Content -->
   <!-- -------------------------------------------------------------- -->
   <!-- basic table -->
-  <!-- <div class="row">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-body">
-          <h4 class="card-title">Riwayat Peserta Didik</h4>
-
-          <div class="table-responsive mt-4">
-
-            <div class="_loading loading_tabel_riwayat_peserta_didik">
-              <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>
-            </div>
-
-            <table id="table_riwayat_peserta_didik" class="table table-bordered table-hover fs-3" style="width:100%;">
-
-              <thead class="bg-info text-white">
-                <tr class="text-center">
-                  <th scope="col">No.</th>
-                  <th scope="col">Nama Lengkap</th>
-                  <th scope="col">NISN</th>
-                  <th scope="col">NIK</th>
-                  <th scope="col">Jenis Kelamin</th>
-                  <th scope="col">Agama</th>
-                  <th scope="col">Penyandang Disabilitas</th>
-                  <th scope="col">Aktif</th>
-                  <th scope="col">Aktif</th>
-                </tr>
-              </thead>
-
-              <tbody style="font-size: 11px;"></tbody>
-
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div> -->
-
   <div class="row">
     <div class="col-12">
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title">Daftar Peserta Didik</h4>
+          <h4 class="card-title">Daftar Siswa</h4>
 
           <div class="table-responsive mt-4">
 
-            <div class="_loading loading_tabel_pd">
+            <div class="_loading loading_table_siswa">
               <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>
             </div>
 
-            <table id="table_pd" class="table table-bordered table-hover fs-3" style="width:100%;">
+            <table id="table_siswa" class="table table-bordered table-hover fs-3" style="width:100%;">
 
               <thead class="bg-info text-white">
                 <tr class="text-center">
-                  <th class="vam" style="min-width: 35px;">#</th>
-                  <th class="vam" style="min-width: 175px;">NISN / Nama Lengkap</th>
-                  <th class="vam" style="min-width: 175px;">Orang Tua PD</th>
-                  <th class="vam" style="min-width: 100px;">NIK</th>
+                  <th class="vam" style="min-width: 30px;">#</th>
+                  <th class="vam" style="min-width: 100px;">Nama Lengkap</th>
+                  <th class="vam" style="min-width: 150px;">Orang Tua PD</th>
+                  <th class="vam" style="min-width: 80px;">NIK</th>
                   <th class="vam" style="min-width: 80px;">Jenis Kelamin</th>
                   <th class="vam" style="min-width: 60px;">Agama</th>
-                  <th class="vam" style="min-width: 150px;">Alamat</th>
                   <th class="vam" style="min-width: 40px;">Status</th>
                   <th class="vam" style="min-width: 60px;">Aksi</th>
                 </tr>
@@ -108,7 +70,7 @@
 <script>
   var init_btn_add = false;
   let urlDatatable = "<?= site_url('pdt_peserta_didik/get_data') ?>";
-  var tabel_pd = $("#table_pd").DataTable({
+  var table_siswa = $("#table_siswa").DataTable({
     responsive: true,
     processing: false,
     serverSide: true,
@@ -200,14 +162,6 @@
         }
       },
       {
-        data: 'alamat',
-        orderable: false,
-        className: 'vat',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-start">' + cellData + '</div>');
-        }
-      },
-      {
         data: 's_aktif',
         orderable: false,
         className: 'vat',
@@ -223,6 +177,8 @@
         orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
+          let id = cellData;
+          let id_encrypt = '<?= encrypt_id($id); ?>';
           let detail_url = "<?= site_url('pdt_peserta_didik/detail/'); ?>";
           let kewenangan_user = '<?= $this->session->userdata('kewenangan'); ?>';
 
@@ -253,10 +209,10 @@
         /* jalankan apabila return false */
       }
       /* parameter callback untuk kostumisasi fungsi */
-      $('.loading_tabel_pd').removeClass('show');
+      $('.loading_table_siswa').removeClass('show');
 
       let btn_add = '<button class="btn btn-sm btn-success me-2" onclick="modal(`0`,`tambah_peserta_didik`)">' +
-        '<i class="fas fa-plus me-1"></i>Tambah Peserta Didik' +
+        '<i class="fas fa-plus me-1"></i>Tambah Siswa Baru' +
         '</button>';
 
       if (!init_btn_add) {
@@ -270,7 +226,7 @@
 
   /* fungsi untuk reload datatable ajax */
   function reload_table() {
-    tabel_pd.ajax.reload();
+    table_siswa.ajax.reload();
   }
 
   function modal(id_siswa, type) {
