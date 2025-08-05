@@ -665,28 +665,98 @@ class Config extends MY_Controller
       ->set_output(json_encode($data));
   }
 
-  public function select2_rombel()
+  // public function select2_rombel()
+  // {
+  //   // ambil data post
+  //   $search = $this->input->post('search');
+  //   // kondisi where
+  //   $where_search = ($search != '')
+  //     ? "AND (nama_rombel LIKE '%$search%' 
+  //     OR jenjang_id LIKE '%$search%')"
+  //     : "";
+  //   // query searching
+  //   $result = $this->db->query("SELECT * FROM m_rombongan_belajar WHERE id_rombel IS NOT NULL $where_search 
+  //     ORDER BY id_rombel DESC LIMIT 10")->result_array();
+  //   $data = array();
+  //   $index = 0;
+  //   if (isset_nn_nes($result)) {
+  //     foreach ($result as $r) {
+  //       $data[$index]['id'] = $r['id_rombel'];
+  //       $data[$index]['text'] = trim($r['nama_rombel']);
+
+  //       // additional param to send back
+  //       $data[$index]['id_rombel'] = $r['id_rombel'];
+  //       $data[$index]['nama_rombel'] = trim($r['nama_rombel']);
+
+  //       $index++;
+  //     }
+  //   } else {
+  //     $data = $result;
+  //   }
+  //   return $this->output
+  //     ->set_content_type('application/json')
+  //     ->set_output(json_encode($data));
+  // }
+
+  public function select2_siswa()
   {
     // ambil data post
     $search = $this->input->post('search');
     // kondisi where
     $where_search = ($search != '')
-      ? "AND (nama_rombel LIKE '%$search%' 
-      OR jenjang_id LIKE '%$search%')"
+      ? "AND (nama LIKE '%$search%' 
+      OR jenis_kelamin LIKE '%$search%')"
       : "";
     // query searching
-    $result = $this->db->query("SELECT * FROM m_rombongan_belajar WHERE id_rombel IS NOT NULL $where_search 
-      ORDER BY id_rombel DESC LIMIT 10")->result_array();
+    $result = $this->db->query("SELECT * FROM v_progurinda_siswa WHERE id_siswa IS NOT NULL $where_search 
+      ORDER BY id_siswa DESC LIMIT 10")->result_array();
     $data = array();
     $index = 0;
     if (isset_nn_nes($result)) {
       foreach ($result as $r) {
-        $data[$index]['id'] = $r['id_rombel'];
-        $data[$index]['text'] = trim($r['nama_rombel']);
+        $data[$index]['id'] = $r['id_siswa'];
+        $data[$index]['text'] = trim($r['nama']);
 
         // additional param to send back
-        $data[$index]['id_rombel'] = $r['id_rombel'];
-        $data[$index]['nama_rombel'] = trim($r['nama_rombel']);
+        $data[$index]['id_siswa'] = $r['id_siswa'];
+        $data[$index]['nisn'] = trim($r['nisn']);
+        $data[$index]['nama'] = trim($r['nama']);
+        $data[$index]['ket_jns_kelamin'] = trim($r['ket_jns_kelamin']);
+        // $data[$index]['nama'] = trim($r['nama']);
+        // $data[$index]['nama'] = trim($r['nama']);
+
+        $index++;
+      }
+    } else {
+      $data = $result;
+    }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
+  public function select2_tahun_ajaran()
+  {
+    // ambil data post
+    $search = $this->input->post('search');
+    // kondisi where
+    $where_search = ($search != '')
+      ? "AND (ket_tahun_ajaran LIKE '%$search%' 
+      OR id_tahun_ajaran LIKE '%$search%')"
+      : "";
+    // query searching
+    $result = $this->db->query("SELECT * FROM m_tahun_ajaran WHERE id_tahun_ajaran IS NOT NULL $where_search 
+      ORDER BY id_tahun_ajaran DESC LIMIT 10")->result_array();
+    $data = array();
+    $index = 0;
+    if (isset_nn_nes($result)) {
+      foreach ($result as $r) {
+        $data[$index]['id'] = $r['id_tahun_ajaran'];
+        $data[$index]['text'] = trim($r['ket_tahun_ajaran']);
+
+        // additional param to send back
+        $data[$index]['id_tahun_ajaran'] = $r['id_tahun_ajaran'];
+        $data[$index]['ket_tahun_ajaran'] = trim($r['ket_tahun_ajaran']);
 
         $index++;
       }

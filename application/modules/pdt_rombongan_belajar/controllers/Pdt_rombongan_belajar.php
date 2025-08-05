@@ -28,15 +28,24 @@ class Pdt_rombongan_belajar extends MY_Controller
     echo Modules::run('layout/backend', $data);
   }
 
-  public function detail($id)
+  public function detail($encryptedID = '')
   {
+    $decryptedID = decrypt_id(sanitize_string($encryptedID));
+
+    $dataset = fetch_row_data('v_rombongan_belajar', ['id' => $decryptedID], false);
+    if ($dataset == false) {
+      $this->session->set_userdata('flash_data', "Maaf, data Rombongan Belajar yang akan dilihat detailnya tidak valid.");
+      redirect(site_url('pdt_rombongan_belajar'));
+      return;
+    }
     // lakukan proses init halaman
-    $sent_data = array();
+    $dataset['id'] = encrypt_id($dataset['id']);
+
     $data = array(
       'page_title' => "Update Rombongan Belajar | PROGURINDA",
       'module' => "pdt_rombongan_belajar",
       'view' => "vw_update_rombongan_belajar",
-      'data' => $sent_data
+      'data' => $dataset
     );
     echo Modules::run('layout/backend', $data);
   }
@@ -57,6 +66,33 @@ class Pdt_rombongan_belajar extends MY_Controller
     );
     // move the db operation to the designated models
     $result = $this->mdl_rombongan_belajar->get_datatable($param);
+    // return the data back to the views
+    $data["recordsTotal"] = $result['total'];
+    $data["recordsFiltered"] = $result['filtered'];
+    $data["data"] = $result['data'];
+    $data["draw"] = $result['draw'];
+    // using common_helper function
+    $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
+  public function get_data_siswa()
+  {
+    // get index value
+    $index = $this->input->post("order[0][column]");
+    // insert datatable param to transfer
+    $param = array(
+      'start' => $this->input->post("start"),
+      'length' => $this->input->post("length"),
+      'order_column' => $this->input->post("columns[$index][data]"),
+      'order_sort' => $this->input->post("order[0][dir]"),
+      'search' => $this->input->post("search[value]"),
+      'draw' => $this->input->post("draw"),
+      /* additional data can be declared here */
+    );
+    // move the db operation to the designated models
+    $result = $this->mdl_rombongan_belajar->get_datatable_siswa($param);
     // return the data back to the views
     $data["recordsTotal"] = $result['total'];
     $data["recordsFiltered"] = $result['filtered'];
@@ -102,11 +138,28 @@ class Pdt_rombongan_belajar extends MY_Controller
           ];
           break;
         }
+      case 'tambah_siswa_rombel': {
+          /// |----------------------------------------
+          /// | INSERT DATA SISWA ROMBEL
+          /// |----------------------------------------
+          $dataset = [];
+          $data = [
+            'modal_title' => "Tambah Peserta Didik",
+            'type' => 'add',
+            'data' => $dataset,
+          ];
+          $res = [
+            'status' => true,
+            'message' => "Modal Tambah Peserta Didik",
+            'html' => $this->load->view('vwm_add_siswa_rombel', $data, true)
+          ];
+          break;
+        }
       case 'delete_rombongan_belajar': {
           /// |----------------------------------------
           /// | DELETE DATA
           /// |----------------------------------------
-          $dataset = $this->mdl_rombongan_belajar->get('v_rombongan_belajar', "id_rombel = '$decryptedID'");
+          $dataset = $this->mdl_rombongan_belajar->get('v_rombongan_belajar', "id = '$decryptedID'");
           if (isset_nn_nes($dataset)) {
             $data = [
               'modal_title' => "Hapus Rombongan Belajar",
@@ -143,10 +196,12 @@ class Pdt_rombongan_belajar extends MY_Controller
       'id' => $post['id'],
       'jenjang' => $post['id_jenjang'],
       'kelas' => $post['id_kelas'],
-      'rombel' => $post['id_rombel'],
-      'ket_jenjang' => $post['ket_jenjang'],
-      'ket_kelas' => $post['ket_kelas'],
+      'id_sekolah' => $this->session->userdata('kode_unor'),
+      'ket_sekolah' => $this->session->userdata('ket_unor'),
+      // 'ket_jenjang' => $post['ket_jenjang'],
+      // 'ket_kelas' => $post['ket_kelas'],
       'nama_rombel' => $post['nama_rombel'],
+      'id_tahun_ajaran' => $post['id_tahun_ajaran'],
       'created_by' => $this->session->userdata('username'),
       'created_at' => em_date('Y-m-d'),
     );
@@ -158,6 +213,26 @@ class Pdt_rombongan_belajar extends MY_Controller
     // }
 
     $res = $this->mdl_rombongan_belajar->save_rombel($data_to_save);
+
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($res));
+  }
+
+  public function save_siswa()
+  {
+    /// |----------------------------------------
+    /// | AMBIL DATA POST
+    /// |----------------------------------------
+    $post = $this->input->post();
+
+    // set data array utk proses insert
+    $data_to_save = array(
+      'id_rombel' => $post['id_rombel'],
+      'id_siswa' => $post['id_siswa']
+    );
+
+    $res = $this->mdl_rombongan_belajar->save_siswa_rombel($data_to_save);
 
     return $this->output
       ->set_content_type('application/json')

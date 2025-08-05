@@ -8,7 +8,8 @@
 
   <form id="saveRombel" action="<?= site_url('pdt_rombongan_belajar/save'); ?>" method="POST">
     <input type="hidden" name="type" value="<?= $data['type']; ?>">
-    <!-- <input type="hidden" name="id_siswa" value="<?= $data['id_siswa']; ?>"> -->
+    <input type="hidden" id="id_sekolah" name="id_sekolah" value="<?= $this->session->userdata("kode_unor"); ?>">
+    <input type="hidden" id="ket_sekolah" name="ket_sekolah" value="<?= $this->session->userdata("ket_unor"); ?>">
 
     <div class="row g-2">
 
@@ -34,9 +35,9 @@
       ?>
 
       <div class="col-12 form_mapel mb-2">
-        <label for="id_ukerja">Sekolah</label>
-        <select name="id_ukerja" id="id_ukerja" class="form-select form-select" disabled>
-          <option value="<?= $this->session->userdata("id_unor"); ?>" selected><?= $this->session->userdata("ket_unor"); ?></option>
+        <label for="id_sekolah">Sekolah</label>
+        <select name="id_sekolah" id="id_sekolah" class="form-select form-select" style="width: 100%;" disabled>
+          <option value="<?= $this->session->userdata("kode_unor"); ?>" selected><?= $this->session->userdata("ket_unor"); ?></option>
         </select>
         <div class="invalid-feedback"></div>
       </div>
@@ -50,7 +51,7 @@
         </select>
       </div>
 
-      <div class="col-12 col-lg-12 form_mapel mb-2">
+      <div class="col-12 col-lg-6 form_mapel mb-2">
         <label for="id_kelas">Kelas</label>
         <br>
         <select name="id_kelas" id="id_kelas" class="form-select form-select" style="width:100%">
@@ -59,18 +60,37 @@
         </select>
       </div>
 
-      <div class="col-12 col-lg-12 form_mapel mb-2">
-        <label for="id_rombel">Rombel</label>
+      <div class="col-12 col-lg-6 form_mapel mb-2">
+        <label for="nama_rombel">Rombel</label>
         <br>
-        <select name="id_rombel" id="id_rombel" class="form-select form-select" style="width:100%">
+        <input type="text" name="nama_rombel" id="nama_rombel" class="form-control form-control-sm" value="<?= $data["nama_rombel"]; ?>">
+        <div class="invalid-feedback"></div>
+        <!-- <select name="id_rombel" id="id_rombel" class="form-select form-select" style="width:100%">
           <?php $selected = ($data["id_rombel"] != "") ? "selected" : ""; ?>
           <option value="<?php echo $data["id_rombel"]; ?>" <?php echo $selected ?>><?php echo $data["nama_rombel"]; ?></option>
-        </select>
+        </select> -->
       </div>
 
-      <div class="col-12 form_mapel mb-2">
-        <label for="tahun">Tahun Ajar</label>
-        <input type="text" name="tahun" id="tahun" class="form-control form-control-sm" value="<?= em_date('Y'); ?>">
+      <div class="col-12 col-lg-6 form_mapel mb-2">
+        <label for="semester">Semester</label>
+        <br>
+        <select name="semester" id="semester" class="form-select form-select" style="width:100%">
+          <option value="I">I</option>
+          <option value="II">II</option>
+          <!-- <?php $selected = ($data["semester"] != "") ? "selected" : ""; ?>
+          <option value="<?php echo $data["semester"]; ?>" <?php echo $selected ?>><?php echo $data["semester"]; ?></option> -->
+        </select>
+        <div class="invalid-feedback"></div>
+      </div>
+
+      <div class="col-12 col-lg-6 form_mapel mb-2">
+        <label for="id_tahun_ajaran">Tahun Ajar</label>
+        <!-- <input type="text" name="id_tahun_ajaran" id="id_tahun_ajaran" class="form-control form-control-sm" value="<?= em_date('Y'); ?>"> -->
+        <br>
+        <select name="id_tahun_ajaran" id="id_tahun_ajaran" class="form-select form-select" style="width:100%">
+          <?php $selected = ($data["id_tahun_ajaran"] != "") ? "selected" : ""; ?>
+          <option value="<?php echo $data["id_tahun_ajaran"]; ?>" <?php echo $selected ?>><?php echo $data["ket_tahun_ajaran"]; ?></option>
+        </select>
         <div class="invalid-feedback"></div>
       </div>
 
@@ -152,14 +172,47 @@
   /// |----------------------------------------------------------------------
   /// | >> SELECT2 ROMBEL
   /// |----------------------------------------------------------------------
-  var select2_rombel = $('#id_rombel');
-  $('#id_rombel').select2({
+  // var select2_rombel = $('#id_rombel');
+  // $('#id_rombel').select2({
+  //   allowClear: true,
+  //   placeholder: '-- Pilih Rombel --',
+  //   ajax: {
+  //     type: 'POST',
+  //     dataType: 'json',
+  //     url: '<?= site_url('config/select2_rombel') ?>',
+  //     delay: 800,
+  //     /* delay before sending ajax request */
+  //     data: function(params) {
+  //       return {
+  //         search: params.term,
+  //       }
+  //     },
+  //     processResults: function(data) {
+  //       return {
+  //         results: data
+  //       };
+  //     },
+  //   }
+  // }).on('select2:select', function(e) {
+  //   // what to do when option selected
+  // }).on('select2:close', function(e) {
+  //   // what to do when selection closed
+  // }).on('select2:clear', function(e) {
+  //   // what to do when clearing (only if allowClear: true)
+  //   select2_rombel.empty();
+  // });
+
+  /// |----------------------------------------------------------------------
+  /// | >> SELECT2 TAHUN AJARAN
+  /// |----------------------------------------------------------------------
+  var select2_tahun_ajar = $('#id_tahun_ajaran');
+  $('#id_tahun_ajaran').select2({
     allowClear: true,
-    placeholder: '-- Pilih Rombel --',
+    placeholder: '-- Pilih Tahun Ajaran --',
     ajax: {
       type: 'POST',
       dataType: 'json',
-      url: '<?= site_url('config/select2_rombel') ?>',
+      url: '<?= site_url('config/select2_tahun_ajaran') ?>',
       delay: 800,
       /* delay before sending ajax request */
       data: function(params) {
@@ -179,7 +232,7 @@
     // what to do when selection closed
   }).on('select2:clear', function(e) {
     // what to do when clearing (only if allowClear: true)
-    select2_rombel.empty();
+    select2_tahun_ajar.empty();
   });
 
   $('#saveRombel').validate($.extend({

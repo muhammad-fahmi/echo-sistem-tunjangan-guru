@@ -40,8 +40,9 @@
               <thead class="bg-info text-white">
                 <tr class="text-center">
                   <th class="vat" style="min-width: 30px;">#</th>
-                  <th class="vat" style="min-width: 100px;">Sekolah</th>
-                  <th class="vat" style="min-width: 150px;">Kelas</th>
+                  <th class="vat" style="min-width: 100px;">Jenjang</th>
+                  <th class="vat" style="min-width: 150px;">Sekolah</th>
+                  <th class="vat" style="min-width: 60px;">Kelas</th>
                   <th class="vat" style="min-width: 80px;">Rombel</th>
                   <th class="vat" style="min-width: 60px;">Aksi</th>
                 </tr>
@@ -107,7 +108,7 @@
         }
       },
       {
-        data: 'jenjang',
+        data: 'ket_jenjang',
         orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -115,7 +116,15 @@
         }
       },
       {
-        data: 'kelas',
+        data: 'ket_sekolah',
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-start">' + cellData + '</div>');
+        }
+      },
+      {
+        data: 'ket_kelas',
         orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -123,11 +132,11 @@
         }
       },
       {
-        data: 'rombel',
+        data: 'nama_rombel',
         orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-start">' + cellData + '</div>');
+          $(td).html('<div class="text-center">' + cellData + '</div>');
         }
       },
       {
@@ -143,7 +152,7 @@
           let btn_update = '<a href="' + detail_url + cellData + '" class="badge bg-warning clickable text-white me-1 py-1"><i class="fas fa-upload"></i> Update</a>';
           let btn_detail = '<a href="' + detail_url + cellData + '" class="badge bg-secondary clickable text-white me-1"><i class="fas fa-eye"></i> Detail</a>';
 
-          let btn_delete = (kewenangan_user == '02') ?
+          let btn_delete = (kewenangan_user == '10') ?
             '<div onclick="modal(`' + cellData + '`, `delete_rombongan_belajar`)" class="badge bg-danger clickable me-1" title="Hapus">' +
             '<i class="fas fa-trash"></i> Hapus</div>' :
             '';
