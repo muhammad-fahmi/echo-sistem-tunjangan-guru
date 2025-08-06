@@ -97,11 +97,11 @@ class Mdl_pdt_rombel extends CI_Model
     // var_dump($data);
     /* kalau ada tambahan where condition bisa add lagi di atas */
     // deklarasi query yang digunakan
-    $query_result = $this->db->query("SELECT * FROM v_rombongan_belajar_siswa 
+    $query_result = $this->db->query("SELECT * FROM v_peserta_didik_rombel 
       WHERE id_rombel IS NOT NULL $where_search 
       ORDER BY $data[order_column] $data[order_sort] 
       LIMIT $data[start], $data[length]");
-    $query_total = $this->db->query("SELECT * FROM v_rombongan_belajar_siswa 
+    $query_total = $this->db->query("SELECT * FROM v_peserta_didik_rombel 
       WHERE id_rombel IS NOT NULL $where_search");
     // cari total hasil
     $total_count = 0;
@@ -265,7 +265,7 @@ class Mdl_pdt_rombel extends CI_Model
 
     // cek apakah data sudah ada di database
     $is_siswa_exist = fetch_row_data(
-      'r_rombongan_belajar_siswa',
+      'r_peserta_didik_rombel',
       [
         'id_rombel' => $data['id_rombel'],
         'id_siswa' => $data['id_siswa']
@@ -287,24 +287,24 @@ class Mdl_pdt_rombel extends CI_Model
       //cek apakah insert atau update
       if ($data["id"] == 0) {
         //insert data
-        $this->db->insert("r_rombongan_belajar_siswa", $data);
+        $this->db->insert("r_peserta_didik_rombel", $data);
         $insert_id = $this->db->insert_id();
 
         // BUATKAN LOG UTK SISTEM (INSERT)
         log_generator(
           $cur_user,
-          'r_rombongan_belajar_siswa',
+          'r_peserta_didik_rombel',
           $insert_id,
           "Melakukan penambahan data siswa baru di rombel " . $data['id_rombel'] . " dengan data sebagai berikut :\n\n" . format_log_view($data)
         );
       } else {
         //update data
-        $this->db->where(["id" => $data["id"]])->update("r_rombongan_belajar_siswa", $data);
+        $this->db->where(["id" => $data["id"]])->update("r_peserta_didik_rombel", $data);
 
         // BUATKAN LOG UTK SISTEM (UPDATE)
         log_generator(
           $cur_user,
-          'r_rombongan_belajar_siswa',
+          'r_peserta_didik_rombel',
           $data['id'],
           "Melakukan perubahan data siswa di rombel dengan data sebagai berikut :\n\n" . format_log_view($data)
         );

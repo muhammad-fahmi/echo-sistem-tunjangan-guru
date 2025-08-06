@@ -51,7 +51,7 @@
         </select>
       </div>
 
-      <div class="col-12 col-lg-6 form_mapel mb-2">
+      <div class="col-12 col-lg-12 form_mapel mb-2">
         <label for="id_kelas">Kelas</label>
         <br>
         <select name="id_kelas" id="id_kelas" class="form-select form-select" style="width:100%">
@@ -65,27 +65,10 @@
         <br>
         <input type="text" name="nama_rombel" id="nama_rombel" class="form-control form-control-sm" value="<?= $data["nama_rombel"]; ?>">
         <div class="invalid-feedback"></div>
-        <!-- <select name="id_rombel" id="id_rombel" class="form-select form-select" style="width:100%">
-          <?php $selected = ($data["id_rombel"] != "") ? "selected" : ""; ?>
-          <option value="<?php echo $data["id_rombel"]; ?>" <?php echo $selected ?>><?php echo $data["nama_rombel"]; ?></option>
-        </select> -->
-      </div>
-
-      <div class="col-12 col-lg-6 form_mapel mb-2">
-        <label for="semester">Semester</label>
-        <br>
-        <select name="semester" id="semester" class="form-select form-select" style="width:100%">
-          <option value="I">I</option>
-          <option value="II">II</option>
-          <!-- <?php $selected = ($data["semester"] != "") ? "selected" : ""; ?>
-          <option value="<?php echo $data["semester"]; ?>" <?php echo $selected ?>><?php echo $data["semester"]; ?></option> -->
-        </select>
-        <div class="invalid-feedback"></div>
       </div>
 
       <div class="col-12 col-lg-6 form_mapel mb-2">
         <label for="id_tahun_ajaran">Tahun Ajar</label>
-        <!-- <input type="text" name="id_tahun_ajaran" id="id_tahun_ajaran" class="form-control form-control-sm" value="<?= em_date('Y'); ?>"> -->
         <br>
         <select name="id_tahun_ajaran" id="id_tahun_ajaran" class="form-select form-select" style="width:100%">
           <?php $selected = ($data["id_tahun_ajaran"] != "") ? "selected" : ""; ?>
@@ -170,39 +153,6 @@
   });
 
   /// |----------------------------------------------------------------------
-  /// | >> SELECT2 ROMBEL
-  /// |----------------------------------------------------------------------
-  // var select2_rombel = $('#id_rombel');
-  // $('#id_rombel').select2({
-  //   allowClear: true,
-  //   placeholder: '-- Pilih Rombel --',
-  //   ajax: {
-  //     type: 'POST',
-  //     dataType: 'json',
-  //     url: '<?= site_url('config/select2_rombel') ?>',
-  //     delay: 800,
-  //     /* delay before sending ajax request */
-  //     data: function(params) {
-  //       return {
-  //         search: params.term,
-  //       }
-  //     },
-  //     processResults: function(data) {
-  //       return {
-  //         results: data
-  //       };
-  //     },
-  //   }
-  // }).on('select2:select', function(e) {
-  //   // what to do when option selected
-  // }).on('select2:close', function(e) {
-  //   // what to do when selection closed
-  // }).on('select2:clear', function(e) {
-  //   // what to do when clearing (only if allowClear: true)
-  //   select2_rombel.empty();
-  // });
-
-  /// |----------------------------------------------------------------------
   /// | >> SELECT2 TAHUN AJARAN
   /// |----------------------------------------------------------------------
   var select2_tahun_ajar = $('#id_tahun_ajaran');
@@ -264,7 +214,7 @@
       });
     },
     rules: {
-      id_ukerja: {
+      id_sekolah: {
         required: true
       },
       id_jenjang: {
@@ -273,10 +223,10 @@
       id_kelas: {
         required: true
       },
-      id_rombel: {
+      nama_rombel: {
         required: true
       },
-      tahun: {
+      id_tahun_ajaran: {
         required: true
       }
     },
@@ -291,20 +241,20 @@
       }
     },
     messages: {
-      id_ukerja: {
-        required: "ID Unit Kerja tidak boleh kosong!"
+      id_sekolah: {
+        required: "Sekolah tidak boleh kosong!"
       },
       id_jenjang: {
-        required: "ID Jenjang tidak boleh kosong!"
+        required: "Jenjang tidak boleh kosong!"
       },
       id_kelas: {
-        required: "ID Kelas tidak boleh kosong"
+        required: "Kelas tidak boleh kosong!"
       },
-      id_rombel: {
-        required: "ID Rombel tidak boleh kosong"
+      nama_rombel: {
+        required: "Nama Rombel tidak boleh kosong!"
       },
-      tahun: {
-        required: "Tahun Ajaran tidak boleh kosong"
+      id_tahun_ajaran: {
+        required: "Tahun Ajaran tidak boleh kosong!"
       }
     },
   }));

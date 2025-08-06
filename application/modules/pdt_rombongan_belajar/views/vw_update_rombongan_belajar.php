@@ -64,12 +64,6 @@
                 </tr>
 
                 <tr>
-                  <td style="min-width: 150px;">Semester</td>
-                  <td style="min-width: 15px; text-align: center;">:</td>
-                  <td style="width: 100%;"><?= check_var($data, 'semester', '-') ?></td>
-                </tr>
-
-                <tr>
                   <td style="min-width: 150px;">Tahun Ajaran</td>
                   <td style="min-width: 15px; text-align: center;">:</td>
                   <td style="width: 100%;"><?= check_var($data, 'ket_tahun_ajaran', '-') ?></td>

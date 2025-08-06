@@ -229,7 +229,9 @@ class Pdt_rombongan_belajar extends MY_Controller
     // set data array utk proses insert
     $data_to_save = array(
       'id_rombel' => $post['id_rombel'],
-      'id_siswa' => $post['id_siswa']
+      'id_siswa' => $post['id_siswa'],
+      'tgl_masuk_rombel' => em_date('Y-m-d'),
+      'insert_by' => $this->session->userdata("username")
     );
 
     $res = $this->mdl_rombongan_belajar->save_siswa_rombel($data_to_save);
@@ -253,4 +255,19 @@ class Pdt_rombongan_belajar extends MY_Controller
       ->set_content_type('application/json')
       ->set_output(json_encode($res));
   }
+
+  // public function delete_siswa()
+  // {
+  //   $res = [
+  //     'status' => false,
+  //     'message' => "Maaf, proses penghapusan data Peserta Didik di rombongan belajar gagal dilakukan!"
+  //   ];
+
+  //   $data["id"] = $this->input->post('id_siswa');
+  //   $res = $this->mdl_rombongan_belajar->delete_siswa($data);
+
+  //   return $this->output
+  //     ->set_content_type('application/json')
+  //     ->set_output(json_encode($res));
+  // }
 }
