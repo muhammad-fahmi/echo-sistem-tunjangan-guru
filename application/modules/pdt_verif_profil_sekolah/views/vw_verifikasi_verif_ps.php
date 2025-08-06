@@ -647,7 +647,6 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
 
         </div>
 
-        phptag
         <div class="card-title space-between">
           <div>Data Inventaris (Baru)</div>
         </div>
