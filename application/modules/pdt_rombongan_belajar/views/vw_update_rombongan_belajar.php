@@ -3,11 +3,9 @@
     <h3 class="text-themecolor mb-0">Update Rombongan Belajar</h3>
     <ol class="breadcrumb mb-0">
       <li class="breadcrumb-item">
-        <a href="javascript:void(0)">Pangkalan Data</a>
+        <a href="<?= site_url('pangkalan_data'); ?>">Pangkalan Data</a>
       </li>
-      <li class="breadcrumb-item">
-        <a href="javascript:void(0)">Data Tahun Ajaran</a>
-      </li>
+      <li class="breadcrumb-item active">Data Tahun Ajaran</li>
       <li class="breadcrumb-item">
         <a href="<?= site_url('pdt_rombongan_belajar') ?>">Rombongan Belajar</a>
       </li>
@@ -41,39 +39,38 @@
 
     <div class="col-12">
       <div class="card">
-        <div class="card-body">
+        <div class="card-title">
           <h4 class="card-title space-between">
             <div><i class="fas fa-building me-2"></i>Profil Rombongan Belajar</div>
             <div></div>
           </h4>
-          <div>
+        </div>
+        <div class="card-body">
+          <div class="row g-1">
 
-            <div class="row g-1">
+            <table style="width: 100%;" class="table table-hover mb-1">
+              <tr>
+                <td style="min-width: 150px;">Sekolah</td>
+                <td style="min-width: 15px; text-align: center;">:</td>
+                <td style="width: 100%;"><?= check_var($data, 'ket_sekolah', '-') ?></td>
+              </tr>
 
-              <table style="width: 100%;" class="table table-hover mb-1">
-                <tr>
-                  <td style="min-width: 150px;">Sekolah</td>
-                  <td style="min-width: 15px; text-align: center;">:</td>
-                  <td style="width: 100%;"><?= check_var($data, 'ket_sekolah', '-') ?></td>
-                </tr>
+              <tr>
+                <td style="min-width: 150px;">Kelas / Rombel</td>
+                <td style="min-width: 15px; text-align: center;">:</td>
+                <td style="width: 100%;"><?= check_var($data, 'ket_kelas', '-') . '/' . check_var($data, 'nama_rombel', '-')  ?></td>
+              </tr>
 
-                <tr>
-                  <td style="min-width: 150px;">Kelas / Rombel</td>
-                  <td style="min-width: 15px; text-align: center;">:</td>
-                  <td style="width: 100%;"><?= check_var($data, 'ket_kelas', '-') . '/' . check_var($data, 'nama_rombel', '-')  ?></td>
-                </tr>
+              <tr>
+                <td style="min-width: 150px;">Tahun Ajaran</td>
+                <td style="min-width: 15px; text-align: center;">:</td>
+                <td style="width: 100%;"><?= check_var($data, 'ket_tahun_ajaran', '-') ?></td>
+              </tr>
 
-                <tr>
-                  <td style="min-width: 150px;">Tahun Ajaran</td>
-                  <td style="min-width: 15px; text-align: center;">:</td>
-                  <td style="width: 100%;"><?= check_var($data, 'ket_tahun_ajaran', '-') ?></td>
-                </tr>
-
-              </table>
-
-            </div>
+            </table>
 
           </div>
+
         </div>
       </div>
     </div>
@@ -81,42 +78,41 @@
     <div class="col-12">
 
       <div class="card">
-        <div class="card-body">
-          <h4 class="card-title space-between mb-3">
+        <div class="card-title">
+          <h4 class="card-title space-between">
             <div><i class="fas fa-user me-2"></i>Manajemen Peserta Didik</div>
-            <div></div>
+            <div>
+              <a href="javascript:void(0)" class="btn btn-sm btn-info pull-right">Insert Data Batch PD <i class="fas fa-file mx-1"></i></a>
+            </div>
           </h4>
+        </div>
+        <div class="card-body">
+          <div class="col-12">
+            <div class="row g-2">
 
-          <div class="row g-2">
+              <div class="table-responsive">
 
-            <div class="col-12">
-              <div class="row g-2">
-
-                <div class="table-responsive mt-4">
-
-                  <div class="_loading loading_list_peserta_didik">
-                    <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>
-                  </div>
-
-                  <table id="list_peserta_didik" class="table table-bordered table-hover fs-3" style="width:100%;">
-
-                    <thead class="bg-info text-white">
-                      <tr class="text-center">
-                        <th class="vam" style="min-width: 30px;">#</th>
-                        <th class="vam" style="min-width: 100px;">Nama Lengkap</th>
-                        <th class="vam" style="min-width: 80px;">Jenis Kelamin</th>
-                        <th class="vam" style="min-width: 60px;">Aksi</th>
-                      </tr>
-                    </thead>
-
-                    <tbody style="font-size: 12px;"></tbody>
-
-                  </table>
+                <div class="_loading loading_list_peserta_didik">
+                  <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>
                 </div>
 
-              </div>
-            </div>
+                <table id="list_peserta_didik" class="table table-bordered table-hover fs-3" style="width:100%;">
 
+                  <thead class="bg-info text-white">
+                    <tr class="text-center">
+                      <th class="vam" style="min-width: 30px;">#</th>
+                      <th class="vam" style="min-width: 100px;">Nama Lengkap</th>
+                      <th class="vam" style="min-width: 80px;">Jenis Kelamin</th>
+                      <th class="vam" style="min-width: 60px;">Aksi</th>
+                    </tr>
+                  </thead>
+
+                  <tbody style="font-size: 12px;"></tbody>
+
+                </table>
+              </div>
+
+            </div>
           </div>
 
         </div>
