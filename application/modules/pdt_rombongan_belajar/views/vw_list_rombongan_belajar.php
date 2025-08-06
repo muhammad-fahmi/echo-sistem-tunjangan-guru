@@ -3,11 +3,12 @@
 <!-- ============================================================== -->
 <div class="row page-titles">
   <div class="col-md-4 col-12 align-self-center">
-    <h3 class="text-themecolor mb-0">Rombongan Belajar</h3>
+    <h3 class="text-themecolor mb-0">Daftar Rombongan Belajar</h3>
     <ol class="breadcrumb mb-0">
       <li class="breadcrumb-item">
-        <a href="javascript:void(0)">Home</a>
+        <a href="<?= site_url('pangkalan_data'); ?>">Pangkalan Data</a>
       </li>
+      <li class="breadcrumb-item active">Data Tahun Ajaran</li>
       <li class="breadcrumb-item active">Rombongan Belajar</li>
     </ol>
   </div>
@@ -26,10 +27,12 @@
   <div class="row">
     <div class="col-12">
       <div class="card">
+        <div class="card-title">
+          <h4 class="space-between">Daftar Rombongan Belajar</h4>
+        </div>
         <div class="card-body">
-          <h4 class="card-title">Daftar Rombongan Belajar</h4>
 
-          <div class="table-responsive mt-4">
+          <div class="table-responsive">
 
             <div class="_loading loading_table_rombel">
               <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>

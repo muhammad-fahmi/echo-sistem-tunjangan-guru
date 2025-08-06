@@ -6,9 +6,9 @@
     <h3 class="text-themecolor mb-0">Daftar Peserta Didik</h3>
     <ol class="breadcrumb mb-0">
       <li class="breadcrumb-item">
-        <a href="javascript:void(0)">Home</a>
+        <a href="<?= site_url('pangkalan_data'); ?>">Pangkalan Data</a>
       </li>
-      <li class="breadcrumb-item active">Daftar Peserta Didik</li>
+      <li class="breadcrumb-item active">Peserta Didik</li>
     </ol>
   </div>
   <!-- ============================================================== -->
@@ -26,10 +26,12 @@
   <div class="row">
     <div class="col-12">
       <div class="card">
+        <div class="card-title">
+          <h4 class="space-between">Daftar Siswa</h4>
+        </div>
         <div class="card-body">
-          <h4 class="card-title">Daftar Siswa</h4>
 
-          <div class="table-responsive mt-4">
+          <div class="table-responsive">
 
             <div class="_loading loading_table_siswa">
               <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>

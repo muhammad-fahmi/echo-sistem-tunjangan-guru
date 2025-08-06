@@ -3,12 +3,13 @@
 <!-- ============================================================== -->
 <div class="row page-titles">
   <div class="col-md-4 col-12 align-self-center">
-    <h3 class="text-themecolor mb-0">Data Tahun Ajaran</h3>
+    <h3 class="text-themecolor mb-0">Tahun Ajaran</h3>
     <ol class="breadcrumb mb-0">
       <li class="breadcrumb-item">
-        <a href="javascript:void(0)">Home</a>
+        <a href="<?= site_url('pangkalan_data'); ?>">Pangkalan Data</a>
       </li>
       <li class="breadcrumb-item active">Data Tahun Ajaran</li>
+      <li class="breadcrumb-item active">Tahun Ajaran</li>
     </ol>
   </div>
 </div>
@@ -26,8 +27,10 @@
   <div class="row">
     <div class="col-12">
       <div class="card">
+        <div class="card-title">
+          <h4 class="space-between">Daftar Data Tahun Ajaran</h4>
+        </div>
         <div class="card-body">
-          <h4 class="card-title">Daftar Data Tahun Ajaran</h4>
           <!-- Unit Kerja -->
           <div class="row mb-2">
             <div class="col-4 col-lg-3">
