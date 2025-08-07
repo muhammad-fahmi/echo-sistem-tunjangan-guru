@@ -3,7 +3,7 @@
 <!-- ============================================================== -->
 <div class="row page-titles">
   <div class="col-md-4 col-12 align-self-center">
-    <h3 class="text-themecolor mb-0">Daftar Peserta Didik</h3>
+    <h3 class="text-themecolor mb-0">Peserta Didik</h3>
     <ol class="breadcrumb mb-0">
       <li class="breadcrumb-item">
         <a href="<?= site_url('pangkalan_data'); ?>">Pangkalan Data</a>
@@ -67,8 +67,6 @@
 <!-- -------------------------------------------------------------- -->
 <!-- End Container fluid  -->
 <!-- -------------------------------------------------------------- -->
-
-
 <script>
   var init_btn_add = false;
   let urlDatatable = "<?= site_url('pdt_peserta_didik/get_data') ?>";
@@ -88,7 +86,7 @@
     ],
     /* set placeholder dari input search */
     language: {
-      searchPlaceholder: "Cari data peserta didik..."
+      searchPlaceholder: "Cari data siswa..."
     },
     ajax: {
       url: urlDatatable,

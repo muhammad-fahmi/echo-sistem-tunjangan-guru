@@ -39,7 +39,6 @@ class Mdl_pdt_rombel extends CI_Model
       OR nama_rombel LIKE '%$data[search]%')"
       : "";
 
-    // var_dump($data);
     /* kalau ada tambahan where condition bisa add lagi di atas */
     // deklarasi query yang digunakan
     $query_result = $this->db->query("SELECT * FROM v_rombongan_belajar 
@@ -91,18 +90,18 @@ class Mdl_pdt_rombel extends CI_Model
     $where_search = (isset_nn_nes($data['search']))
       ? "AND (nama LIKE '%$data[search]%' 
       OR nisn LIKE '%$data[search]%' 
-      OR jenis_kelamin LIKE '%$data[search]%')"
+      OR ket_jns_kelamin LIKE '%$data[search]%' 
+      OR ket_agama LIKE '%$data[search]%')"
       : "";
 
-    // var_dump($data);
     /* kalau ada tambahan where condition bisa add lagi di atas */
     // deklarasi query yang digunakan
     $query_result = $this->db->query("SELECT * FROM v_peserta_didik_rombel 
-      WHERE id_rombel IS NOT NULL $where_search 
+      WHERE id_siswa IS NOT NULL $where_search 
       ORDER BY $data[order_column] $data[order_sort] 
       LIMIT $data[start], $data[length]");
     $query_total = $this->db->query("SELECT * FROM v_peserta_didik_rombel 
-      WHERE id_rombel IS NOT NULL $where_search");
+      WHERE id_siswa IS NOT NULL $where_search");
     // cari total hasil
     $total_count = 0;
     while ($row = $query_total->unbuffered_row()) {
@@ -117,15 +116,28 @@ class Mdl_pdt_rombel extends CI_Model
       /// | PENATAAN DATA SEBELUM DIMASUKKAN KE DALAM RESULT_ARRAY
       /// |----------------------------------------------------------------------
       $data_result[$index]['no'] = $no;
+      $data_result[$index]['id_siswa'] = isset_nn_nes(encrypt_id($row['id_siswa']), '-');
+      $data_result[$index]['nama'] = isset_nn_nes($row['nama'], '-');
+      $data_result[$index]['nisn'] = isset_nn_nes($row['nisn'], '-');
+      $data_result[$index]['nik'] = isset_nn_nes($row['nik'], '-');
+      $data_result[$index]['jenis_kelamin'] = isset_nn_nes($row['jenis_kelamin'], '-');
+      $data_result[$index]['ket_jns_kelamin'] = isset_nn_nes($row['ket_jns_kelamin'], '-');
+      $data_result[$index]['kode_agama'] = isset_nn_nes($row['kode_agama'], '-');
+      $data_result[$index]['ket_agama'] = isset_nn_nes($row['ket_agama'], '-');
+      $data_result[$index]['no_kk'] = isset_nn_nes($row['no_kk'], '-');
+      $data_result[$index]['alamat'] = isset_nn_nes($row['alamat'], '-');
+      $data_result[$index]['pdpd'] = isset_nn_nes($row['pdpd'], '-');
+      $data_result[$index]['ket_disabilitas'] = isset_nn_nes($row['ket_disabilitas'], '-');
+      $data_result[$index]['id_rombel'] = isset_nn_nes(encrypt_id($row['id_rombel']), '-');
       $data_result[$index]['jenjang'] = isset_nn_nes($row['jenjang'], '-');
+      $data_result[$index]['ket_jenjang'] = isset_nn_nes($row['ket_jenjang'], '-');
       $data_result[$index]['kelas'] = isset_nn_nes($row['kelas'], '-');
+      $data_result[$index]['ket_kelas'] = isset_nn_nes($row['ket_kelas'], '-');
       $data_result[$index]['id_sekolah'] = isset_nn_nes($row['id_sekolah'], '-');
-      // $data_result[$index]['rombel'] = isset_nn_nes($row['rombel'], '-');
       $data_result[$index]['ket_sekolah'] = isset_nn_nes($row['ket_sekolah'], '-');
-      // $data_result[$index]['ket_jenjang'] = isset_nn_nes($row['ket_jenjang'], '-');
-      // $data_result[$index]['ket_kelas'] = isset_nn_nes($row['ket_kelas'], '-');
       $data_result[$index]['nama_rombel'] = isset_nn_nes($row['nama_rombel'], '-');
-      $data_result[$index]['id'] = isset_nn_nes(encrypt_id($row['id']), '-');
+      $data_result[$index]['id_tahun_ajaran'] = isset_nn_nes($row['id_tahun_ajaran'], '-');
+      $data_result[$index]['ket_tahun_ajaran'] = isset_nn_nes($row['ket_tahun_ajaran'], '-');
 
       $no += 1;
       $index += 1;
@@ -145,9 +157,9 @@ class Mdl_pdt_rombel extends CI_Model
     $this->load->library('form_validation');
 
     // Define validation rules
+    $this->form_validation->set_rules('id_sekolah', 'ID Sekolah', 'required');
     $this->form_validation->set_rules('id_jenjang', 'ID Jenjang', 'required');
     $this->form_validation->set_rules('id_kelas', 'ID Kelas', 'required');
-    $this->form_validation->set_rules('id_sekolah', 'ID Sekolah', 'required');
     $this->form_validation->set_rules('nama_rombel', 'Nama Rombel', 'required');
 
     // Validate the input data
@@ -174,7 +186,7 @@ class Mdl_pdt_rombel extends CI_Model
         'kelas' => $data['kelas'],
         'nama_rombel' => $data['nama_rombel']
       ],
-      ''
+      false
     );
     if ($is_rombel_exist) {
       return [
@@ -267,10 +279,10 @@ class Mdl_pdt_rombel extends CI_Model
     $is_siswa_exist = fetch_row_data(
       'r_peserta_didik_rombel',
       [
-        'id_rombel' => $data['id_rombel'],
-        'id_siswa' => $data['id_siswa']
+        'id_siswa' => $data['id_siswa'],
+        'id_rombel' => $data['id_rombel']
       ],
-      ''
+      false
     );
     if ($is_siswa_exist) {
       return [
@@ -285,7 +297,7 @@ class Mdl_pdt_rombel extends CI_Model
       //start db transaction
       $this->db->trans_begin();
       //cek apakah insert atau update
-      if ($data["id"] == 0) {
+      if (!$is_siswa_exist) {
         //insert data
         $this->db->insert("r_peserta_didik_rombel", $data);
         $insert_id = $this->db->insert_id();
@@ -299,13 +311,13 @@ class Mdl_pdt_rombel extends CI_Model
         );
       } else {
         //update data
-        $this->db->where(["id" => $data["id"]])->update("r_peserta_didik_rombel", $data);
+        $this->db->where(["id_siswa" => $data["id_siswa"]])->update("r_peserta_didik_rombel", $data);
 
         // BUATKAN LOG UTK SISTEM (UPDATE)
         log_generator(
           $cur_user,
           'r_peserta_didik_rombel',
-          $data['id'],
+          $data['id_siswa'],
           "Melakukan perubahan data siswa di rombel dengan data sebagai berikut :\n\n" . format_log_view($data)
         );
       }
@@ -390,6 +402,67 @@ class Mdl_pdt_rombel extends CI_Model
       $res = [
         'status' => false,
         'message' => "Proses hapus rombongan belajar error! Error message : " . $th->getMessage()
+      ];
+    }
+    return $res;
+  }
+
+  public function delete_siswa_rombel($data)
+  {
+    // FORM VALIDATION
+    $this->load->library('form_validation');
+
+    // Define validation rules
+    $this->form_validation->set_rules('id', 'ID Siswa', 'required');
+
+    // Validate the input data
+    if ($this->form_validation->run() === FALSE) {
+      // Collect errors
+      $errors = validation_errors('<li>', '</li>'); // This will return a string with errors formatted as HTML
+
+      // Build error list
+      $error_list = '<ul class="mb-0">';
+      $error_list .= $errors;
+      $error_list .= '</ul>';
+
+      // Return response with error details
+      return [
+        'status' => false,
+        'message' => 'Proses tidak bisa dilanjutkan karena form tidak valid.<br>' . $error_list
+      ];
+    }
+
+    $cur_user = $this->session->userdata('id_user');
+    try {
+      $this->db->trans_begin();
+      $this->db->where(["id_siswa" => $data["id"]])->delete("r_peserta_didik_rombel");
+
+      // BUATKAN LOG UTK SISTEM (DELETE)
+      log_generator(
+        $cur_user,
+        'r_peserta_didik_rombel',
+        $data['id'],
+        "Melakukan penghapusan data Peserta Didik " . $data['id'] . " di rombongan belajar sebagai berikut :\n\n" . format_log_view($data)
+      );
+      if ($this->db->trans_status() === FALSE) {
+        // do your error handler here
+        $this->db->trans_rollback();
+        $res = [
+          'status' => false,
+          'message' => "Data Peserta Didik di rombel gagal dihapus!"
+        ];
+      } else {
+        // do your success handler here
+        $this->db->trans_commit();
+        $res = [
+          'status' => true,
+          'message' => "Data Peserta Didik di rombel berhasil dihapus!"
+        ];
+      }
+    } catch (\Throwable $th) {
+      $res = [
+        'status' => false,
+        'message' => "Proses hapus Peserta Didik di rombel error! Error message : " . $th->getMessage()
       ];
     }
     return $res;
