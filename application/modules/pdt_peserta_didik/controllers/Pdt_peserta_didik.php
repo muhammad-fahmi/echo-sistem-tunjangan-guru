@@ -41,8 +41,18 @@ class Pdt_peserta_didik extends MY_Controller
       redirect(site_url('pdt_peserta_didik'));
       return;
     }
+    $getdata_from_rombel = fetch_row_data('v_peserta_didik_rombel', ['id_siswa' => $decryptedID], false);
+    if ($dataset == false) {
+      $this->session->set_userdata('flash_data', "Maaf, data Peserta Didik yang akan dilihat detailnya tidak valid.");
+      redirect(site_url('pdt_peserta_didik'));
+      return;
+    }
 
     $dataset['id_siswa'] = encrypt_id($dataset['id_siswa']);
+    $dataset['ket_jenjang'] = $getdata_from_rombel['ket_jenjang'];
+    $dataset['ket_kelas'] = $getdata_from_rombel['ket_kelas'];
+    $dataset['ket_sekolah'] = $getdata_from_rombel['ket_sekolah'];
+    $dataset['nama_rombel'] = $getdata_from_rombel['nama_rombel'];
 
     $data = array(
       'page_title' => "Detail Data Peserta Didik | PROGURINDA",

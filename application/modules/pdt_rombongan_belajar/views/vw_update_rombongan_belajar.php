@@ -1,6 +1,6 @@
 <div class="row page-titles">
   <div class="col-md-4 col-12 align-self-center">
-    <h3 class="text-themecolor mb-0">Update Rombongan Belajar</h3>
+    <h3 class="text-themecolor mb-0">Rombongan Belajar - <?= $data['ket_kelas']; ?>/<?= $data['nama_rombel']; ?></h3>
     <ol class="breadcrumb mb-0">
       <li class="breadcrumb-item">
         <a href="<?= site_url('pangkalan_data'); ?>">Pangkalan Data</a>
@@ -17,8 +17,10 @@
 <div class="container-fluid">
 
   <div class="row">
-
     <?php
+    /// |----------------------------------------
+    /// | SHOW DEBUG
+    /// |----------------------------------------
     $show_debug = false;
     if ($show_debug) {
     ?>
@@ -85,6 +87,7 @@
               <a href="javascript:void(0)" class="btn btn-sm btn-info pull-right">Insert Data Batch PD <i class="fas fa-file mx-1"></i></a>
             </div>
           </h4>
+          <input type="hidden" id="id_rombel" name="id_rombel" value="<?= $data['id']; ?>">
         </div>
         <div class="card-body">
           <div class="col-12">
@@ -100,10 +103,11 @@
 
                   <thead class="bg-info text-white">
                     <tr class="text-center">
-                      <th class="vam" style="min-width: 30px;">#</th>
-                      <th class="vam" style="min-width: 100px;">Nama Lengkap</th>
+                      <th class="vam" style="min-width: 20px;">#</th>
+                      <th class="vam" style="min-width: 150px;">NISN / Nama Lengkap</th>
                       <th class="vam" style="min-width: 80px;">Jenis Kelamin</th>
-                      <th class="vam" style="min-width: 60px;">Aksi</th>
+                      <th class="vam" style="min-width: 60px;">Agama</th>
+                      <th class="vam" style="min-width: 20px;">Aksi</th>
                     </tr>
                   </thead>
 
@@ -124,7 +128,10 @@
 
 </div>
 
+<div class="toast_container"></div>
+
 <script>
+  var id_rombel = "<?= $data['id'] ?>";
   var init_btn_add_siswa = false;
   let urlDatatable = "<?= site_url('pdt_rombongan_belajar/get_data_siswa') ?>";
   var list_peserta_didik = $("#list_peserta_didik").DataTable({
@@ -174,13 +181,21 @@
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-start">' +
-            '<div class="badge bg-secondary mb-1" style="opacity: 0.65;">' + rowData['nisn'] + '</div><br>' + cellData +
+            '<div class="badge bg-info mb-1" style="opacity: 0.65;">' + rowData['nisn'] + '</div><br>' + cellData +
             '</div>'
           );
         }
       },
       {
         data: 'ket_jns_kelamin',
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        }
+      },
+      {
+        data: 'ket_agama',
         orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -198,16 +213,16 @@
           let kewenangan_user = '<?= $this->session->userdata('kewenangan'); ?>';
 
           let btn_detail = '<a href="' + detail_url + cellData + '" class="badge bg-secondary clickable text-white me-1"><i class="fas fa-eye"></i> Detail</a>';
-          let btn_delete = (kewenangan_user == '00') ?
+          let btn_delete = (kewenangan_user == '10') ?
             '<div onclick="modal(`' + cellData + '`, `delete_siswa_rombel`)" class="badge bg-danger clickable me-1" title="Hapus">' +
             '<i class="fas fa-trash"></i> Hapus</div>' :
             '';
 
           $(td).html('<div class="text-center">' +
-            '<div class="d-grid gap-1 px-2"><div class="row">' +
+            '<div class="d-grid gap-1 px-2">' +
             '<div class="row">' + btn_detail + '</div>' +
             '<div class="row">' + btn_delete + '</div>' +
-            '</div></div>');
+            '</div>');
         }
       },
     ],
@@ -222,7 +237,7 @@
       /* parameter callback untuk kostumisasi fungsi */
       $('.loading_list_peserta_didik').removeClass('show');
 
-      let btn_add_siswa = '<button class="btn btn-sm btn-success me-2" onclick="modal(`0`,`tambah_siswa_rombel`)">' +
+      let btn_add_siswa = '<button class="btn btn-sm btn-success me-2" onclick="modal(`' + id_rombel + '`,`tambah_siswa_rombel`)">' +
         '<i class="fas fa-plus me-1"></i>Tambah Peserta Didik' +
         '</button>';
 
@@ -259,12 +274,4 @@
       }
     });
   }
-
-  /// |----------------------------------------
-  /// | DOCUMENT READY
-  /// |----------------------------------------
-  $(document).ready(function() {
-    // REQUEST RIWAYAT
-    // request_riwayat();
-  });
 </script>

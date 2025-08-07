@@ -6,13 +6,15 @@ class Pdt_tahun_ajaran extends MY_Controller
   {
     // lakukan proses verifikasi user disini
     parent::__construct();
-    $priv = $this->session->userdata('kewenangan');
-    $log = $this->session->userdata('logged_in');
-    if ($log != true) {
-      redirect(site_url('login'));
-    } else {
-      $this->load->model('mdl_pdt_tahun_ajaran', 'mdl_tahun_ajaran');
+
+    $is_ajax = $this->input->is_ajax_request();
+    if (!$is_ajax) {
+      $this->session->set_userdata('menu', 'PDT_DTATahunAjaran');
+      if (!check_perm('read') || !is_logged_in()) {
+        redirect(site_url('pangkalan_data'));
+      }
     }
+    $this->load->model('mdl_pdt_tahun_ajaran', 'mdl_tahun_ajaran');
   }
 
   public function index()
