@@ -7,8 +7,8 @@
 <div class="modal-body">
 
   <form id="deleteSiswaRombel" action="<?= site_url('pdt_rombongan_belajar/delete_siswa'); ?>" method="POST" enctype="multipart/form-data">
-    <input type="hidden" id="type" name="type" value="<?= $data['type'] ?>">
-    <input type="hidden" id="id" name="id" value="<?= $data['id_siswa'] ?>">
+    <input type="hidden" id="type" name="type" value="<?= $data['type']; ?>">
+    <input type="hidden" id="id_siswa" name="id_siswa" value="<?= $data['id_siswa']; ?>">
 
     <div class="row g-2">
 

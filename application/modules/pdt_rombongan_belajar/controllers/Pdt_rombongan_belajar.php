@@ -273,7 +273,7 @@ class Pdt_rombongan_belajar extends MY_Controller
       'message' => "Maaf, proses penghapusan data Peserta Didik di rombongan belajar gagal dilakukan!"
     ];
 
-    $data["id"] = $this->input->post('id_siswa');
+    $data["id_siswa"] = $this->input->post('id_siswa');
     $res = $this->mdl_rombongan_belajar->delete_siswa_rombel($data);
 
     return $this->output

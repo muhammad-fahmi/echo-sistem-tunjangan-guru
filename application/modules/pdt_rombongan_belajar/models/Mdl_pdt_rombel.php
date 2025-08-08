@@ -41,12 +41,12 @@ class Mdl_pdt_rombel extends CI_Model
 
     /* kalau ada tambahan where condition bisa add lagi di atas */
     // deklarasi query yang digunakan
-    $query_result = $this->db->query("SELECT * FROM v_rombongan_belajar 
-      WHERE id IS NOT NULL $where_search 
+    $query_result = $this->db->query("SELECT * FROM `v_rombongan_belajar` 
+      WHERE `id` IS NOT NULL $where_search 
       ORDER BY $data[order_column] $data[order_sort] 
       LIMIT $data[start], $data[length]");
-    $query_total = $this->db->query("SELECT * FROM v_rombongan_belajar 
-      WHERE id IS NOT NULL $where_search");
+    $query_total = $this->db->query("SELECT * FROM `v_rombongan_belajar` 
+      WHERE `id` IS NOT NULL $where_search");
     // cari total hasil
     $total_count = 0;
     while ($row = $query_total->unbuffered_row()) {
@@ -56,10 +56,11 @@ class Mdl_pdt_rombel extends CI_Model
     $no = $data['start'] + 1;
     $index = 0;
     $data_result = array();
-    while ($row = $query_result->unbuffered_row("array")) {
+    while ($row = $query_result->unbuffered_row('array')) {
       /// |----------------------------------------------------------------------
       /// | PENATAAN DATA SEBELUM DIMASUKKAN KE DALAM RESULT_ARRAY
       /// |----------------------------------------------------------------------
+      $data_result[$index] = $row;
       $data_result[$index]['no'] = $no;
       $data_result[$index]['jenjang'] = isset_nn_nes($row['jenjang'], '-');
       $data_result[$index]['kelas'] = isset_nn_nes($row['kelas'], '-');
@@ -96,12 +97,12 @@ class Mdl_pdt_rombel extends CI_Model
 
     /* kalau ada tambahan where condition bisa add lagi di atas */
     // deklarasi query yang digunakan
-    $query_result = $this->db->query("SELECT * FROM v_peserta_didik_rombel 
-      WHERE id_siswa IS NOT NULL $where_search 
+    $query_result = $this->db->query("SELECT * FROM `v_peserta_didik_rombel` 
+      WHERE `id_siswa` IS NOT NULL $where_search 
       ORDER BY $data[order_column] $data[order_sort] 
       LIMIT $data[start], $data[length]");
-    $query_total = $this->db->query("SELECT * FROM v_peserta_didik_rombel 
-      WHERE id_siswa IS NOT NULL $where_search");
+    $query_total = $this->db->query("SELECT * FROM `v_peserta_didik_rombel` 
+      WHERE `id_siswa` IS NOT NULL $where_search");
     // cari total hasil
     $total_count = 0;
     while ($row = $query_total->unbuffered_row()) {
@@ -111,10 +112,11 @@ class Mdl_pdt_rombel extends CI_Model
     $no = $data['start'] + 1;
     $index = 0;
     $data_result = array();
-    while ($row = $query_result->unbuffered_row("array")) {
+    while ($row = $query_result->unbuffered_row('array')) {
       /// |----------------------------------------------------------------------
       /// | PENATAAN DATA SEBELUM DIMASUKKAN KE DALAM RESULT_ARRAY
       /// |----------------------------------------------------------------------
+      $data_result[$index] = $row;
       $data_result[$index]['no'] = $no;
       $data_result[$index]['id_siswa'] = isset_nn_nes(encrypt_id($row['id_siswa']), '-');
       $data_result[$index]['nama'] = isset_nn_nes($row['nama'], '-');
@@ -200,7 +202,7 @@ class Mdl_pdt_rombel extends CI_Model
       //start db transaction
       $this->db->trans_begin();
       //cek apakah insert atau update
-      if ($data["id"] == 0) {
+      if (!$is_rombel_exist) {
         //insert data
         $this->db->insert("r_rombongan_belajar", $data);
         $insert_id = $this->db->insert_id();
@@ -307,7 +309,7 @@ class Mdl_pdt_rombel extends CI_Model
           $cur_user,
           'r_peserta_didik_rombel',
           $insert_id,
-          "Melakukan penambahan data siswa baru di rombel " . $data['id_rombel'] . " dengan data sebagai berikut :\n\n" . format_log_view($data)
+          "Melakukan penambahan data siswa baru di rombel dengan data sebagai berikut :\n\n" . format_log_view($data)
         );
       } else {
         //update data
@@ -413,7 +415,7 @@ class Mdl_pdt_rombel extends CI_Model
     $this->load->library('form_validation');
 
     // Define validation rules
-    $this->form_validation->set_rules('id', 'ID Siswa', 'required');
+    $this->form_validation->set_rules('id_siswa', 'ID Siswa', 'required');
 
     // Validate the input data
     if ($this->form_validation->run() === FALSE) {
@@ -435,14 +437,14 @@ class Mdl_pdt_rombel extends CI_Model
     $cur_user = $this->session->userdata('id_user');
     try {
       $this->db->trans_begin();
-      $this->db->where(["id_siswa" => $data["id"]])->delete("r_peserta_didik_rombel");
+      $this->db->where(["id_siswa" => $data["id_siswa"]])->delete("r_peserta_didik_rombel");
 
       // BUATKAN LOG UTK SISTEM (DELETE)
       log_generator(
         $cur_user,
         'r_peserta_didik_rombel',
-        $data['id'],
-        "Melakukan penghapusan data Peserta Didik " . $data['id'] . " di rombongan belajar sebagai berikut :\n\n" . format_log_view($data)
+        $data['id_siswa'],
+        "Melakukan penghapusan data Peserta Didik " . $data['id_siswa'] . " di rombongan belajar sebagai berikut :\n\n" . format_log_view($data)
       );
       if ($this->db->trans_status() === FALSE) {
         // do your error handler here
