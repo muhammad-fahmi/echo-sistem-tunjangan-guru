@@ -6,7 +6,7 @@
 </div>
 <div class="modal-body">
 
-  <form id="saveSiswaRombel" action="<?= site_url('pdt_rombongan_belajar/save_siswa'); ?>" method="POST">
+  <form id="saveSiswaRombel" action="<?= site_url('pdt_rombongan_belajar/save_siswa'); ?>" method="POST" enctype="multipart/form-data">
     <input type="hidden" id="type" name="type" value="<?= $data['type']; ?>">
     <input type="hidden" id="id_rombel" name="id_rombel" value="<?= $data['id']; ?>">
 

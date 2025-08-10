@@ -6,7 +6,7 @@
 </div>
 <div class="modal-body">
 
-  <form id="saveRombel" action="<?= site_url('pdt_rombongan_belajar/save'); ?>" method="POST">
+  <form id="saveRombel" action="<?= site_url('pdt_rombongan_belajar/save'); ?>" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="type" value="<?= $data['type']; ?>">
 
     <div class="row g-2">
