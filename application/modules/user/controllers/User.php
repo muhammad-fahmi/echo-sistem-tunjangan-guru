@@ -9,6 +9,7 @@ class User extends MY_Controller
     $log = $this->session->userdata('logged_in');
     $user = $this->session->userdata('username');
     $kewenangan = $this->session->userdata('kewenangan');
+    $this->session->set_userdata('menu', 'user');
     if ($log != true) {
       redirect(site_url('login'));
     } else {
