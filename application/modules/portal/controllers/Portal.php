@@ -8,7 +8,8 @@ class Portal extends MY_Controller
     parent::__construct();
     $log = $this->session->userdata('logged_in');
     $user = $this->session->userdata('username');
-    $kewenangan = $this->session->userdata('kewenangan');
+    $kewenangan = $this->session->userdata('portal');
+    $this->session->set_userdata('menu', 'mapel_guru');
     if ($log != true) {
       redirect(site_url('login'));
     } else {
@@ -18,7 +19,6 @@ class Portal extends MY_Controller
 
   public function index()
   {
-    $this->session->set_userdata('menu', 'user');
     $sent_data = [];
     $data = array(
       'page_title' => "Portal | PROGURINDA",
