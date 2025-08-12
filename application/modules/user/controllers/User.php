@@ -45,14 +45,11 @@ class User extends MY_Controller
   public function index()
   {
     $this->session->set_userdata('menu', 'user');
-    $sent_data = array(
-      'm_user' => $this->user->get('m_user'),
-    );
+    
     $data = array(
       'page_title' => "Manajemen User",
       'module' => "user",
-      'view' => "vw_user",
-      'data' => $sent_data
+      'view' => "vw_user"
     );
     echo Modules::run('layout/backend', $data);
   }
