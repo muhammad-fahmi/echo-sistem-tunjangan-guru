@@ -28,46 +28,55 @@ class Mdl_pdt_tahun_ajaran extends CI_Model
     return $result;
   }
 
+  public function query_data_tahun_ajaran($data)
+  {
+    $cur_unor = $this->session->userdata('kode_unor');
+
+    // declare table
+    $this->db->from('v_tahun_ajaran');
+
+    // where condition
+    if (check_var($data, 'search')) {
+      $this->db->group_start()
+        ->like('tahun_ajar', $data['search'])
+        ->or_like('nama_sekolah', $data['search'])
+        ->or_like('jenjang', $data['search'])
+        ->group_end();
+    }
+
+    // if (check_var($data['id_rombel'])) {
+    //   $this->db->where('id_rombel', $data['id_rombel']);
+    // }
+  }
+
   /* fungsi untuk menarik data dari DB dan konversi ke dataset untuk jquery datatable */
   public function get_datatable($data, $primary_key = 'id_tahun_ajar')
   {
-    // lakukan filtering data
-    // deklarasi where condition
-    $where_search = (isset_nn_nes($data['search']))
-      ? "AND (tahun_ajaran LIKE '%$data[search]%' 
-      OR tingkat LIKE '%$data[search]%'      
-      OR nama_sekolah LIKE '%$data[search]%')"
-      : "";
-    /* kalau ada tambahan where condition bisa add lagi di atas */
-    // deklarasi query yang digunakan
-    $query_result = $this->db->query("SELECT * FROM `progurinda_r_tahun_ajar` 
-      WHERE $primary_key IS NOT NULL $where_search 
-      ORDER BY $data[order_column] $data[order_sort]
-      LIMIT $data[start], $data[length]");
-    $query_total = $this->db->query("SELECT * FROM `progurinda_r_tahun_ajar` 
-      WHERE $primary_key IS NOT NULL $where_search");
-    // cari total hasil
-    $total_count = 0;
-    while ($row = $query_total->unbuffered_row()) {
-      $total_count += 1;
-    }
-    // cari data result + penomoran
-    $no = $data['start'] + 1;
-    $index = 0;
-    $data_result = array();
-    while ($row = $query_result->unbuffered_row('array')) {
-      /// |----------------------------------------------------------------------
-      /// | PENATAAN DATA SEBELUM DIMASUKKAN KE DALAM RESULT_ARRAY
-      /// |----------------------------------------------------------------------
-      $data_result[$index] = $row;
-      $data_result[$index]['no'] = $no;
-      $data_result[$index]['tahun_ajar'] = isset_nn_nes($row['tahun_ajar'], '-');
-      $data_result[$index]['nama_sekolah'] = isset_nn_nes($row['nama_sekolah'], '-');
-      $data_result[$index]['tingkat'] = isset_nn_nes($row['tingkat'], '-');
-      $data_result[$index]['jumlah_rombel'] = isset_nn_nes($row['jumlah_rombel'], '-');
+    // START DB BUILDER
+    $this->query_data_tahun_ajaran($data);
 
-      $no += 1;
-      $index += 1;
+    // ORDER
+    $order_col = $data['order_column'];
+    $order_sort = strtolower($data['order_sort']) === 'desc' ? 'DESC' : 'ASC';
+    $this->db->order_by($order_col, $order_sort);
+
+    // LIMIT
+    $this->db->limit((int)$data['length'], (int)$data['start']);
+
+    // RESULT DATA
+    $query_result = $this->db->get()->result_array();
+
+    // RE-BUILD FOR TOTAL
+    $this->query_data_tahun_ajaran($data);
+    $total_count = $this->db->get()->num_rows();
+
+    $no = $data['start'] + 1;
+    $data_result = [];
+    foreach ($query_result as $row) {
+      $row['no'] = $no++;
+
+      // store modified data into the result
+      $data_result[] = $row;
     }
     // kembalikan data yang didapat ke controller
     return array(
