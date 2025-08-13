@@ -9,6 +9,7 @@ class Tpp_per_bulan extends MY_Controller
     // lakukan proses verifikasi user disini
     $priv = $this->session->userdata('kewenangan');
     $log = $this->session->userdata('logged_in');
+    $this->session->set_userdata('menu', 'tpp_per_bulan');
     if ($log != true) {
       redirect(site_url('login'));
     } else {
@@ -80,7 +81,7 @@ class Tpp_per_bulan extends MY_Controller
           break;
         case '3':
           $display_status = "PPPK";
-          break;        
+          break;
         default:
           $display_status = "-";
           break;
@@ -96,14 +97,14 @@ class Tpp_per_bulan extends MY_Controller
         <td align="right">' . $tpp_elogbook . ' ' . $value["hari_kerja"] . '</td>
         <td align="right">' . $capaian_elogbook . ' (' . $value["menit_capaian_elogbook"] . '/' . $value["max_menit_elogbook"] . ') menit_khusus : ' . $value["menit_khusus"] . '</td>
       */
-      
-        $tabel .= '
+
+      $tabel .= '
         <tr>
-          <td>'.$no.'</td>
-          <td>' . $ket_jab . '<br>Golongan : ( <b> '.$display_gol.' </b> )'. '<br>Status : ( <b> '.$display_status.' </b> )</td>
-          <td>' . $nama_lengkap . '<br>'.$nip.'</td>
-          <td>' . $besaran_tpp  .'</td>
-          <td align="right">' . $tpp_disiplin_kerja. '</td>
+          <td>' . $no . '</td>
+          <td>' . $ket_jab . '<br>Golongan : ( <b> ' . $display_gol . ' </b> )' . '<br>Status : ( <b> ' . $display_status . ' </b> )</td>
+          <td>' . $nama_lengkap . '<br>' . $nip . '</td>
+          <td>' . $besaran_tpp  . '</td>
+          <td align="right">' . $tpp_disiplin_kerja . '</td>
           <td align="right">' . $total_potongan_disiplin . '</td>
           <td align="right">' . $penghasilan_tpp_disiplin . '</td>
           <td align="right">' . $tpp_produktivitas . '</td>
@@ -140,7 +141,8 @@ class Tpp_per_bulan extends MY_Controller
     $this->return_json($res);
   }
 
-  public function cetak_list_tpp($unit_kerja, $bulan, $tahun){
+  public function cetak_list_tpp($unit_kerja, $bulan, $tahun)
+  {
     $unit_kerja = clean_string($unit_kerja);
     $bulan = clean_string($bulan);
     $tahun = clean_string($tahun);
@@ -156,7 +158,7 @@ class Tpp_per_bulan extends MY_Controller
     $start_date = '9999';
     $end_date = '9999';
 
-    
+
     $cek_ukerja = $this->db->get_where('v_ukerja', ['kode_ukerja' => $unit_kerja]);
     if ($cek_ukerja->num_rows() < 1) {
       echo '<h4>ERROR: Unit Kerja tidak valid / belum di-set.</h4>';
@@ -174,7 +176,7 @@ class Tpp_per_bulan extends MY_Controller
     // set document information
     $pdf->SetCreator(PDF_CREATOR);
     $pdf->SetAuthor($data_ukerja['ket_ukerja']);
-    $pdf->SetTitle('Laporan Tunjangan Produktifitas Guru Bulan '.$nama_bulan.' '.$tahun);
+    $pdf->SetTitle('Laporan Tunjangan Produktifitas Guru Bulan ' . $nama_bulan . ' ' . $tahun);
     $pdf->SetSubject('List TPP');
     $pdf->SetKeywords('TPP, Guru, example, test, guide');
 
@@ -229,25 +231,25 @@ class Tpp_per_bulan extends MY_Controller
     $html_table_open = '<table border="1" cellpadding="6">' .
       '<thead>' .
       '<tr>' .
-        '<th rowspan="2" style="' . $style_header . $border_thin . $width_num . '">No</th>' .
-        '<th rowspan="2" style="' . $style_header . $border_thin . '">JABATAN</th>' .
-        '<th rowspan="2" style="' . $style_header . $border_thin . '">NAMA</th>' .
-        '<th rowspan="2" style="' . $style_header . $border_thin . '">NIP</th>' .
-        '<th rowspan="2" style="' . $style_header . $border_thin . '">GOL</th>' .
-        '<th rowspan="2" style="' . $style_header . $border_thin . '">UNIT KERJA</th>' .
-        '<th rowspan="2" style="' . $style_header . $border_thin . '">BESARAN TPP</th>' .
-        '<th colspan="3" style="' . $style_header . $border_thin . '">TPP DISIPLIN KERJA</th>' .
-        '<th colspan="3" style="' . $style_header . $border_thin . '">TPP PRODUKTIVITAS KERJA</th>' .
-        '<th rowspan="2" style="' . $style_header . $border_thin . '">TOTAL TPP</th>' .
+      '<th rowspan="2" style="' . $style_header . $border_thin . $width_num . '">No</th>' .
+      '<th rowspan="2" style="' . $style_header . $border_thin . '">JABATAN</th>' .
+      '<th rowspan="2" style="' . $style_header . $border_thin . '">NAMA</th>' .
+      '<th rowspan="2" style="' . $style_header . $border_thin . '">NIP</th>' .
+      '<th rowspan="2" style="' . $style_header . $border_thin . '">GOL</th>' .
+      '<th rowspan="2" style="' . $style_header . $border_thin . '">UNIT KERJA</th>' .
+      '<th rowspan="2" style="' . $style_header . $border_thin . '">BESARAN TPP</th>' .
+      '<th colspan="3" style="' . $style_header . $border_thin . '">TPP DISIPLIN KERJA</th>' .
+      '<th colspan="3" style="' . $style_header . $border_thin . '">TPP PRODUKTIVITAS KERJA</th>' .
+      '<th rowspan="2" style="' . $style_header . $border_thin . '">TOTAL TPP</th>' .
       '</tr>' .
-      '<tr>'.
-        '<th style="' . $style_header . $border_thin . '">BESARAN</th>' .
-        '<th style="' . $style_header . $border_thin . '">POTONGAN</th>' .
-        '<th style="' . $style_header . $border_thin . '">PENGHASILAN</th>' .
-        '<th style="' . $style_header . $border_thin . '">BESARAN</th>' .
-        '<th style="' . $style_header . $border_thin . '">CAPAIAN</th>' .
-        '<th style="' . $style_header . $border_thin . '">PENGHASILAN</th>' .
-      '</tr>'.
+      '<tr>' .
+      '<th style="' . $style_header . $border_thin . '">BESARAN</th>' .
+      '<th style="' . $style_header . $border_thin . '">POTONGAN</th>' .
+      '<th style="' . $style_header . $border_thin . '">PENGHASILAN</th>' .
+      '<th style="' . $style_header . $border_thin . '">BESARAN</th>' .
+      '<th style="' . $style_header . $border_thin . '">CAPAIAN</th>' .
+      '<th style="' . $style_header . $border_thin . '">PENGHASILAN</th>' .
+      '</tr>' .
       '</thead>' .
       '<tbody>';
 
@@ -291,7 +293,7 @@ class Tpp_per_bulan extends MY_Controller
         '<td style="' . $style_content_2 . $border_thin . '">' . $nilai_capaian . '</td>' .
         '<td style="' . $style_content_2 . $border_thin . '">' . $total_tpp_perorangan . '</td>' .
         '</tr>';
-      
+
       $total_besaran_full += (float)$value["besaran_tpp"];
       $total_tpp_disiplin += (float)$value["tpp_disiplin_kerja"];
       //var_dump($value["total_potongan_disiplin"]);
@@ -306,14 +308,14 @@ class Tpp_per_bulan extends MY_Controller
     // Jumlah Final (Last Row)
     $html_content_2 = '<tr style="' . $style_header . '">' .
       '<td colspan="6" style="' . $border_thin . '">JUMLAH </td>' .
-      '<td style="' . $border_thin . '">Rp. '.konversi_counting($total_besaran_full).'</td>' .
-      '<td style="' . $border_thin . '">Rp. '.konversi_counting($total_tpp_disiplin).'</td>' .
-      '<td style="' . $border_thin . '">Rp. '.konversi_counting($total_potongan_disiplin).'</td>' .
-      '<td style="' . $border_thin . '">Rp. '.konversi_counting($total_perolehan_disiplin).'</td>' .
-      '<td style="' . $border_thin . '">Rp. '.konversi_counting($total_tpp_produktivitas).'</td>' .
+      '<td style="' . $border_thin . '">Rp. ' . konversi_counting($total_besaran_full) . '</td>' .
+      '<td style="' . $border_thin . '">Rp. ' . konversi_counting($total_tpp_disiplin) . '</td>' .
+      '<td style="' . $border_thin . '">Rp. ' . konversi_counting($total_potongan_disiplin) . '</td>' .
+      '<td style="' . $border_thin . '">Rp. ' . konversi_counting($total_perolehan_disiplin) . '</td>' .
+      '<td style="' . $border_thin . '">Rp. ' . konversi_counting($total_tpp_produktivitas) . '</td>' .
       '<td style="' . $border_thin . '"></td>' .
-      '<td style="' . $border_thin . '">Rp. '.konversi_counting($total_perolehan_produktivitas).'</td>' .
-      '<td style="' . $border_thin . '">Rp. '.konversi_counting($total_tpp).'</td>' .
+      '<td style="' . $border_thin . '">Rp. ' . konversi_counting($total_perolehan_produktivitas) . '</td>' .
+      '<td style="' . $border_thin . '">Rp. ' . konversi_counting($total_tpp) . '</td>' .
       '</tr>';
 
     // jadikan satu semuanya
@@ -329,7 +331,8 @@ class Tpp_per_bulan extends MY_Controller
     $pdf->Output('Daftar TPP Guru - $nama_bulan $tahun - $data_ukerja[ket_ukerja].pdf', 'I');
   }
 
-  public function cetak_list_tpp_old($unit_kerja, $bulan, $tahun){
+  public function cetak_list_tpp_old($unit_kerja, $bulan, $tahun)
+  {
     $unit_kerja = clean_string($unit_kerja);
     $bulan = clean_string($bulan);
     $tahun = clean_string($tahun);

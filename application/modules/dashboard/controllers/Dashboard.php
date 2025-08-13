@@ -5,6 +5,7 @@ class Dashboard extends MY_Controller
   public function __construct()
   {
     parent::__construct();
+    $this->session->set_userdata('menu', 'dashboard');
     $priv = $this->session->userdata('kewenangan');
     $log = $this->session->userdata('logged_in');
     if ($log != true) {

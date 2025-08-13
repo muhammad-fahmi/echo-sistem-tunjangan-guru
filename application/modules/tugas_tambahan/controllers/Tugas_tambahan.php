@@ -8,6 +8,7 @@ class Tugas_tambahan extends MY_Controller
     // lakukan proses verifikasi user disini
     $priv = $this->session->userdata('kewenangan');
     $log = $this->session->userdata('logged_in');
+    $this->session->set_userdata('menu', 'tugas_tambahan');
     if ($log != true) {
       redirect(site_url('login'));
     } else {
@@ -18,7 +19,6 @@ class Tugas_tambahan extends MY_Controller
   public function index()
   {
     // lakukan proses init halaman
-    $this->session->set_userdata('menu', 'tugas_tambahan');
     $sent_data = array();
     $data = array(
       'page_title' => "Tugas Tambahan",
@@ -55,7 +55,7 @@ class Tugas_tambahan extends MY_Controller
       ->set_content_type('application/json')
       ->set_output(json_encode($data));
   }
-  
+
   public function select2_tgs_tambahan()
   {
     // ambil data post
@@ -74,12 +74,12 @@ class Tugas_tambahan extends MY_Controller
       foreach ($result as $r) {
         $data[$index]['id'] = $r['kode_tugas_tambahan'];
         $data[$index]['text'] = $r['kode_tugas_tambahan'] . ' - ' . trim($r['ket_tugas_tambahan']);
-  
+
         // additional param to send back
         $data[$index]['kode_tugas_tambahan'] = $r['kode_tugas_tambahan'];
         $data[$index]['bonus_jam_mengajar'] = $r['bonus_jam_mengajar'];
         $data[$index]['ket_tugas_tambahan'] = $r['ket_tugas_tambahan'];
-  
+
         $index++;
       }
     } else {
@@ -108,68 +108,68 @@ class Tugas_tambahan extends MY_Controller
     /// |----------------------------------------
     switch ($type) {
       case 'tambah_tugas_tambahan': {
-        /// |----------------------------------------
-        /// | INSERT DATA
-        /// |----------------------------------------
-        $dataset = [
-          'nip' => '',
-          'nama_lengkap' => '',
-          'kode_jab' => '',
-          'kode_ukerja' => '',
-          'kode_tgs_tambahan' => '',
-          'ket_tugas_tambahan' => '',
-          'tmt_mulai' => '',
-          'tmt_selesai' => '',
-          'id' => $id
-        ];
-        $data = [
-          'modal_title' => "Tambah Tugas Tambahan Guru",
-          'data' => $dataset,
-        ];
-        $res = [
-          'status' => true,
-          'message' => "Modal Tambah Tugas Tambahan Guru",
-          'html' => $this->load->view('vw_tugas_tambahan_modal_save', $data, true)
-        ];
-        break;
-      }
-      case 'edit_tugas_tambahan': {
-        /// |----------------------------------------
-        /// | EDIT DATA
-        /// |----------------------------------------
-        $dataset = $this->mtt->get('v_progurinda_tugas_tambahan', "id = '$id'");
-        $data = [
-          'modal_title' => "Edit Tugas Tambahan",
-          'data' => $dataset,
-        ];
-        $res = [
-          'status' => true,
-          'message' => "Modal Edit Tugas Tambahan",
-          'html' => $this->load->view('vw_tugas_tambahan_modal_save', $data, true)
-        ];
-        break;
-      }
-      case 'delete_tugas_tambahan': {
-        /// |----------------------------------------
-        /// | DELETE DATA
-        /// |----------------------------------------
-        $dataset = $this->mtt->get('v_progurinda_tugas_tambahan', "id = '$id'");
-        if (isset_nn_nes($dataset)) {
+          /// |----------------------------------------
+          /// | INSERT DATA
+          /// |----------------------------------------
+          $dataset = [
+            'nip' => '',
+            'nama_lengkap' => '',
+            'kode_jab' => '',
+            'kode_ukerja' => '',
+            'kode_tgs_tambahan' => '',
+            'ket_tugas_tambahan' => '',
+            'tmt_mulai' => '',
+            'tmt_selesai' => '',
+            'id' => $id
+          ];
           $data = [
-            'modal_title' => "Delete Tugas Tambahan",
+            'modal_title' => "Tambah Tugas Tambahan Guru",
             'data' => $dataset,
           ];
           $res = [
             'status' => true,
-            'message' => "Modal delete tugas tambahan",
-            'html' => $this->load->view('vw_tugas_tambahan_modal_delete', $data, true)
+            'message' => "Modal Tambah Tugas Tambahan Guru",
+            'html' => $this->load->view('vw_tugas_tambahan_modal_save', $data, true)
           ];
+          break;
         }
-        break;
-      }
+      case 'edit_tugas_tambahan': {
+          /// |----------------------------------------
+          /// | EDIT DATA
+          /// |----------------------------------------
+          $dataset = $this->mtt->get('v_progurinda_tugas_tambahan', "id = '$id'");
+          $data = [
+            'modal_title' => "Edit Tugas Tambahan",
+            'data' => $dataset,
+          ];
+          $res = [
+            'status' => true,
+            'message' => "Modal Edit Tugas Tambahan",
+            'html' => $this->load->view('vw_tugas_tambahan_modal_save', $data, true)
+          ];
+          break;
+        }
+      case 'delete_tugas_tambahan': {
+          /// |----------------------------------------
+          /// | DELETE DATA
+          /// |----------------------------------------
+          $dataset = $this->mtt->get('v_progurinda_tugas_tambahan', "id = '$id'");
+          if (isset_nn_nes($dataset)) {
+            $data = [
+              'modal_title' => "Delete Tugas Tambahan",
+              'data' => $dataset,
+            ];
+            $res = [
+              'status' => true,
+              'message' => "Modal delete tugas tambahan",
+              'html' => $this->load->view('vw_tugas_tambahan_modal_delete', $data, true)
+            ];
+          }
+          break;
+        }
       default: {
-        break;
-      }
+          break;
+        }
     }
 
     return $this->output
@@ -246,7 +246,7 @@ class Tugas_tambahan extends MY_Controller
     $res = $this->mtt->delete($data);
 
     return $this->output
-    ->set_content_type('application/json')
-    ->set_output(json_encode($res));
+      ->set_content_type('application/json')
+      ->set_output(json_encode($res));
   }
 }
