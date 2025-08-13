@@ -198,7 +198,7 @@
                 </div>
                 <a class="dropdown-item" href="#"><i data-feather="user" class="feather-sm text-info me-1 ms-1"></i>
                   My Profile</a>
-               
+
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#"><i data-feather="settings" class="feather-sm text-warning me-1 ms-1"></i>
                   Account Setting</a>
@@ -206,7 +206,7 @@
                 <a class="dropdown-item" href="#"><i data-feather="log-out" class="feather-sm text-danger me-1 ms-1"></i>
                   Logout</a>
                 <div class="dropdown-divider"></div>
-                
+
               </div>
             </li> -->
           </ul>
@@ -408,9 +408,9 @@
     </div>
   </div>
 
-  <div class="modal fade" id="bs-modal-lg" tabindex="-1" aria-labelledby="bs-modal-lg" data-bs-focus="false" data-bs-backdrop="static" aria-hidden="true">
+  <div class="modal fade" id="lgModal" tabindex="-1" aria-labelledby="bs-modal-lg" data-bs-focus="false" data-bs-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-      <div id="modal-content-lg" class="modal-content-lg">
+      <div id="lgModalContent" class="modal-content">
 
       </div>
       <!-- /.modal-content -->
