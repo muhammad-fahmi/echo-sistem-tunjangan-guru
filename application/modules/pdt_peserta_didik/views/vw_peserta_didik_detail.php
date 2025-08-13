@@ -204,8 +204,8 @@
 
                   <div class="col-12">
                     <div class="desc_block">
-                      <label for="pdpd">Penyandang Disabilitas</label>
-                      <div class="text_value"><?= check_var($data, 'pdpd', '-') ?></div>
+                      <label for="ket_disabilitas">Penyandang Disabilitas</label>
+                      <div class="text_value"><?= check_var($data, 'ket_disabilitas', '-') ?></div>
                     </div>
                   </div>
 

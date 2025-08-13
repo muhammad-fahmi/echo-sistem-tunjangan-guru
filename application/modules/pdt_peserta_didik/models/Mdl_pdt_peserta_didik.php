@@ -37,7 +37,7 @@ class Mdl_pdt_peserta_didik extends CI_Model
     // $where_ukerja = "(kode_instansi LIKE '" . $kode_ukerja . "%' OR unit_kepeg LIKE '" . $kode_ukerja . "%')";
     // deklarasi where condition
     $where_search = (isset_nn_nes($data['search']))
-      ? " AND (nama LIKE '%$data[search]%' 
+      ? " AND (nama LIKE '%$data[search]%'
       OR nisn LIKE '%$data[search]%'
       OR jenis_kelamin LIKE '%$data[search]%'
       OR kode_agama LIKE '$data[search]%')"
@@ -49,7 +49,7 @@ class Mdl_pdt_peserta_didik extends CI_Model
       WHERE id_siswa IS NOT NULL $where_search
       ORDER BY $data[order_column] $data[order_sort]
       LIMIT $data[start], $data[length]");
-    $query_total = $this->db->query("SELECT * FROM v_progurinda_siswa 
+    $query_total = $this->db->query("SELECT * FROM v_progurinda_siswa
       WHERE id_siswa IS NOT NULL $where_search");
     // cari total hasil
     $total_count = $query_total->num_rows();
@@ -127,13 +127,15 @@ class Mdl_pdt_peserta_didik extends CI_Model
       ];
     }
 
-    // cek apakah data sudah ada di database
-    $is_siswa_exist = fetch_row_data('progurinda_r_siswa', ['nama' => $data['nama']], '');
-    if ($is_siswa_exist) {
-      return [
-        'status' => false,
-        'message' => 'Maaf, Peserta Didik (Siswa) sudah terdaftar dalam database.'
-      ];
+    if ($this->input->post('type') != 'edit_peserta_didik') {
+      // cek apakah data sudah ada di database
+      $is_siswa_exist = fetch_row_data('progurinda_r_siswa', ['nama' => $data['nama']], '');
+      if ($is_siswa_exist) {
+        return [
+          'status' => false,
+          'message' => 'Maaf, Peserta Didik (Siswa) sudah terdaftar dalam database.'
+        ];
+      }
     }
 
     $cur_user = $this->session->userdata('id_user');
@@ -249,6 +251,13 @@ class Mdl_pdt_peserta_didik extends CI_Model
       ];
     }
     return $res;
+  }
+
+  public function import_data($data)
+  {
+    $this->db->trans_start();
+    $this->db->insert("progurinda_r_siswa", $data);
+    $this->db->trans_complete();
   }
 
   /// |----------------------------------------------------------------------
