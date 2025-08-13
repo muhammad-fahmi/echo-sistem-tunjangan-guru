@@ -161,8 +161,8 @@
             '';
 
           $(td).html('<div class="text-center">' +
-            '<div class="d-grid gap-1 px-2"><div class="row">' + btn_update + '</div>' +
-            '<div class="row">' + btn_detail + '</div>' +
+            '<div class="d-grid gap-1 px-2">' +
+            '<div class="row">' + btn_update + '</div>' +
             '<div class="row">' + btn_delete + '</div>' +
             '</div></div>');
         }

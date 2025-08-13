@@ -5,14 +5,14 @@ class Pdt_rombongan_belajar extends MY_Controller
   public function __construct()
   {
     parent::__construct();
-    // lakukan proses verifikasi user disini
-    $priv = $this->session->userdata('kewenangan');
-    $log = $this->session->userdata('logged_in');
-    if ($log != true) {
-      redirect(site_url('login'));
-    } else {
-      $this->load->model('mdl_pdt_rombel', 'mdl_rombongan_belajar');
+    $is_ajax = $this->input->is_ajax_request();
+    if (!$is_ajax) {
+      $this->session->set_userdata('menu', 'PDT_DTARombel');
+      if (!check_perm('read') || !is_logged_in()) {
+        redirect(site_url('pangkalan_data'));
+      }
     }
+    $this->load->model('mdl_pdt_rombel', 'mdl_rombongan_belajar');
   }
 
   public function index()
@@ -38,9 +38,8 @@ class Pdt_rombongan_belajar extends MY_Controller
       redirect(site_url('pdt_rombongan_belajar'));
       return;
     }
-    // lakukan proses init halaman
-    $dataset['id'] = encrypt_id($dataset['id']);
 
+    // lakukan proses init halaman
     $data = array(
       'page_title' => "Update Rombongan Belajar | PROGURINDA",
       'module' => "pdt_rombongan_belajar",
@@ -142,7 +141,7 @@ class Pdt_rombongan_belajar extends MY_Controller
           /// |----------------------------------------
           /// | INSERT DATA SISWA ROMBEL
           /// |----------------------------------------
-          $dataset = [];
+          $dataset = $this->mdl_rombongan_belajar->get('v_rombongan_belajar', "id = '$id'");
           $data = [
             'modal_title' => "Tambah Peserta Didik",
             'type' => 'add',
@@ -174,6 +173,25 @@ class Pdt_rombongan_belajar extends MY_Controller
           }
           break;
         }
+      case 'delete_siswa_rombel': {
+          /// |----------------------------------------
+          /// | DELETE DATA
+          /// |----------------------------------------
+          $dataset = $this->mdl_rombongan_belajar->get('v_peserta_didik_rombel', "id_siswa = '$decryptedID'");
+          if (isset_nn_nes($dataset)) {
+            $data = [
+              'modal_title' => "Hapus Peserta Didik Rombel",
+              'type' => 'delete',
+              'data' => $dataset,
+            ];
+            $res = [
+              'status' => true,
+              'message' => "Modal Hapus Peserta Didik Rombel",
+              'html' => $this->load->view('vwm_delete_siswa_rombel', $data, true)
+            ];
+          }
+          break;
+        }
       default: {
           break;
         }
@@ -196,21 +214,13 @@ class Pdt_rombongan_belajar extends MY_Controller
       'id' => $post['id'],
       'jenjang' => $post['id_jenjang'],
       'kelas' => $post['id_kelas'],
-      'id_sekolah' => $this->session->userdata('kode_unor'),
-      'ket_sekolah' => $this->session->userdata('ket_unor'),
-      // 'ket_jenjang' => $post['ket_jenjang'],
-      // 'ket_kelas' => $post['ket_kelas'],
+      'id_sekolah' => $post['id_sekolah'],
+      'ket_sekolah' => $post['ket_sekolah'],
       'nama_rombel' => $post['nama_rombel'],
       'id_tahun_ajaran' => $post['id_tahun_ajaran'],
       'created_by' => $this->session->userdata('username'),
       'created_at' => em_date('Y-m-d'),
     );
-
-    // Jika peserta didik di non-aktifkan, lanjutkan proses insert data
-    // if ($data_to_save['s_aktif'] == 0) {
-    //   $data_to_save['alasan_keluar'] = $post['alasan_keluar'];
-    //   $data_to_save['tgl_keluar'] = em_date('Y-m-d');
-    // }
 
     $res = $this->mdl_rombongan_belajar->save_rombel($data_to_save);
 
@@ -228,8 +238,8 @@ class Pdt_rombongan_belajar extends MY_Controller
 
     // set data array utk proses insert
     $data_to_save = array(
-      'id_rombel' => $post['id_rombel'],
       'id_siswa' => $post['id_siswa'],
+      'id_rombel' => $post['id_rombel'],
       'tgl_masuk_rombel' => em_date('Y-m-d'),
       'insert_by' => $this->session->userdata("username")
     );
@@ -256,18 +266,18 @@ class Pdt_rombongan_belajar extends MY_Controller
       ->set_output(json_encode($res));
   }
 
-  // public function delete_siswa()
-  // {
-  //   $res = [
-  //     'status' => false,
-  //     'message' => "Maaf, proses penghapusan data Peserta Didik di rombongan belajar gagal dilakukan!"
-  //   ];
+  public function delete_siswa()
+  {
+    $res = [
+      'status' => false,
+      'message' => "Maaf, proses penghapusan data Peserta Didik di rombongan belajar gagal dilakukan!"
+    ];
 
-  //   $data["id"] = $this->input->post('id_siswa');
-  //   $res = $this->mdl_rombongan_belajar->delete_siswa($data);
+    $data["id_siswa"] = $this->input->post('id_siswa');
+    $res = $this->mdl_rombongan_belajar->delete_siswa_rombel($data);
 
-  //   return $this->output
-  //     ->set_content_type('application/json')
-  //     ->set_output(json_encode($res));
-  // }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($res));
+  }
 }

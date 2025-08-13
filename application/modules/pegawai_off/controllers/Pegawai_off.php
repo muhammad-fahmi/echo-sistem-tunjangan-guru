@@ -8,6 +8,7 @@ class Pegawai_off extends MY_Controller
     // lakukan proses verifikasi user disini
     $priv = $this->session->userdata('kewenangan');
     $log = $this->session->userdata('logged_in');
+    $this->session->set_userdata('menu', 'pegawai_off');
     if ($log != true) {
       redirect(site_url('login'));
     } else {
@@ -34,7 +35,7 @@ class Pegawai_off extends MY_Controller
     // get index value
     $index = $this->input->post("order[0][column]");
     $ukerja = $this->input->post("select_ukerja");
-    if ($this->session->userdata("kewenangan") != "00"){
+    if ($this->session->userdata("kewenangan") != "00") {
       $ukerja = $this->session->userdata("kode_unor");
     }
     // insert datatable param to transfer
@@ -60,7 +61,7 @@ class Pegawai_off extends MY_Controller
       ->set_content_type('application/json')
       ->set_output(json_encode($data));
   }
-  
+
   public function select2_tgs_tambahan()
   {
     // ambil data post
@@ -79,12 +80,12 @@ class Pegawai_off extends MY_Controller
       foreach ($result as $r) {
         $data[$index]['id'] = $r['kode_tugas_tambahan'];
         $data[$index]['text'] = $r['kode_tugas_tambahan'] . ' - ' . trim($r['ket_tugas_tambahan']);
-  
+
         // additional param to send back
         $data[$index]['kode_tugas_tambahan'] = $r['kode_tugas_tambahan'];
         $data[$index]['bonus_jam_mengajar'] = $r['bonus_jam_mengajar'];
         $data[$index]['ket_tugas_tambahan'] = $r['ket_tugas_tambahan'];
-  
+
         $index++;
       }
     } else {
@@ -113,67 +114,67 @@ class Pegawai_off extends MY_Controller
     /// |----------------------------------------
     switch ($type) {
       case 'tambah_pegawai_out': {
-        /// |----------------------------------------
-        /// | INSERT DATA
-        /// |----------------------------------------
-        $dataset = [
-          'nip' => '',
-          'nama_lengkap' => '',
-          'ket_jab' => '',
-          'ket_ukerja' => '',
-          'keterangan_out' => '',
-          'tmt_out' => '',
-          'tmt_aktif_kembali' => '',
-          'id' => $id
-        ];
-        $data = [
-          'modal_title' => "Tambah Pegawai Non Aktif",
-          'data' => $dataset,
-        ];
-        $res = [
-          'status' => true,
-          'message' => "Modal Tambah Pegawai Non Aktif",
-          'html' => $this->load->view('vw_pegawai_off_modal_save', $data, true)
-        ];
-        break;
-      }
-      case 'edit_pegawai_out': {
-        /// |----------------------------------------
-        /// | EDIT DATA
-        /// |----------------------------------------
-        $dataset = $this->pgo->get('v_progurinda_pegawai_out', "id = '$id'");
-        $data = [
-          'modal_title' => "Edit Pegawai Out",
-          'data' => $dataset,
-        ];
-        $res = [
-          'status' => true,
-          'message' => "Modal Edit Pegawai OUT",
-          'html' => $this->load->view('vw_pegawai_off_modal_save', $data, true)
-        ];
-        break;
-      }
-      case 'delete_pegawai_out': {
-        /// |----------------------------------------
-        /// | DELETE DATA
-        /// |----------------------------------------
-        $dataset = $this->pgo->get('v_progurinda_pegawai_out', "id = '$id'");
-        if (isset_nn_nes($dataset)) {
+          /// |----------------------------------------
+          /// | INSERT DATA
+          /// |----------------------------------------
+          $dataset = [
+            'nip' => '',
+            'nama_lengkap' => '',
+            'ket_jab' => '',
+            'ket_ukerja' => '',
+            'keterangan_out' => '',
+            'tmt_out' => '',
+            'tmt_aktif_kembali' => '',
+            'id' => $id
+          ];
           $data = [
-            'modal_title' => "Delete pegawai non aktif",
+            'modal_title' => "Tambah Pegawai Non Aktif",
             'data' => $dataset,
           ];
           $res = [
             'status' => true,
-            'message' => "Modal delete pegawai non aktif",
-            'html' => $this->load->view('vw_pegawai_off_modal_delete', $data, true)
+            'message' => "Modal Tambah Pegawai Non Aktif",
+            'html' => $this->load->view('vw_pegawai_off_modal_save', $data, true)
           ];
+          break;
         }
-        break;
-      }
+      case 'edit_pegawai_out': {
+          /// |----------------------------------------
+          /// | EDIT DATA
+          /// |----------------------------------------
+          $dataset = $this->pgo->get('v_progurinda_pegawai_out', "id = '$id'");
+          $data = [
+            'modal_title' => "Edit Pegawai Out",
+            'data' => $dataset,
+          ];
+          $res = [
+            'status' => true,
+            'message' => "Modal Edit Pegawai OUT",
+            'html' => $this->load->view('vw_pegawai_off_modal_save', $data, true)
+          ];
+          break;
+        }
+      case 'delete_pegawai_out': {
+          /// |----------------------------------------
+          /// | DELETE DATA
+          /// |----------------------------------------
+          $dataset = $this->pgo->get('v_progurinda_pegawai_out', "id = '$id'");
+          if (isset_nn_nes($dataset)) {
+            $data = [
+              'modal_title' => "Delete pegawai non aktif",
+              'data' => $dataset,
+            ];
+            $res = [
+              'status' => true,
+              'message' => "Modal delete pegawai non aktif",
+              'html' => $this->load->view('vw_pegawai_off_modal_delete', $data, true)
+            ];
+          }
+          break;
+        }
       default: {
-        break;
-      }
+          break;
+        }
     }
 
     return $this->output
@@ -250,7 +251,7 @@ class Pegawai_off extends MY_Controller
     $res = $this->pgo->delete($data);
 
     return $this->output
-    ->set_content_type('application/json')
-    ->set_output(json_encode($res));
+      ->set_content_type('application/json')
+      ->set_output(json_encode($res));
   }
 }

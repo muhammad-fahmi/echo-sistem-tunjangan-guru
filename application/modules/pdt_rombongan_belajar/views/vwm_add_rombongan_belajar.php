@@ -6,23 +6,22 @@
 </div>
 <div class="modal-body">
 
-  <form id="saveRombel" action="<?= site_url('pdt_rombongan_belajar/save'); ?>" method="POST">
+  <form id="saveRombel" action="<?= site_url('pdt_rombongan_belajar/save'); ?>" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="type" value="<?= $data['type']; ?>">
-    <input type="hidden" id="id_sekolah" name="id_sekolah" value="<?= $this->session->userdata("kode_unor"); ?>">
-    <input type="hidden" id="ket_sekolah" name="ket_sekolah" value="<?= $this->session->userdata("ket_unor"); ?>">
 
     <div class="row g-2">
 
       <?php
-      $data_kepsek = check_var($data, 'kepsek', []);
-      $data_sekolah = check_var($data, 'sekolah', []);
+      /// |----------------------------------------
+      /// | SHOW DEBUG
+      /// |----------------------------------------
       $show_debug = false;
       if ($show_debug) {
       ?>
         <div class="col-12">
           <div class="card">
             <div class="card-body">
-              <h4 class="card-title">SESSION DATA (DEBUG)</h4>
+              <h4 class="card-title">DATA (DEBUG)</h4>
               <small>
                 <?php highlight_string("<?php\nSESSION = " . var_export($this->session->userdata(), true) . ";\n\n?>"); ?>
                 <?php highlight_string("<?php\nDATA = " . var_export($data, true) . ";\n\n?>"); ?>
@@ -36,9 +35,8 @@
 
       <div class="col-12 form_mapel mb-2">
         <label for="id_sekolah">Sekolah</label>
-        <select name="id_sekolah" id="id_sekolah" class="form-select form-select" style="width: 100%;" disabled>
-          <option value="<?= $this->session->userdata("kode_unor"); ?>" selected><?= $this->session->userdata("ket_unor"); ?></option>
-        </select>
+        <input type="hidden" id="id_sekolah" name="id_sekolah" class="form-control form-control" value="<?= $this->session->userdata("kode_unor"); ?>">
+        <input type="text" id="ket_sekolah" name="ket_sekolah" class="form-control form-control" value="<?= $this->session->userdata("ket_unor"); ?>" disabled>
         <div class="invalid-feedback"></div>
       </div>
 
@@ -63,7 +61,7 @@
       <div class="col-12 col-lg-6 form_mapel mb-2">
         <label for="nama_rombel">Rombel</label>
         <br>
-        <input type="text" name="nama_rombel" id="nama_rombel" class="form-control form-control-sm" value="<?= $data["nama_rombel"]; ?>">
+        <input type="text" name="nama_rombel" id="nama_rombel" class="form-control form-control" value="<?= $data["nama_rombel"]; ?>">
         <div class="invalid-feedback"></div>
       </div>
 
@@ -185,6 +183,9 @@
     select2_tahun_ajar.empty();
   });
 
+  /// |----------------------------------------
+  /// | FORM AJAX
+  /// |----------------------------------------
   $('#saveRombel').validate($.extend({
     submitHandler: function(form, event) {
       var submit = $('#saveRombelbtn');

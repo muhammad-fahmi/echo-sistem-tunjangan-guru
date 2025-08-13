@@ -9,6 +9,7 @@ class Laporan extends MY_Controller
     // lakukan proses verifikasi user disini
     $priv = $this->session->userdata('kewenangan');
     $log = $this->session->userdata('logged_in');
+    $this->session->set_userdata('menu', 'laporan');
     if ($log != true) {
       redirect(site_url('login'));
     } else {
@@ -19,6 +20,7 @@ class Laporan extends MY_Controller
   public function tpp_3_bln()
   {
     // lakukan proses init halaman
+    $this->session->set_userdata('menu', 'tpp_3_bulan');
     $sent_data = array();
     $data = array(
       'page_title' => "TPP 3 Bulan",

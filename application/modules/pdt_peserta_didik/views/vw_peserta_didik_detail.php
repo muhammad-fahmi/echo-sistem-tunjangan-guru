@@ -18,6 +18,9 @@
   <div class="row">
 
     <?php
+    /// |----------------------------------------
+    /// | SHOW DEBUG
+    /// |----------------------------------------
     $show_debug = false;
     if ($show_debug) {
     ?>
@@ -38,11 +41,13 @@
 
     <div class="col-12">
       <div class="card">
-        <div class="card-body">
+        <div class="card-title">
           <h4 class="card-title space-between">
             <div><i class="fas fa-building me-2"></i>Profil Sekolah Peserta Didik</div>
             <div></div>
           </h4>
+        </div>
+        <div class="card-body">
           <div>
 
             <div class="row g-1">
@@ -51,19 +56,19 @@
                 <tr>
                   <td style="min-width: 150px;">Sekolah</td>
                   <td style="min-width: 15px; text-align: center;">:</td>
-                  <td style="width: 100%;"><?= check_var($data, 'nama_sekolah', '-') ?></td>
+                  <td style="width: 100%;"><?= check_var($data, 'ket_sekolah', '-') ?></td>
                 </tr>
 
                 <tr>
                   <td style="min-width: 150px;">Kelas / Rombel</td>
                   <td style="min-width: 15px; text-align: center;">:</td>
-                  <td style="width: 100%;"><?= check_var($data, 'tingkat', '-') . '/' . check_var($data, 'ket_rombel', '-')  ?></td>
+                  <td style="width: 100%;"><?= check_var($data, 'ket_kelas', '-') . '/' . check_var($data, 'nama_rombel', '-')  ?></td>
                 </tr>
 
                 <tr>
-                  <td style="min-width: 150px;">Semester</td>
+                  <td style="min-width: 150px;">Jenjang</td>
                   <td style="min-width: 15px; text-align: center;">:</td>
-                  <td style="width: 100%;"><?= check_var($data, 'semester', '-') ?></td>
+                  <td style="width: 100%;"><?= check_var($data, 'ket_jenjang', '-') ?></td>
                 </tr>
 
               </table>
@@ -104,11 +109,13 @@
         <input type="hidden" name="id_dokumen" value="<?= check_var($data, 'id_dokumen', '') ?>">
 
         <div class="card">
-          <div class="card-body">
-            <h4 class="card-title space-between mb-3">
+          <div class="card-title">
+            <h4 class="card-title space-between">
               <div><i class="fas fa-user me-2"></i>Profil Peserta Didik</div>
               <div></div>
             </h4>
+          </div>
+          <div class="card-body">
 
             <div class="row g-2">
 

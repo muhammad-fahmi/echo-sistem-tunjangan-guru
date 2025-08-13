@@ -6,22 +6,23 @@
 </div>
 <div class="modal-body">
 
-  <form id="saveSiswaRombel" action="<?= site_url('pdt_rombongan_belajar/save_siswa'); ?>" method="POST">
-    <input type="hidden" name="type" value="<?= $data['type']; ?>">
-    <input type="hidden" id="id" name="id" value="<?= $data['id_rombel']; ?>">
+  <form id="saveSiswaRombel" action="<?= site_url('pdt_rombongan_belajar/save_siswa'); ?>" method="POST" enctype="multipart/form-data">
+    <input type="hidden" id="type" name="type" value="<?= $data['type']; ?>">
+    <input type="hidden" id="id_rombel" name="id_rombel" value="<?= $data['id']; ?>">
 
     <div class="row g-2">
 
       <?php
-      $data_kepsek = check_var($data, 'kepsek', []);
-      $data_sekolah = check_var($data, 'sekolah', []);
+      /// |----------------------------------------
+      /// | SHOW DEBUG
+      /// |----------------------------------------
       $show_debug = false;
       if ($show_debug) {
       ?>
         <div class="col-12">
           <div class="card">
             <div class="card-body">
-              <h4 class="card-title">SESSION DATA (DEBUG)</h4>
+              <h4 class="card-title">DATA (DEBUG)</h4>
               <small>
                 <?php highlight_string("<?php\nSESSION = " . var_export($this->session->userdata(), true) . ";\n\n?>"); ?>
                 <?php highlight_string("<?php\nDATA = " . var_export($data, true) . ";\n\n?>"); ?>
@@ -59,15 +60,6 @@
         <input type="text" id="jenis_kelamin" name="jenis_kelamin" class="form-control form-control" value="<?= isset_nn_nes($data['ket_jenis_kelamin'], ''); ?>" disabled>
         <div class="invalid-feedback"></div>
       </div>
-
-      <!-- <div class="col-12 col-lg-12 form_mapel mb-2">
-        <label for="id_kelas">Kelas</label>
-        <br>
-        <select name="id_kelas" id="id_kelas" class="form-select form-select" style="width:100%">
-          <?php $selected = ($data["id_kelas"] != "") ? "selected" : ""; ?>
-          <option value="<?php echo $data["id_kelas"]; ?>" <?php echo $selected ?>><?php echo $data["ket_kelas"]; ?></option>
-        </select>
-      </div> -->
 
     </div>
   </form>
@@ -117,6 +109,9 @@
     $('#jenis_kelamin').val();
   });
 
+  /// |----------------------------------------
+  /// | FORM AJAX
+  /// |----------------------------------------
   $('#saveSiswaRombel').validate($.extend({
     submitHandler: function(form, event) {
       var submit = $('#saveSiswaRombelbtn');
@@ -165,10 +160,10 @@
     },
     messages: {
       id_rombel: {
-        required: "ID Rombel tidak boleh kosong"
+        required: "ID Rombel tidak boleh kosong!"
       },
       id_siswa: {
-        required: "ID Siswa tidak boleh kosong"
+        required: "ID Siswa tidak boleh kosong!"
       }
     },
   }));
