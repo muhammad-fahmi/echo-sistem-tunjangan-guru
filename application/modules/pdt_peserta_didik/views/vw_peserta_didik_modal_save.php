@@ -7,8 +7,8 @@
 <div class="modal-body">
 
   <form id="savePesertaDidik" action="<?= site_url('pdt_peserta_didik/save'); ?>" method="POST">
-    <input type="hidden" name="type" value="<?= $data['type']; ?>">
-    <input type="hidden" name="id_siswa" value="<?= $data['id_siswa']; ?>">
+    <input type="hidden" name="type" value="<?= $type; ?>">
+    <input type="hidden" name="id_siswa" value="<?= (string) $data['id_siswa']; ?>">
 
     <div class="row g-2">
       <div class="col-12 col-lg-12">
@@ -21,19 +21,19 @@
 
       <div class="col-12 form_mapel mb-2">
         <label for="nisn">NISN</label>
-        <input type="number" name="nisn" id="nisn" class="form-control form-control-sm" value="<?= $data['nisn']; ?>">
+        <input type="number" name="nisn" id="nisn" class="form-control form-control-sm" value="<?= (string) $data['nisn']; ?>">
         <div class="invalid-feedback"></div>
       </div>
 
       <div class="col-12 form_mapel mb-2">
         <label for="nama">Nama Lengkap</label>
-        <input type="text" name="nama" id="nama" class="form-control form-control-sm" value="<?= $data['nama']; ?>">
+        <input type="text" name="nama" id="nama" class="form-control form-control-sm" value="<?= (string) $data['nama']; ?>">
         <div class="invalid-feedback"></div>
       </div>
 
       <div class="col-12 form_mapel mb-2">
         <label for="nik">NIK</label>
-        <input type="number" name="nik" id="nik" class="form-control form-control-sm" value="<?= $data['nik']; ?>">
+        <input type="number" name="nik" id="nik" class="form-control form-control-sm" value="<?= (string) $data['nik']; ?>">
         <div class="invalid-feedback"></div>
       </div>
 
@@ -42,7 +42,7 @@
         <br>
         <select name="jenis_kelamin" id="jenis_kelamin" class="form-select form-select" style="width:100%">
           <?php $selected = ($data["jenis_kelamin"] != "") ? "selected" : ""; ?>
-          <option value="<?php echo $data["jenis_kelamin"]; ?>" <?php echo $selected ?>><?php echo $data["ket_jns_kelamin"]; ?></option>
+          <option value="<?= (string) $data["jenis_kelamin"]; ?>" <?= $selected ?>><?= (string) $data["ket_jns_kelamin"]; ?></option>
         </select>
       </div>
 
@@ -51,31 +51,31 @@
         <br>
         <select name="kode_agama" id="kode_agama" class="form-select form-select" style="width:100%">
           <?php $selected = ($data["kode_agama"] != "") ? "selected" : ""; ?>
-          <option value="<?php echo $data["kode_agama"]; ?>" <?php echo $selected ?>><?php echo $data["ket_agama"]; ?></option>
+          <option value="<?= (string) $data["kode_agama"]; ?>" <?= $selected ?>><?= (string) $data["ket_agama"]; ?></option>
         </select>
       </div>
 
       <div class="col-12 form_mapel mb-2">
         <label for="nama_ayah">Nama Ayah</label>
-        <input type="text" name="nama_ayah" id="nama_ayah" class="form-control form-control-sm" value="<?= $data['nama_ayah']; ?>">
+        <input type="text" name="nama_ayah" id="nama_ayah" class="form-control form-control-sm" value="<?= (string) $data['nama_ayah']; ?>">
         <div class="invalid-feedback"></div>
       </div>
 
       <div class="col-12 form_mapel mb-2">
         <label for="nama_ibu">Nama Ibu</label>
-        <input type="text" name="nama_ibu" id="nama_ibu" class="form-control form-control-sm" value="<?= $data['nama_ibu']; ?>">
+        <input type="text" name="nama_ibu" id="nama_ibu" class="form-control form-control-sm" value="<?= (string) $data['nama_ibu']; ?>">
         <div class="invalid-feedback"></div>
       </div>
 
       <div class="col-12 form_mapel mb-2">
         <label for="no_kk">No. KK</label>
-        <input type="number" name="no_kk" id="no_kk" class="form-control form-control-sm" value="<?= $data['no_kk']; ?>">
+        <input type="number" name="no_kk" id="no_kk" class="form-control form-control-sm" value="<?= (string) $data['no_kk']; ?>">
         <div class="invalid-feedback"></div>
       </div>
 
       <div class="col-12 col-lg-12 form_mapel mb-2">
         <label for="alamat">Alamat</label>
-        <input type="text" name="alamat" id="alamat" rows="3" class="form-control form-control-sm" value="<?= $data['alamat'] ?>">
+        <input type="text" name="alamat" id="alamat" rows="3" class="form-control form-control-sm" value="<?= (string) $data['alamat'] ?>">
       </div>
 
       <!-- Status Aktif tampil sesuai kewenangan -->
@@ -98,7 +98,7 @@
         <label for="pdpd_options">Ragam Disabilitas</label>
         <select id="pdpd_options" name="pdpd_options" class="form-select form-select">
           <?php $selected = ($data["pdpd"] != "") ? "selected" : ""; ?>
-          <option value="<?php echo $data["pdpd"]; ?>" <?php echo $selected ?>><?php echo $data["ket_disabilitas"]; ?></option>
+          <option value="<?= (string) $data["pdpd"]; ?>" <?= $selected ?>><?= (string) $data["ket_disabilitas"]; ?></option>
         </select>
       </div>
 

@@ -75,10 +75,11 @@
     processing: false,
     serverSide: true,
     orderCellsTop: true,
+    scrollX: true,
     dom: '<"row g-1"' +
       '<"col-12 col-sm-6 init_btn_container"><"col-12 col-sm-6 vam"f>' +
       '<"col-12"tr>' +
-      '<"col-12 col-sm-6"li><"col-12 col-sm-6"p>' +
+      '<"col-12 col-sm-6"li><"col-12 col-sm-6 mt-3"p>' +
       '>',
     /* set kolom yang di sortir secara default */
     order: [
@@ -178,7 +179,6 @@
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
           let id = cellData;
-          let id_encrypt = '<?= encrypt_id($id); ?>';
           let detail_url = "<?= site_url('pdt_peserta_didik/detail/'); ?>";
           let kewenangan_user = '<?= $this->session->userdata('kewenangan'); ?>';
 
@@ -215,8 +215,15 @@
         '<i class="fas fa-plus me-1"></i>Tambah Siswa Baru' +
         '</button>';
 
+      let btn_import = `
+        <button class="btn btn-sm btn-success me-2 my-2" onclick="modal('0','import_data_siswa', 'lg')">
+          <i class="fas fa-plus me-2"></i>Import Data Siswa
+        </button>
+      `;
+
       if (!init_btn_add) {
         $('.init_btn_container').append(btn_add);
+        $('.init_btn_container').append(btn_import);
         init_btn_add = true;
       }
       /* parameter callback untuk kostumisasi fungsi */
@@ -229,7 +236,7 @@
     table_siswa.ajax.reload();
   }
 
-  function modal(id_siswa, type) {
+  function modal(id_siswa, type, model = 'std') {
     var url = "<?= site_url('pdt_peserta_didik/modal') ?>";
     $.ajax({
       type: "POST",
@@ -239,11 +246,21 @@
         type: type
       },
       success: function(res) {
-        if (res.status) {
-          $("#modal_content_id").html(res.html).show();
-          $("#whole_modal_id").modal("show");
-        } else {
-          toaster('info', 'Unknown error on modal calls.\n- ' + res.message);
+        if (model === 'std') {
+          if (res.status) {
+            $("#modal_content_id").html(res.html).show();
+            $("#whole_modal_id").modal("show");
+          } else {
+            toaster('info', 'Unknown error on modal calls.\n- ' + res.message);
+          }
+        }
+        if (model === 'lg') {
+          if (res.status) {
+            $('#lgModalContent').html(res.html).show();
+            $("#lgModal").modal("show");
+          } else {
+            toaster('info', 'Unknown error on modal calls.\n- ' + res.message);
+          }
         }
       }
     });

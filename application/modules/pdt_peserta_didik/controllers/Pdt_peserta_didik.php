@@ -1,5 +1,16 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
+// Include librari PhpSpreadsheet
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+
+/**
+ * @property Mdl_pdt_peserta_didik $mdl_peserta_didik
+ * @property CI_Session $session
+ * @property CI_Input $input
+ * @property CI_Output $output
+ * @property CI_Loader|MY_Loader $load
+ */
 class Pdt_peserta_didik extends MY_Controller
 {
   public function __construct()
@@ -125,6 +136,7 @@ class Pdt_peserta_didik extends MY_Controller
             'alamat' => '',
             's_aktif' => '',
             'pdpd' => '',
+            'type' => ''
           ];
           $data = [
             'modal_title' => "Tambah Data Siswa",
@@ -170,6 +182,17 @@ class Pdt_peserta_didik extends MY_Controller
               'html' => $this->load->view('vw_peserta_didik_modal_delete', $data, true)
             ];
           }
+          break;
+        }
+      case 'import_data_siswa': {
+          $data = [
+            'modal_title' => "Import Data Siswa",
+          ];
+          $res = [
+            'status' => true,
+            'message' => "Modal import data siswa.",
+            'html' => $this->load->view('vw_peserta_didik_modal_import', $data, true)
+          ];
           break;
         }
       default: {
@@ -233,5 +256,189 @@ class Pdt_peserta_didik extends MY_Controller
     return $this->output
       ->set_content_type('application/json')
       ->set_output(json_encode($res));
+  }
+
+  public function preview_data()
+  {
+    if (empty($_FILES)) {
+      var_dump("Tidak ada file yang diupload.");
+    } else {
+      $date_now = date('YmdHis');
+      $file_name = 'import_siswa_' . $date_now . '.xlsx';
+      $files = glob('uploads/' . '*');
+      foreach ($files as $file) {
+        if (is_file($file)) {
+          unlink($file); // Delete file
+        }
+      }
+      move_uploaded_file($_FILES['file']['tmp_name'], 'uploads/' . $file_name);
+
+      $reader = new Xlsx();
+      $spreadsheet = $reader->load('uploads/' . $file_name); // Load file yang tadi diupload ke folder tmp
+      $sheet = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+      $data = [];
+      array_shift($sheet); // Hapus header dari array
+
+      $index = 0;
+      $kosong = 0;
+      foreach ($sheet as $row) { // Lakukan perulangan dari data yang ada di excel
+        // Ambil data pada excel sesuai Kolom
+        $nisn = $row['A']; // Ambil data NISN
+        $nama = $row['B']; // Ambil data nama
+        $nik = $row['C']; // Ambil data NIK
+        $jenis_kelamin = $row['D']; // Ambil data jenis kelamin
+        $agama = $row['E']; // Ambil data agama
+        $nama_ayah = $row['F']; // Ambil data ayah
+        $nama_ibu = $row['G']; // Ambil data ibu
+        $no_kk = $row['H']; // Ambil data KK
+        $alamat = $row['I']; // Ambil data alamat
+        $disabilitas = $row['J']; // Ambil data disabilitas
+        if ($nisn == '' || $nama == '' || $nik == '' || $jenis_kelamin == '' || $agama == '' || $nama_ayah == '' || $nama_ibu == '' || $no_kk == '' || $alamat == '' || $disabilitas == '') {
+          $kosong++;
+          $data[$index] = [
+            'nisn' => $nisn,
+            'nama' => $nama,
+            'nik' => $nik,
+            'jenis_kelamin' => $jenis_kelamin,
+            'agama' => $agama,
+            'nama_ayah' => $nama_ayah,
+            'nama_ibu' => $nama_ibu,
+            'no_kk' => $no_kk,
+            'alamat' => $alamat,
+            'disabilitas' => $disabilitas
+          ];
+        } else {
+          $data[$index] = [
+            'nisn' => $nisn,
+            'nama' => $nama,
+            'nik' => $nik,
+            'jenis_kelamin' => $jenis_kelamin,
+            'agama' => $agama,
+            'nama_ayah' => $nama_ayah,
+            'nama_ibu' => $nama_ibu,
+            'no_kk' => $no_kk,
+            'alamat' => $alamat,
+            'disabilitas' => $disabilitas
+          ];
+        }
+
+        $index++;
+      }
+
+      // Hapus file yang sudah diupload
+      unlink('uploads/' . $file_name); // Hapus file yang sudah diupload
+
+      return $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode([
+          'status' => true,
+          'message' => "Preview data berhasil.",
+          'data' => $data,
+          'kosong' => $kosong,
+        ]));
+    }
+  }
+
+  public function import_data()
+  {
+    if (empty($_FILES)) {
+      var_dump("Tidak ada file yang diupload.");
+    } else {
+      $date_now = date('YmdHis');
+      $file_name = 'import_siswa_' . $date_now . '.xlsx';
+      $files = glob('uploads/' . '*');
+      foreach ($files as $file) {
+        if (is_file($file)) {
+          unlink($file); // Delete file
+        }
+      }
+      move_uploaded_file($_FILES['file']['tmp_name'], 'uploads/' . $file_name);
+
+      $reader = new Xlsx();
+      $spreadsheet = $reader->load('uploads/' . $file_name); // Load file yang tadi diupload ke folder tmp
+      $sheet = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+      $data = [];
+      array_shift($sheet); // Hapus header dari array
+
+      $index = 0;
+      foreach ($sheet as $row) { // Lakukan perulangan dari data yang ada di excel
+        // Ambil data pada excel sesuai Kolom
+        $nisn = $row['A']; // Ambil data NISN
+        $nama = $row['B']; // Ambil data nama
+        $nik = $row['C']; // Ambil data NIK
+        $jenis_kelamin = $row['D']; // Ambil data jenis kelamin
+        $agama = $row['E']; // Ambil data agama
+        $nama_ayah = $row['F']; // Ambil data ayah
+        $nama_ibu = $row['G']; // Ambil data ibu
+        $no_kk = $row['H']; // Ambil data KK
+        $alamat = $row['I']; // Ambil data alamat
+        $disabilitas = $row['J']; // Ambil data disabilitas
+
+        if ($jenis_kelamin == 'Laki-laki') {
+          $jenis_kelamin = 'L';
+        } else if ($jenis_kelamin == 'Perempuan') {
+          $jenis_kelamin = 'P';
+        }
+
+        if ($agama == 'Islam') {
+          $agama = 1;
+        } else if ($agama == 'Kristen') {
+          $agama = 2;
+        } else if ($agama == 'Katolik') {
+          $agama = 3;
+        } else if ($agama == 'Hindu') {
+          $agama = 4;
+        } else if ($agama == 'Buddha') {
+          $agama = 5;
+        } else if ($agama == 'Kepercayaan') {
+          $agama = 6;
+        } else {
+          $agama = 7; // Default value for unknown agama
+        }
+
+        if ($disabilitas == "PD Intelektual/Grahita") {
+          $disabilitas = 1;
+        } else if ($disabilitas == "PD Netra") {
+          $disabilitas = 2;
+        } else if ($disabilitas == "PD Wicara") {
+          $disabilitas = 3;
+        } else if ($disabilitas == "PD Rungu") {
+          $disabilitas = 4;
+        } else if ($disabilitas == "PD Fisik/Daksa") {
+          $disabilitas = 5;
+        } else if ($disabilitas == "PD Mental") {
+          $disabilitas = 6;
+        } else {
+          $disabilitas = 7;
+        }
+
+        $data[$index] = [
+          'nisn' => $nisn,
+          'nama' => $nama,
+          'nik' => $nik,
+          'jenis_kelamin' => $jenis_kelamin,
+          'kode_agama' => $agama,
+          'nama_ayah' => $nama_ayah,
+          'nama_ibu' => $nama_ibu,
+          'no_kk' => $no_kk,
+          'alamat' => $alamat,
+          'pdpd' => $disabilitas,
+          's_aktif' => 1, // Set active status
+          'tgl_masuk' => em_date('Y-m-d'),
+        ];
+
+        $this->mdl_peserta_didik->import_data($data[$index]);
+
+        $index++;
+      }
+
+      return $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode([
+          'status' => true,
+          'message' => "Import data berhasil.",
+          'data' => $data
+        ]));
+    }
   }
 }
