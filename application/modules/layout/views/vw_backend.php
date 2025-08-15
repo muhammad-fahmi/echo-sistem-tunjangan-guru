@@ -230,7 +230,7 @@
           <!-- User profile image -->
           <div class="profile-img">
             <div class="profil_img_container sm">
-              <img id="sidebar_profile_img" src="<?= site_url('pdt_profile/image/') ?>" onerror="this.onerror=null; this.src='<?= base_url('theme/assets/images/logo/logo_tut_wuri_handayani.png') ?>';" alt="user" class="w-100" style="border-radius: 50%;">
+              <img id="sidebar_profile_img" src="<?= site_url('pdt_profile/image/'); ?>" onerror="this.onerror=null; this.src='<?= base_url('theme/assets/images/logo/logo_tut_wuri_handayani.png') ?>';" alt="user" class="w-100" style="border-radius: 50%;">
             </div>
           </div>
           <!-- User profile text-->
@@ -341,6 +341,9 @@
                       </span></a>
                   </li>
                 </ul>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("portal") ?>" aria-expanded="false"><i class="fas fa-arrow-left"></i><span class="hide-menu">Back to portal</span></a>
               </li>
               <li class="sidebar-item">
                 <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("login/logout") ?>" aria-expanded="false"><i class="mdi mdi-directions"></i><span class="hide-menu">Log Out</span></a>
