@@ -226,7 +226,7 @@ class Pdt_profile extends MY_Controller
     $upload_file_path = $this->config->item('upload_path');
     $folder = $upload_file_path . 'profile_image/';
     $filepath = $folder . $filename;
-    if (!file_exists($filepath)) return show_404();
+    if (!file_exists($filepath)) return http_response_code(204);
 
     $mime = mime_content_type($filepath);
     if (strpos($mime, 'image/') !== 0) {
