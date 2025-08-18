@@ -117,7 +117,7 @@
           <!-- ============================================================== -->
           <!-- Logo -->
           <!-- ============================================================== -->
-          <a class="navbar-brand" href="<?= site_url(); ?>">
+          <a class="navbar-brand" href="<?= base_url('portal'); ?>">
             <!-- Logo icon -->
             <b class="logo-icon">
               <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
@@ -131,9 +131,9 @@
             <span class="logo-text">
               <h3 style="color:white;font-weight:600">PROGURINDA</h3>
               <!-- dark Logo text -->
-              <!-- <img src="<?= base_url("theme/assets/images/logo-text.png") ?>" alt="homepage" class="dark-logo" /> -->
+              <!-- <img src="<.?= base_url("theme/assets/images/logo-text.png") ?>" alt="homepage" class="dark-logo" /> -->
               <!-- Light Logo text -->
-              <!-- <img src="<?= base_url("theme/assets/images/logo-light-text.png") ?>" class="light-logo" alt="homepage" /> -->
+              <!-- <img src="<.?= base_url("theme/assets/images/logo-light-text.png") ?>" class="light-logo" alt="homepage" /> -->
             </span>
           </a>
           <!-- ============================================================== -->
@@ -171,7 +171,7 @@
             <!-- ============================================================== -->
             <!-- <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle waves-effect waves-dark" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <img src="<?= base_url("theme/assets/images/users/1.jpg") ?>" alt="user" width="30" class="profile-pic rounded-circle" />
+                <img src="<.?= base_url("theme/assets/images/users/1.jpg") ?>" alt="user" width="30" class="profile-pic rounded-circle" />
               </a>
               <div class="
                     dropdown-menu dropdown-menu-end
@@ -189,7 +189,7 @@
                       mb-2
                     ">
                   <div class="">
-                    <img src="<?= base_url("theme/assets/images/users/1.jpg") ?>" alt="user" class="rounded-circle" width="60" />
+                    <img src="<.?= base_url("theme/assets/images/users/1.jpg") ?>" alt="user" class="rounded-circle" width="60" />
                   </div>
                   <div class="ms-2">
                     <h4 class="mb-0 text-white">Steave Jobs</h4>
@@ -230,7 +230,7 @@
           <!-- User profile image -->
           <div class="profile-img">
             <div class="profil_img_container sm">
-              <img id="sidebar_profile_img" src="<?= site_url('pdt_profile/image/') ?>" onerror="this.onerror=null; this.src='<?= base_url('theme/assets/images/logo/logo_tut_wuri_handayani.png') ?>';" alt="user" class="w-100" style="border-radius: 50%;">
+              <img id="sidebar_profile_img" src="<?= site_url('pdt_profile/image/'); ?>" onerror="this.onerror=null; this.src='<?= base_url('theme/assets/images/logo/logo_tut_wuri_handayani.png') ?>';" alt="user" class="w-100" style="border-radius: 50%;">
             </div>
           </div>
           <!-- User profile text-->
@@ -341,6 +341,9 @@
                       </span></a>
                   </li>
                 </ul>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("portal") ?>" aria-expanded="false"><i class="fas fa-arrow-left"></i><span class="hide-menu">Back to portal</span></a>
               </li>
               <li class="sidebar-item">
                 <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("login/logout") ?>" aria-expanded="false"><i class="mdi mdi-directions"></i><span class="hide-menu">Log Out</span></a>

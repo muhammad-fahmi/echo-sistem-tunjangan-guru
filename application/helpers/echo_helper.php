@@ -33,7 +33,7 @@ function is_logged_in()
 
 /**
  * Checks if a variable has a valid value (not empty).
- * 
+ *
  * @param mixed $data The variable to check
  * @param string|int|null $key_to_check If $data is an array/object, check this specific key/property
  * @param mixed $placeholder_if_not_valid Value to return if check fails
@@ -101,7 +101,7 @@ function trim_array($data_array)
 /**
  * @param string $string The input string to be cleaned.
  * @return string The cleaned string.
- * 
+ *
  * Cleans a given string by performing the following steps:
  * 1. Replaces spaces with underscores.
  * 2. Removes all characters except alphabetic letters (both uppercase and lowercase),
@@ -780,7 +780,7 @@ function left_join_array($master_table, $foreign_table, $master_id, $foreign_id 
   return $final;
 }
 
-/** fungsi ini untuk mengubah empty string / null menjadi strip 
+/** fungsi ini untuk mengubah empty string / null menjadi strip
  * fungsi ini juga menerima suffix, kalau tidak kosong akan ditambahkan spasi + suffix
  */
 function null_to_dash($string, $suffix = '')
@@ -1036,6 +1036,16 @@ function menu_loader($echo = true)
           <div class="icon"><i class="fas fa-arrow-left"></i></div>
           <div class="hide-menu">
             <div class="main">Logout</div>
+          </div>
+        </a>
+      </li>';
+
+    // portal
+    $html = $html . '<li class="bz_sidebar_item PDT_Portal">
+        <a href="' . site_url('portal') . '" class="sidebar_link">
+          <div class="icon"><i class="mdi mdi-directions"></i></div>
+          <div class="hide-menu">
+            <div class="main">Back to portal</div>
           </div>
         </a>
       </li>';
