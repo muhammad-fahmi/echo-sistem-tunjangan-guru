@@ -275,7 +275,7 @@ class Pdt_peserta_didik extends MY_Controller
 
       $reader = new Xlsx();
       $spreadsheet = $reader->load('uploads/' . $file_name); // Load file yang tadi diupload ke folder tmp
-      $sheet = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+      $sheet = $spreadsheet->getActiveSheet()->toArray(null, false, false, true);
       $data = [];
       array_shift($sheet); // Hapus header dari array
 
@@ -293,7 +293,9 @@ class Pdt_peserta_didik extends MY_Controller
         $no_kk = $row['H']; // Ambil data KK
         $alamat = $row['I']; // Ambil data alamat
         $disabilitas = $row['J']; // Ambil data disabilitas
-        if ($nisn == '' || $nama == '' || $nik == '' || $jenis_kelamin == '' || $agama == '' || $nama_ayah == '' || $nama_ibu == '' || $no_kk == '' || $alamat == '' || $disabilitas == '') {
+        if ($nisn == '' && $nama == '' && $nik == '' && $jenis_kelamin == '' && $agama == '' && $nama_ayah == '' && $nama_ibu == '' && $no_kk == '' && $alamat == '' && $disabilitas == '') {
+          continue;
+        } else if ($nisn == '' || $nama == '' || $nik == '' || $jenis_kelamin == '' || $agama == '' || $nama_ayah == '' || $nama_ibu == '' || $no_kk == '' || $alamat == '' || $disabilitas == '') {
           $kosong++;
           $data[$index] = [
             'nisn' => $nisn,
@@ -308,8 +310,6 @@ class Pdt_peserta_didik extends MY_Controller
             'disabilitas' => $disabilitas
           ];
           $index++;
-        } else if ($nisn == '' && $nama == '' && $nik == '' && $jenis_kelamin == '' && $agama == '' && $nama_ayah == '' && $nama_ibu == '' && $no_kk == '' && $alamat == '' && $disabilitas == '') {
-          continue;
         } else {
           $data[$index] = [
             'nisn' => $nisn,
@@ -375,62 +375,64 @@ class Pdt_peserta_didik extends MY_Controller
         $no_kk = $row['H']; // Ambil data KK
         $alamat = $row['I']; // Ambil data alamat
         $disabilitas = $row['J']; // Ambil data disabilitas
-
-        if ($jenis_kelamin == 'Laki-laki') {
-          $jenis_kelamin = 'L';
-        } else if ($jenis_kelamin == 'Perempuan') {
-          $jenis_kelamin = 'P';
-        }
-
-        if ($agama == 'Islam') {
-          $agama = 1;
-        } else if ($agama == 'Kristen') {
-          $agama = 2;
-        } else if ($agama == 'Katolik') {
-          $agama = 3;
-        } else if ($agama == 'Hindu') {
-          $agama = 4;
-        } else if ($agama == 'Buddha') {
-          $agama = 5;
-        } else if ($agama == 'Kepercayaan') {
-          $agama = 6;
+        if ($nisn == '' && $nama == '' && $nik == '' && $jenis_kelamin == '' && $agama == '' && $nama_ayah == '' && $nama_ibu == '' && $no_kk == '' && $alamat == '' && $disabilitas == '') {
+          continue;
         } else {
-          $agama = 7; // Default value for unknown agama
+          if ($jenis_kelamin == 'Laki-laki') {
+            $jenis_kelamin = 'L';
+          } else if ($jenis_kelamin == 'Perempuan') {
+            $jenis_kelamin = 'P';
+          }
+
+          if ($agama == 'Islam') {
+            $agama = 1;
+          } else if ($agama == 'Kristen') {
+            $agama = 2;
+          } else if ($agama == 'Katolik') {
+            $agama = 3;
+          } else if ($agama == 'Hindu') {
+            $agama = 4;
+          } else if ($agama == 'Buddha') {
+            $agama = 5;
+          } else if ($agama == 'Kepercayaan') {
+            $agama = 6;
+          } else {
+            $agama = 7; // Default value for unknown agama
+          }
+
+          if ($disabilitas == "PD Intelektual/Grahita") {
+            $disabilitas = 1;
+          } else if ($disabilitas == "PD Netra") {
+            $disabilitas = 2;
+          } else if ($disabilitas == "PD Wicara") {
+            $disabilitas = 3;
+          } else if ($disabilitas == "PD Rungu") {
+            $disabilitas = 4;
+          } else if ($disabilitas == "PD Fisik/Daksa") {
+            $disabilitas = 5;
+          } else if ($disabilitas == "PD Mental") {
+            $disabilitas = 6;
+          } else {
+            $disabilitas = 7;
+          }
+
+          $data[$index] = [
+            'nisn' => $nisn,
+            'nama' => $nama,
+            'nik' => $nik,
+            'jenis_kelamin' => $jenis_kelamin,
+            'kode_agama' => $agama,
+            'nama_ayah' => $nama_ayah,
+            'nama_ibu' => $nama_ibu,
+            'no_kk' => $no_kk,
+            'alamat' => $alamat,
+            'pdpd' => $disabilitas,
+            's_aktif' => 1, // Set active status
+            'tgl_masuk' => em_date('Y-m-d'),
+          ];
+
+          $this->mdl_peserta_didik->import_data($data[$index]);
         }
-
-        if ($disabilitas == "PD Intelektual/Grahita") {
-          $disabilitas = 1;
-        } else if ($disabilitas == "PD Netra") {
-          $disabilitas = 2;
-        } else if ($disabilitas == "PD Wicara") {
-          $disabilitas = 3;
-        } else if ($disabilitas == "PD Rungu") {
-          $disabilitas = 4;
-        } else if ($disabilitas == "PD Fisik/Daksa") {
-          $disabilitas = 5;
-        } else if ($disabilitas == "PD Mental") {
-          $disabilitas = 6;
-        } else {
-          $disabilitas = 7;
-        }
-
-        $data[$index] = [
-          'nisn' => $nisn,
-          'nama' => $nama,
-          'nik' => $nik,
-          'jenis_kelamin' => $jenis_kelamin,
-          'kode_agama' => $agama,
-          'nama_ayah' => $nama_ayah,
-          'nama_ibu' => $nama_ibu,
-          'no_kk' => $no_kk,
-          'alamat' => $alamat,
-          'pdpd' => $disabilitas,
-          's_aktif' => 1, // Set active status
-          'tgl_masuk' => em_date('Y-m-d'),
-        ];
-
-        $this->mdl_peserta_didik->import_data($data[$index]);
-
         $index++;
       }
 
