@@ -117,7 +117,7 @@
           <!-- ============================================================== -->
           <!-- Logo -->
           <!-- ============================================================== -->
-          <a class="navbar-brand" href="<?= site_url(); ?>">
+          <a class="navbar-brand" href="<?= base_url('portal'); ?>">
             <!-- Logo icon -->
             <b class="logo-icon">
               <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
