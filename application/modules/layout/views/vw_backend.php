@@ -131,9 +131,9 @@
             <span class="logo-text">
               <h3 style="color:white;font-weight:600">PROGURINDA</h3>
               <!-- dark Logo text -->
-              <!-- <img src="<?= base_url("theme/assets/images/logo-text.png") ?>" alt="homepage" class="dark-logo" /> -->
+              <!-- <img src="<.?= base_url("theme/assets/images/logo-text.png") ?>" alt="homepage" class="dark-logo" /> -->
               <!-- Light Logo text -->
-              <!-- <img src="<?= base_url("theme/assets/images/logo-light-text.png") ?>" class="light-logo" alt="homepage" /> -->
+              <!-- <img src="<.?= base_url("theme/assets/images/logo-light-text.png") ?>" class="light-logo" alt="homepage" /> -->
             </span>
           </a>
           <!-- ============================================================== -->
@@ -171,7 +171,7 @@
             <!-- ============================================================== -->
             <!-- <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle waves-effect waves-dark" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <img src="<?= base_url("theme/assets/images/users/1.jpg") ?>" alt="user" width="30" class="profile-pic rounded-circle" />
+                <img src="<.?= base_url("theme/assets/images/users/1.jpg") ?>" alt="user" width="30" class="profile-pic rounded-circle" />
               </a>
               <div class="
                     dropdown-menu dropdown-menu-end
@@ -189,7 +189,7 @@
                       mb-2
                     ">
                   <div class="">
-                    <img src="<?= base_url("theme/assets/images/users/1.jpg") ?>" alt="user" class="rounded-circle" width="60" />
+                    <img src="<.?= base_url("theme/assets/images/users/1.jpg") ?>" alt="user" class="rounded-circle" width="60" />
                   </div>
                   <div class="ms-2">
                     <h4 class="mb-0 text-white">Steave Jobs</h4>
