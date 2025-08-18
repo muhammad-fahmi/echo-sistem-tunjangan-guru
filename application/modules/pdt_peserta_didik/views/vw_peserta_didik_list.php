@@ -265,4 +265,8 @@
       }
     });
   }
+
+  $(window).on('resize', function() {
+    table_siswa.columns.adjust();
+  });
 </script>

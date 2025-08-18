@@ -307,6 +307,9 @@ class Pdt_peserta_didik extends MY_Controller
             'alamat' => $alamat,
             'disabilitas' => $disabilitas
           ];
+          $index++;
+        } else if ($nisn == '' && $nama == '' && $nik == '' && $jenis_kelamin == '' && $agama == '' && $nama_ayah == '' && $nama_ibu == '' && $no_kk == '' && $alamat == '' && $disabilitas == '') {
+          continue;
         } else {
           $data[$index] = [
             'nisn' => $nisn,
@@ -320,9 +323,8 @@ class Pdt_peserta_didik extends MY_Controller
             'alamat' => $alamat,
             'disabilitas' => $disabilitas
           ];
+          $index++;
         }
-
-        $index++;
       }
 
       // Hapus file yang sudah diupload

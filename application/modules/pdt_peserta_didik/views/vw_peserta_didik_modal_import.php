@@ -60,11 +60,13 @@
   var previewFile = () => {
     const form_data = new FormData();
     form_data.append('file', $('#i_import_siswa')[0].files[0]);
+    let uploaded_file_index = 0;
 
     fetch('<?= base_url('pdt_peserta_didik/preview_data') ?>', {
         method: 'POST',
         body: form_data,
-      }).then(response => response.text())
+      })
+      .then(response => response.text())
       .then(data => {
         let res_data = JSON.parse(data);
         if (res_data.kosong > 0) {
@@ -200,7 +202,7 @@
               className: "vam",
               data: "disabilitas",
               createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                if (cellData === null || cellData === '') {
+                if (cellData === '' || cellData === null) {
                   $(cell).html('<span class="text-danger">Kosong</span>');
                 } else {
                   $(cell).html('<div class="text-center">' + cellData + '</div>');
@@ -210,11 +212,18 @@
             // Add more columns as needed
           ],
         });
-
-        // You can also update the UI to show the preview
+        uploaded_file_index += 1;
       })
       .catch(error => {
-        console.error('Error:', error);
+        if(uploaded_file_index > 0) {
+          show_notify('error', 'Silahkan upload file kembali.');
+        }else {
+          show_notify('error', 'Silahkan upload file terlebih dahulu.');
+        }
+      })
+      .finally(() => {
+        $('#i_import_siswa').val('');
+        $("#uploaded_file").html('');
       });
   }
 
