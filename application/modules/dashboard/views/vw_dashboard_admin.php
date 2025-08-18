@@ -17,7 +17,7 @@
       <div class="d-flex me-3 ms-2">
         <div class="chart-text me-2">
           <h6 class="mb-0"><small>Pagu Anggaran</small></h6>
-          <h4 class="mt-0 text-info"><?= to_rp($data['anggaran']) ?></h4>
+          <h4 class="mt-0 text-info"><.?= to_rp($data['anggaran']) ?></h4>
         </div>
         <div class="spark-chart">
           <div id="monthchart"></div>
@@ -26,7 +26,7 @@
       <div class="d-flex ms-2">
         <div class="chart-text me-2">
           <h6 class="mb-0"><small>Realisasi</small></h6>
-          <h4 class="mt-0 text-primary"><?= to_rp($data['real_keu']) ?></h4>
+          <h4 class="mt-0 text-primary"><.?= to_rp($data['real_keu']) ?></h4>
         </div>
         <div class="spark-chart">
           <div id="lastmonthchart"></div>
@@ -35,7 +35,7 @@
       <div class="d-flex ms-2">
         <div class="chart-text me-2">
           <h6 class="mb-0"><small>Fisik</small></h6>
-          <h4 class="mt-0 text-success"><?= to_rp($data['real_fisik'], false) ?>%</h4>
+          <h4 class="mt-0 text-success"><.?= to_rp($data['real_fisik'], false) ?>%</h4>
         </div>
         <div class="spark-chart">
           <div id="nextmonthchart"></div>
