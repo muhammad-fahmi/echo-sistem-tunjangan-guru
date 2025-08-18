@@ -62,7 +62,7 @@
     form_data.append('file', $('#i_import_siswa')[0].files[0]);
     let uploaded_file_index = 0;
 
-    fetch('<?= base_url('pdt_peserta_didik/preview_data') ?>', {
+    fetch('<?= site_url('pdt_peserta_didik/preview_data') ?>', {
         method: 'POST',
         body: form_data,
       })
