@@ -255,8 +255,18 @@ class Mdl_pdt_peserta_didik extends CI_Model
 
   public function import_data($data)
   {
+    $get_existing = $this->db->get_where('progurinda_r_siswa', ['nisn' => $data['nisn']])->num_rows();
     $this->db->trans_start();
-    $this->db->insert("progurinda_r_siswa", $data);
+    if ($get_existing > 0) {
+      // Update existing record
+      $this->db->where('nisn', $data['nisn']);
+      $this->db->update('progurinda_r_siswa', $data);
+    } else {
+      // Insert new record
+      $data['id_siswa'] = $this->generate_id_siswa(); // Generate new ID for the student
+      $this->db->insert("progurinda_r_siswa", $data);
+    }
+
     $this->db->trans_complete();
   }
 
