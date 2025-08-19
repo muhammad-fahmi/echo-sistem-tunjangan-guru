@@ -29,6 +29,27 @@ class Pdt_tahun_ajaran extends MY_Controller
     echo Modules::run('layout/backend', $data);
   }
 
+  public function detail($encryptedID = '')
+  {
+    $decryptedID = decrypt_id(sanitize_string($encryptedID));
+
+    $dataset = fetch_row_data('v_tahun_ajaran', ['id_tahun_ajaran' => $decryptedID], false);
+    if ($dataset == false) {
+      $this->session->set_userdata('flash_data', "Maaf, data Tahun Ajaran yang akan dilihat detailnya tidak valid.");
+      redirect(site_url('pdt_tahun_ajaran'));
+      return;
+    }
+
+    // lakukan proses init halaman
+    $data = array(
+      'page_title' => "Detail Tahun Ajaran | PROGURINDA",
+      'module' => "pdt_tahun_ajaran",
+      'view' => "vw_detail_tahun_ajaran",
+      'data' => $dataset
+    );
+    echo Modules::run('layout/backend', $data);
+  }
+
   public function get_data()
   {
     // get index value
@@ -54,85 +75,5 @@ class Pdt_tahun_ajaran extends MY_Controller
     $this->output
       ->set_content_type('application/json')
       ->set_output(json_encode($data));
-  }
-
-  public function modal()
-  {
-    $type = $this->input->post('type');
-    $id = $this->input->post('id');
-    $decryptedID = decrypt_id(sanitize_string($id));
-    /// |----------------------------------------
-    /// | DEFAULT VALUE
-    /// |----------------------------------------
-    $res = [
-      'status' => false,
-      'message' => "Sorry this feature is under development."
-    ];
-
-    /// |----------------------------------------
-    /// | COMMANDS
-    /// |----------------------------------------
-    switch ($type) {
-      case 'tambah_data_tahun_ajar': {
-          /// |----------------------------------------
-          /// | INSERT DATA
-          /// |----------------------------------------
-          $dataset = [];
-          $data = [
-            'modal_title' => "Tambah Data Tahun Ajaran",
-            'type' => 'add',
-            'data' => $dataset,
-          ];
-          $res = [
-            'status' => true,
-            'message' => "Modal Tambah Data Tahun Ajaran",
-            'html' => $this->load->view('vwm_crud_tahun_ajaran', $data, true)
-          ];
-          break;
-        }
-      case 'update_data_tahun_ajar': {
-          /// |----------------------------------------
-          /// | EDIT DATA
-          /// |----------------------------------------
-          $dataset = $this->mdl_tahun_ajaran->get('v_progurinda_siswa', "id_siswa = '$decryptedID'");
-          $data = [
-            'modal_title' => "Update Data Tahun Ajaran",
-            'type' => 'update',
-            'data' => $dataset,
-          ];
-          $res = [
-            'status' => true,
-            'message' => "Modal Update Data Tahun Ajaran",
-            'html' => $this->load->view('vwm_crud_tahun_ajaran', $data, true)
-          ];
-          break;
-        }
-      case 'delete_data_tahun_ajar': {
-          /// |----------------------------------------
-          /// | DELETE DATA
-          /// |----------------------------------------
-          $dataset = $this->mdl_tahun_ajaran->get('v_progurinda_siswa', "id_siswa = '$decryptedID'");
-          if (isset_nn_nes($dataset)) {
-            $data = [
-              'modal_title' => "Hapus Data Tahun Ajaran",
-              'type' => 'delete',
-              'data' => $dataset,
-            ];
-            $res = [
-              'status' => true,
-              'message' => "Modal Hapus Data Tahun Ajaran",
-              'html' => $this->load->view('vwm_crud_tahun_ajaran', $data, true)
-            ];
-          }
-          break;
-        }
-      default: {
-          break;
-        }
-    }
-
-    return $this->output
-      ->set_content_type('application/json')
-      ->set_output(json_encode($res));
   }
 }

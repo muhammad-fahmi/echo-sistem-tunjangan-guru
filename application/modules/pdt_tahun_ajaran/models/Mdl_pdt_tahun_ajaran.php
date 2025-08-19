@@ -28,9 +28,12 @@ class Mdl_pdt_tahun_ajaran extends CI_Model
     return $result;
   }
 
+  /// |---------------------------------------------------------
+  /// | QUERY MODEL DATATABLE
+  /// |---------------------------------------------------------
   public function query_data_tahun_ajaran($data)
   {
-    $cur_unor = $this->session->userdata('kode_unor');
+    // $cur_unor = $this->session->userdata('kode_unor');
 
     // declare table
     $this->db->from('v_tahun_ajaran');
@@ -49,8 +52,10 @@ class Mdl_pdt_tahun_ajaran extends CI_Model
     // }
   }
 
-  /* fungsi untuk menarik data dari DB dan konversi ke dataset untuk jquery datatable */
-  public function get_datatable($data, $primary_key = 'id_tahun_ajar')
+  /// |---------------------------------------------------------
+  /// | PROSES MODEL GET DATA
+  /// |---------------------------------------------------------
+  public function get_datatable($data)
   {
     // START DB BUILDER
     $this->query_data_tahun_ajaran($data);
@@ -75,6 +80,17 @@ class Mdl_pdt_tahun_ajaran extends CI_Model
     foreach ($query_result as $row) {
       $row['no'] = $no++;
 
+      // tampilan aksi
+      $encrypt_id = encrypt_id($row['id_tahun_ajaran']);
+      $tombol_detail = '<a href="' . site_url('pdt_tahun_ajaran/detail/') . $encrypt_id . '" class="badge bg-info clickable text-white me-1"><i class="fas fa-eye"></i> Detail</a>';
+      // $tombol_delete = ($this->session->userdata('kewenangan') == '10') ?
+      //   '<div onclick="modal(`' . $encrypt_id . '`, `delete_siswa_rombel`)" class="badge bg-danger clickable me-1" title="Hapus"><i class="fas fa-trash"></i> Hapus</div>'
+      //   : '';
+
+      $row['aksi_display'] = '<div class="d-grid gap-1">' .
+        $tombol_detail
+        . '</div>';
+
       // store modified data into the result
       $data_result[] = $row;
     }
@@ -86,4 +102,8 @@ class Mdl_pdt_tahun_ajaran extends CI_Model
       'draw' => $data['draw']
     );
   }
+
+  /// |---------------------------------------------------------
+  /// | PROSES MODEL CRUD
+  /// |---------------------------------------------------------
 }
