@@ -135,6 +135,7 @@
       data: function(params) {
         return {
           search: params.term,
+          id_jenjang: $('#id_jenjang').val()
         }
       },
       processResults: function(data) {
