@@ -140,6 +140,7 @@ class Pdt_peserta_didik extends MY_Controller
           ];
           $data = [
             'modal_title' => "Tambah Data Siswa",
+            'type' => $type,
             'data' => $dataset,
           ];
           $res = [
