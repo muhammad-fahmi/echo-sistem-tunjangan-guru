@@ -29,7 +29,7 @@ class Mdl_pdt_rombel extends CI_Model
   }
 
   /// |---------------------------------------------------------
-  /// | QUERY MASTER DATATABLE
+  /// | >> QUERY MASTER DATATABLE
   /// |---------------------------------------------------------
   public function query_data_rombel($data)
   {
@@ -71,7 +71,7 @@ class Mdl_pdt_rombel extends CI_Model
   }
 
   /// |---------------------------------------------------------
-  /// | PROSES MODEL GET DATA
+  /// | >> PROSES MODEL GET DATA
   /// |---------------------------------------------------------
   public function get_datatable($data)
   {
@@ -99,9 +99,9 @@ class Mdl_pdt_rombel extends CI_Model
 
       // tampilan aksi
       $encrypt_id = encrypt_id($row['id']);
-      $tombol_update = '<a href="' . site_url('pdt_rombongan_belajar/detail/') . $encrypt_id . '" class="badge bg-warning clickable text-white me-1"><i class="fas fa-upload"></i> Update</a>';
-      $tombol_delete = ($this->session->userdata('kewenangan') == "10") ?
-        '<div onclick="modal(`' . $encrypt_id . '`, `delete_rombongan_belajar`)" class="badge bg-danger clickable me-1" title="Hapus"><i class="fas fa-trash"></i> Hapus</div>'
+      $tombol_update = '<a href="' . site_url('pdt_rombongan_belajar/detail/') . $encrypt_id . '" class="badge bg-warning clickable text-white me-1 py-1"><i class="fas fa-upload"></i> Update</a>';
+      $tombol_delete = ($this->session->userdata('kewenangan') == '10') ?
+        '<div onclick="modal(`' . $encrypt_id . '`, `delete_rombongan_belajar`)" class="badge bg-danger clickable me-1 py-1" title="Hapus"><i class="fas fa-trash"></i> Hapus</div>'
         : '';
 
       $row['aksi_display'] = '<div class="d-grid gap-1">' .
@@ -148,9 +148,9 @@ class Mdl_pdt_rombel extends CI_Model
 
       // tampilan aksi
       $encrypt_id = encrypt_id($row['id_siswa']);
-      $tombol_detail = '<a href="' . site_url('pdt_peserta_didik/detail/') . $encrypt_id . '" class="badge bg-secondary clickable text-white me-1"><i class="fas fa-eye"></i> Detail</a>';
+      $tombol_detail = '<a href="' . site_url('pdt_peserta_didik/detail/') . $encrypt_id . '" class="badge bg-secondary clickable text-white me-1 py-1"><i class="fas fa-eye"></i> Detail</a>';
       $tombol_delete = ($this->session->userdata('kewenangan') == '10') ?
-        '<div onclick="modal(`' . $encrypt_id . '`, `delete_siswa_rombel`)" class="badge bg-danger clickable me-1" title="Hapus"><i class="fas fa-trash"></i> Hapus</div>'
+        '<div onclick="modal(`' . $encrypt_id . '`, `delete_siswa_rombel`)" class="badge bg-danger clickable me-1 py-1" title="Hapus"><i class="fas fa-trash"></i> Hapus</div>'
         : '';
 
       $row['aksi_display'] = '<div class="d-grid gap-1">' .
@@ -171,7 +171,7 @@ class Mdl_pdt_rombel extends CI_Model
   }
 
   /// |---------------------------------------------------------
-  /// | PROSES MODEL CRUD
+  /// | >> PROSES MODEL CRUD
   /// |---------------------------------------------------------
   public function save_rombel($data)
   {

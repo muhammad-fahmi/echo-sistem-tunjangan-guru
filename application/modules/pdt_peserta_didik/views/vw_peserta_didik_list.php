@@ -178,25 +178,7 @@
         orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
-          let id = cellData;
-          let detail_url = "<?= site_url('pdt_peserta_didik/detail/'); ?>";
-          let kewenangan_user = '<?= $this->session->userdata('kewenangan'); ?>';
-
-          let btn_edit = '<div onclick="modal(`' + cellData + '`, `edit_peserta_didik`)" class="badge bg-primary clickable me-1" title="Edit">' +
-            '<i class="fas fa-edit"></i> Edit</div>';
-
-          let btn_detail = '<a href="' + detail_url + cellData + '" class="badge bg-secondary clickable text-white me-1"><i class="fas fa-eye"></i> Detail</a>';
-
-          let btn_delete = (kewenangan_user == '00') ?
-            '<div onclick="modal(`' + cellData + '`, `delete_peserta_didik`)" class="badge bg-danger clickable me-1" title="Hapus">' +
-            '<i class="fas fa-trash"></i> Hapus</div>' :
-            '';
-
-          $(td).html('<div class="text-center">' +
-            '<div class="d-grid gap-1 px-2"><div class="row">' + btn_edit + '</div>' +
-            '<div class="row">' + btn_detail + '</div>' +
-            '<div class="row">' + btn_delete + '</div>' +
-            '</div></div>');
+          $(td).html('<div class="text-center">' + rowData['aksi_display'] + '</div>');
         }
       },
     ],

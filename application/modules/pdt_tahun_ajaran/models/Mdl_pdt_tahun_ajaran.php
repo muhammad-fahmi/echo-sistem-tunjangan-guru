@@ -29,7 +29,7 @@ class Mdl_pdt_tahun_ajaran extends CI_Model
   }
 
   /// |---------------------------------------------------------
-  /// | QUERY MODEL DATATABLE
+  /// | >> QUERY MODEL DATATABLE
   /// |---------------------------------------------------------
   public function query_data_tahun_ajaran($data)
   {
@@ -46,14 +46,10 @@ class Mdl_pdt_tahun_ajaran extends CI_Model
         ->or_like('jenjang', $data['search'])
         ->group_end();
     }
-
-    // if (check_var($data['id_rombel'])) {
-    //   $this->db->where('id_rombel', $data['id_rombel']);
-    // }
   }
 
   /// |---------------------------------------------------------
-  /// | PROSES MODEL GET DATA
+  /// | >> PROSES MODEL GET DATA
   /// |---------------------------------------------------------
   public function get_datatable($data)
   {
@@ -82,9 +78,9 @@ class Mdl_pdt_tahun_ajaran extends CI_Model
 
       // tampilan aksi
       $encrypt_id = encrypt_id($row['id_tahun_ajaran']);
-      $tombol_detail = '<a href="' . site_url('pdt_tahun_ajaran/detail/') . $encrypt_id . '" class="badge bg-info clickable text-white me-1"><i class="fas fa-eye"></i> Detail</a>';
+      $tombol_detail = '<a href="' . site_url('pdt_tahun_ajaran/detail/') . $encrypt_id . '" class="badge bg-info clickable text-white me-1 py-1"><i class="fas fa-eye"></i> Detail</a>';
       // $tombol_delete = ($this->session->userdata('kewenangan') == '10') ?
-      //   '<div onclick="modal(`' . $encrypt_id . '`, `delete_siswa_rombel`)" class="badge bg-danger clickable me-1" title="Hapus"><i class="fas fa-trash"></i> Hapus</div>'
+      //   '<div onclick="modal(`' . $encrypt_id . '`, `delete_siswa_rombel`)" class="badge bg-danger clickable me-1 py-1" title="Hapus"><i class="fas fa-trash"></i> Hapus</div>'
       //   : '';
 
       $row['aksi_display'] = '<div class="d-grid gap-1">' .
@@ -99,11 +95,11 @@ class Mdl_pdt_tahun_ajaran extends CI_Model
       'total' => $total_count,
       'filtered' => $total_count,
       'data' => $data_result,
-      'draw' => $data['draw']
+      'draw' => (int)$data['draw']
     );
   }
 
   /// |---------------------------------------------------------
-  /// | PROSES MODEL CRUD
+  /// | >> PROSES MODEL CRUD
   /// |---------------------------------------------------------
 }
