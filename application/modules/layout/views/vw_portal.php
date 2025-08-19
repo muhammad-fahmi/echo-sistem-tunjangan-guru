@@ -98,16 +98,20 @@
                   <div class="form-floating mb-3">
                     <input type="text" class="form-control form-input-bg" id="tb-email" name="username" placeholder="admin" />
                     <label for="tb-email">Username</label>
-                    <div class="invalid-feedback" for="tb-email">Username is required</div>
+                    <div class="text-danger" id="invalid_feedback_display"></div>
                   </div>
-                  <div class="form-floating mb-3 d-flex">
-                    <input type="password" class="form-control form-input-bg" name="password" id="text-password" placeholder="*****" />
-                    <label for="text-password" class="form-label">Password</label>
-                    <span class="input-group-text" id="password_toggle">
-                      <i class="fas fa-eye" id="password_show"></i>
-                      <i class="fas fa-eye-slash" id="password_hide"></i>
-                    </span>
-                    <div class="invalid-feedback" for="text-password">Password is required</div>
+                  <div class="d-flex flex-column">
+                    <div class=" form-floating mb-3 d-flex">
+                      <input type="password" class="form-control form-input-bg" name="password" id="text-password" placeholder="*****" />
+                      <label for="text-password" class="form-label">Password</label>
+                      <span class="input-group-text" id="password_toggle">
+                        <i class="fas fa-eye" id="password_show"></i>
+                        <i class="fas fa-eye-slash" id="password_hide"></i>
+                      </span>
+                    </div>
+                    <div>
+                      <div class="text-danger" id="invalid_feedback_display"></div>
+                    </div>
                   </div>
                   <div class="d-flex align-items-stretch button-group mt-4 pt-2">
                     <button type="submit" class="btn btn-info btn-lg px-4">
@@ -262,19 +266,28 @@
         validClass: 'is-valid',
         /* if there's select2 element, please use this errorPlacement */
         errorPlacement: function(error, element) {
-          const feedback = element.closest('.form-floating').find('.invalid-feedback');
+          const feedback = element.closest('.form-floating').find('#invalid_feedback_display');
+          const feedbackDisplay = element.closest('.form-floating').siblings().find('#invalid_feedback_display');
           if (feedback.length) {
             feedback.text(error.text());
+          } else {
+            feedbackDisplay.text(error.text());
           }
         },
         highlight: function(element) {
           $(element).addClass('is-invalid').removeClass('is-valid');
         },
-
         unhighlight: function(element) {
           $(element).removeClass('is-invalid').addClass('is-valid');
-          // Clear error text if valid
-          $(element).closest('.form-floating').find('.invalid-feedback').text('');
+          const feedback = $(element).closest('.form-floating').find('#invalid_feedback_display');
+          const feedbackDisplay = $(element).closest('.form-floating').siblings().find('#invalid_feedback_display');
+          if (feedback.length) {
+            feedback.text('');
+          } else {
+            feedbackDisplay.text('');
+          }
+          // // Clear error text if valid
+          // $(element).closest('.form-floating').find('#invalid_feedback_display').text('');
         },
         messages: {
           username: {
@@ -295,6 +308,7 @@
         $("#password_show").toggle();
         $("#password_hide").toggle();
       });
+
     });
   </script>
 </body>
