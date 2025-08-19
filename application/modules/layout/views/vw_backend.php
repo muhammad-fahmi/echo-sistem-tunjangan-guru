@@ -343,10 +343,10 @@
                 </ul>
               </li>
               <li class="sidebar-item">
-                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("portal") ?>" aria-expanded="false"><i class="fas fa-arrow-left"></i><span class="hide-menu">Back to portal</span></a>
+                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("login/logout") ?>" aria-expanded="false"><i class="fas fa-arrow-left"></i><span class="hide-menu">Log Out</span></a>
               </li>
               <li class="sidebar-item">
-                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("login/logout") ?>" aria-expanded="false"><i class="mdi mdi-directions"></i><span class="hide-menu">Log Out</span></a>
+                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("portal") ?>" aria-expanded="false"><i class="mdi mdi-directions"></i><span class="hide-menu">Back to portal</span></a>
               </li>
             <?php
             }
