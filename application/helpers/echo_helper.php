@@ -1723,3 +1723,19 @@ function keg_get_kegiatan_selection()
     'data' => $query->result_array()
   ];
 }
+
+function cek_folder_kosong($dir) {
+  // Cek apakah direktori ada
+  if (!is_dir($dir)) {
+    return false; // Direktori tidak ada
+  }
+
+  // Baca isi direktori
+  $files = scandir($dir);
+
+  // Hapus '.' dan '..' dari daftar file
+  $files = array_diff($files, array('.', '..'));
+
+  // Jika tidak ada file atau folder lain, berarti kosong
+  return empty($files);
+}
