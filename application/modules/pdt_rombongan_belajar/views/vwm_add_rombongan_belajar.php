@@ -36,7 +36,7 @@
       <div class="col-12 form_mapel mb-2">
         <label for="id_sekolah">Sekolah</label>
         <input type="hidden" id="id_sekolah" name="id_sekolah" class="form-control form-control" value="<?= $this->session->userdata("kode_unor"); ?>">
-        <input type="text" id="ket_sekolah" name="ket_sekolah" class="form-control form-control" value="<?= $this->session->userdata("ket_unor"); ?>" disabled>
+        <input type="text" id="ket_sekolah" name="ket_sekolah" class="form-control form-control" value="<?= $this->session->userdata("ket_unor"); ?>" readonly>
         <div class="invalid-feedback"></div>
       </div>
 
@@ -47,6 +47,7 @@
           <?php $selected = ($data["id_jenjang"] != "") ? "selected" : ""; ?>
           <option value="<?php echo $data["id_jenjang"]; ?>" <?php echo $selected ?>><?php echo $data["ket_jenjang"]; ?></option>
         </select>
+        <div class="invalid-feedback"></div>
       </div>
 
       <div class="col-12 col-lg-12 form_mapel mb-2">
@@ -56,6 +57,7 @@
           <?php $selected = ($data["id_kelas"] != "") ? "selected" : ""; ?>
           <option value="<?php echo $data["id_kelas"]; ?>" <?php echo $selected ?>><?php echo $data["ket_kelas"]; ?></option>
         </select>
+        <div class="invalid-feedback"></div>
       </div>
 
       <div class="col-12 col-lg-6 form_mapel mb-2">
