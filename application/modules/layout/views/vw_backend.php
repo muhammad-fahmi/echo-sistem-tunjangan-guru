@@ -40,7 +40,7 @@
   <!-- ============================================================== -->
   <!-- All Jquery -->
   <!-- ============================================================== -->
-  <!-- <script src="<?= base_url("theme/dist/libs/jquery/dist/jquery.min.js"); ?>"></script> -->
+  <!-- <script src="<.?= base_url("theme/dist/libs/jquery/dist/jquery.min.js"); ?>"></script> -->
   <script src="<?= base_url("assets_old/jquery/jquery-3.5.1.min.js"); ?>"></script>
   <script src="<?= base_url("assets_old/jquery/jquery.form.js"); ?>"></script>
   <script src="<?= base_url("assets_old/jquery-validation/jquery.validate.min.js"); ?>"></script>
@@ -66,10 +66,10 @@
   <!--This page JavaScript -->
   <script src="<?= base_url("theme/dist/libs/apexcharts/dist/apexcharts.min.js"); ?>"></script>
   <!-- Chart JS -->
-  <!-- <script src="<?= base_url("theme/dist/js/pages/dashboards/dashboard1.js"); ?>"></script> -->
+  <!-- <script src="<.?= base_url("theme/dist/js/pages/dashboards/dashboard1.js"); ?>"></script> -->
   <!--This page plugins -->
   <script src="<?= base_url("theme/dist/libs/datatables.net/js/jquery.dataTables.min.js") ?>"></script>
-  <!-- <script src="<?= base_url("assets_old/datatables/datatables.min.js") ?>"></script> -->
+  <!-- <script src="<.?= base_url("assets_old/datatables/datatables.min.js") ?>"></script> -->
 
   <!-- Picker -->
   <script src="<?= base_url("theme/dist/libs/moment-js/moment.js"); ?>"></script>
@@ -85,6 +85,9 @@
 
   <!-- Leaflet Control Geocoder JS -->
   <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+  <!-- BlockUI -->
+  <script src="<?= base_url('theme\dist\libs\block-ui\jquery.blockUI.js'); ?>"></script>
 
   <script type="text/javascript" src="<?= base_url("theme/overrider/script.js?v=") . em_date('YmdHis'); ?>"></script>
 </head>
