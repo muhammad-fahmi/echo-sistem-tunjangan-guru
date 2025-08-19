@@ -90,7 +90,7 @@
                   <th class="vam" style="min-width: 150px;">Nama Sekolah</th>
                   <th class="vam" style="min-width: 60px;">Jenjang</th>
                   <th class="vam" style="min-width: 20px;">Jumlah Rombel</th>
-                  <!-- <th class="vat" style="min-width: 30px;">Aksi</th> -->
+                  <th class="vat" style="min-width: 30px;">Aksi</th>
                 </tr>
               </thead>
 
@@ -184,22 +184,14 @@
           $(td).html('<div class="text-center">' + cellData + '</div>');
         },
       },
-      // {
-      //   data: 'id_tahun_ajaran',
-      //   orderable: false,
-      //   className: 'vam',
-      //   createdCell: function(td, cellData, rowData, row, col) {
-      //     let html_aksi = '<div class="btn-group">' + '<button type="button" class="btn btn-sm btn-light-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">' +
-      //       'Pilih' +
-      //       '</button>' +
-      //       '<ul class="dropdown-menu">' +
-      //       '<li><a class="dropdown-item" onclick="modal(\'' + cellData + '\', \'edit_jurnal_mengajar\')" href="#"><i class="fas fa-edit me-1"></i>Edit</a></li>' +
-      //       '<li><a class="dropdown-item text-danger" onclick="modal(\'' + cellData + '\', \'delete_jurnal_mengajar\')" href="#"><i class="fas fa-trash me-1"></i>Delete</a></li>' +
-      //       '</ul>' +
-      //       '</div>';
-      //     $(td).html('<div class="text-center">' + html_aksi + '</div>');
-      //   },
-      // },
+      {
+        data: 'id_tahun_ajaran',
+        orderable: false,
+        className: 'vam',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + rowData['aksi_display'] + '</div>');
+        },
+      },
     ],
     /* Lakukan fungsi callback pada bracket ini */
     drawCallback: function(settings) {

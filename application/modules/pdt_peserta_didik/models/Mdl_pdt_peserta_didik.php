@@ -27,58 +27,75 @@ class Mdl_pdt_peserta_didik extends CI_Model
     }
     return $result;
   }
+  /// |----------------------------------------------------------
+  /// | >> QUERY MODEL DATATABLE
+  /// |----------------------------------------------------------
+  public function query_data_peserta_didik($data)
+  {
+    // $cur_unor = $this->session->userdata('kode_unor');
 
-  /* fungsi untuk menarik data dari DB dan konversi ke dataset untuk jquery datatable */
+    // declare table
+    $this->db->from('v_progurinda_siswa');
+
+    // where condition
+    if (check_var($data, 'search')) {
+      $this->db->group_start()
+        ->like('nama', $data['search'])
+        ->or_like('nisn', $data['search'])
+        ->or_like('ket_jns_kelamin', $data['search'])
+        ->or_like('ket_agama', $data['search'])
+        ->group_end();
+    }
+  }
+
+  /// |----------------------------------------------------------
+  /// | >> PROSES MODEL GET DATA
+  /// |----------------------------------------------------------
   public function get_datatable($data)
   {
-    // lakukan filtering data
-    // cek kewenangan dan unit kerja
-    // $kode_ukerja = $this->session->userdata("kode_unor");
-    // $where_ukerja = "(kode_instansi LIKE '" . $kode_ukerja . "%' OR unit_kepeg LIKE '" . $kode_ukerja . "%')";
-    // deklarasi where condition
-    $where_search = (isset_nn_nes($data['search']))
-      ? " AND (nama LIKE '%$data[search]%'
-      OR nisn LIKE '%$data[search]%'
-      OR jenis_kelamin LIKE '%$data[search]%'
-      OR kode_agama LIKE '$data[search]%')"
-      : "";
+    $this->query_data_peserta_didik($data);
 
-    /* kalau ada tambahan where condition bisa add lagi di atas */
-    // deklarasi query yang digunakan
-    $query_result = $this->db->query("SELECT * FROM v_progurinda_siswa
-      WHERE id_siswa IS NOT NULL $where_search
-      ORDER BY $data[order_column] $data[order_sort]
-      LIMIT $data[start], $data[length]");
-    $query_total = $this->db->query("SELECT * FROM v_progurinda_siswa
-      WHERE id_siswa IS NOT NULL $where_search");
-    // cari total hasil
-    $total_count = $query_total->num_rows();
-    // cari data result + penomoran
+    // ORDER
+    $order_col = $data['order_column'];
+    $order_sort = strtolower($data['order_sort']) === 'desc' ? 'DESC' : 'ASC';
+    $this->db->order_by($order_col, $order_sort);
+
+    // LIMIT
+    $this->db->limit((int)$data['length'], (int)$data['start']);
+
+    // RESULT DATA
+    $query_result = $this->db->get()->result_array();
+
+    // RE-BUILD FOR TOTAL
+    $this->query_data_peserta_didik($data);
+    $total_count = $this->db->get()->num_rows();
+
     $no = $data['start'] + 1;
-    $index = 0;
-    $data_result = array();
-    while ($row = $query_result->unbuffered_row('array')) {
-      /// |----------------------------------------------------------------------
-      /// | PENATAAN DATA SEBELUM DIMASUKKAN KE DALAM RESULT_ARRAY
-      /// |----------------------------------------------------------------------
-      $data_result[$index] = $row;
-      $data_result[$index]['no'] = $no;
-      $data_result[$index]['nama'] = isset_nn_nes($row['nama'], '-');
-      $data_result[$index]['nisn'] = isset_nn_nes($row['nisn'], '-');
-      $data_result[$index]['nik'] = isset_nn_nes($row['nik'], '-');
-      $data_result[$index]['ket_jns_kelamin'] = isset_nn_nes($row['ket_jns_kelamin'], '-');
-      $data_result[$index]['ket_agama'] = isset_nn_nes($row['ket_agama'], '-');
-      // $data_result[$index]['alamat'] = isset_nn_nes($row['alamat'], '-');
-      $data_result[$index]['id_siswa'] = isset_nn_nes(encrypt_id($row['id_siswa']), '-');
-      $no += 1;
-      $index += 1;
+    $data_result = [];
+    foreach ($query_result as $row) {
+      $row['no'] = $no++;
+
+      // tampilan aksi
+      $encrypt_id = encrypt_id($row['id_siswa']); // enkrip rowData `id_siswa`
+      $tombol_edit = '<div onclick="modal(`' . $encrypt_id . '`, `edit_peserta_didik`)" class="badge bg-primary clickable me-1" title="Edit"><i class="fas fa-edit"></i> Edit</div>';
+      $tombol_detail = '<a href="' . site_url('pdt_peserta_didik/detail/') . $encrypt_id . '" class="badge bg-info clickable text-white me-1 py-1"><i class="fas fa-upload"></i> Update</a>';
+      $tombol_delete = ($this->session->userdata('kewenangan') == '00') ?
+        '<div onclick="modal(`' . $encrypt_id . '`, `delete_peserta_didik`)" class="badge bg-danger clickable me-1 py-1" title="Hapus"><i class="fas fa-trash"></i> Hapus</div>'
+        : '';
+
+      $row['aksi_display'] = '<div class="d-grid gap-1">' .
+        $tombol_edit . $tombol_detail . $tombol_delete
+        . '</div>';
+
+      // store modified data into the result
+      $data_result[] = $row;
     }
     // kembalikan data yang didapat ke controller
     return array(
       'total' => $total_count,
       'filtered' => $total_count,
       'data' => $data_result,
-      'draw' => $data['draw']
+      'draw' => (int)$data['draw']
     );
   }
 
@@ -94,6 +111,9 @@ class Mdl_pdt_peserta_didik extends CI_Model
     return $id_siswa;
   }
 
+  /// |----------------------------------------------------------
+  /// | >> PROSES MODEL CRUD
+  /// |----------------------------------------------------------
   public function save_peserta_didik($data)
   {
     // FORM VALIDATION
@@ -269,8 +289,4 @@ class Mdl_pdt_peserta_didik extends CI_Model
 
     $this->db->trans_complete();
   }
-
-  /// |----------------------------------------------------------------------
-  /// | >> FUNGSI CRUD
-  /// |----------------------------------------------------------------------
 }

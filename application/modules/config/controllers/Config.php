@@ -616,7 +616,7 @@ class Config extends MY_Controller
     if (isset_nn_nes($result)) {
       foreach ($result as $r) {
         $data[$index]['id'] = $r['id'];
-        $data[$index]['text'] = $r['id'] . ' - ' . trim($r['ket_jenjang']);
+        $data[$index]['text'] = trim($r['ket_jenjang']);
 
         // additional param to send back
         $data[$index]['id'] = $r['id'];
@@ -636,13 +636,18 @@ class Config extends MY_Controller
   {
     // ambil data post
     $search = $this->input->post('search');
+    $id_jenjang = $this->input->post('id_jenjang');
     // kondisi where
     $where_search = ($search != '')
       ? "AND (ket_kelas LIKE '%$search%' 
       OR id_kelas LIKE '%$search%')"
       : "";
+    $where_id_jenjang = ($id_jenjang != '')
+      ? "AND id_jenjang = '$id_jenjang'"
+      : "";
+
     // query searching
-    $result = $this->db->query("SELECT * FROM m_kelas WHERE id_kelas IS NOT NULL $where_search 
+    $result = $this->db->query("SELECT * FROM m_kelas WHERE id_kelas IS NOT NULL $where_id_jenjang $where_search 
       ORDER BY ket_kelas DESC LIMIT 10")->result_array();
     $data = array();
     $index = 0;

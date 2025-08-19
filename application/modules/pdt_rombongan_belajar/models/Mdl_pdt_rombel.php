@@ -28,131 +28,151 @@ class Mdl_pdt_rombel extends CI_Model
     return $result;
   }
 
-  /* fungsi untuk menarik data dari DB dan konversi ke dataset untuk jquery datatable */
+  /// |---------------------------------------------------------
+  /// | >> QUERY MASTER DATATABLE
+  /// |---------------------------------------------------------
+  public function query_data_rombel($data)
+  {
+    // $cur_unor = $this->session->userdata('kode_unor');
+
+    // declare table
+    $this->db->from('v_rombongan_belajar');
+
+    // where condition
+    if (check_var($data, 'search')) {
+      $this->db->group_start()
+        ->like('ket_jenjang', $data['search'])
+        ->or_like('ket_kelas', $data['search'])
+        ->or_like('nama_rombel', $data['search'])
+        ->group_end();
+    }
+  }
+
+  public function query_data_siswa($data)
+  {
+    // $cur_unor = $this->session->userdata('kode_unor');
+
+    // declare table
+    $this->db->from('v_peserta_didik_rombel');
+
+    // where condition
+    if (check_var($data, 'search')) {
+      $this->db->group_start()
+        ->like('nama', $data['search'])
+        ->or_like('nisn', $data['search'])
+        ->or_like('ket_jns_kelamin', $data['search'])
+        ->or_like('ket_agama', $data['search'])
+        ->group_end();
+    }
+
+    if (check_var($data['id_rombel'])) {
+      $this->db->where('id_rombel', $data['id_rombel']);
+    }
+  }
+
+  /// |---------------------------------------------------------
+  /// | >> PROSES MODEL GET DATA
+  /// |---------------------------------------------------------
   public function get_datatable($data)
   {
-    // lakukan filtering data
-    // deklarasi where condition
-    $where_search = (isset_nn_nes($data['search']))
-      ? "AND (ket_jenjang LIKE '%$data[search]%' 
-      OR ket_kelas LIKE '%$data[search]%' 
-      OR nama_rombel LIKE '%$data[search]%')"
-      : "";
+    $this->query_data_rombel($data);
 
-    /* kalau ada tambahan where condition bisa add lagi di atas */
-    // deklarasi query yang digunakan
-    $query_result = $this->db->query("SELECT * FROM `v_rombongan_belajar` 
-      WHERE `id` IS NOT NULL $where_search 
-      ORDER BY $data[order_column] $data[order_sort] 
-      LIMIT $data[start], $data[length]");
-    $query_total = $this->db->query("SELECT * FROM `v_rombongan_belajar` 
-      WHERE `id` IS NOT NULL $where_search");
-    // cari total hasil
-    $total_count = 0;
-    while ($row = $query_total->unbuffered_row()) {
-      $total_count += 1;
-    }
-    // cari data result + penomoran
+    // ORDER
+    $order_col = $data['order_column'];
+    $order_sort = strtolower($data['order_sort']) === 'desc' ? 'DESC' : 'ASC';
+    $this->db->order_by($order_col, $order_sort);
+
+    // LIMIT
+    $this->db->limit((int)$data['length'], (int)$data['start']);
+
+    // RESULT DATA
+    $query_result = $this->db->get()->result_array();
+
+    // RE-BUILD FOR TOTAL
+    $this->query_data_rombel($data);
+    $total_count = $this->db->get()->num_rows();
+
     $no = $data['start'] + 1;
-    $index = 0;
-    $data_result = array();
-    while ($row = $query_result->unbuffered_row('array')) {
-      /// |----------------------------------------------------------------------
-      /// | PENATAAN DATA SEBELUM DIMASUKKAN KE DALAM RESULT_ARRAY
-      /// |----------------------------------------------------------------------
-      $data_result[$index] = $row;
-      $data_result[$index]['no'] = $no;
-      $data_result[$index]['jenjang'] = isset_nn_nes($row['jenjang'], '-');
-      $data_result[$index]['kelas'] = isset_nn_nes($row['kelas'], '-');
-      $data_result[$index]['id_sekolah'] = isset_nn_nes($row['id_sekolah'], '-');
-      $data_result[$index]['ket_sekolah'] = isset_nn_nes($row['ket_sekolah'], '-');
-      $data_result[$index]['ket_jenjang'] = isset_nn_nes($row['ket_jenjang'], '-');
-      $data_result[$index]['ket_kelas'] = isset_nn_nes($row['ket_kelas'], '-');
-      $data_result[$index]['nama_rombel'] = isset_nn_nes($row['nama_rombel'], '-');
-      $data_result[$index]['id_tahun_ajaran'] = isset_nn_nes($row['id_tahun_ajaran'], '-');
-      $data_result[$index]['id'] = isset_nn_nes(encrypt_id($row['id']), '-');
+    $data_result = [];
+    foreach ($query_result as $row) {
+      $row['no'] = $no++;
 
-      $no += 1;
-      $index += 1;
+      // tampilan aksi
+      $encrypt_id = encrypt_id($row['id']);
+      $tombol_update = '<a href="' . site_url('pdt_rombongan_belajar/detail/') . $encrypt_id . '" class="badge bg-warning clickable text-white me-1 py-1"><i class="fas fa-upload"></i> Update</a>';
+      $tombol_delete = ($this->session->userdata('kewenangan') == '10') ?
+        '<div onclick="modal(`' . $encrypt_id . '`, `delete_rombongan_belajar`)" class="badge bg-danger clickable me-1 py-1" title="Hapus"><i class="fas fa-trash"></i> Hapus</div>'
+        : '';
+
+      $row['aksi_display'] = '<div class="d-grid gap-1">' .
+        $tombol_update . $tombol_delete
+        . '</div>';
+
+      // store modified data into the result
+      $data_result[] = $row;
     }
+
     // kembalikan data yang didapat ke controller
     return array(
       'total' => $total_count,
       'filtered' => $total_count,
       'data' => $data_result,
-      'draw' => $data['draw']
+      'draw' => (int)$data['draw']
     );
   }
 
   public function get_datatable_siswa($data)
   {
-    // lakukan filtering data
-    // deklarasi where condition
-    $where_search = (isset_nn_nes($data['search']))
-      ? "AND (nama LIKE '%$data[search]%' 
-      OR nisn LIKE '%$data[search]%' 
-      OR ket_jns_kelamin LIKE '%$data[search]%' 
-      OR ket_agama LIKE '%$data[search]%')"
-      : "";
+    // START DB BUILDER
+    $this->query_data_siswa($data);
 
-    /* kalau ada tambahan where condition bisa add lagi di atas */
-    // deklarasi query yang digunakan
-    $query_result = $this->db->query("SELECT * FROM `v_peserta_didik_rombel` 
-      WHERE `id_siswa` IS NOT NULL $where_search 
-      ORDER BY $data[order_column] $data[order_sort] 
-      LIMIT $data[start], $data[length]");
-    $query_total = $this->db->query("SELECT * FROM `v_peserta_didik_rombel` 
-      WHERE `id_siswa` IS NOT NULL $where_search");
-    // cari total hasil
-    $total_count = 0;
-    while ($row = $query_total->unbuffered_row()) {
-      $total_count += 1;
-    }
-    // cari data result + penomoran
+    // ORDER
+    $order_col = $data['order_column'];
+    $order_sort = strtolower($data['order_sort']) === 'desc' ? 'DESC' : 'ASC';
+    $this->db->order_by($order_col, $order_sort);
+
+    // LIMIT
+    $this->db->limit((int)$data['length'], (int)$data['start']);
+
+    // RESULT DATA
+    $query_result = $this->db->get()->result_array();
+
+    // RE-BUILD FOR TOTAL
+    $this->query_data_siswa($data);
+    $total_count = $this->db->get()->num_rows();
+
     $no = $data['start'] + 1;
-    $index = 0;
-    $data_result = array();
-    while ($row = $query_result->unbuffered_row('array')) {
-      /// |----------------------------------------------------------------------
-      /// | PENATAAN DATA SEBELUM DIMASUKKAN KE DALAM RESULT_ARRAY
-      /// |----------------------------------------------------------------------
-      $data_result[$index] = $row;
-      $data_result[$index]['no'] = $no;
-      $data_result[$index]['id_siswa'] = isset_nn_nes(encrypt_id($row['id_siswa']), '-');
-      $data_result[$index]['nama'] = isset_nn_nes($row['nama'], '-');
-      $data_result[$index]['nisn'] = isset_nn_nes($row['nisn'], '-');
-      $data_result[$index]['nik'] = isset_nn_nes($row['nik'], '-');
-      $data_result[$index]['jenis_kelamin'] = isset_nn_nes($row['jenis_kelamin'], '-');
-      $data_result[$index]['ket_jns_kelamin'] = isset_nn_nes($row['ket_jns_kelamin'], '-');
-      $data_result[$index]['kode_agama'] = isset_nn_nes($row['kode_agama'], '-');
-      $data_result[$index]['ket_agama'] = isset_nn_nes($row['ket_agama'], '-');
-      $data_result[$index]['no_kk'] = isset_nn_nes($row['no_kk'], '-');
-      $data_result[$index]['alamat'] = isset_nn_nes($row['alamat'], '-');
-      $data_result[$index]['pdpd'] = isset_nn_nes($row['pdpd'], '-');
-      $data_result[$index]['ket_disabilitas'] = isset_nn_nes($row['ket_disabilitas'], '-');
-      $data_result[$index]['id_rombel'] = isset_nn_nes(encrypt_id($row['id_rombel']), '-');
-      $data_result[$index]['jenjang'] = isset_nn_nes($row['jenjang'], '-');
-      $data_result[$index]['ket_jenjang'] = isset_nn_nes($row['ket_jenjang'], '-');
-      $data_result[$index]['kelas'] = isset_nn_nes($row['kelas'], '-');
-      $data_result[$index]['ket_kelas'] = isset_nn_nes($row['ket_kelas'], '-');
-      $data_result[$index]['id_sekolah'] = isset_nn_nes($row['id_sekolah'], '-');
-      $data_result[$index]['ket_sekolah'] = isset_nn_nes($row['ket_sekolah'], '-');
-      $data_result[$index]['nama_rombel'] = isset_nn_nes($row['nama_rombel'], '-');
-      $data_result[$index]['id_tahun_ajaran'] = isset_nn_nes($row['id_tahun_ajaran'], '-');
-      $data_result[$index]['ket_tahun_ajaran'] = isset_nn_nes($row['ket_tahun_ajaran'], '-');
+    $data_result = [];
+    foreach ($query_result as $row) {
+      $row['no'] = $no++;
 
-      $no += 1;
-      $index += 1;
+      // tampilan aksi
+      $encrypt_id = encrypt_id($row['id_siswa']);
+      $tombol_detail = '<a href="' . site_url('pdt_peserta_didik/detail/') . $encrypt_id . '" class="badge bg-secondary clickable text-white me-1 py-1"><i class="fas fa-eye"></i> Detail</a>';
+      $tombol_delete = ($this->session->userdata('kewenangan') == '10') ?
+        '<div onclick="modal(`' . $encrypt_id . '`, `delete_siswa_rombel`)" class="badge bg-danger clickable me-1 py-1" title="Hapus"><i class="fas fa-trash"></i> Hapus</div>'
+        : '';
+
+      $row['aksi_display'] = '<div class="d-grid gap-1">' .
+        $tombol_detail . $tombol_delete
+        . '</div>';
+
+      // store modified data into the result
+      $data_result[] = $row;
     }
+
     // kembalikan data yang didapat ke controller
     return array(
       'total' => $total_count,
       'filtered' => $total_count,
       'data' => $data_result,
-      'draw' => $data['draw']
+      'draw' => (int)$data['draw']
     );
   }
 
+  /// |---------------------------------------------------------
+  /// | >> PROSES MODEL CRUD
+  /// |---------------------------------------------------------
   public function save_rombel($data)
   {
     // FORM VALIDATION
@@ -160,6 +180,7 @@ class Mdl_pdt_rombel extends CI_Model
 
     // Define validation rules
     $this->form_validation->set_rules('id_sekolah', 'ID Sekolah', 'required');
+    $this->form_validation->set_rules('ket_sekolah', 'Ket. Sekolah', 'required');
     $this->form_validation->set_rules('id_jenjang', 'ID Jenjang', 'required');
     $this->form_validation->set_rules('id_kelas', 'ID Kelas', 'required');
     $this->form_validation->set_rules('nama_rombel', 'Nama Rombel', 'required');
@@ -377,13 +398,22 @@ class Mdl_pdt_rombel extends CI_Model
     try {
       $this->db->trans_begin();
       $this->db->where(["id" => $data["id"]])->delete("r_rombongan_belajar");
+      $this->db->where(["id_rombel" => $data["id"]])->delete("r_peserta_didik_rombel");
 
       // BUATKAN LOG UTK SISTEM (DELETE)
+      // LOG UTK ROMBEL
       log_generator(
         $cur_user,
         'r_rombongan_belajar',
         $data['id'],
         "Melakukan penghapusan data rombongan belajar sebagai berikut :\n\n" . format_log_view($data)
+      );
+      // LOG UTK PESERTA DIDIK
+      log_generator(
+        $cur_user,
+        'r_peserta_didik_rombel',
+        $data['id'],
+        "Melakukan penghapusan data peserta didik di rombongan belajar sebagai berikut :\n\n" . format_log_view($data)
       );
       if ($this->db->trans_status() === FALSE) {
         // do your error handler here
