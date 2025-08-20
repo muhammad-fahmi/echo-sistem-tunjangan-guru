@@ -6,20 +6,20 @@
 </div>
 
 <div class="modal-body">
-  <div class="row">
-    <div class="col-sm-12">
-      <div class="row my-2">
-        <div class="col-sm-5">
-          <button class="btn btn-secondary">
-            <a href="<?= base_url('template.xlsx'); ?>" style="text-decoration: none;color:inherit;">
-              <i class="fas fa-file-excel me-1"></i>Download Template Excel
-            </a>
-          </button>
+  <div class="col" id="import_container">
+    <div class="row p-0">
+      <div class="col-sm-12">
+        <div class="row my-2">
+          <div class="col-sm-5">
+            <button class="btn btn-secondary">
+              <a href="<?= base_url('template.xlsx'); ?>" style="text-decoration: none;color:inherit;">
+                <i class="fas fa-file-excel me-1"></i>Download Template Excel
+              </a>
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="row">
     <div class="row my-2 d-flex">
       <div class="col-md-12 d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center">
@@ -34,9 +34,10 @@
         <button type="button" class="btn btn-warning mx-2" id="btn_preview" onclick="previewFile()">Preview</button>
       </div>
     </div>
+    <hr style="border: 1px solid black;">
   </div>
 
-  <div class="table-responsive">
+  <div class="table-responsive" id="preview_response_container">
     <div class="alert_message d-none">
       <p class="text-danger">Masih ada <span id="kosong_value"></span> data yang kosong!</p>
     </div>
@@ -46,11 +47,9 @@
 </div>
 
 <div class="modal-footer">
-  <div class="row">
-    <div class="col-md-12 d-flex">
-      <button type="button" class="btn btn-danger mx-2" data-bs-dismiss="modal">Close</button>
-      <button type="button" class="btn btn-primary mx-2 d-none" id="btn_import" onclick="importFile()">Import</button>
-    </div>
+  <div class="col-md-12 d-flex justify-content-end">
+    <button type="button" class="btn btn-danger mx-2" data-bs-dismiss="modal">Close</button>
+    <button type="button" class="btn btn-primary mx-2 d-none" id="btn_import" onclick="importFile()">Import</button>
   </div>
 </div>
 
@@ -60,184 +59,215 @@
   var previewFile = () => {
     const form_data = new FormData();
     form_data.append('file', $('#i_import_siswa')[0].files[0]);
-    let uploaded_file_index = 0;
-
-    fetch('<?= site_url('pdt_peserta_didik/preview_data') ?>', {
-        method: 'POST',
-        body: form_data,
-      })
-      .then(response => response.text())
-      .then(data => {
-        let res_data = JSON.parse(data);
-        if (res_data.kosong > 0) {
-          $("div.alert_message").removeClass('d-none');
-          $("#kosong_value").text(res_data.kosong);
-        } else {
-          $("div.alert_message").addClass('d-none');
-          $("#btn_import").removeClass('d-none').prop('hidden', false);
-        }
-        $('#preview_response').DataTable({
-          // retrieve: true,
-          destroy: true,
-          responsive: true,
-          serverSide: false,
-          scrollX: true,
-          lengthMenu: [5, 10, 25, 50, 100],
-          dom: '<"row g-1"' +
-            '<"col-12 col-sm-6"l><"col-12 col-sm-6 vam">' +
-            '<"col-12"tr>' +
-            '<"col-12 col-sm-6"><"col-12 col-sm-6 mt-3"p>' +
-            '>',
-          data: res_data['data'],
-          columns: [{
-              title: "NISN",
-              className: "vam",
-              data: "nisn",
-              createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                if (cellData === null || cellData === '') {
-                  $(cell).html('<span class="text-danger">Kosong</span>');
-                } else {
-                  $(cell).html('<div class="text-center">' + cellData + '</div>');
+    if (document.getElementById("i_import_siswa").files.length == 0) {
+      show_notify('error', "Preview gagal, tidak ada file yang diupload.");
+      uploaded_file_index = 0; // Reset the index
+      $("#btn_import").addClass('d-none').prop('hidden', true);
+      $("#preview_response_container").addClass('d-none');
+      $('#i_import_siswa').val(''); // Clear the file input
+      $("#uploaded_file").html(''); // Clear the uploaded file display
+      return;
+    } else {
+      fetch('<?= site_url('pdt_peserta_didik/preview_data') ?>', {
+          method: 'POST',
+          body: form_data,
+        })
+        .then(response => response.text())
+        .then(data => {
+          // Parse the JSON response
+          let res_data = JSON.parse(data);
+          if (res_data.status === false) {
+            throw res_data.message;
+          } else {
+            if (res_data.kosong > 0) {
+              $("div.alert_message").removeClass('d-none');
+              $("#kosong_value").text(res_data.kosong);
+            } else {
+              $("div.alert_message").addClass('d-none');
+              $("#btn_import").removeClass('d-none').prop('hidden', false);
+            }
+            $("#preview_response_container").removeClass('d-none');
+            // $("#import_container").block({
+            //   message: null,
+            //   overlayCSS: {
+            //     backgroundColor: '#666666ff',
+            //     opacity: 0.8,
+            //     cursor: 'auto'
+            //   },
+            // });
+            $("#import_container").addClass('d-none');
+            $('#preview_response').DataTable({
+              // retrieve: true,
+              destroy: true,
+              responsive: true,
+              serverSide: false,
+              scrollX: true,
+              lengthMenu: [5, 10, 25, 50, 100],
+              dom: '<"row g-1"' +
+                '<"col-12 col-sm-6"l><"col-12 col-sm-6 vam"f>' +
+                '<"col-12"tr>' +
+                '<"col-12 col-sm-6"i><"col-12 col-sm-6 mt-3"p>' +
+                '>',
+              language: {
+                search: "Cari:",
+                searchPlaceholder: "Cari data...",
+                lengthMenu: "Tampilkan _MENU_ data",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                loadingRecords: "Sedang memuat...",
+                zeroRecords: "Tidak ada data yang ditemukan",
+                infoEmpty: "Tidak ada data yang tersedia",
+                infoFiltered: "(difilter dari _MAX_ total data)",
+                paginate: {
+                  first: "Pertama",
+                  last: "Terakhir",
+                  next: "Selanjutnya",
+                  previous: "Sebelumnya"
                 }
-              }
-            },
-            {
-              title: "Nama",
-              className: "vam",
-              data: "nama",
-              createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                if (cellData === null || cellData === '') {
-                  $(cell).html('<span class="text-danger">Kosong</span>');
-                } else {
-                  $(cell).html('<div class="text-center">' + cellData + '</div>');
-                }
-              }
-            },
-            {
-              title: "NIK",
-              className: "vam",
-              data: "nik",
-              createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                if (cellData === null || cellData === '') {
-                  $(cell).html('<span class="text-danger">Kosong</span>');
-                } else {
-                  $(cell).html('<div class="text-center">' + cellData + '</div>');
-                }
-              }
-            },
-            {
-              title: "Jenis Kelamin",
-              className: "vam",
-              data: "jenis_kelamin",
-              createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                if (cellData === null || cellData === '') {
-                  $(cell).html('<span class="text-danger">Kosong</span>');
-                } else {
-                  $(cell).html('<div class="text-center">' + cellData + '</div>');
-                }
-              }
-            },
-            {
-              title: "Agama",
-              className: "vam",
-              data: "agama",
-              createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                if (cellData === null || cellData === '') {
-                  $(cell).html('<span class="text-danger">Kosong</span>');
-                } else {
-                  $(cell).html('<div class="text-center">' + cellData + '</div>');
-                }
-              }
-            },
-            {
-              title: "Nama Ayah",
-              className: "vam",
-              data: "nama_ayah",
-              createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                if (cellData === null || cellData === '') {
-                  $(cell).html('<span class="text-danger">Kosong</span>');
-                } else {
-                  $(cell).html('<div class="text-center">' + cellData + '</div>');
-                }
-              }
-            },
-            {
-              title: "Nama Ibu",
-              className: "vam",
-              data: "nama_ibu",
-              createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                if (cellData === null || cellData === '') {
-                  $(cell).html('<span class="text-danger">Kosong</span>');
-                } else {
-                  $(cell).html('<div class="text-center">' + cellData + '</div>');
-                }
-              }
-            },
-            {
-              title: "No KK",
-              className: "vam",
-              data: "no_kk",
-              createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                if (cellData === null || cellData === '') {
-                  $(cell).html('<span class="text-danger">Kosong</span>');
-                } else {
-                  $(cell).html('<div class="text-center">' + cellData + '</div>');
-                }
-              }
-            },
-            {
-              title: "Alamat",
-              className: "vam",
-              data: "alamat",
-              createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                if (cellData === null || cellData === '') {
-                  $(cell).html('<span class="text-danger">Kosong</span>');
-                } else {
-                  $(cell).html('<div class="text-center">' + cellData + '</div>');
-                }
-              }
-            },
-            {
-              title: "Ragam Disabilitas",
-              className: "vam",
-              data: "disabilitas",
-              createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                if (cellData === '' || cellData === null) {
-                  $(cell).html('<span class="text-danger">Kosong</span>');
-                } else {
-                  $(cell).html('<div class="text-center">' + cellData + '</div>');
-                }
-              }
-            },
-            // Add more columns as needed
-          ],
+              },
+              data: res_data['data'],
+              columns: [{
+                  title: "NISN",
+                  className: "vam",
+                  data: "nisn",
+                  createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                    if (cellData === null || cellData === '') {
+                      $(cell).html('<span class="text-danger">Kosong</span>');
+                    } else {
+                      $(cell).html('<div class="text-center">' + cellData + '</div>');
+                    }
+                  }
+                },
+                {
+                  title: "Nama",
+                  className: "vam",
+                  data: "nama",
+                  createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                    if (cellData === null || cellData === '') {
+                      $(cell).html('<span class="text-danger">Kosong</span>');
+                    } else {
+                      $(cell).html('<div class="text-center">' + cellData + '</div>');
+                    }
+                  }
+                },
+                {
+                  title: "NIK",
+                  className: "vam",
+                  data: "nik",
+                  createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                    if (cellData === null || cellData === '') {
+                      $(cell).html('<span class="text-danger">Kosong</span>');
+                    } else {
+                      $(cell).html('<div class="text-center">' + cellData + '</div>');
+                    }
+                  }
+                },
+                {
+                  title: "Jenis Kelamin",
+                  className: "vam",
+                  data: "jenis_kelamin",
+                  createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                    if (cellData === null || cellData === '') {
+                      $(cell).html('<span class="text-danger">Kosong</span>');
+                    } else {
+                      $(cell).html('<div class="text-center">' + cellData + '</div>');
+                    }
+                  }
+                },
+                {
+                  title: "Agama",
+                  className: "vam",
+                  data: "agama",
+                  createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                    if (cellData === null || cellData === '') {
+                      $(cell).html('<span class="text-danger">Kosong</span>');
+                    } else {
+                      $(cell).html('<div class="text-center">' + cellData + '</div>');
+                    }
+                  }
+                },
+                {
+                  title: "Nama Ayah",
+                  className: "vam",
+                  data: "nama_ayah",
+                  createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                    if (cellData === null || cellData === '') {
+                      $(cell).html('<span class="text-danger">Kosong</span>');
+                    } else {
+                      $(cell).html('<div class="text-center">' + cellData + '</div>');
+                    }
+                  }
+                },
+                {
+                  title: "Nama Ibu",
+                  className: "vam",
+                  data: "nama_ibu",
+                  createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                    if (cellData === null || cellData === '') {
+                      $(cell).html('<span class="text-danger">Kosong</span>');
+                    } else {
+                      $(cell).html('<div class="text-center">' + cellData + '</div>');
+                    }
+                  }
+                },
+                {
+                  title: "No KK",
+                  className: "vam",
+                  data: "no_kk",
+                  createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                    if (cellData === null || cellData === '') {
+                      $(cell).html('<span class="text-danger">Kosong</span>');
+                    } else {
+                      $(cell).html('<div class="text-center">' + cellData + '</div>');
+                    }
+                  }
+                },
+                {
+                  title: "Alamat",
+                  className: "vam",
+                  data: "alamat",
+                  createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                    if (cellData === null || cellData === '') {
+                      $(cell).html('<span class="text-danger">Kosong</span>');
+                    } else {
+                      $(cell).html('<div class="text-center">' + cellData + '</div>');
+                    }
+                  }
+                },
+                {
+                  title: "Ragam Disabilitas",
+                  className: "vam",
+                  data: "disabilitas",
+                  createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                    if (cellData === '' || cellData === null) {
+                      $(cell).html('<span class="text-danger">Kosong</span>');
+                    } else {
+                      $(cell).html('<div class="text-center">' + cellData + '</div>');
+                    }
+                  }
+                },
+                // Add more columns as needed
+              ],
+            });
+          }
+        })
+        .catch(error => {
+          show_notify('error', error);
+          $("#btn_import").addClass('d-none').prop('hidden', true);
+          $("#preview_response_container").addClass('d-none');
+        })
+        .finally(() => {
+          $('#i_import_siswa').val('');
+          $("#uploaded_file").html('');
         });
-        uploaded_file_index += 1;
-      })
-      .catch(error => {
-        if(uploaded_file_index > 0) {
-          show_notify('error', 'Silahkan upload file kembali.');
-        }else {
-          show_notify('error', 'Silahkan upload file terlebih dahulu.');
-        }
-      })
-      .finally(() => {
-        $('#i_import_siswa').val('');
-        $("#uploaded_file").html('');
-      });
+    }
   }
 
   var importFile = () => {
-    const form_data = new FormData();
-    form_data.append('file', $('#i_import_siswa')[0].files[0]);
-
-    fetch('<?= base_url('pdt_peserta_didik/import_data') ?>', {
-        method: 'POST',
-        body: form_data,
+    fetch('<?= site_url('pdt_peserta_didik/import_data') ?>', {
+        method: 'GET',
       }).then(response => response.text())
       .then(data => {
         let res_data = JSON.parse(data);
-        console.log(res_data);
         if (res_data.status) {
           alert(res_data.message);
           // Optionally, you can refresh the page or update the UI

@@ -140,6 +140,7 @@ class Pdt_peserta_didik extends MY_Controller
           ];
           $data = [
             'modal_title' => "Tambah Data Siswa",
+            'type' => $type,
             'data' => $dataset,
           ];
           $res = [
@@ -174,6 +175,7 @@ class Pdt_peserta_didik extends MY_Controller
           if (isset_nn_nes($dataset)) {
             $data = [
               'modal_title' => "Hapus Data Siswa",
+              'type' => $type,
               'data' => $dataset,
             ];
             $res = [
@@ -261,7 +263,17 @@ class Pdt_peserta_didik extends MY_Controller
   public function preview_data()
   {
     if (empty($_FILES)) {
-      var_dump("Tidak ada file yang diupload.");
+      $dir = 'uploads';
+      if (!cek_folder_kosong($dir)) {
+        unlink('uploads/' . $this->session->userdata('file_name')); // Hapus file yang sudah diupload
+        $this->session->unset_userdata('file_name'); // Hapus nama file dari session
+      }
+      return $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode([
+          'status' => false,
+          'message' => "Preview gagal, tidak ada file yang diupload.",
+        ]));
     } else {
       $date_now = date('YmdHis');
       $file_name = 'import_siswa_' . $date_now . '.xlsx';
@@ -327,8 +339,7 @@ class Pdt_peserta_didik extends MY_Controller
         }
       }
 
-      // Hapus file yang sudah diupload
-      unlink('uploads/' . $file_name); // Hapus file yang sudah diupload
+      $this->session->set_userdata('file_name', $file_name); // Simpan nama file ke session
 
       return $this->output
         ->set_content_type('application/json')
@@ -343,22 +354,20 @@ class Pdt_peserta_didik extends MY_Controller
 
   public function import_data()
   {
-    if (empty($_FILES)) {
-      var_dump("Tidak ada file yang diupload.");
+    $dir = 'uploads';
+    if (cek_folder_kosong($dir)) {
+      return $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode([
+          'status' => false,
+          'message' => "Import gagal, tidak ada file yang di upload.",
+        ]));
     } else {
-      $date_now = date('YmdHis');
-      $file_name = 'import_siswa_' . $date_now . '.xlsx';
-      $files = glob('uploads/' . '*');
-      foreach ($files as $file) {
-        if (is_file($file)) {
-          unlink($file); // Delete file
-        }
-      }
-      move_uploaded_file($_FILES['file']['tmp_name'], 'uploads/' . $file_name);
+      $file_name = $this->session->userdata('file_name');
 
       $reader = new Xlsx();
       $spreadsheet = $reader->load('uploads/' . $file_name); // Load file yang tadi diupload ke folder tmp
-      $sheet = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+      $sheet = $spreadsheet->getActiveSheet()->toArray(null, false, false, true);
       $data = [];
       array_shift($sheet); // Hapus header dari array
 
@@ -435,6 +444,9 @@ class Pdt_peserta_didik extends MY_Controller
         }
         $index++;
       }
+
+      // unlink('uploads/' . $file_name); // Hapus file yang sudah diupload
+      // $this->session->unset_userdata('file_name'); // Hapus nama file dari session
 
       return $this->output
         ->set_content_type('application/json')
