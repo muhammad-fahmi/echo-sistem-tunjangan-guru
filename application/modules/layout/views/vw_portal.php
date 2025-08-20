@@ -100,13 +100,15 @@
                     <label for="tb-email">Username</label>
                     <div class="invalid-feedback" for="tb-email">Username is required</div>
                   </div>
-
-                  <div class="form-floating mb-3">
+                  <div class="form-floating mb-3 d-flex">
                     <input type="password" class="form-control form-input-bg" name="password" id="text-password" placeholder="*****" />
-                    <label for="text-password">Password</label>
+                    <label for="text-password" class="form-label">Password</label>
+                    <span class="input-group-text" id="password_toggle">
+                      <i class="fas fa-eye" id="password_show"></i>
+                      <i class="fas fa-eye-slash" id="password_hide"></i>
+                    </span>
                     <div class="invalid-feedback" for="text-password">Password is required</div>
                   </div>
-
                   <div class="d-flex align-items-stretch button-group mt-4 pt-2">
                     <button type="submit" class="btn btn-info btn-lg px-4">
                       Masuk
@@ -284,7 +286,16 @@
           }
         },
       }));
-    })
+
+      $("#password_hide").hide();
+      $("#password_toggle").on("click", function() {
+        const passwordField = $("#text-password");
+        const passwordType = passwordField.attr("type") === "password" ? "text" : "password";
+        passwordField.attr("type", passwordType);
+        $("#password_show").toggle();
+        $("#password_hide").toggle();
+      });
+    });
   </script>
 </body>
 

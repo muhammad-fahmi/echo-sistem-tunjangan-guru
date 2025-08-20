@@ -16,6 +16,7 @@
 
   <!-- Custom CSS -->
   <link href="<?php echo base_url("theme/dist/css/style.min.css") ?>" rel="stylesheet" />
+  <link href="<?php echo base_url("theme/overrider/style.css?v=" . em_date('YmdHis')) ?>" rel="stylesheet" />
 
   <!-- -------------------------------------------------------------- -->
   <!-- All Required js -->

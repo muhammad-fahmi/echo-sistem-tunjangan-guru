@@ -18,6 +18,73 @@ function isset_nn_nes($data, $placeholder = null)
   }
 }
 
+function is_logged_in()
+{
+  $CI = &get_instance();
+  $logged_in = $CI->session->userdata('logged_in');
+  $id_user = $CI->session->userdata('id_user');
+
+  if (!$logged_in || !$id_user) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+/**
+ * Checks if a variable has a valid value (not empty).
+ *
+ * @param mixed $data The variable to check
+ * @param string|int|null $key_to_check If $data is an array/object, check this specific key/property
+ * @param mixed $placeholder_if_not_valid Value to return if check fails
+ * @return mixed Returns boolean result of check or placeholder/original value based on parameters
+ */
+function check_var($data, $key_to_check = null, $placeholder_if_not_valid = null)
+{
+  // Special handling for $placeholder_if_not_valid parameter
+  $use_placeholder = func_num_args() > 2;
+
+  // First, get the target data to check
+  if ($key_to_check !== null) {
+    if (is_array($data) && array_key_exists($key_to_check, $data)) {
+      $data = $data[$key_to_check];
+      $exists = true;
+    } elseif (is_object($data) && property_exists($data, $key_to_check)) {
+      $data = $data->$key_to_check;
+      $exists = true;
+    } else {
+      $exists = false;
+    }
+  } else {
+    $exists = true;
+  }
+
+  // If the key doesn't exist, return false or the placeholder
+  if (!$exists) {
+    return $use_placeholder ? $placeholder_if_not_valid : false;
+  }
+
+  // Check if the value is valid (not empty)
+  $is_valid = false;
+
+  if (is_array($data)) {
+    $is_valid = count($data) > 0;
+  } elseif (is_object($data)) {
+    $is_valid = true; // Objects are always considered valid, unless null
+  } elseif (is_numeric($data) || $data === '0' || $data === 0) {
+    $is_valid = true; // Fix: Numeric values (including 0) are considered valid
+  } else {
+    $is_valid = trim((string)$data) !== '';
+  }
+
+  // Return appropriate value based on validity and placeholder setting
+  if ($use_placeholder) {
+    return $is_valid ? $data : $placeholder_if_not_valid;
+  }
+
+  return $is_valid;
+}
+
 /** hapus / unset array key yang memiliki nilai berupa string kosong / null */
 function trim_array($data_array)
 {
@@ -34,7 +101,7 @@ function trim_array($data_array)
 /**
  * @param string $string The input string to be cleaned.
  * @return string The cleaned string.
- * 
+ *
  * Cleans a given string by performing the following steps:
  * 1. Replaces spaces with underscores.
  * 2. Removes all characters except alphabetic letters (both uppercase and lowercase),
@@ -73,26 +140,120 @@ function datetime_now($alphanum = false, $timezone = 'Asia/Hong_Kong')
   return $data;
 }
 
-/** fungsi datetime generator + timezone
- * - param1: format date pake string default: Y-m-d
- * - param2: kalau value = "set" param3 harus diisi dengan datetime yg valid, kalau di set dengan string format seperti now, 1 day ago, +5 day, +5 hour akan melakukan modifikasi terhadap date yang dicetak
- * - param3: value datetime, default null, tapi kalau diisi maka akan mengacu pada tanggal tersebut
- * - param4: timezone berdasarkan aturan string php, default adalah Asia/Hong_Kong (GMT+8)
- */
-function em_date($format = "Y-m-d", $when = "now", $datetime = null, $timezone = 'Asia/Hong_Kong')
+function em_date($format = "Y-m-d", $when = "now", $datetime = null, $lang = 'id', $timezone = 'Asia/Hong_Kong')
 {
-  if ($datetime != null) {
+  if (!check_var($datetime) && $when != "now") return '';
+
+  if (check_var($datetime) && $datetime != null) {
     $dt = new DateTime($datetime, new DateTimeZone($timezone));
     if ($when != "set") {
       $dt->modify($when);
     }
-    $data = $dt->format($format);
-    return $data;
   } else {
     $dt = new DateTime($when, new DateTimeZone($timezone));
-    $data = $dt->format($format);
-    return $data;
   }
+
+  $id_month_short = indonesian_month($dt->format('n'));
+  $id_month_full = indonesian_month($dt->format('n'), true);
+
+  if ($format == 'elapsed') {
+    return time_elapsed_string($dt, $lang);
+  } elseif ($format == 'j M Y' && $lang == 'id') {
+    return $dt->format('j') . ' ' . $id_month_short . ' ' . $dt->format('Y');
+  } elseif ($format == 'j F Y' && $lang == 'id') {
+    return $dt->format('j') . ' ' . $id_month_full . ' ' . $dt->format('Y');
+  } elseif ($format == 'j M Y, H:i:s' && $lang == 'id') {
+    return $dt->format('j') . ' ' . $id_month_short . ' ' . $dt->format('Y') . ', ' . $dt->format('H:i:s');
+  } elseif ($format == 'j F Y, H:i:s' && $lang == 'id') {
+    return $dt->format('j') . ' ' . $id_month_full . ' ' . $dt->format('Y') . ', ' . $dt->format('H:i:s');
+  } else {
+    return $dt->format($format);
+  }
+}
+
+function indonesian_month($month_number = 1, $full = false)
+{
+  $short_months = [
+    1 => 'Jan',
+    2 => 'Feb',
+    3 => 'Mar',
+    4 => 'Apr',
+    5 => 'Mei',
+    6 => 'Jun',
+    7 => 'Jul',
+    8 => 'Agu',
+    9 => 'Sep',
+    10 => 'Okt',
+    11 => 'Nov',
+    12 => 'Des',
+  ];
+
+  $full_months = [
+    1 => 'Januari',
+    2 => 'Februari',
+    3 => 'Maret',
+    4 => 'April',
+    5 => 'Mei',
+    6 => 'Juni',
+    7 => 'Juli',
+    8 => 'Agustus',
+    9 => 'September',
+    10 => 'Oktober',
+    11 => 'November',
+    12 => 'Desember',
+  ];
+
+  return $full ? $full_months[$month_number] : $short_months[$month_number];
+}
+
+function time_elapsed_string($datetime, $lang = 'id', $full = false)
+{
+  $now = new DateTime();
+  $ago = $datetime;
+  $diff = $now->diff($ago);
+
+  $diff->w = floor($diff->d / 7);
+  $diff->d -= $diff->w * 7;
+
+  if ($lang == 'id') {
+    // Translations for Bahasa Indonesia
+    $string = array(
+      'y' => 'tahun',
+      'm' => 'bulan',
+      'w' => 'minggu',
+      'd' => 'hari',
+      'h' => 'jam',
+      'i' => 'menit',
+      's' => 'detik',
+    );
+    $suffix = ' yang lalu';
+    $now_string = 'baru saja';
+  } else {
+    // Default to English
+    $string = array(
+      'y' => 'year',
+      'm' => 'month',
+      'w' => 'week',
+      'd' => 'day',
+      'h' => 'hour',
+      'i' => 'minute',
+      's' => 'second',
+    );
+    $suffix = ' ago';
+    $now_string = 'just now';
+  }
+
+  foreach ($string as $k => &$v) {
+    $multi_suffix = ($lang == 'en') ? 's' : '';
+    if ($diff->$k) {
+      $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? $multi_suffix : '');
+    } else {
+      unset($string[$k]);
+    }
+  }
+
+  if (!$full) $string = array_slice($string, 0, 1);
+  return $string ? implode(', ', $string) . $suffix : $now_string;
 }
 
 /** ambil data tanggal saat ini, dan lakukan split per tahun, bulan, hari, jam, menit */
@@ -373,6 +534,145 @@ function short_num($num, $decimals = 2, $lang = 'en',  $caps = false)
   return $result;
 }
 
+/** fungsi untuk ngambil data yang ada di field tertentu pada tabel sesuai dengan kondisi `where` */
+function fetch_single_data($table_name, $field_name, $where = null, $placeholder = '')
+{
+  $CI = &get_instance();
+  if ($where == null) return $placeholder;
+  $q = $CI->db->get_where($table_name, $where);
+  $count = $q->num_rows();
+  if ($count < 1) return $placeholder;
+  $data = $q->row_array();
+  if (!isset($data[$field_name])) return $placeholder;
+
+  return $data[$field_name];
+}
+
+/** fungsi untuk ngambil 1 row dari tabel dengan kondisi yang ditentukan */
+function fetch_row_data($table_name, $where = null, $placeholder = '')
+{
+  $CI = &get_instance();
+  if ($where == null) return $placeholder;
+  $q = $CI->db->get_where($table_name, $where);
+  $count = $q->num_rows();
+  if ($count < 1) return $placeholder;
+  $data = $q->row_array();
+
+  return $data;
+}
+
+/** fungsi untuk ngambil nilai apakah ada atau tidak di DB */
+function fetch_num_rows($table_name, $where = null)
+{
+  $CI = &get_instance();
+  if ($where == null) return 0;
+  $q = $CI->db->get_where($table_name, $where);
+  $count = $q->num_rows();
+
+  return $count;
+}
+
+/**
+ * Securely get POST input with optional XSS filtering.
+ */
+function post_safe($key = null, $default = null)
+{
+  $CI = &get_instance();
+  $value = $CI->input->post($key, TRUE); // TRUE enables XSS filtering
+
+  return $value !== null ? $value : $default;
+}
+
+/**
+ * Securely get GET input with optional XSS filtering.
+ */
+function get_safe($key = null, $default = null)
+{
+  $CI = &get_instance();
+  $value = $CI->input->get($key, TRUE);
+
+  return $value !== null ? $value : $default;
+}
+
+/** fungsi untuk ngecek kewenangan di sesi dan menentukan apakah yg login saat ini termasuk admin (output : true / false) */
+function is_admin()
+{
+  $CI = &get_instance();
+  $cur_kewenangan = $CI->session->userdata('kewenangan');
+
+  return ($cur_kewenangan == '00' || $cur_kewenangan == '01' || $cur_kewenangan == '02')
+    ? true : false;
+}
+
+/** fungsi untuk ngecek kewenangan di sesi dan menentukan apakah yg login saat ini merupakan super admin (output: true / false) */
+function is_super_admin()
+{
+  $CI = &get_instance();
+  $cur_kewenangan = $CI->session->userdata('kewenangan');
+
+  return ($cur_kewenangan == '00')
+    ? true : false;
+}
+
+// Define a mapping from digits to character strings
+function get_digit_to_string_mapping()
+{
+  return [
+    '0' => 'SD',
+    '1' => 'KJ',
+    '2' => 'MM',
+    '3' => 'BY',
+    '4' => 'RH',
+    '5' => 'JL',
+    '6' => 'WW',
+    '7' => 'TN',
+    '8' => 'NB',
+    '9' => 'XT'
+  ];
+}
+
+// Define a reverse mapping from character strings to digits
+function get_string_to_digit_mapping()
+{
+  $mapping = get_digit_to_string_mapping();
+  return array_flip($mapping);
+}
+
+/** Encrypt a numeric ID into a string */
+function encrypt_id($numericID)
+{
+  $mapping = get_digit_to_string_mapping();
+  $encrypted = '';
+  // Iterate through each digit in the numeric ID
+  foreach (str_split($numericID) as $digit) {
+    // Append the corresponding string from the mapping
+    if (check_var($mapping, $digit)) {
+      $encrypted .= $mapping[$digit];
+    } else {
+      $encrypted .= '';
+    }
+  }
+  return $encrypted;
+}
+
+/** Decrypt a string back into a numeric ID */
+function decrypt_id($stringID)
+{
+  $mapping = get_string_to_digit_mapping();
+  $decrypted = '';
+  // Iterate through substrings of the string ID
+  for ($i = 0; $i < strlen($stringID); $i += 2) {
+    $subStr = substr($stringID, $i, 2);
+    // Append the corresponding digit from the reverse mapping
+    if (check_var($mapping, $subStr)) {
+      $decrypted .= $mapping[$subStr];
+    } else {
+      $decrypted .= '';
+    }
+  }
+  return $decrypted;
+}
+
 /** lakukan enkripsi bcrypt pada string password yang diisi sebagai parameter. output berupa hashed password */
 function encrypt_pwd($pwd)
 {
@@ -480,7 +780,7 @@ function left_join_array($master_table, $foreign_table, $master_id, $foreign_id 
   return $final;
 }
 
-/** fungsi ini untuk mengubah empty string / null menjadi strip 
+/** fungsi ini untuk mengubah empty string / null menjadi strip
  * fungsi ini juga menerima suffix, kalau tidak kosong akan ditambahkan spasi + suffix
  */
 function null_to_dash($string, $suffix = '')
@@ -505,8 +805,63 @@ function sanitize_string($string)
   return $string;
 }
 
+/** simple function to get default periode bln array */
+function array_periode_bulan()
+{
+  return [
+    '01' => '01 - Januari',
+    '02' => '02 - Februari',
+    '03' => '03 - Maret',
+    '04' => '04 - April',
+    '05' => '05 - Mei',
+    '06' => '06 - Juni',
+    '07' => '07 - Juli',
+    '08' => '08 - Agustus',
+    '09' => '09 - September',
+    '10' => '10 - Oktober',
+    '11' => '11 - November',
+    '12' => '12 - Desember',
+  ];
+}
+
+/** fungsi untuk ngecek permission ke database langsung, output true/false
+ * @param $menu: id_menu yang diakses, cek tabel m_menu
+ * @param $action: aksi yang akan dilakukan (read/ insert/ update/ delete/ verif)
+ * @return boolean
+ */
+function check_perm($action, $menu = null)
+{
+  $CI = &get_instance();
+  $cur_kewenangan = $CI->session->userdata('kewenangan');
+  $cur_menu = ($menu === null)
+    ? $CI->session->userdata('menu')
+    : $menu;
+
+  $valid_action = ['read', 'insert', 'update', 'delete', 'verif'];
+
+  if (!in_array($action, $valid_action)) return false;
+
+  $dataset = $CI->db->select($action)
+    ->from('v_kewenangan_menu')
+    ->group_start()
+    ->where(['id_kewenangan' => $cur_kewenangan])
+    ->or_where(['id_kewenangan' => 'OK'])
+    ->group_end()
+    ->where(['id_menu' => $cur_menu])
+    ->get()->row_array();
+
+  return ($dataset[$action] == 'YES') ? true : false;
+}
+
+/** fungsi untuk menghapus semua karakter pada string yang bukan alphanumeric atau spasi */
+function str_alphanumeric_space($string)
+{
+  $filtered = preg_replace("/[^a-zA-Z0-9 ]/", "", $string);
+  return $filtered;
+}
+
 /** fungsi untuk mencetak menu sidebar pada sistem cuti */
-function menu_loader($privilege = '200', $menu = 'dashboard')
+function menu_loader($echo = true)
 {
   /// |----------------------------------------------------------------------
   /// | NOTE BEFORE USING
@@ -515,31 +870,349 @@ function menu_loader($privilege = '200', $menu = 'dashboard')
   // dan pastikan ada permission tag (privilege dipisah dengan koma)
   // dan pastikan ada order, untuk mengurutkan menunya
   $CI = &get_instance();
-  $table = 'm_menu';
+  $table = 'v_kewenangan_menu';
+  $hr = '<hr style="border: 1px solid #efefef; opacity: 1;">';
+
+  $cur_kewenangan = $CI->session->userdata('kewenangan');
+  $cur_menu = $CI->session->userdata('menu');
+
   // query untuk tarik data menu
   $data = $CI->db->select('*')->from($table)
-    ->where('id <> 0')
-    ->group_start()
-    ->like('permission', 'all')
-    ->or_like('permission', $privilege)
-    ->group_end()
+    ->where(['id_kewenangan' => $cur_kewenangan])
+    ->where(['read' => 'YES'])
     ->order_by('order', 'asc')->get()->result_array();
+
+  $html = '';
+  $cur_parent_dropdown = false;
+  $is_super_admin = is_super_admin();
   if (isset_nn_nes($data)) {
     foreach ($data as $v) {
-      if ($v['module'] == '-') {
-        // output hr separator
-        echo '<hr>';
+      // output menu
+      $active = ($cur_menu == $v['id_menu']) ? 'selected' : '';
+      $icon = check_var($v, 'icon', 'mdi mdi-view-dashboard');
+      $subs = (check_var($v, 'menu_sub', false) === false)
+        ? ''
+        : '<div class="sub">' . $v['menu_sub'] . '</div>';
+
+      if ($cur_parent_dropdown && $v['is_child'] == 'NO') {
+        /// |----------------------------------------
+        /// | CLOSE THE DROPDOWN
+        /// |----------------------------------------
+        $html .= '</ul></li>';
+        $cur_parent_dropdown = false;
+      }
+
+      if (
+        !$cur_parent_dropdown &&
+        $v['is_parent'] == 'YES'
+        && $v['is_child'] == 'NO'
+      ) {
+        /// |----------------------------------------
+        /// | BUATKAN OPENER UNTUK DROPDOWN
+        /// |----------------------------------------
+        $cur_parent_dropdown = true;
+        if (strpos($cur_menu, $v['id_menu']) !== false) {
+          $parent_active = 'selected';
+          $a_expand = 'true';
+          $c_open = 'expand';
+        } else {
+          $parent_active = '';
+          $a_expand = 'false';
+          $c_open = 'collapse';
+        }
+
+        //_____ ORIGINAL STYLE
+        // $html .= '<li class="sidebar-item parent_item ' . $v['id_menu'] . ' ' . $parent_active . '">
+        //   <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="' . $a_expand . '"><i class="' . $icon . '"></i><span class="hide-menu">' . check_var($v, 'menu_title', 'UNKNOWN') . '<small>' . $subs . '</small></span></a>
+        //   <ul aria-expanded="false" class="' . $c_open . ' first-level">';
+
+        //_____ MODIFIED STYLE
+        $html .= '<li class="bz_sidebar_item parent_item ' . $v['id_menu'] . ' ' . $parent_active . '">
+          <a class="sidebar_link" href="javascript:void(0)" aria-expanded="' . $a_expand . '">
+            <div class="icon"><i class="' . $icon . '"></i></div>
+            <div class="hide-menu">
+              <div class="main">' . check_var($v, 'menu_title', 'UNKNOWN') . '<i class="dropdown-arrow dropdown-arrow-' . $v['id_menu'] . ' fas fa-chevron-down"></i></div>
+              ' . $subs . '
+            </div>
+            <ul aria-expanded="' . $a_expand . '" class="' . $c_open . ' first-level">';
+
+        continue;
+      }
+
+      /// |----------------------------------------
+      /// | OUTPUT MENU NORMALLY
+      /// |----------------------------------------
+      if (check_var($v, 'on_dev', 'NO') == 'YES') {
+        $href = 'href="#"';
+        $onclick = 'onclick="on_dev()"';
       } else {
-        // output menu
-        $active = ($menu == $v['module']) ? 'active' : '';
-        echo '' .
-          '<a href="' . site_url($v['link']) . '" class="item ' . $active . '">
-            <div class="bg"></div>
-            <i class="fa ' . $v['icon'] . ' fa-fw"></i> ' . $v['name'] . '
-          </a>';
+        $href = 'href="' . site_url(check_var($v, 'url', '#')) . '"';
+        $onclick = '';
+      }
+
+      $child_container_class = '';
+      $child_link_class = '';
+      if ($v['is_child'] == 'YES') {
+        $child_container_class = 'child_container';
+        $child_link_class = 'child_link';
+      }
+
+      //_____ ORIGINAL STYLE
+      // $html .= '<li class="sidebar-item ' . $v['id_menu'] . ' ' . $active . '">
+      //     <a ' . $href . ' ' . $onclick . ' class="sidebar-link"><i class="' . $icon . '"></i><span class="hide-menu">
+      //         ' . check_var($v, 'menu_title', 'UNKNOWN') . '<small>' . $subs . '</small>
+      //       </span></a>
+      //   </li>';
+
+      //_____ MODIFIED STYLE
+      $html .= '<li class="bz_sidebar_item ' . $child_container_class . ' ' . $v['id_menu'] . ' ' . $active . '">
+          <a ' . $href . ' ' . $onclick . ' class="sidebar_link ' . $child_link_class . '">
+            <div class="icon"><i class="' . $icon . '"></i></div>
+            <div class="hide-menu">
+              <div class="main">' . check_var($v, 'menu_title', 'UNKNOWN') . '</div>
+              ' . $subs . '
+            </div>
+          </a>
+        </li>';
+    }
+
+    // FIX: Close any remaining open dropdown after the loop
+    if ($cur_parent_dropdown) {
+      $html .= '</ul></li>';
+    }
+
+    /// |----------------------------------------
+    /// | OUTPUT MENU DASHBOARD & LOGOUT
+    /// | dua menu yang pasti ada di semua user
+    /// |----------------------------------------
+    // dashboard
+    $dashboard_active = ($cur_menu == 'PDT_Dashboard') ? 'selected' : '';
+    $html = '<li class="bz_sidebar_item PDT_Dashboard ' . $dashboard_active . '">
+        <a href="' . site_url('pangkalan_data') . '" class="sidebar_link">
+          <div class="icon"><i class="mdi mdi-view-dashboard"></i></div>
+          <div class="hide-menu">
+            <div class="main">Dashboard</div>
+          </div>
+        </a>
+      </li>' . $hr . $html;
+
+    // profile
+    $profile_on_dev = false;
+    $href_profile = ($profile_on_dev)
+      ? 'onclick="on_dev()"' : 'href="' . site_url('pdt_profile') . '"';
+    $profile_active = ($cur_menu == 'PDT_AkunProfile') ? 'selected' : '';
+    $html = $html . $hr . '<li class="bz_sidebar_item PDT_AkunProfile ' . $profile_active . '">
+        <a ' . $href_profile . ' class="sidebar_link">
+          <div class="icon"><i class="fas fa-id-card"></i></div>
+          <div class="hide-menu">
+            <div class="main">Profile</div>
+            <div class="sub">Setting Akun</div>
+          </div>
+        </a>
+      </li>';
+
+    // manajemen hak akses
+    if ($is_super_admin) {
+      $on_dev = false;
+      $href = ($on_dev)
+        ? 'onclick="on_dev()"'
+        : 'href="' . site_url('pdt_manajemen_perm') . '"';
+      // sisipkan menu manajemen perm
+      $perm_active = ($cur_menu == 'PDT_ManajemenPerm') ? 'selected' : '';
+      $html .= '<li class="bz_sidebar_item PDT_ManajemenPerm ' . $perm_active . '">
+          <a ' . $href . ' class="sidebar_link">
+            <div class="icon"><i class="fas fa-list"></i></div>
+            <div class="hide-menu">
+              <div class="main">Hak Akses</div>
+              <div class="sub">Manajemen Akses Menu</div>
+            </div>
+          </a>
+        </li>';
+    }
+
+    // logout
+    $html = $html . $hr . '<li class="bz_sidebar_item PDT_Logout">
+        <a href="' . site_url('login/logout') . '" class="sidebar_link">
+          <div class="icon"><i class="fas fa-arrow-left"></i></div>
+          <div class="hide-menu">
+            <div class="main">Logout</div>
+          </div>
+        </a>
+      </li>';
+
+    // portal
+    $html = $html . '<li class="bz_sidebar_item PDT_Portal">
+        <a href="' . site_url('portal') . '" class="sidebar_link">
+          <div class="icon"><i class="mdi mdi-directions"></i></div>
+          <div class="hide-menu">
+            <div class="main">Back to portal</div>
+          </div>
+        </a>
+      </li>';
+  }
+
+  if ($echo) {
+    echo $html;
+  } else {
+    return $html;
+  }
+}
+
+function summarize_permission_changes($old_data, $new_data)
+{
+  // Index both arrays by id_menu
+  $old = array_column($old_data, null, 'id_menu');
+  $new = array_column($new_data, null, 'id_menu');
+
+  $summary = [
+    'new_menu' => 0,
+    'changed_permission' => 0,
+    'deleted_menu' => 0,
+  ];
+
+  // Check for new or changed menus
+  foreach ($new as $menu_id => $new_row) {
+    if (!isset($old[$menu_id])) {
+      // completely new menu
+      $summary['new_menu']++;
+    } else {
+      // exists in both, compare permissions
+      $permissions = ['read', 'insert', 'update', 'delete', 'verif'];
+      foreach ($permissions as $perm) {
+        if ($old[$menu_id][$perm] !== $new_row[$perm]) {
+          $summary['changed_permission']++;
+          break; // count only once per menu
+        }
       }
     }
   }
+
+  // Check for deleted menus
+  foreach ($old as $menu_id => $old_row) {
+    if (!isset($new[$menu_id])) {
+      $summary['deleted_menu']++;
+    }
+  }
+
+  return $summary;
+}
+
+function clean_empty_or_all_no_permissions($data)
+{
+  $permissions = ['read', 'insert', 'update', 'delete', 'verif'];
+
+  foreach ($data as $key => &$value) {
+    if (!is_array($value)) continue; // skip 'id_kewenangan', 'error', etc.
+
+    $all_blank_or_no = true;
+    $has_yes = false;
+
+    // First pass: detect permission states
+    foreach ($permissions as $perm) {
+      if (isset($value[$perm])) {
+        if ($value[$perm] === 'YES') {
+          $has_yes = true;
+          $all_blank_or_no = false;
+        } elseif ($value[$perm] !== '' && $value[$perm] !== 'NO') {
+          // Unexpected value (e.g., 'MAYBE') — treat it as not blank/no
+          $all_blank_or_no = false;
+        }
+      }
+    }
+
+    if ($all_blank_or_no) {
+      unset($data[$key]); // remove this menu completely
+    } elseif ($has_yes) {
+      // Normalize: convert '' to 'NO'
+      foreach ($permissions as $perm) {
+        if (!isset($value[$perm]) || $value[$perm] === '') {
+          $value[$perm] = 'NO';
+        }
+      }
+    }
+  }
+
+  return $data;
+}
+
+/** fungsi utk output array sebagai json response, parameter kedua merupakan response code (default: 200) */
+function output_json($response_array, $status_code = 200)
+{
+  $CI = &get_instance();
+  $CI->output
+    ->set_content_type('application/json')
+    ->set_status_header($status_code)
+    ->set_output(json_encode($response_array));
+}
+
+function output_error($message)
+{
+  echo '<style>';
+  echo 'body{
+      background-color: #343434;
+      color: #EFEFEF;
+      font-family: sans-serif;
+    }';
+  echo '.container{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      width: calc(100vw - 25px);
+      height: calc(100vh - 25px);
+      overflow: hidden;
+    }';
+  echo '</style>';
+
+  echo '<div class="container"><h3>' . $message . '</h3></div>';
+}
+
+/**
+ * Set cell value with protection against Excel auto-format (e.g., scientific notation or lost leading zeros).
+ *
+ * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $sheet
+ * @param string $cells     Cell reference like "D8"
+ * @param mixed  $data      The value to be written
+ *
+ * @return void
+ */
+function setStrCellValue($sheet, $cells, $data)
+{
+  $datatype = \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING;
+  $value = $data;
+  if ((is_numeric($value) && strlen($value) >= 15) ||
+    (is_string($value) && preg_match('/^0\d+$/', $value))
+  ) {
+    $sheet->setCellValueExplicit($cells, $value, $datatype);
+  } else {
+    $sheet->setCellValue($cells, $value);
+  }
+}
+
+/**
+ * Mencatat aktivitas log dengan menggunakan sesi CodeIgniter.
+ *
+ * Fungsi ini mencatat aktivitas log dengan format kunci yang terdiri dari waktu mikro dan nama fungsi.
+ * Nilai log disimpan dalam sesi pengguna dengan kunci `__LOG SESSION__`.
+ *
+ * @param string $__FUNCTION__ Nama fungsi atau aktivitas yang dicatat.
+ * @param mixed $value Nilai atau pesan yang akan dicatat dalam log. Default adalah 'logged activity'.
+ * @param bool $reset Jika true, log saat ini akan di-reset. Default adalah false.
+ * @return void
+ */
+function s_log($__FUNCTION__, $value = 'logged activity', $reset = false)
+{
+  $CI = &get_instance();
+  $microtime = number_format(microtime(true), 8, '', '');
+
+  $curLog = $CI->session->userdata('__LOG SESSION__');
+  $curLog = (isset_nn_nes($curLog)) ? $curLog : array();
+
+  $nextLog = ($reset) ? array() : $curLog;
+  $keyname = $microtime . '__[' . $__FUNCTION__ . ']';
+  $nextLog[$keyname] = $value;
+  $CI->session->set_userdata('__LOG SESSION__', $nextLog);
 }
 
 /** fungsi untuk pengecekan akses menu sistem cuti, return true kalau boleh mengakses */
@@ -618,6 +1291,141 @@ function menu_auth_sipedal($username, $module, $kewenangan)
   }
 }
 
+/**
+ * Get the list of inventory items used for building/facility names.
+ *
+ * Each key represents the internal name used in form inputs or data processing,
+ * while the value is the display label shown in the UI.
+ *
+ * @return array<string, string> Associative array of item keys and their display names
+ */
+function get_inventaris_items()
+{
+  return [
+    'bertingkat' => 'Bertingkat',
+    'ruang_kelas' => 'Ruang Kelas',
+    'ruang_perpustakaan' => 'Ruang Perpustakaan',
+    'ruang_uks' => 'Ruang UKS',
+    'lab_komputer' => 'Lab. Komputer',
+    'lab_bahasa' => 'Lab. Bahasa',
+    'lab_ipa' => 'Lab. IPA',
+    'lab_fisika' => 'Lab. Fisika',
+    'lab_biologi' => 'Lab. Biologi',
+    'ruang_kepala_sekolah' => 'Ruang Kepala Sekolah',
+    'ruang_guru' => 'Ruang Guru',
+    'ruang_tata_usaha' => 'Ruang Tata Usaha (TU)',
+    'wc_guru_laki_laki' => 'WC Guru Laki-Laki',
+    'wc_guru_perempuan' => 'WC Guru Perumpuan',
+    'wc_siswa_laki_laki' => 'WC Siswa Laki-Laki',
+    'wc_siswa_perempuan' => 'WC Siswa Perempuan',
+    'tempat_bermain_olahraga' => 'Tempat Bermain / Olahraga',
+    'ruang_konseling' => 'Ruang Konseling',
+    'ruang_osis' => 'Ruang Osis',
+    'ruang_ibadah' => 'Ruang Ibadah',
+    'ruang_praktik' => 'Ruang Praktik',
+    'gudang' => 'Gudang',
+    'total' => 'JUMLAH'
+  ];
+}
+
+/**
+ * Get the list of condition/status fields used for inventory input.
+ *
+ * These correspond to the condition of an inventory item and
+ * are used both in HTML form inputs and in data processing.
+ *
+ * @return string[] List of field names like 'baik', 'rusak_ringan', etc.
+ */
+function get_inventaris_fields()
+{
+  return ['baik', 'rusak_ringan', 'rusak_sedang', 'rusak_berat', 'rusak_total', 'jumlah'];
+}
+
+/**
+ * Set inventory data into the spreadsheet cells based on item and condition mapping.
+ *
+ * This function dynamically calculates the target cell for each inventory item
+ * and condition (e.g., 'baik', 'rusak_ringan', etc.), starting from a defined column and row.
+ * Values are only set if they exist in the $arranged_inventaris array and are not zero.
+ *
+ * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $sheet The worksheet object to write data into.
+ * @param array<string, array<string, int>> $arranged_inventaris Associative array of inventory data,
+ *        where the first key is the item (e.g., 'bertingkat'), and the second key is the field (e.g., 'baik').
+ * @param string $columnStart Starting column letter in the spreadsheet (default is 'I').
+ * @param int $rowStart Starting row number in the spreadsheet (default is 7).
+ *
+ * @return void
+ */
+function set_inventaris_cells($sheet, $arranged_inventaris, $columnStart = 'I', $rowStart = 7)
+{
+  $items = array_keys(get_inventaris_items());   // List of inventory item keys
+  $fields = get_inventaris_fields();             // List of condition/status fields
+
+  foreach ($items as $rowIndex => $itemKey) {
+    foreach ($fields as $colIndex => $fieldKey) {
+      // Convert column index to column letter, e.g., 0 => 'I', 1 => 'J', ...
+      $columnLetter = chr(ord($columnStart) + $colIndex);
+
+      // Combine column and row to get the cell reference, e.g., 'I7'
+      $cell = $columnLetter . ($rowStart + $rowIndex);
+
+      // Check if the value exists in the arranged data
+      if (isset($arranged_inventaris[$itemKey][$fieldKey])) {
+        $numValue = $arranged_inventaris[$itemKey][$fieldKey];
+
+        // Only set value if it's not zero (skip zero values)
+        if ($numValue != 0) {
+          $sheet->setCellValue($cell, $numValue);
+        }
+      }
+    }
+  }
+}
+
+function compress_image($path, $image_type)
+{
+  list($width, $height) = getimagesize($path);
+  $quality = 85; // Start with high quality
+
+  switch ($image_type) {
+    case 'jpeg':
+    case 'jpg':
+      $image = imagecreatefromjpeg($path);
+      break;
+    case 'png':
+      $image = imagecreatefrompng($path);
+      $quality = 8; // PNG compression: 0 (no compression) to 9
+      break;
+    case 'gif':
+      $image = imagecreatefromgif($path);
+      break;
+    case 'webp':
+      $image = imagecreatefromwebp($path);
+      break;
+    default:
+      return; // unsupported
+  }
+
+  // Overwrite original
+  switch ($image_type) {
+    case 'jpeg':
+    case 'jpg':
+      imagejpeg($image, $path, $quality); // JPEG quality: 0-100
+      break;
+    case 'png':
+      imagepng($image, $path, $quality); // PNG quality: 0-9
+      break;
+    case 'gif':
+      imagegif($image, $path);
+      break;
+    case 'webp':
+      imagewebp($image, $path, $quality); // WEBP: 0-100
+      break;
+  }
+
+  imagedestroy($image);
+}
+
 /** fungsi untuk membuat log */
 function log_generator($username = '-', $table = '-', $object = '-', $message = '-')
 {
@@ -633,6 +1441,61 @@ function log_generator($username = '-', $table = '-', $object = '-', $message = 
   $CI->db->insert('r_log', $data);
 }
 
+/**
+ * Generate a random string of uppercase characters.
+ *
+ * This function generates a random string consisting of uppercase letters (A-Z),
+ * and optionally includes digits (0-9) if $include_numeric is set to true.
+ *
+ * @param int  $length           The number of characters to generate. Default is 6.
+ * @param bool $include_numeric  Whether to include numbers (0-9) in the string. Default is false.
+ * @return string A random uppercase string of the specified length.
+ */
+function generate_random_characters($length = 6, $include_numeric = false)
+{
+  $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  if ($include_numeric) {
+    $characters .= '0123456789';
+  }
+
+  return strtoupper(substr(str_shuffle($characters), 0, $length));
+}
+
+/** fungsi utk ngecek data apa aja yang diganti / diupdate dengan membandingkan data original dan data yang diupdate, return array ['before' => [], 'after' => []] */
+function get_changed_data($original_array, $update_array)
+{
+  $before = [];
+  $after = [];
+
+  foreach ($update_array as $key => $newValue) {
+    // Only compare keys that exist in the original record
+    if (array_key_exists($key, $original_array)) {
+      $oldValue = $original_array[$key];
+
+      // Optional: normalize both values for fair comparison (e.g., trim, cast types)
+      if ($oldValue != $newValue) {
+        $before[$key] = $oldValue;
+        $after[$key] = $newValue;
+      }
+    }
+  }
+
+  return [
+    'before' => $before,
+    'after' => $after
+  ];
+}
+
+/** fungsi untuk format result array jadi readable string menggunakan `|` sebagai separator */
+function format_log_view($array_data)
+{
+  $parts = [];
+  foreach ($array_data as $k => $v) {
+    $parts[] = "`{$k}` : `{$v}`";
+  }
+  return implode(" | ", $parts);
+}
+
 /** fungsi untuk generate no dokumen */
 function generate_no_dok()
 {
@@ -642,6 +1505,80 @@ function generate_no_dok()
     ->like('tgl_dok', $curyear)->get()->num_rows();
   $numbering = str_pad(($no + 1), 5, '0', STR_PAD_LEFT);
   return "MNJD-$curyear-$numbering";
+}
+
+/** normalisasi data dari `v_ukerja` ke format `vm_profil_sekolah` */
+function normalisasi_data_profil_sekolah(&$data_sekolah, $data_v_ukerja)
+{
+  $data_sekolah = [
+    'kode_ukerja' => check_var($data_v_ukerja, 'kode_ukerja', null),
+    'ket_ukerja' => check_var($data_v_ukerja, 'ket_ukerja', null),
+    'jenjang' => null,
+    'status' => null,
+    'npsn' => null,
+    'nss' => null,
+    'no_statistik_bangunan' => null,
+    'akreditasi' => null,
+    'inklusif' => null,
+    'alamat' => check_var($data_v_ukerja, 'alamat_ukerja', null),
+    'id_kelurahan' => null,
+    'id_kecamatan' => null,
+    'kode_pos' => null,
+    'lat' => null,
+    'long' => null,
+    'telepon' => check_var($data_v_ukerja, 'telp_ukerja', null),
+    'website' => check_var($data_v_ukerja, 'website_ukerja', null),
+    'email' => check_var($data_v_ukerja, 'email_ukerja', null),
+    'no_rek_bank' => null,
+    'nama_bank' => null,
+    'cabang_kcp_unit' => null,
+    'nama_wajib_pajak' => null,
+    'npwp' => null,
+    'no_sk_pendirian' => null,
+    'tgl_sk_pendirian' => null,
+    'no_sk_izin_operasional' => null,
+    'tgl_sk_izin_operasional' => null,
+    'luas_tanah' => null,
+    'kepemilikan_tanah' => null, /* MILIK / SEWA / PINJAM */
+  ];
+}
+
+/** normalisasi data dari `v_pns` ke format `vm_profil_kepsek` */
+function normalisasi_data_profil_kepsek(&$data_kepsek, $data_v_pns)
+{
+  $data_kepsek = [
+    'kode_ukerja' => $data_v_pns['kode_ukerja'],
+    'ket_ukerja' => $data_v_pns['ket_ukerja'],
+    'nip' => $data_v_pns['nip'],
+    'nama' => str_alphanumeric_space(trim(strtoupper($data_v_pns['nama']))),
+    'nuptr' => null,
+    'nurs' => null,
+    'nrg' => null,
+    'nik' => check_var($data_v_pns, 'nik', null),
+    'tgl_lahir' => check_var($data_v_pns, 'tgl_lahir', null),
+    'jenis_kelamin' => check_var($data_v_pns, 'j_kelamin', null),
+    'alamat_saat_ini' => check_var($data_v_pns, 'tt_alamat', null),
+    'status_pernikahan' => check_var($data_v_pns, 'kode_kawin', null),
+    'ket_status_pernikahan' => check_var($data_v_pns, 'ket_kawin', null),
+    'kode_didik' => check_var($data_v_pns, 'kode_didik', null),
+    'pendidikan' => check_var($data_v_pns, 'ket_didik', null),
+    'no_sertifikat_pendidik' => null,
+    'no_sertifikat_gp' => null,
+    'no_sertifikat_crs' => null,
+    'no_rek_bank' => null,
+    'npwp' => check_var($data_v_pns, 'no_npwp', null),
+    'menerima_ttp_insentif' => null,
+    'status' => check_var($data_v_pns, 'kode_status', null),
+    'ket_status' => check_var($data_v_pns, 'ket_status', null),
+    'email' => check_var($data_v_pns, 'email', null),
+    'no_hp' => check_var($data_v_pns, 'no_hp', null),
+    'kode_agama' => check_var($data_v_pns, 'kode_agama', null),
+    'ket_agama' => check_var($data_v_pns, 'ket_agama', null),
+    'periode_ke' => null,
+    'masa_penugasan_mulai' => null,
+    'masa_penugasan_selesai' => null,
+    's_aktif' => null
+  ];
 }
 
 /** fungsi untuk merubah int menit menjadi int jam dan int menit

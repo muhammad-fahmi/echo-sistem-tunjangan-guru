@@ -1,0 +1,262 @@
+<div class="row page-titles">
+  <div class="col-md-4 col-12 align-self-center">
+    <h3 class="text-themecolor mb-0">Rombongan Belajar - <?= $data['ket_kelas']; ?>/<?= $data['nama_rombel']; ?></h3>
+    <ol class="breadcrumb mb-0">
+      <li class="breadcrumb-item">
+        <a href="<?= site_url('pangkalan_data'); ?>">Pangkalan Data</a>
+      </li>
+      <li class="breadcrumb-item active">Data Tahun Ajaran</li>
+      <li class="breadcrumb-item">
+        <a href="<?= site_url('pdt_rombongan_belajar') ?>">Rombongan Belajar</a>
+      </li>
+      <li class="breadcrumb-item active">Update</li>
+    </ol>
+  </div>
+</div>
+
+<div class="container-fluid">
+
+  <div class="row">
+    <?php
+    /// |----------------------------------------
+    /// | SHOW DEBUG
+    /// |----------------------------------------
+    $show_debug = false;
+    if ($show_debug) {
+    ?>
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">DATA (DEBUG)</h4>
+            <small>
+              <?php highlight_string("<?php\nSESSION = " . var_export($this->session->userdata(), true) . ";\n\n?>"); ?>
+              <?php highlight_string("<?php\nDATA = " . var_export($data, true) . ";\n\n?>"); ?>
+            </small>
+          </div>
+        </div>
+      </div>
+    <?php
+    }
+    ?>
+
+    <div class="col-12">
+      <div class="card">
+        <div class="card-title">
+          <h4 class="card-title space-between">
+            <div><i class="fas fa-building me-2"></i>Profil Rombongan Belajar</div>
+            <div></div>
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="row g-1">
+
+            <table style="width: 100%;" class="table table-hover mb-1">
+              <tr>
+                <td style="min-width: 150px;">Sekolah</td>
+                <td style="min-width: 15px; text-align: center;">:</td>
+                <td style="width: 100%;"><?= check_var($data, 'ket_sekolah', '-') ?></td>
+              </tr>
+
+              <tr>
+                <td style="min-width: 150px;">Kelas / Rombel</td>
+                <td style="min-width: 15px; text-align: center;">:</td>
+                <td style="width: 100%;"><?= check_var($data, 'ket_kelas', '-') . '/' . check_var($data, 'nama_rombel', '-')  ?></td>
+              </tr>
+
+              <tr>
+                <td style="min-width: 150px;">Tahun Ajaran</td>
+                <td style="min-width: 15px; text-align: center;">:</td>
+                <td style="width: 100%;"><?= check_var($data, 'ket_tahun_ajaran', '-') ?></td>
+              </tr>
+
+            </table>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+
+      <div class="card">
+        <div class="card-title">
+          <h4 class="card-title space-between">
+            <div><i class="fas fa-user me-2"></i>Manajemen Peserta Didik</div>
+            <div>
+              <a href="javascript:void(0)" class="btn btn-sm btn-info pull-right">Insert Data Batch PD <i class="fas fa-file mx-1"></i></a>
+            </div>
+          </h4>
+          <input type="hidden" id="id_rombel" name="id_rombel" value="<?= $data['id']; ?>">
+        </div>
+        <div class="card-body">
+          <div class="col-12">
+            <div class="row g-2">
+
+              <div class="table-responsive">
+
+                <div class="_loading loading_list_peserta_didik">
+                  <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>
+                </div>
+
+                <table id="list_peserta_didik" class="table table-bordered table-hover fs-3" style="width:100%;">
+
+                  <thead class="bg-info text-white">
+                    <tr class="text-center">
+                      <th class="vam" style="min-width: 20px;">#</th>
+                      <th class="vam" style="min-width: 150px;">NISN / Nama Lengkap</th>
+                      <th class="vam" style="min-width: 80px;">Jenis Kelamin</th>
+                      <th class="vam" style="min-width: 60px;">Agama</th>
+                      <th class="vam" style="min-width: 20px;">Aksi</th>
+                    </tr>
+                  </thead>
+
+                  <tbody style="font-size: 12px;"></tbody>
+
+                </table>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div class="toast_container"></div>
+
+<script>
+  var id_rombel = "<?= $data['id'] ?>";
+  var init_btn_add_siswa = false;
+  let urlDatatable = "<?= site_url('pdt_rombongan_belajar/get_data_siswa') ?>";
+  var list_peserta_didik = $("#list_peserta_didik").DataTable({
+    responsive: true,
+    processing: false,
+    serverSide: true,
+    orderCellsTop: true,
+    dom: '<"row g-1"' +
+      '<"col-12 col-sm-6 init_btn_container"><"col-12 col-sm-6 vam"f>' +
+      '<"col-12"tr>' +
+      '<"col-12 col-sm-6"li><"col-12 col-sm-6"p>' +
+      '>',
+    /* set kolom yang di sortir secara default */
+    order: [
+      [1, "desc"],
+    ],
+    /* set placeholder dari input search */
+    language: {
+      searchPlaceholder: "Cari data peserta didik..."
+    },
+    ajax: {
+      url: urlDatatable,
+      /* parameter yang dikirimkan ke controller */
+      data: {
+        id_rombel: function() {
+          return $('#id_rombel').val();
+        },
+      },
+      type: 'POST',
+      beforeSend: function() {
+        // lakukan sesuatu sebelum mengirimkan ajax
+        $('._loading').addClass('show');
+      },
+    },
+    /* Sesuaikan jumlah kolom dengan id table yang digunakan */
+    columns: [{
+        data: 'no',
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        }
+      },
+      {
+        data: 'nama',
+        orderable: true,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-start">' +
+            '<div class="badge bg-info mb-1" style="opacity: 0.65;">' + rowData['nisn'] + '</div><br>' + cellData +
+            '</div>'
+          );
+        }
+      },
+      {
+        data: 'ket_jns_kelamin',
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        }
+      },
+      {
+        data: 'ket_agama',
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        }
+      },
+      {
+        data: 'id_siswa',
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + rowData.aksi_display + '</div>');
+        }
+      },
+    ],
+    /* Lakukan fungsi callback pada bracket ini */
+    drawCallback: function(settings) {
+      /* gunakan code ini utk mengambil data response ke dalam drawCallback */
+      let api = this.api();
+      let json = api.ajax.json();
+      if (json.status == false) {
+        /* jalankan apabila return false */
+      }
+      /* parameter callback untuk kostumisasi fungsi */
+      $('.loading_list_peserta_didik').removeClass('show');
+
+      let btn_add_siswa = '<button class="btn btn-sm btn-success me-2" onclick="modal(`' + id_rombel + '`,`tambah_siswa_rombel`)">' +
+        '<i class="fas fa-plus me-1"></i>Tambah Peserta Didik' +
+        '</button>';
+
+      if (!init_btn_add_siswa) {
+        $('.init_btn_container').append(btn_add_siswa);
+        init_btn_add_siswa = true;
+      }
+      /* parameter callback untuk kostumisasi fungsi */
+      //$('._loading').removeClass('show');
+    }
+  });
+
+  /* fungsi untuk reload datatable ajax */
+  function reload_table() {
+    list_peserta_didik.ajax.reload();
+  }
+
+  function modal(id_siswa, type) {
+    var url = "<?= site_url('pdt_rombongan_belajar/modal') ?>";
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: {
+        id: id_siswa,
+        type: type
+      },
+      success: function(res) {
+        if (res.status) {
+          $("#modal_content_id").html(res.html).show();
+          $("#whole_modal_id").modal("show");
+        } else {
+          toaster('info', 'Unknown error on modal calls.\n- ' + res.message);
+        }
+      }
+    });
+  }
+</script>

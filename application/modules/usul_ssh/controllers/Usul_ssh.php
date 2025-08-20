@@ -8,6 +8,7 @@ class Usul_ssh extends MY_Controller
     parent::__construct();
     $priv = $this->session->userdata('kewenangan');
     $log = $this->session->userdata('logged_in');
+    $this->session->set_userdata('menu', 'usul_ssh');
     if ($log != true) {
       redirect(site_url('login'));
     } else {
@@ -17,7 +18,6 @@ class Usul_ssh extends MY_Controller
 
   public function index()
   {
-    $this->session->set_userdata('menu', 'usul_ssh');
     $sent_data = $this->db->get_where('v_pagu_realisasi', 'kode_unor IS NOT NULL')->row_array();
     $data = array(
       'page_title' => "Usul SSH",

@@ -191,15 +191,15 @@
     btn_cetak_handler();
   });
 
-  
+
   var init_btn_export = false;
-  
-  function generate_tabel_tpp_triwulan(){
+
+  function generate_tabel_tpp_triwulan() {
     var urlDatatable = "<?= site_url('laporan/tpp_3_bln_datalist') ?>";
     var triwulan = $("[name=triwulan]").val();
     var thn_filter = $("[name=tahun]").val();
     var select_ukerja = $("[name=select_ukerja]").val();
-    $("#gen_table").prop("disabled",true);
+    $("#gen_table").prop("disabled", true);
     $("#gen_table").html(" . . . Proses tabel");
     $.ajax({
       type: "POST",
@@ -210,7 +210,7 @@
         kode_ukerja: kode_ukerja
       },
       success: function(res) {
-        $("#gen_table").prop("disabled",false);
+        $("#gen_table").prop("disabled", false);
         $("#gen_table").html("Tampilkan");
         $("#tabel-body").html(res);
       }

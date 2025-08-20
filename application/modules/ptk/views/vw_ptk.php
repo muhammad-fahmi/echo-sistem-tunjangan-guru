@@ -3,18 +3,18 @@
 <!-- ============================================================== -->
 <div class="row page-titles">
   <div class="col-md-4 col-12 align-self-center">
-    <h3 class="text-themecolor mb-0">Daftar User</h3>
+    <h3 class="text-themecolor mb-0">Pendidik dan Tenaga Kependidikan</h3>
     <ol class="breadcrumb mb-0">
       <li class="breadcrumb-item">
         <a href="javascript:void(0)">Home</a>
       </li>
-      <li class="breadcrumb-item active">Manajemen User</li>
+      <li class="breadcrumb-item active">PTK</li>
     </ol>
   </div>
-  <!-- ============================================================== -->
-  <!-- End Bread crumb and right sidebar toggle -->
-  <!-- ============================================================== -->
 </div>
+<!-- ============================================================== -->
+<!-- End Bread crumb and right sidebar toggle -->
+<!-- ============================================================== -->
 <!-- -------------------------------------------------------------- -->
 <!-- Container fluid  -->
 <!-- -------------------------------------------------------------- -->
@@ -27,30 +27,29 @@
     <div class="col-12">
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title">Daftar User</h4>
+          <h4 class="card-title">Daftar Pendidik dan Tenaga Kependidikan ASN / PPPK</h4>
 
           <div class="table-responsive mt-4">
 
-            <div class="_loading loading_tabel_user">
+            <div class="_loading loading_tabel_ptk">
               <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>
             </div>
 
-            <table id="table_user" class="table table-bordered table-hover fs-3" style="width:100%;">
+            <table id="table_ptk" class="table table-bordered table-hover fs-3" style="width:100%;">
 
               <thead class="bg-info text-white">
                 <tr class="text-center">
-                  <th scope="col">No.</th>
-                  <th scope="col">Username</th>
-                  <th scope="col">Nama Lengkap</th>
-                  <th scope="col">Kewenangan</th>
-                  <th scope="col">Unit Kerja</th>
-                  <th scope="col">Aktif</th>
-                  <th scope="col">Aksi</th>
+                  <th>NIP / Status</th>
+                  <th>Nama</th>
+                  <th>Jabatan</th>
+                  <th>Golongan</th>
+                  <th>Status Pendidik</th>
+                  <th>Jenis PTK</th>
+                  <th>Keterangan</th>
+                  <th>Aksi</th>
                 </tr>
               </thead>
-
               <tbody style="font-size: 11px;"></tbody>
-
             </table>
           </div>
         </div>
@@ -65,13 +64,12 @@
 <!-- End Container fluid  -->
 <!-- -------------------------------------------------------------- -->
 
-
 <script>
+  var urlDatatable = "<?= site_url('ptk/datalist') ?>";
   var init_btn_add = false;
-  let urlDatatable = "<?= site_url('user/get_data') ?>";
-  var tabel_user = $("#table_user").DataTable({
+  var tabel_ptk = $("#table_ptk").DataTable({
     responsive: true,
-    processing: false,
+    processing: true,
     serverSide: true,
     orderCellsTop: true,
     dom: '<"row g-1"' +
@@ -81,94 +79,116 @@
       '>',
     /* set kolom yang di sortir secara default */
     order: [
-      [1, "desc"],
+      [0, "asc"],
     ],
     /* set placeholder dari input search */
     language: {
-      searchPlaceholder: "Cari data user..."
+      searchPlaceholder: "Keyword"
     },
     ajax: {
       url: urlDatatable,
       /* parameter yang dikirimkan ke controller */
       data: {
-        param1: function() {
-          return $('#xor').val();
-        },
+        // param1: function() {
+        //   return $('#id_atau_class_element').val();
+        // },
       },
       type: 'POST',
       beforeSend: function() {
-        // lakukan sesuatu sebelum mengirimkan ajax
-        $('._loading').addClass('show');
+        // lakukan sesuatu sebelum mulai ajax process
+        $('.loading_tabel_ptk').addClass('show');
       },
     },
     /* Sesuaikan jumlah kolom dengan id table yang digunakan */
-    columns: [{
-        data: 'no',
-        orderable: false,
-        className: '',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        }
-      },
+    columns: [
       {
-        data: 'id_user',
-        orderable: true,
-        className: '',
+        data: 'nip',
+        orderable: false,
+        className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-start">' + cellData + '</div>');
-        }
+        },
       },
       {
-        data: 'username',
+        data: 'nama_lengkap',
         orderable: false,
-        className: '',
+        className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-start">' + cellData + '</div>');
-        }
+        },
       },
       {
-        data: 'kewenangan',
+        data: 'ket_jab',
         orderable: false,
-        className: '',
+        className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        }
+          $(td).html('<div class="text-start">' + cellData + '</div>');
+        },
       },
       {
-        data: 'ket_ukerja',
+        data: 'ket_gol',
         orderable: false,
-        className: '',
+        className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        }
+          $(td).html('<div>[' + cellData +'] '+rowData["nama_gol"]+'</div>');
+        },
       },
       {
-        data: 'aktif',
+        data: 'status_gtk',
         orderable: false,
-        className: '',
+        className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + cellData + '</div>');
-        }
+          var display = "";
+          if (cellData !== false){
+            display = rowData.status_gtk;
+          }else{
+            display = "Belum Diset";
+          }
+          $(td).html('<div class="text-end">' + display + '</div>');
+        },
       },
       {
-        data: 'id_user',
+        data: 'jenis_ptk',
         orderable: false,
-        className: '',
+        className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
-          let kewenangan_user = '<?= $this->session->userdata('kewenangan'); ?>';
-          let btn_user_management = '<a href="<?= site_url('user/menu_management/'); ?>' + cellData + '" class="badge bg-secondary clickable me-1" title="Menu Management">' +
-            '<i class="fas fa-list"></i></a>';
-
-          let btn_edit = '<div onclick="modal(`' + cellData + '`, `edit`)" class="badge bg-primary clickable me-1" title="Edit">' +
-            '<i class="fas fa-edit"></i></div>';
-
-          let btn_delete = (kewenangan_user == '00') ?
-            '<div onclick="modal(`' + cellData + '`, `hapus`)" class="badge bg-danger clickable" title="Hapus">' +
-            '<i class="fas fa-trash"></i></div>' :
-            '';
-
-          $(td).html('<div class="text-center">' + btn_edit + btn_delete + '</div>');
-        }
+          var display = "";
+          if (cellData !== false){
+            display = rowData.jenis_ptk;
+          }else{
+            display = "Belum Diset";
+          }
+          $(td).html('<div class="text-end">' + cellData + '</div>');
+        },
+      },
+      {
+        data: 'keterangan_ptk',
+        orderable: false,
+        className: 'vam',
+        createdCell: function(td, cellData, rowData, row, col) {
+          if (rowData.keterangan_ptk != "" && rowData.jenisketerangan_ptk_ptk != null){
+            display = rowData.keterangan_ptk;
+          }else{
+            display = "-";
+          }
+          $(td).html('<div class="text-end">' + cellData + '</div>');
+        },
+      },
+      {
+        data: 'nip',
+        orderable: false,
+        className: 'vam',
+        createdCell: function(td, cellData, rowData, row, col) {
+          let id_entry = cellData;
+          let html_aksi = '<div class="btn-group">' + '<button type="button" class="btn btn-sm btn-light-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">' +
+            'Pilih' +
+            '</button>' +
+            '<ul class="dropdown-menu">' +
+            '<li><a class="dropdown-item" href="<?php echo site_url("ptk/edit/"); ?>'+btoa(cellData)+'"><i class="fas fa-edit me-1"></i>Edit</a></li>' +
+            '</ul>' +
+            '</div>';
+          $(td).html('<div class="text-center">' + html_aksi + '</div>');
+        },
       },
     ],
     /* Lakukan fungsi callback pada bracket ini */
@@ -180,51 +200,31 @@
         /* jalankan apabila return false */
       }
       /* parameter callback untuk kostumisasi fungsi */
-      $('.loading_tabel_user').removeClass('show');
+      $('.loading_tabel_ptk').removeClass('show');
 
-      let btn_add = '<button class="btn btn-sm btn-success me-2" onclick="modal(`0`,`tambah_user`)">' +
-        '<i class="fas fa-plus me-1"></i>Tambah User' +
+      let btn_add = '<button class="btn btn-sm btn-success me-2" onclick="modal(`0`,`tambah_gtk`)">' +
+        '<i class="fas fa-plus me-1"></i>Tambah PTK' +
         '</button>';
 
       if (!init_btn_add) {
         $('.init_btn_container').append(btn_add);
         init_btn_add = true;
       }
-      /* parameter callback untuk kostumisasi fungsi */
-      //$('._loading').removeClass('show');
     }
   });
 
   /* fungsi untuk reload datatable ajax */
   function reload_table() {
-    tabel_user.ajax.reload();
+    tabel_ptk.ajax.reload();
   }
 
-  // OLD FUNCTION
-  // function modal(id, type) {
-  //   var url = "<?= site_url('user/modal') ?>";
-  //   $.ajax({
-  //     type: "POST",
-  //     url: url,
-  //     data: {
-  //       username: id,
-  //       type: type
-  //     },
-  //     success: function(res) {
-  //       console.log(res);
-  //       $("#whole_modal_id").html(res).show();
-  //       $("#modal_content_id").modal("show");
-  //     }
-  //   });
-  // }
-
   function modal(id, type) {
-    var url = "<?= site_url('user/modal') ?>";
+    var url = "<?= site_url('ptk/modal') ?>";
     $.ajax({
       type: "POST",
       url: url,
       data: {
-        username: id,
+        id: id,
         type: type
       },
       success: function(res) {

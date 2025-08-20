@@ -17,7 +17,7 @@
       <div class="d-flex me-3 ms-2">
         <div class="chart-text me-2">
           <h6 class="mb-0"><small>Pagu Anggaran</small></h6>
-          <h4 class="mt-0 text-info"><?= to_rp($data['anggaran']) ?></h4>
+          <h4 class="mt-0 text-info"><.?= to_rp($data['anggaran']) ?></h4>
         </div>
         <div class="spark-chart">
           <div id="monthchart"></div>
@@ -26,7 +26,7 @@
       <div class="d-flex ms-2">
         <div class="chart-text me-2">
           <h6 class="mb-0"><small>Realisasi</small></h6>
-          <h4 class="mt-0 text-primary"><?= to_rp($data['real_keu']) ?></h4>
+          <h4 class="mt-0 text-primary"><.?= to_rp($data['real_keu']) ?></h4>
         </div>
         <div class="spark-chart">
           <div id="lastmonthchart"></div>
@@ -35,7 +35,7 @@
       <div class="d-flex ms-2">
         <div class="chart-text me-2">
           <h6 class="mb-0"><small>Fisik</small></h6>
-          <h4 class="mt-0 text-success"><?= to_rp($data['real_fisik'], false) ?>%</h4>
+          <h4 class="mt-0 text-success"><.?= to_rp($data['real_fisik'], false) ?>%</h4>
         </div>
         <div class="spark-chart">
           <div id="nextmonthchart"></div>
@@ -204,7 +204,7 @@
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
           let id_entry = cellData;
-          let html_aksi = '<button type="button" class="btn btn-sm btn-light-info">' +
+          let html_aksi = '<button type="button" class="btn btn-sm btn-light-info" onclick="modal(`' + id_entry + '`, `delete_arsip_tpp`)" href="#">' +
             'Batalkan' +
             '</button>';
           $(td).html('<div class="text-center">' + html_aksi + '</div>');
@@ -236,5 +236,25 @@
   /* fungsi untuk reload datatable ajax */
   function reload_table() {
     tabel_arsip_tpp.ajax.reload();
+  }
+
+  function modal(id, type) {
+    var url = "<?= site_url('dashboard/modal') ?>";
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: {
+        id: id,
+        type: type
+      },
+      success: function(res) {
+        if (res.status) {
+          $("#modal_content_id").html(res.html).show();
+          $("#whole_modal_id").modal("show");
+        } else {
+          toaster('info', 'Unknown error on modal calls.\n- ' + res.message);
+        }
+      }
+    });
   }
 </script>

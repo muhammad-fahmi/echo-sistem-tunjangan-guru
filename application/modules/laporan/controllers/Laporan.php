@@ -9,6 +9,7 @@ class Laporan extends MY_Controller
     // lakukan proses verifikasi user disini
     $priv = $this->session->userdata('kewenangan');
     $log = $this->session->userdata('logged_in');
+    $this->session->set_userdata('menu', 'laporan');
     if ($log != true) {
       redirect(site_url('login'));
     } else {
@@ -19,6 +20,7 @@ class Laporan extends MY_Controller
   public function tpp_3_bln()
   {
     // lakukan proses init halaman
+    $this->session->set_userdata('menu', 'tpp_3_bulan');
     $sent_data = array();
     $data = array(
       'page_title' => "TPP 3 Bulan",
@@ -351,25 +353,26 @@ class Laporan extends MY_Controller
     $pdf->Output('laporan_tunjangan_produktifitas_guru_triwulan_IV_2023.pdf', 'I');
   }
 
-  public function gen_table_tpp_3bln(){
+  public function gen_table_tpp_3bln()
+  {
     $kode_ukerja = $this->input->post("kode_ukerja");
     $triwulan = $this->input->post("triwulan");
     $tahun = $this->input->post("tahun");
 
     //get list pegawai triwulan
-    $list_pegawai = $this->get_tpp_pegawai_triwulan($kode_ukerja,$triwulan,$tahun);
+    $list_pegawai = $this->get_tpp_pegawai_triwulan($kode_ukerja, $triwulan, $tahun);
     $tabel = "";
     $no = 1;
     foreach ($list_pegawai as $key => $value) {
       $display_gol = ($value["kode_status"] == 3) ? $value["ket_gol_pppk"] : $value["ket_gol"];
       $pph_21 = 0;
-      if (($value["kode_gol"] >= 41 || strpos(strtoupper($value["ket_jab"]),"PENGAWAS SEKOLAH MADYA") !== false) && $value["kode_status"] < 3){ // guru ahli madya PNS
+      if (($value["kode_gol"] >= 41 || strpos(strtoupper($value["ket_jab"]), "PENGAWAS SEKOLAH MADYA") !== false) && $value["kode_status"] < 3) { // guru ahli madya PNS
         $pph_21 = 15;
-      }elseif($value["kode_gol"] >= 33 && $value["kode_gol"] <= 34 && $value["kode_status"] < 3){ // guru ahli muda PNS
+      } elseif ($value["kode_gol"] >= 33 && $value["kode_gol"] <= 34 && $value["kode_status"] < 3) { // guru ahli muda PNS
         $pph_21 = 5;
-      }elseif($value["kode_gol"] >= 31 && $value["kode_gol"] <= 32 && $value["kode_status"] < 3 ){ // guru ahli pertama PNS
+      } elseif ($value["kode_gol"] >= 31 && $value["kode_gol"] <= 32 && $value["kode_status"] < 3) { // guru ahli pertama PNS
         $pph_21 = 5;
-      }elseif(($value["kode_gol"] < 31 && $value["kode_status"] < 3) || $value["kode_status"] == 3){ // guru PNS gol II 
+      } elseif (($value["kode_gol"] < 31 && $value["kode_status"] < 3) || $value["kode_status"] == 3) { // guru PNS gol II 
         $pph_21 = 0;
       }
 
@@ -392,7 +395,7 @@ class Laporan extends MY_Controller
 
       //hitung infaq
       $infaq = 0;
-      if ($value["kode_agama"] == 1){
+      if ($value["kode_agama"] == 1) {
         $infaq = $tpp_setelah_pajak * 2.5 / 100;
       }
 
@@ -403,7 +406,7 @@ class Laporan extends MY_Controller
           <td><span style="font-size:12;"><b>$value[nama]<b></span><br><span class="badge text-bg-secondary">$value[nip]</span></td>
           <td>$display_gol</td>
           <td>$value["ket_jab"] $value["ket_ukerja"]</td>
-          <td align="right">' . konversi_counting($value["besaran_tpp"]). '</td>
+          <td align="right">' . konversi_counting($value["besaran_tpp"]) . '</td>
           <td align="right">3</td>
           <td align="right">' . konversi_counting($value["total_tpp_guru"]) . '</td>
           <td align="right">' . $value[""] . '</td>
@@ -417,51 +420,52 @@ class Laporan extends MY_Controller
     echo $tabel;
   }
 
-  public function get_tpp_pegawai_triwulan($unit_kerja,$triwulan,$tahun){
+  public function get_tpp_pegawai_triwulan($unit_kerja, $triwulan, $tahun)
+  {
     $arr_bln = [];
     switch ($triwulan) {
       case 1:
-        $arr_bln = [1,2,3];
+        $arr_bln = [1, 2, 3];
         break;
       case 2:
-        $arr_bln = [4,5,6];
+        $arr_bln = [4, 5, 6];
         break;
       case 3:
-        $arr_bln = [7,8,9];
+        $arr_bln = [7, 8, 9];
         break;
       case 4:
-        $arr_bln = [10,11,12];
-        break;    
+        $arr_bln = [10, 11, 12];
+        break;
       default:
-        $arr_bln = [1,2,3];
+        $arr_bln = [1, 2, 3];
         break;
     }
-    $bayar_full = $this->is_bayar_full($triwulan,$tahun);
+    $bayar_full = $this->is_bayar_full($triwulan, $tahun);
     $con["kode_ukerja"] = $unit_kerja;
     $con["filter_thn"] = $tahun;
     $list_final = [];
     //iterasi per periode waktu    
-    for($i = 0;$i < 3;$i++){ 
-           
+    for ($i = 0; $i < 3; $i++) {
+
       //ambil bulan sesuai triwulan
       $con["filter_bln"] = $arr_bln[$i];
       //get data tpp per bulan
       $list_tpp_bulan = $this->progurinda_lib->get_data_tpp($con);
-      if ($i == 0){
+      if ($i == 0) {
         $list_final = $list_tpp_bulan;
         $counter = 0;
         foreach ($list_final as $key => $value) {
           $list_final[$counter]["jml_bln"] = 1;
           $counter++;
         }
-      }else{
+      } else {
         //iterasi list_tpp bulan
         foreach ($list_tpp_bulan as $key => $value) {
           //cek apakah nip sudah masuk ke list_final
           $exists = false;
           $idx_check = 0;
           foreach ($list_final as $key_f => $val_fnl) {
-            if ($val_fnl["nip"] == $value["nip"]){
+            if ($val_fnl["nip"] == $value["nip"]) {
               //sudah ada yang sama
               $exists = true;
               break;
@@ -470,15 +474,15 @@ class Laporan extends MY_Controller
           }
           //cek apakah nip sudah ada di list final jika belum tambahkan ke array list final
           //jika sudah ada sebelumnya
-          if ($exists){
+          if ($exists) {
             //jika sudah tambahkan nilai total capaian (total_tpp_guru)
             $list_final[$idx_check]["total_tpp_guru"] += $value["total_tpp_guru"];
             $list_final[$idx_check]["jml_bln"] += 1;
-          }else{
+          } else {
             //tambahkan dengan index selanjutnya
-            $list_final[$idx_check+1] = $value;
-            $list_final[$idx_check+1]["jml_bln"] = 1;
-          }           
+            $list_final[$idx_check + 1] = $value;
+            $list_final[$idx_check + 1]["jml_bln"] = 1;
+          }
         }
       }
     }
@@ -486,20 +490,22 @@ class Laporan extends MY_Controller
     return $list_final;
   }
 
-  public function is_bayar_full($triwulan,$tahun){
-    if ($triwulan == 1 && $tahun == 2024){
+  public function is_bayar_full($triwulan, $tahun)
+  {
+    if ($triwulan == 1 && $tahun == 2024) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }
 
-  public function get_persen_pajak($data){
-    if($data["besaran_tpp"] == 1300000){
+  public function get_persen_pajak($data)
+  {
+    if ($data["besaran_tpp"] == 1300000) {
       $persen_pajak = 15;
-    } elseif ($data["besaran_tpp"] < 1300000 && $data["besaran_tpp"] >= 1100000){
+    } elseif ($data["besaran_tpp"] < 1300000 && $data["besaran_tpp"] >= 1100000) {
       $persen_pajak = 5;
-    }else{
+    } else {
       $persen_pajak = 0;
     }
     return $persen_pajak;
@@ -577,7 +583,7 @@ class Laporan extends MY_Controller
     $data_ukerja = $cek_ukerja->row_array();
 
     //get data list tpp per triwulan
-    $list_tpp_pegawai = $this->get_tpp_pegawai_triwulan($unit_kerja,$triwulan,$tahun);
+    $list_tpp_pegawai = $this->get_tpp_pegawai_triwulan($unit_kerja, $triwulan, $tahun);
 
 
     // create new PDF document
@@ -664,20 +670,20 @@ class Laporan extends MY_Controller
       '<thead>' .
       '<tr>' .
       '<th style="' . $style_header . $tebel . $border_thin . $width_num . '">No.</th>' .
-      '<th style="' . $style_header . $tebel . $border_thin . $w100.'font-size:10px">NAMA</th>' .
-      '<th style="' . $style_header . $tebel . $border_thin . $w100.'font-size:10px">NIP</th>' .
-      '<th style="' . $style_header . $tebel . $border_thin . $w50.'font-size:10px">GOL</th>' .
-      '<th style="' . $style_header . $tebel . $border_thin . $w100.'font-size:10px">UNIT KERJA</th>' .
-      '<th style="' . $style_header . $tebel . $border_thin . $w60.'font-size:10px">(TPP) 1 BULAN</th>' .
-      '<th style="' . $style_header . $tebel . $border_thin . $w60.'font-size:10px">JUMLAH BULAN</th>' .
-      '<th style="' . $style_header . $tebel . $border_thin . $w70.'font-size:10px">JUMLAH KOTOR</th>' .
-      '<th style="' . $style_header . $tebel . $border_thin . $w70.'font-size:10px">JUMLAH PPh 5%</th>' .
-      '<th style="' . $style_header . $tebel . $border_thin . $w70.'font-size:10px">JUMLAH PPh 15%</th>' .
-      '<th style="' . $style_header . $tebel . $border_thin . $w70.'font-size:10px">JUMLAH INFAQ 2,5%</th>' .
-      '<th style="' . $style_header . $tebel . $border_thin . $w70.'font-size:10px">JUMLAH BERSIH</th>' .
-      '<th style="' . $style_header . $tebel . $border_thin . $w60.'font-size:10px">NO. REKENING</th>' .
-      '<th style="' . $style_header . $tebel . $border_thin . $w60.'font-size:10px">NIK</th>' .
-      '<th style="' . $style_header . $tebel . $border_thin . $w70.'font-size:10px">NPWP</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . $w100 . 'font-size:10px">NAMA</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . $w100 . 'font-size:10px">NIP</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . $w50 . 'font-size:10px">GOL</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . $w100 . 'font-size:10px">UNIT KERJA</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . $w60 . 'font-size:10px">(TPP) 1 BULAN</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . $w60 . 'font-size:10px">JUMLAH BULAN</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . $w70 . 'font-size:10px">JUMLAH KOTOR</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . $w70 . 'font-size:10px">JUMLAH PPh 5%</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . $w70 . 'font-size:10px">JUMLAH PPh 15%</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . $w70 . 'font-size:10px">JUMLAH INFAQ 2,5%</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . $w70 . 'font-size:10px">JUMLAH BERSIH</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . $w60 . 'font-size:10px">NO. REKENING</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . $w60 . 'font-size:10px">NIK</th>' .
+      '<th style="' . $style_header . $tebel . $border_thin . $w70 . 'font-size:10px">NPWP</th>' .
       '</tr>' .
       '</thead>' .
       '<tbody>';
@@ -694,19 +700,19 @@ class Laporan extends MY_Controller
     $html_content = '';
     $no = 1;
     foreach ($list_tpp_pegawai as $k => $val) {
-      if($kode_status < 3){
+      if ($kode_status < 3) {
         $display_gol = $val["ket_gol"];
-      }else{
+      } else {
         $display_gol = $val["ket_gol_pppk"];
       }
       $pph_21 = 0;
-      if ($val["kode_gol"] >= 41 && $val["kode_status"] < 3){ // guru ahli madya PNS
+      if ($val["kode_gol"] >= 41 && $val["kode_status"] < 3) { // guru ahli madya PNS
         $pph_21 = 15;
-      }elseif($val["kode_gol"] >= 33 && $val["kode_gol"] <= 34 && $val["kode_status"] < 3){ // guru ahli muda PNS
+      } elseif ($val["kode_gol"] >= 33 && $val["kode_gol"] <= 34 && $val["kode_status"] < 3) { // guru ahli muda PNS
         $pph_21 = 5;
-      }elseif($val["kode_gol"] >= 31 && $val["kode_gol"] <= 32 && $val["kode_status"] < 3 ){ // guru ahli pertama PNS
+      } elseif ($val["kode_gol"] >= 31 && $val["kode_gol"] <= 32 && $val["kode_status"] < 3) { // guru ahli pertama PNS
         $pph_21 = 5;
-      }elseif(($val["kode_gol"] < 31 && $val["kode_status"] < 3) || $val["kode_status"] == 3){ // guru PNS gol II 
+      } elseif (($val["kode_gol"] < 31 && $val["kode_status"] < 3) || $val["kode_status"] == 3) { // guru PNS gol II 
         $pph_21 = 0;
       }
 
@@ -729,29 +735,29 @@ class Laporan extends MY_Controller
 
       //hitung infaq
       $infaq = 0;
-      if ($val["kode_agama"] == 1){
+      if ($val["kode_agama"] == 1) {
         $infaq = $tpp_setelah_pajak * 2.5 / 100;
       }
 
       $tpp_bersih = $tpp_setelah_pajak - $infaq;
 
       $html_content .= '<tr>' .
-      '<td style="' . $style_content_3 . $border_thin . $width_num . '">'.$no.'</td>' .
-      '<td style="' . $style_content_3 . $border_thin . $w100.'">'.$val["nama"].'</td>' .
-      '<td style="' . $style_content_3 . $border_thin . $w100.'">'.$val["nip"].'</td>' .
-      '<td style="' . $style_content_3 . $border_thin . $w50.'">'.$display_gol.'</td>' .
-      '<td style="' . $style_content_3 . $border_thin . $w100.'">'.$val["ket_jab"]."<br>".$val["ket_ukerja"].'</td>' .
-      '<td style="' . $style_content_3 . $border_thin . $w60.'">'.konversi_counting($val["besaran_tpp"]).'</td>' .
-      '<td style="' . $style_content_3 . $border_thin . $w60.'">'.$val["jml_bln"].'</td>' .
-      '<td style="' . $style_content_3 . $border_thin . $w70.'">'.konversi_counting($val["total_tpp_guru"]).'</td>' .
-      '<td style="' . $style_content_3 . $border_thin . $w70.'">'.konversi_counting($pph_5_persen).'</td>' .
-      '<td style="' . $style_content_3 . $border_thin . $w70.'">'.konversi_counting($pph_15_persen).'</td>' .
-      '<td style="' . $style_content_3 . $border_thin . $w70.'">'.konversi_counting($infaq).'</td>' .
-      '<td style="' . $style_content_3 . $border_thin . $w70.'">'.konversi_counting($tpp_bersih).'</td>' .
-      '<td style="' . $style_content_3 . $border_thin . $w60.'">no-rek</td>' .
-      '<td style="' . $style_content_3 . $border_thin . $w60.'">nik</td>' .
-      '<td style="' . $style_content_3 . $border_thin . $w70.'">npwp</td>' .
-      '</tr>';
+        '<td style="' . $style_content_3 . $border_thin . $width_num . '">' . $no . '</td>' .
+        '<td style="' . $style_content_3 . $border_thin . $w100 . '">' . $val["nama"] . '</td>' .
+        '<td style="' . $style_content_3 . $border_thin . $w100 . '">' . $val["nip"] . '</td>' .
+        '<td style="' . $style_content_3 . $border_thin . $w50 . '">' . $display_gol . '</td>' .
+        '<td style="' . $style_content_3 . $border_thin . $w100 . '">' . $val["ket_jab"] . "<br>" . $val["ket_ukerja"] . '</td>' .
+        '<td style="' . $style_content_3 . $border_thin . $w60 . '">' . konversi_counting($val["besaran_tpp"]) . '</td>' .
+        '<td style="' . $style_content_3 . $border_thin . $w60 . '">' . $val["jml_bln"] . '</td>' .
+        '<td style="' . $style_content_3 . $border_thin . $w70 . '">' . konversi_counting($val["total_tpp_guru"]) . '</td>' .
+        '<td style="' . $style_content_3 . $border_thin . $w70 . '">' . konversi_counting($pph_5_persen) . '</td>' .
+        '<td style="' . $style_content_3 . $border_thin . $w70 . '">' . konversi_counting($pph_15_persen) . '</td>' .
+        '<td style="' . $style_content_3 . $border_thin . $w70 . '">' . konversi_counting($infaq) . '</td>' .
+        '<td style="' . $style_content_3 . $border_thin . $w70 . '">' . konversi_counting($tpp_bersih) . '</td>' .
+        '<td style="' . $style_content_3 . $border_thin . $w60 . '">no-rek</td>' .
+        '<td style="' . $style_content_3 . $border_thin . $w60 . '">nik</td>' .
+        '<td style="' . $style_content_3 . $border_thin . $w70 . '">npwp</td>' .
+        '</tr>';
       $no++;
     }
 
@@ -790,7 +796,7 @@ class Laporan extends MY_Controller
     /// | OUTPUT TO THE PAGE
     /// |----------------------------------------
     //Close and output PDF document
-    $pdf->Output('laporan_tpp_guru_triwulan_' . $triwulanTitle . '_' . $tahun . '-'.$data_ukerja["ket_ukerja"].'.pdf', 'I');
+    $pdf->Output('laporan_tpp_guru_triwulan_' . $triwulanTitle . '_' . $tahun . '-' . $data_ukerja["ket_ukerja"] . '.pdf', 'I');
   }
 
   public function cetak_rekapitulasi_mengajar($unit_kerja, $triwulan, $tahun)

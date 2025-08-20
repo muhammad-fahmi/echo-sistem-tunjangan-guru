@@ -6,20 +6,21 @@ class Ganti_password extends MY_Controller
   public function __construct()
   {
     parent::__construct();
-    $log = $this->session->userdata('logged_in');
-    $user = $this->session->userdata('username');
-    $kewenangan = $this->session->userdata('kewenangan');
-    if ($log != true || !menu_auth_sipedal($user, 'ganti_password', $kewenangan)) {
-      redirect(site_url('login'));
-    } else {
-      $this->load->model('mdl_ganti_password', 'mdl_gp');
+
+    $is_ajax = $this->input->is_ajax_request();
+    if (!$is_ajax) {
+      $this->session->set_userdata('menu', 'ganti_password');
+      if (!is_logged_in()) {
+        redirect(site_url('login'));
+      }
     }
+
+    $this->load->model('mdl_ganti_password', 'mdl_gp');
   }
 
   // fungsi untuk tampilan halaman manajemen user
   public function index()
   {
-    $this->session->set_userdata('menu', 'ganti_password');
     $data = array(
       'page_title' => "Ganti Password",
       'module' => "ganti_password",
@@ -30,15 +31,23 @@ class Ganti_password extends MY_Controller
 
   public function action()
   {
+    if (!is_logged_in()) return output_json([
+      'status' => false,
+      'message' => "Maaf, tidak bisa melakukan ganti password apabila belum login."
+    ]);
+
     $old = $this->input->post('password_old');
     $new = $this->input->post('password_new');
     $salt = micin();
 
-    $username = $this->session->userdata('username');
+    $username = $this->session->userdata('id_user');
     /// |----------------------------------------
     /// | CEK APAKAH USER AKTIF
     /// |----------------------------------------
-    $data_user = $this->db->get_where('m_user', "username = '$username' AND aktif = 'Y'")->row_array();
+    $data_user = $this->db->get_where(
+      'progurinda_m_user',
+      "id_user = '$username' AND aktif = 'Y'"
+    )->row_array();
     if (!isset_nn_nes($data_user)) {
       return $this->output
         ->set_content_type('application/json')
@@ -65,13 +74,13 @@ class Ganti_password extends MY_Controller
       /// | UPDATE DATA PASSWORD
       /// |----------------------------------------
       $where = [
-        'username' => $username
+        'id_user' => $username
       ];
       $data = [
         'password' => encrypt_pwd($new),
         'salt' => $salt
       ];
-      $this->db->update('m_user', $data, $where);
+      $this->db->update('progurinda_m_user', $data, $where);
     } catch (\Throwable $th) {
       return $this->output
         ->set_content_type('application/json')

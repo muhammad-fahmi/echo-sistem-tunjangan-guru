@@ -24,7 +24,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 |
 */
 $config['base_url'] = CUSTOMBASEURL;
-//$config['base_url'] = "http://sipekakrenta.jh-beon.cloud/";
 
 /*
 |--------------------------------------------------------------------------
@@ -379,11 +378,11 @@ $config['encryption_key'] = '';
 |
 */
 $config['sess_driver'] = 'files';
-$config['sess_cookie_name'] = 'pekaklingsir';
+$config['sess_cookie_name'] = 'sess_progurinda';
 $config['sess_expiration'] = 360000;
 $config['sess_save_path'] = sys_get_temp_dir();
 $config['sess_match_ip'] = FALSE;
-$config['sess_time_to_update'] = 300;
+$config['sess_time_to_update'] = 3600;
 $config['sess_regenerate_destroy'] = FALSE;
 
 /*
@@ -536,8 +535,9 @@ $config['modules_locations'] = array(
 /// |----------------------------------------------------------------------
 /// | PROJECT CONFIG
 /// |----------------------------------------------------------------------
-$config['upload_path'] = $_SERVER['DOCUMENT_ROOT'] . '/sipekakrenta/upload/';
-$config['efile_path'] = $_SERVER['DOCUMENT_ROOT'] . "/sipekakrenta_efile/";
+$config['upload_path'] = $_SERVER['DOCUMENT_ROOT'] . '/progurinda-files/upload/';
+$config['template_path'] = $_SERVER['DOCUMENT_ROOT'] . '/progurinda-files/template/';
+$config['efile_path'] = $_SERVER['DOCUMENT_ROOT'] . '/progurinda-files/efile/';
 
 /// |----------------------------------------------------------------------
 /// | SERVER CONFIG

@@ -9,6 +9,7 @@ class User extends MY_Controller
     $log = $this->session->userdata('logged_in');
     $user = $this->session->userdata('username');
     $kewenangan = $this->session->userdata('kewenangan');
+    $this->session->set_userdata('menu', 'user');
     if ($log != true) {
       redirect(site_url('login'));
     } else {
@@ -45,14 +46,11 @@ class User extends MY_Controller
   public function index()
   {
     $this->session->set_userdata('menu', 'user');
-    $sent_data = array(
-      'm_user' => $this->user->get('m_user'),
-    );
+    
     $data = array(
       'page_title' => "Manajemen User",
       'module' => "user",
-      'view' => "vw_user",
-      'data' => $sent_data
+      'view' => "vw_user"
     );
     echo Modules::run('layout/backend', $data);
   }

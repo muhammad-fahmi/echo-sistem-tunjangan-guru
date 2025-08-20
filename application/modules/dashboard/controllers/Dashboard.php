@@ -5,6 +5,7 @@ class Dashboard extends MY_Controller
   public function __construct()
   {
     parent::__construct();
+    $this->session->set_userdata('menu', 'dashboard');
     $priv = $this->session->userdata('kewenangan');
     $log = $this->session->userdata('logged_in');
     if ($log != true) {
@@ -86,66 +87,66 @@ class Dashboard extends MY_Controller
     /// | COMMANDS
     /// |----------------------------------------
     switch ($type) {
-      case 'tambah_mapel_guru': {
-        /// |----------------------------------------
-        /// | INSERT DATA
-        /// |----------------------------------------
-        $dataset = [
-          'nip' => '',
-          'nama_lengkap' => '',
-          'ket_jab' => '',
-          'unit_kerja' => '',
-          'mapel' => '',
-          'id' => $id
-        ];
-        $data = [
-          'modal_title' => "Tambah Mapel Guru",
-          'data' => $dataset,
-        ];
-        $res = [
-          'status' => true,
-          'message' => "Modal Tambah Mapel Guru",
-          'html' => $this->load->view('vw_mapel_guru_modal_save', $data, true)
-        ];
-        break;
-      }
-      case 'edit_mapel_guru': {
-        /// |----------------------------------------
-        /// | EDIT DATA
-        /// |----------------------------------------
-        $dataset = $this->mmpg->get('v_progurinda_mapel', "id = '$id'");
-        $data = [
-          'modal_title' => "Edit Mapel Guru",
-          'data' => $dataset,
-        ];
-        $res = [
-          'status' => true,
-          'message' => "Modal Edit Mapel Guru",
-          'html' => $this->load->view('vw_mapel_guru_modal_save', $data, true)
-        ];
-        break;
-      }
-      case 'delete_mapel_guru': {
-        /// |----------------------------------------
-        /// | DELETE DATA
-        /// |----------------------------------------
-        $dataset = $this->mmpg->get('v_progurinda_mapel', "id = '$id'");
-        if (isset_nn_nes($dataset)) {
-          $data = [
-            'modal_title' => "Hapus Mapel Guru",
-            'data' => $dataset,
-          ];
-          $res = [
-            'status' => true,
-            'message' => "Modal Hapus Mapel Guru",
-            'html' => $this->load->view('vw_mapel_guru_modal_delete', $data, true)
-          ];
+        // case 'tambah_mapel_guru': {
+        //   /// |----------------------------------------
+        //   /// | INSERT DATA
+        //   /// |----------------------------------------
+        //   $dataset = [
+        //     'nip' => '',
+        //     'nama_lengkap' => '',
+        //     'ket_jab' => '',
+        //     'unit_kerja' => '',
+        //     'mapel' => '',
+        //     'id' => $id
+        //   ];
+        //   $data = [
+        //     'modal_title' => "Tambah Mapel Guru",
+        //     'data' => $dataset,
+        //   ];
+        //   $res = [
+        //     'status' => true,
+        //     'message' => "Modal Tambah Mapel Guru",
+        //     'html' => $this->load->view('vw_mapel_guru_modal_save', $data, true)
+        //   ];
+        //   break;
+        // }
+        // case 'edit_mapel_guru': {
+        //   /// |----------------------------------------
+        //   /// | EDIT DATA
+        //   /// |----------------------------------------
+        //   $dataset = $this->mmpg->get('v_progurinda_mapel', "id = '$id'");
+        //   $data = [
+        //     'modal_title' => "Edit Mapel Guru",
+        //     'data' => $dataset,
+        //   ];
+        //   $res = [
+        //     'status' => true,
+        //     'message' => "Modal Edit Mapel Guru",
+        //     'html' => $this->load->view('vw_mapel_guru_modal_save', $data, true)
+        //   ];
+        //   break;
+        // }
+      case 'delete_arsip_tpp': {
+          /// |----------------------------------------
+          /// | DELETE DATA
+          /// |----------------------------------------
+          $dataset = $this->mdbo->get('v_progurinda_jurnal_mengajar', "id = '$id'");
+          if (isset_nn_nes($dataset)) {
+            $data = [
+              'modal_title' => "Batalkan Arsip TPP",
+              'data' => $dataset,
+            ];
+            $res = [
+              'status' => true,
+              'message' => "Modal Batalkan Arsip TPP",
+              'html' => $this->load->view('vw_arsip_tpp_modal_delete', $data, true)
+            ];
+          }
+          break;
         }
-        break; 
-      }
       default: {
-        break;
-      }
+          break;
+        }
     }
 
     return $this->output
@@ -153,7 +154,8 @@ class Dashboard extends MY_Controller
       ->set_output(json_encode($res));
   }
 
-  public function get_data_list(){
+  public function get_data_list()
+  {
     $dummy_data = array(
       [
         "id" => "0",

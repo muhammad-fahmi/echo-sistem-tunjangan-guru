@@ -21,6 +21,13 @@
   <link rel="stylesheet" href="<?= base_url("theme/dist/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css"); ?>">
   <link rel="stylesheet" href="<?= base_url("theme/dist/css/style.min.css"); ?>" rel="stylesheet" />
   <link rel="stylesheet" href="<?= base_url('assets_old/flatpickr/flatpickr.min.css'); ?>">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="<?= base_url('theme/assets/pangkalan_data/leaflet/leaflet.css'); ?>">
+
+  <!-- Leaflet Control Geocoder CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+
   <link rel="stylesheet" href="<?= base_url("theme/overrider/style.css?v=") . em_date('YmdHis'); ?>" rel="stylesheet" />
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -52,7 +59,7 @@
   <!--Wave Effects -->
   <script src="<?= base_url("theme/dist/js/waves.js"); ?>"></script>
   <!--Menu sidebar -->
-  <script src="<?= base_url("theme/dist/js/sidebarmenu.js"); ?>"></script>
+  <script src="<?= base_url("theme/dist/js/sidebarmenu.js?v=2"); ?>"></script>
   <!--Custom JavaScript -->
   <script src="<?= base_url("theme/dist/js/feather.min.js"); ?>"></script>
   <script src="<?= base_url("theme/dist/js/custom.min.js"); ?>"></script>
@@ -71,6 +78,13 @@
   <!-- select2 lib -->
   <script src="<?= base_url("theme/dist/libs/select2/dist/js/select2.full.min.js"); ?>"></script>
   <script src="<?= base_url("theme/dist/libs/select2/dist/js/select2.min.js"); ?>"></script>
+  <script src="<?php echo base_url("theme/assets/pangkalan_data/notifyjs/notify.min.js"); ?>"></script>
+
+  <!-- Leaflet JS -->
+  <script type="text/javascript" src="<?= base_url('theme/assets/pangkalan_data/leaflet/leaflet.js'); ?>"></script>
+
+  <!-- Leaflet Control Geocoder JS -->
+  <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
   <script type="text/javascript" src="<?= base_url("theme/overrider/script.js?v=") . em_date('YmdHis'); ?>"></script>
 </head>
@@ -103,7 +117,7 @@
           <!-- ============================================================== -->
           <!-- Logo -->
           <!-- ============================================================== -->
-          <a class="navbar-brand" href="<?= site_url(); ?>">
+          <a class="navbar-brand" href="<?= base_url('portal'); ?>">
             <!-- Logo icon -->
             <b class="logo-icon">
               <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
@@ -117,9 +131,9 @@
             <span class="logo-text">
               <h3 style="color:white;font-weight:600">PROGURINDA</h3>
               <!-- dark Logo text -->
-              <!-- <img src="<?= base_url("theme/assets/images/logo-text.png") ?>" alt="homepage" class="dark-logo" /> -->
+              <!-- <img src="<.?= base_url("theme/assets/images/logo-text.png") ?>" alt="homepage" class="dark-logo" /> -->
               <!-- Light Logo text -->
-              <!-- <img src="<?= base_url("theme/assets/images/logo-light-text.png") ?>" class="light-logo" alt="homepage" /> -->
+              <!-- <img src="<.?= base_url("theme/assets/images/logo-light-text.png") ?>" class="light-logo" alt="homepage" /> -->
             </span>
           </a>
           <!-- ============================================================== -->
@@ -157,7 +171,7 @@
             <!-- ============================================================== -->
             <!-- <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle waves-effect waves-dark" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <img src="<?= base_url("theme/assets/images/users/1.jpg") ?>" alt="user" width="30" class="profile-pic rounded-circle" />
+                <img src="<.?= base_url("theme/assets/images/users/1.jpg") ?>" alt="user" width="30" class="profile-pic rounded-circle" />
               </a>
               <div class="
                     dropdown-menu dropdown-menu-end
@@ -175,7 +189,7 @@
                       mb-2
                     ">
                   <div class="">
-                    <img src="<?= base_url("theme/assets/images/users/1.jpg") ?>" alt="user" class="rounded-circle" width="60" />
+                    <img src="<.?= base_url("theme/assets/images/users/1.jpg") ?>" alt="user" class="rounded-circle" width="60" />
                   </div>
                   <div class="ms-2">
                     <h4 class="mb-0 text-white">Steave Jobs</h4>
@@ -184,7 +198,7 @@
                 </div>
                 <a class="dropdown-item" href="#"><i data-feather="user" class="feather-sm text-info me-1 ms-1"></i>
                   My Profile</a>
-               
+
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#"><i data-feather="settings" class="feather-sm text-warning me-1 ms-1"></i>
                   Account Setting</a>
@@ -192,7 +206,7 @@
                 <a class="dropdown-item" href="#"><i data-feather="log-out" class="feather-sm text-danger me-1 ms-1"></i>
                   Logout</a>
                 <div class="dropdown-divider"></div>
-                
+
               </div>
             </li> -->
           </ul>
@@ -210,12 +224,14 @@
       <div class="scroll-sidebar">
         <!-- User profile -->
         <div class="user-profile position-relative" style="
-              background: url(<?= base_url("theme/assets/images/background/user-info.jpg"); ?>)
-                no-repeat;
+              background: url(<?= base_url("theme/assets/images/background/pangkalan-data-banner.jpg"); ?>)
+                no-repeat; background-size: cover;
             ">
           <!-- User profile image -->
           <div class="profile-img">
-            <img src="<?= base_url("theme/assets/images/users/profile.png") ?>" alt="user" class="w-100" />
+            <div class="profil_img_container sm">
+              <img id="sidebar_profile_img" src="<?= site_url('pdt_profile/image/'); ?>" onerror="this.onerror=null; this.src='<?= base_url('theme/assets/images/logo/logo_tut_wuri_handayani.png') ?>';" alt="user" class="w-100" style="border-radius: 50%;">
+            </div>
           </div>
           <!-- User profile text-->
           <div class="profile-text pt-1 dropdown">
@@ -228,19 +244,19 @@
                   position-relative
                 " id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><?= $this->session->userdata("username"); ?></a>
             <div class="dropdown-menu animated flipInY" aria-labelledby="dropdownMenuLink">
-              <a class="dropdown-item" href="#"><i data-feather="user" class="feather-sm text-info me-1 ms-1"></i>
+              <a class="dropdown-item" href="<?= site_url('pdt_profile') ?>"><i data-feather="user" class="feather-sm text-info me-1 ms-1"></i>
                 My Profile</a>
               <!-- <a class="dropdown-item" href="#"><i data-feather="mail" class="feather-sm text-success me-1 ms-1"></i>
                 Inbox</a> -->
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#"><i data-feather="settings" class="feather-sm text-warning me-1 ms-1"></i>
+              <a class="dropdown-item" href="<?= site_url('pdt_profile') ?>"><i data-feather="settings" class="feather-sm text-warning me-1 ms-1"></i>
                 Account Setting</a>
               <div class="dropdown-divider"></div>
               <!-- <a class="dropdown-item" href="authentication-login3.html"><i data-feather="log-out" class="feather-sm text-danger me-1 ms-1"></i>
                 Logout</a> -->
               <div class="dropdown-divider"></div>
               <div class="ps-4 p-2">
-                <a href="#" class="btn d-block w-100 btn-info rounded-pill">View Profile</a>
+                <a href="<?= site_url('pdt_profile') ?>" class="btn d-block w-100 btn-info rounded-pill">View Profile</a>
               </div>
             </div>
           </div>
@@ -249,82 +265,92 @@
         <!-- Sidebar navigation-->
         <nav class="sidebar-nav">
           <ul id="sidebarnav">
-            <li class="nav-small-cap">
-              <i class="mdi mdi-dots-horizontal"></i>
-              <span class="hide-menu">Menu Sistem</span>
-            </li>
-            <?php if ($this->session->userdata("kewenangan") == "00") { ?>
-              <li class="sidebar-item">
-                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("dashboard"); ?>" aria-expanded="false"><i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Dashboard Monitoring</span></a>
+            <?php
+            $cur_menu = $this->session->userdata('menu');
+            if (substr($cur_menu, 0, 3) == 'PDT') {
+              /// |----------------------------------------
+              /// | LOAD MENU FROM DB USING HELPER
+              /// |----------------------------------------
+              menu_loader();
+            } else {
+              /// |----------------------------------------
+              /// | HARDCODED MENU
+              /// |----------------------------------------
+            ?>
+              <li class="nav-small-cap">
+                <i class="mdi mdi-dots-horizontal"></i>
+                <span class="hide-menu">Menu Sistem</span>
               </li>
-            <?php } ?>
+              <?php if ($this->session->userdata("kewenangan") == "00") { ?>
+                <li class="sidebar-item">
+                  <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("dashboard"); ?>" aria-expanded="false"><i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Dashboard Monitoring</span></a>
+                </li>
+              <?php } ?>
 
-            <li class="sidebar-item">
-              <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-settings"></i><span class="hide-menu">Setup</span></a>
-              <ul aria-expanded="false" class="collapse first-level">
-                <?php if ($this->session->userdata("kewenangan") == "00") { ?>
+              <li class="sidebar-item">
+                <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-settings"></i><span class="hide-menu">Setup</span></a>
+                <ul aria-expanded="false" class="collapse first-level">
+                  <?php if ($this->session->userdata("kewenangan") == "00") { ?>
+                    <li class="sidebar-item">
+                      <a href="<?= site_url("user"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
+                          User
+                        </span></a>
+                    </li>
+                  <?php } ?>
                   <li class="sidebar-item">
-                    <a href="<?= site_url("user"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
-                        User
+                    <a href="<?= site_url("mapel_guru"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
+                        Mapel Guru
                       </span></a>
                   </li>
-                <?php } ?>
-                <li class="sidebar-item">
-                  <a href="<?= site_url("mapel_guru"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
-                      Mapel Guru
-                    </span></a>
-                </li>
-                <li class="sidebar-item">
-                  <a href="<?= site_url("tugas_tambahan"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
-                      Tugas Tambahan Guru
-                    </span></a>
-                </li>
-              </ul>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-pencil"></i><span class="hide-menu">Input Data</span></a>
-              <ul aria-expanded="false" class="collapse first-level">
-                <li class="sidebar-item">
-                  <a href="<?= site_url("presensi"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
-                      Presensi Pegawai
-                    </span></a>
-                </li>
-                <li class="sidebar-item">
-                  <a href="<?= site_url("jurnal_mengajar"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
-                      Jurnal Mengajar
-                    </span></a>
-                </li>
-                <li class="sidebar-item">
-                  <a href="<?= site_url("pegawai_off"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
-                      Non Aktifkan Pegawai
-                    </span></a>
-                </li>
-              </ul>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("tpp_per_bulan") ?>" aria-expanded="false"><i class="mdi mdi-directions"></i><span class="hide-menu">List TPP Per Bulan</span></a>
-            </li>
-            <!-- <li class="sidebar-item">
-              <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("tpp_per_bulan") ?>" aria-expanded="false"><i class="mdi mdi-directions"></i><span class="hide-menu">Cuti</span></a>
-            </li> -->
-            <li class="sidebar-item">
-              <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-file-document"></i><span class="hide-menu">Laporan</span></a>
-              <ul aria-expanded="false" class="collapse first-level">
-                <li class="sidebar-item">
-                  <a href="<?= site_url("laporan/tpp_3_bln") ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
-                      TPP Per 3 Bulan
-                    </span></a>
-                </li>
-                <!-- <li class="sidebar-item">
-                  <a href="<?= site_url("laporan/jurnal_bulanan") ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
-                      Jurnal Mengajar
-                    </span></a>
-                </li> -->
-              </ul>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("login/logout") ?>" aria-expanded="false"><i class="mdi mdi-directions"></i><span class="hide-menu">Log Out</span></a>
-            </li>
+                  <li class="sidebar-item">
+                    <a href="<?= site_url("tugas_tambahan"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
+                        Tugas Tambahan Guru
+                      </span></a>
+                  </li>
+                </ul>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-pencil"></i><span class="hide-menu">Input Data</span></a>
+                <ul aria-expanded="false" class="collapse first-level">
+                  <li class="sidebar-item">
+                    <a href="<?= site_url("presensi"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
+                        Presensi Pegawai
+                      </span></a>
+                  </li>
+                  <li class="sidebar-item">
+                    <a href="<?= site_url("jurnal_mengajar"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
+                        Jurnal Mengajar
+                      </span></a>
+                  </li>
+                  <li class="sidebar-item">
+                    <a href="<?= site_url("pegawai_off"); ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
+                        Non Aktifkan Pegawai
+                      </span></a>
+                  </li>
+                </ul>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("tpp_per_bulan") ?>" aria-expanded="false"><i class="mdi mdi-directions"></i><span class="hide-menu">List TPP Per Bulan</span></a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-file-document"></i><span class="hide-menu">Laporan</span></a>
+                <ul aria-expanded="false" class="collapse first-level">
+                  <li class="sidebar-item">
+                    <a href="<?= site_url("laporan/tpp_3_bln") ?>" class="sidebar-link"><i class="mdi mdi-format-align-left"></i><span class="hide-menu">
+                        TPP Per 3 Bulan
+                      </span></a>
+                  </li>
+                </ul>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("portal") ?>" aria-expanded="false"><i class="fas fa-arrow-left"></i><span class="hide-menu">Back to portal</span></a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= site_url("login/logout") ?>" aria-expanded="false"><i class="mdi mdi-directions"></i><span class="hide-menu">Log Out</span></a>
+              </li>
+            <?php
+            }
+            ?>
           </ul>
         </nav>
         <!-- End Sidebar navigation -->
@@ -385,9 +411,9 @@
     </div>
   </div>
 
-  <div class="modal fade" id="bs-modal-lg" tabindex="-1" aria-labelledby="bs-modal-lg" data-bs-focus="false" data-bs-backdrop="static" aria-hidden="true">
+  <div class="modal fade" id="lgModal" tabindex="-1" aria-labelledby="bs-modal-lg" data-bs-focus="false" data-bs-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-      <div id="modal-content-lg" class="modal-content-lg">
+      <div id="lgModalContent" class="modal-content">
 
       </div>
       <!-- /.modal-content -->
@@ -396,5 +422,17 @@
   </div>
 
 </body>
+
+<script>
+  <?php
+  $flash_data = $this->session->userdata('flash_data');
+  if (check_var($flash_data)) {
+  ?>
+    show_notify('info', '<?= $flash_data ?>');
+  <?php
+    $this->session->set_userdata('flash_data', null);
+  }
+  ?>
+</script>
 
 </html>

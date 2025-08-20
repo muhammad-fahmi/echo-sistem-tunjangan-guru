@@ -90,7 +90,7 @@ class Config extends MY_Controller
   public function select2_user()
   {
     // ambil data post
-    $search = $this->input->post('search');
+    $search = post_safe('search');
     // kondisi where
     $where_search = ($search != '') ? "AND nama_lengkap LIKE '%$search%'" : "";
     // query searching
@@ -114,16 +114,59 @@ class Config extends MY_Controller
       ->set_output(json_encode($data));
   }
 
+  public function select2_sekolah()
+  {
+    //session userdata
+    $session_ukerja = $this->session->userdata("kode_unor");
+    $session_kewenangan = $this->session->userdata("kewenangan");
+    // ambil data post
+    $search = post_safe('search');
+    $include_semua = post_safe('include_semua');
+
+    // kondisi where
+    $where_search = ($search != '') ? "AND (ket_ukerja LIKE '%$search%' OR kode_ukerja LIKE '%$search%' OR ket_uorg LIKE '%$search%' OR kode_ukerja LIKE '%$search%')" : "";
+    $where_admin = ($session_kewenangan != '00')
+      ? "AND kode_ukerja = kode_instansi AND (LEFT(kode_instansi," . strlen($session_ukerja) . ") = '" . $session_ukerja . "' OR unit_kepeg = '" . $session_ukerja . "') AND (kode_ukerja LIKE '69710328%' OR kode_ukerja LIKE '69710345%')"
+      : "AND kode_ukerja = kode_instansi AND (kode_ukerja LIKE '69710328%' OR kode_ukerja LIKE '69710345%')";
+    // query searching
+    $result = $this->db->query("SELECT * FROM v_ukerja 
+      WHERE kode_ukerja IS NOT NULL $where_admin $where_search AND s_ukerja = '-1' 
+      ORDER BY kode_instansi ASC 
+      LIMIT 20")->result_array();
+    $data = array();
+    $index = 0;
+
+    if ($include_semua == 'yes') {
+      $data[$index]['id'] = 'all';
+      $data[$index]['text'] = '- SEMUA -';
+      $index++;
+    }
+
+    if (isset_nn_nes($result)) {
+      foreach ($result as $r) {
+        $s_aktif = ($r["s_ukerja"] == 0) ? "[NON-AKTIF]" : "";
+        $data[$index]['id'] = $r['kode_instansi'];
+        $data[$index]['text'] = $s_aktif . " " . $r['ket_ukerja'] . ' [' . $r['kode_instansi'] . ']';
+        $index++;
+      }
+    } else {
+      $data = $result;
+    }
+    $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
   public function select2_instansi()
   {
     //session userdata
     $session_ukerja = $this->session->userdata("kode_unor");
     $session_kewenangan = $this->session->userdata("kewenangan");
     // ambil data post
-    $search = $this->input->post('search');
+    $search = post_safe('search');
 
     //kondisi apakah menampilkan yang aktif saja
-    $aktif = ($this->input->post('aktif') != "Y") ? "" : " AND s_ukerja = '-1' ";
+    $aktif = (post_safe('aktif') != "Y") ? "" : " AND s_ukerja = '-1' ";
     // kondisi where
     $where_search = ($search != '') ? "AND (ket_ukerja LIKE '%$search%' OR kode_ukerja LIKE '%$search%' OR ket_uorg LIKE '%$search%' OR kode_ukerja LIKE '%$search%')" : "";
     $where_admin = ($session_kewenangan != '00') ? "AND kode_ukerja = kode_instansi AND (LEFT(kode_instansi," . strlen($session_ukerja) . ") = '" . $session_ukerja . "' OR unit_kepeg = '" . $session_ukerja . "') AND (kode_ukerja LIKE '69710328%' OR kode_ukerja LIKE '69710345%')" : "AND kode_ukerja = kode_instansi AND (kode_ukerja LIKE '69710328%' OR kode_ukerja LIKE '69710345%')";
@@ -149,13 +192,11 @@ class Config extends MY_Controller
       ->set_output(json_encode($data));
   }
 
-
-
   public function select2_shift()
   {
     // ambil data post
-    $search = $this->input->post('search');
-    $instansi = $this->input->post('instansi');
+    $search = post_safe('search');
+    $instansi = post_safe('instansi');
     // kondisi where
     $where_search = isset(($search)) ? "AND keterangan LIKE '%$search%'" : "";
     $where_instansi = (isset($instansi)) ? "AND kode_instansi = '$instansi'" : "";
@@ -187,8 +228,8 @@ class Config extends MY_Controller
   public function select2_pegawai()
   {
     // ambil data post
-    $search = $this->input->post('search');
-    $kode_instansi = $this->input->post('kode_instansi');
+    $search = post_safe('search');
+    $kode_instansi = post_safe('kode_instansi');
     // kondisi where
     $where_search = isset(($search)) ? "AND (nip LIKE '%$search%' OR nama_lengkap LIKE '%$search%')" : "";
     // $where_aktif = "AND s_aktif = '-1'";
@@ -231,11 +272,42 @@ class Config extends MY_Controller
       ->set_output(json_encode($data));
   }
 
+  public function select2_pegawai_ttd()
+  {
+    // ambil data post
+    $search = post_safe('search');
+    // kondisi where
+    $where_search = isset(($search)) ? "AND (nip LIKE '%$search%' OR nama_lengkap LIKE '%$search%')" : "";
+    // $where_aktif = "AND s_aktif = '-1'";
+    $where_aktif = "";
+    // query searching
+    $result = $this->db->query("SELECT nip, nama_lengkap, kode_ukerja,kode_jab,ket_jab, ket_ukerja FROM v_pns 
+      WHERE nip IS NOT NULL $where_search $where_aktif 
+      ORDER BY 'nip' ASC 
+      LIMIT 10")->result_array();
+    $data = array();
+    $index = 0;
+    if (isset_nn_nes($result)) {
+      foreach ($result as $r) {
+        $nip = $r['nip'];
+        $nama_lengkap = trim($r['nama_lengkap']);
+        $data[$index]['id'] = $nip;
+        $data[$index]['text'] = "$nip - $nama_lengkap";
+        $index++;
+      }
+    } else {
+      $data = $result;
+    }
+    $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
   public function select2_pegawai_jab()
   {
     // ambil data post
-    $search = $this->input->post('search');
-    $kode_instansi = $this->input->post('kode_instansi');
+    $search = post_safe('search');
+    $kode_instansi = post_safe('kode_instansi');
     // kondisi where
     $where_search = isset(($search)) ? "AND (nip LIKE '%$search%' OR nama_lengkap LIKE '%$search%')" : "";
     // $where_aktif = "AND s_aktif = '-1'";
@@ -282,9 +354,9 @@ class Config extends MY_Controller
   {
     //session userdata
     $session_ukerja = $this->session->userdata("kode_ukerja");
-    $kode_ukerja = $this->input->post("kode_ukerja");
+    $kode_ukerja = post_safe("kode_ukerja");
     // ambil data post
-    $search = $this->input->post('search');
+    $search = post_safe('search');
     // kondisi where
     $where_search = ($search != '') ? "AND (ket_ukerja LIKE '%$search%' OR kode_ukerja LIKE '%$search%' OR nama_mesin LIKE '%$search%')" : "";
     // query searching
@@ -326,10 +398,10 @@ class Config extends MY_Controller
     } else {
       $simpegdb_name = "simpegdbv2_samarinda";
     }
-    $kode_ukerja = $this->input->post("kode_ukerja_sumber");
+    $kode_ukerja = post_safe("kode_ukerja_sumber");
     // ambil data post
-    $search = $this->input->post('search');
-    $jns_peg = $this->input->post('jns_peg');
+    $search = post_safe('search');
+    $jns_peg = post_safe('jns_peg');
     // kondisi where
     $where_search = ($search != '') ? " AND (pin LIKE '%$search%' OR nama LIKE '%$search%')" : "";
     $where_jns_peg = "jns_pegawai = '" . $jns_peg . "'";
@@ -402,7 +474,7 @@ class Config extends MY_Controller
   public function select2_mesin_transfer()
   {
     // ambil data post
-    $search = $this->input->post('search');
+    $search = post_safe('search');
     // kondisi where
     $where_search = ($search != '') ? "AND (ket_ukerja LIKE '%$search%' OR kode_ukerja LIKE '%$search%' OR nama_mesin LIKE '%$search%')" : "";
     // query searching
@@ -424,5 +496,413 @@ class Config extends MY_Controller
     $this->output
       ->set_content_type('application/json')
       ->set_output(json_encode($data));
+  }
+
+  /// |----------------------------------------------------------------------
+  /// | >> PROGURINDA
+  /// |----------------------------------------------------------------------
+
+  public function select2_agama()
+  {
+    // ambil data post
+    $search = $this->input->post('search');
+    // kondisi where
+    $where_search = ($search != '')
+      ? "AND (ket_agama LIKE '%$search%' 
+      OR kode_agama LIKE '%$search%')"
+      : "";
+    // query searching
+    $result = $this->db->query("SELECT * FROM m_agama WHERE kode_agama IS NOT NULL $where_search 
+      ORDER BY ket_agama DESC")->result_array();
+    $data = array();
+    $index = 0;
+    if (isset_nn_nes($result)) {
+      foreach ($result as $r) {
+        $data[$index]['id'] = $r['kode_agama'];
+        $data[$index]['text'] = trim($r['ket_agama']);
+
+        // additional param to send back
+        $data[$index]['kode_agama'] = $r['kode_agama'];
+        $data[$index]['ket_agama'] = trim($r['ket_agama']);
+        $index++;
+      }
+    } else {
+      $data = $result;
+    }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
+  public function select2_jenis_kelamin()
+  {
+    // ambil data post
+    $search = $this->input->post('search');
+    // kondisi where
+    $where_search = ($search != '')
+      ? "AND (ket_jns_kelamin LIKE '%$search%' 
+      OR jns_kelamin LIKE '%$search%')"
+      : "";
+    // query searching
+    $result = $this->db->query("SELECT * FROM m_jenis_kelamin WHERE jns_kelamin IS NOT NULL $where_search 
+      ORDER BY ket_jns_kelamin ASC")->result_array();
+    $data = array();
+    $index = 0;
+    if (isset_nn_nes($result)) {
+      foreach ($result as $r) {
+        $data[$index]['id'] = $r['jns_kelamin'];
+        $data[$index]['text'] = trim($r['ket_jns_kelamin']);
+
+        // additional param to send back
+        $data[$index]['jns_kelamin'] = $r['jns_kelamin'];
+        $data[$index]['ket_jns_kelamin'] = $r['ket_jns_kelamin'];
+        $index++;
+      }
+    } else {
+      $data = $result;
+    }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
+  public function select2_disabilitas()
+  {
+    // ambil data post
+    $search = $this->input->post('search');
+    // kondisi where
+    $where_search = ($search != '')
+      ? "AND (ket_disabilitas LIKE '%$search%' 
+      OR id_pd LIKE '%$search%')"
+      : "";
+    // query searching
+    $result = $this->db->query("SELECT * FROM m_penyandang_disabilitas WHERE id_pd IS NOT NULL $where_search 
+      ORDER BY id_pd DESC")->result_array();
+    $data = array();
+    $index = 0;
+    if (isset_nn_nes($result)) {
+      foreach ($result as $r) {
+        $data[$index]['id'] = $r['id_pd'];
+        $data[$index]['text'] = trim($r['ket_disabilitas']);
+
+        // additional param to send back
+        $data[$index]['id_pd'] = $r['id_pd'];
+        $data[$index]['ket_disabilitas'] = trim($r['ket_disabilitas']);
+
+        $index++;
+      }
+    } else {
+      $data = $result;
+    }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
+  public function select2_jenjang()
+  {
+    // ambil data post
+    $search = $this->input->post('search');
+    // kondisi where
+    $where_search = ($search != '')
+      ? "AND (ket_jenjang LIKE '%$search%' 
+      OR id LIKE '%$search%')"
+      : "";
+    // query searching
+    $result = $this->db->query("SELECT * FROM m_jenjang WHERE id IS NOT NULL $where_search 
+      ORDER BY id DESC LIMIT 10")->result_array();
+    $data = array();
+    $index = 0;
+    if (isset_nn_nes($result)) {
+      foreach ($result as $r) {
+        $data[$index]['id'] = $r['id'];
+        $data[$index]['text'] = trim($r['ket_jenjang']);
+
+        // additional param to send back
+        $data[$index]['id'] = $r['id'];
+        $data[$index]['ket_jenjang'] = trim($r['ket_jenjang']);
+
+        $index++;
+      }
+    } else {
+      $data = $result;
+    }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
+  public function select2_kelas()
+  {
+    // ambil data post
+    $search = $this->input->post('search');
+    $id_jenjang = $this->input->post('id_jenjang');
+    // kondisi where
+    $where_search = ($search != '')
+      ? "AND (ket_kelas LIKE '%$search%' 
+      OR id_kelas LIKE '%$search%')"
+      : "";
+    $where_id_jenjang = ($id_jenjang != '')
+      ? "AND id_jenjang = '$id_jenjang'"
+      : "";
+
+    // query searching
+    $result = $this->db->query("SELECT * FROM m_kelas WHERE id_kelas IS NOT NULL $where_id_jenjang $where_search 
+      ORDER BY ket_kelas DESC LIMIT 10")->result_array();
+    $data = array();
+    $index = 0;
+    if (isset_nn_nes($result)) {
+      foreach ($result as $r) {
+        $data[$index]['id'] = $r['id_kelas'];
+        $data[$index]['text'] = trim($r['ket_kelas']);
+
+        // additional param to send back
+        $data[$index]['id_kelas'] = $r['id_kelas'];
+        $data[$index]['ket_kelas'] = trim($r['ket_kelas']);
+
+        $index++;
+      }
+    } else {
+      $data = $result;
+    }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
+  // public function select2_rombel()
+  // {
+  //   // ambil data post
+  //   $search = $this->input->post('search');
+  //   // kondisi where
+  //   $where_search = ($search != '')
+  //     ? "AND (nama_rombel LIKE '%$search%' 
+  //     OR jenjang_id LIKE '%$search%')"
+  //     : "";
+  //   // query searching
+  //   $result = $this->db->query("SELECT * FROM m_rombongan_belajar WHERE id_rombel IS NOT NULL $where_search 
+  //     ORDER BY id_rombel DESC LIMIT 10")->result_array();
+  //   $data = array();
+  //   $index = 0;
+  //   if (isset_nn_nes($result)) {
+  //     foreach ($result as $r) {
+  //       $data[$index]['id'] = $r['id_rombel'];
+  //       $data[$index]['text'] = trim($r['nama_rombel']);
+
+  //       // additional param to send back
+  //       $data[$index]['id_rombel'] = $r['id_rombel'];
+  //       $data[$index]['nama_rombel'] = trim($r['nama_rombel']);
+
+  //       $index++;
+  //     }
+  //   } else {
+  //     $data = $result;
+  //   }
+  //   return $this->output
+  //     ->set_content_type('application/json')
+  //     ->set_output(json_encode($data));
+  // }
+
+  public function select2_siswa()
+  {
+    // ambil data post
+    $search = $this->input->post('search');
+    // kondisi where
+    $where_search = ($search != '')
+      ? "AND (nama LIKE '%$search%' 
+      OR jenis_kelamin LIKE '%$search%')"
+      : "";
+    // query searching
+    $result = $this->db->query("SELECT * FROM v_progurinda_siswa WHERE id_siswa IS NOT NULL $where_search 
+      ORDER BY id_siswa DESC LIMIT 10")->result_array();
+    $data = array();
+    $index = 0;
+    if (isset_nn_nes($result)) {
+      foreach ($result as $r) {
+        $data[$index]['id'] = $r['id_siswa'];
+        $data[$index]['text'] = trim($r['nama']);
+
+        // additional param to send back
+        $data[$index]['id_siswa'] = $r['id_siswa'];
+        $data[$index]['nisn'] = trim($r['nisn']);
+        $data[$index]['nama'] = trim($r['nama']);
+        $data[$index]['ket_jns_kelamin'] = trim($r['ket_jns_kelamin']);
+        // $data[$index]['nama'] = trim($r['nama']);
+        // $data[$index]['nama'] = trim($r['nama']);
+
+        $index++;
+      }
+    } else {
+      $data = $result;
+    }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
+  public function select2_tahun_ajaran()
+  {
+    // ambil data post
+    $search = $this->input->post('search');
+    // kondisi where
+    $where_search = ($search != '')
+      ? "AND (ket_tahun_ajaran LIKE '%$search%' 
+      OR id_tahun_ajaran LIKE '%$search%')"
+      : "";
+    // query searching
+    $result = $this->db->query("SELECT * FROM m_tahun_ajaran WHERE id_tahun_ajaran IS NOT NULL $where_search 
+      ORDER BY id_tahun_ajaran DESC LIMIT 10")->result_array();
+    $data = array();
+    $index = 0;
+    if (isset_nn_nes($result)) {
+      foreach ($result as $r) {
+        $data[$index]['id'] = $r['id_tahun_ajaran'];
+        $data[$index]['text'] = trim($r['ket_tahun_ajaran']);
+
+        // additional param to send back
+        $data[$index]['id_tahun_ajaran'] = $r['id_tahun_ajaran'];
+        $data[$index]['ket_tahun_ajaran'] = trim($r['ket_tahun_ajaran']);
+
+        $index++;
+      }
+    } else {
+      $data = $result;
+    }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
+  public function select2_status_sekolah()
+  {
+    // ambil data post
+    $search = post_safe('search');
+    // kondisi where
+    $where_search = ($search != '')
+      ? "AND ket_status_sekolah LIKE '%$search%'"
+      : "";
+    // query searching
+    $result = $this->db->query("SELECT * FROM m_status_sekolah WHERE id_status_sekolah IS NOT NULL $where_search 
+      ORDER BY id_status_sekolah ASC LIMIT 10")->result_array();
+    $data = array();
+    if (check_var($result)) {
+      foreach ($result as $r) {
+        $data[] = array(
+          'id' => $r['id_status_sekolah'],
+          'text' => $r['ket_status_sekolah']
+        );
+      }
+    } else {
+      $data = $result;
+    }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
+  public function select2_kecamatan()
+  {
+    // ambil data post
+    $search = post_safe('search');
+
+    // kondisi where
+    $where_search = ($search != '')
+      ? "AND nama_kecamatan LIKE '%$search%'"
+      : "";
+    // query searching
+    $result = $this->db->query("SELECT * FROM m_kecamatan WHERE id_kecamatan IS NOT NULL $where_search 
+      ORDER BY id_kecamatan ASC LIMIT 10")->result_array();
+    $data = array();
+    if (check_var($result)) {
+      foreach ($result as $r) {
+        $data[] = array(
+          'id' => $r['id_kecamatan'],
+          'text' => $r['nama_kecamatan']
+        );
+      }
+    } else {
+      $data = $result;
+    }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
+  public function select2_kelurahan()
+  {
+    // ambil data post
+    $search = post_safe('search');
+    $id_kecamatan = post_safe('id_kecamatan');
+
+    // kondisi where
+    $where_search = ($search != '')
+      ? "AND nama_kelurahan LIKE '%{$search}%'"
+      : "";
+    $where_kecamatan = (check_var($id_kecamatan))
+      ? "AND id_kelurahan LIKE '{$id_kecamatan}%'"
+      : "";
+
+    // query searching
+    $result = $this->db->query("SELECT * FROM m_kelurahan WHERE id_kelurahan IS NOT NULL $where_search $where_kecamatan 
+      ORDER BY id_kelurahan ASC LIMIT 10")->result_array();
+    $data = array();
+    if (check_var($result)) {
+      foreach ($result as $r) {
+        $data[] = array(
+          'id' => $r['id_kelurahan'],
+          'text' => $r['nama_kelurahan']
+        );
+      }
+    } else {
+      $data = $result;
+    }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($data));
+  }
+
+  public function select2_kewenangan()
+  {
+    // ambil data post
+    $search = post_safe('search');
+    $include_semua = post_safe('include_semua');
+
+    $this->db->from('m_kewenangan');
+
+    // kondisi where
+    if (check_var($search)) {
+      $this->db->group_start();
+      $this->db->like('id_kewenangan', $search);
+      $this->db->or_like('ket_kewenangan', $search);
+      $this->db->group_end();
+    }
+
+    // order & limit
+    $this->db->order_by('id_kewenangan', 'ASC');
+    $this->db->limit(20);
+
+    // get results
+    $result = $this->db->get()->result_array();
+
+    $data = array();
+    $index = 0;
+
+    if ($include_semua == 'yes') {
+      $data[$index]['id'] = 'all';
+      $data[$index]['text'] = '- SEMUA -';
+      $index++;
+    }
+
+    if (isset_nn_nes($result)) {
+      foreach ($result as $r) {
+        $data[$index]['id'] = $r['id_kewenangan'];
+        $data[$index]['text'] = $r['ket_kewenangan'] . ' [' . $r['id_kewenangan'] . ']';
+        $index++;
+      }
+    } else {
+      $data = $result;
+    }
+
+    return output_json($data);
   }
 }
