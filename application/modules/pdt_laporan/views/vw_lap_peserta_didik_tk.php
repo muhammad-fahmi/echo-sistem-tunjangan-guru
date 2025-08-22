@@ -16,7 +16,7 @@
     <div class="col-12">
       <div class="card">
         <div class="card-title">
-          <h4 class="space-between">Daftar Data Tahun Ajaran</h4>
+          <h4 class="space-between">Laporan Peserta Didik</h4>
         </div>
         <div class="card-body">
           <!-- Unit Kerja -->
@@ -28,20 +28,6 @@
               <select type="text" name="id_sekolah" class="form-select form-select" style="width:100%" id="id_sekolah">
                 <?php $selected = ($data["id_sekolah"] != "") ? "selected" : ""; ?>
                 <option value="<?php echo $data["id_sekolah"]; ?>" <?php echo $selected ?>><?php echo $data["ket_sekolah"]; ?></option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Semester -->
-          <div class="row mb-2">
-            <div class="col-4 col-lg-3">
-              <label for="semester">Semester</label>
-            </div>
-            <div class="col-8 col-lg-9">
-              <select type="text" name="semester" class="form-select form-select" style="width:100%" id="semester">
-                <option value="1">I</option>
-                <option value="2">II</option>
-                <option value="3">III</option>
               </select>
             </div>
           </div>
@@ -63,22 +49,115 @@
             <button class="btn btn-primary" onclick="reload_table()"><i class="fas fa-retweet"></i> Refresh </button>
             <button class="btn btn-info" onclick=""><i class="fas fa-file"></i> Cetak </button>
           </div>
+        </div>
+      </div>
+    </div>
 
-          <div class="table-responsive mt-4">
+    <!-- REKAP I -->
+    <div class="col-12">
+      <div class="card">
+        <div class="card-title">
+          <h4 class="space-between">Keadaan Peserta Didik</h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
 
-            <div class="_loading loading_tabel_tahun_ajaran">
+            <div class="_loading loading_tabel_rekap_pd_all">
               <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>
             </div>
 
-            <table id="table_tahun_ajaran" class="table table-bordered table-hover fs-3" style="width:100%;">
+            <table id="tabel_rekap_pd_all" class="table table-bordered table-hover fs-3" style="width:100%;">
 
               <thead class="bg-info text-white">
                 <tr class="text-center">
-                  <th class="vam" style="min-width: 30px;">Tahun Ajar</th>
-                  <th class="vam" style="min-width: 150px;">Nama Sekolah</th>
-                  <th class="vam" style="min-width: 60px;">Jenjang</th>
-                  <th class="vam" style="min-width: 20px;">Jumlah Rombel</th>
-                  <th class="vat" style="min-width: 30px;">Aksi</th>
+                  <!-- <th class="vam" rowspan="2" style="min-width: 15px;">#</th> -->
+                  <th class="vam" rowspan="2" style="min-width: 150px;">Sekolah</th>
+                  <th class="vam" rowspan="2" style="min-width: 60px;">Kelas</th>
+                  <th class="vam" rowspan="2" style="min-width: 60px;">Rombel</th>
+                  <th class="vam" colspan="3" rowspan="1" style="min-width: 80px;">Peserta Didik/Jenis Kelamin</th>
+                </tr>
+                <tr class="text-center">
+                  <th class="vam">L</th>
+                  <th class="vam">P</th>
+                  <th class="vam">Jumlah</th>
+                </tr>
+              </thead>
+
+              <tbody style="font-size: 11px;"></tbody>
+
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REKAP II -->
+    <div class="col-12">
+      <div class="card">
+        <div class="card-title">
+          <h4 class="space-between">Rekap Peserta Didik</h4>
+        </div>
+        <div class="card-body">
+
+          <div class="table-responsive">
+
+            <div class="_loading loading_tabel_rekap_pd">
+              <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>
+            </div>
+
+            <table id="tabel_rekap_pd" class="table table-bordered table-hover fs-3" style="width:100%;">
+
+              <thead class="bg-info text-white">
+                <tr class="text-center">
+                  <th class="vam" rowspan="2" style="min-width: 10px;">#</th>
+                  <th class="vam" rowspan="2" style="min-width: 150px;">Nama TK</th>
+                  <th class="vam" rowspan="2" style="min-width: 60px;">Kelas</th>
+                  <th class="vam" rowspan="2" style="min-width: 60px;">Jml Rombel</th>
+                  <th class="vam" colspan="3" rowspan="1" style="min-width: 80px;">Jumlah Siswa</th>
+                </tr>
+                <tr class="text-center">
+                  <th class="vam">L</th>
+                  <th class="vam">P</th>
+                  <th class="vam">Jumlah</th>
+                </tr>
+              </thead>
+
+              <tbody style="font-size: 11px;"></tbody>
+
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REKAP III -->
+    <div class="col-12">
+      <div class="card">
+        <div class="card-title">
+          <h4 class="space-between">Peserta Didik Penyandang Disabilitas</h4>
+        </div>
+        <div class="card-body">
+
+          <div class="table-responsive">
+
+            <div class="_loading loading_tabel_rekap_pd_disabilitas">
+              <div class="text"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</div>
+            </div>
+
+            <table id="tabel_rekap_pd_disabilitas" class="table table-bordered table-hover fs-3" style="width:100%;">
+
+              <thead class="bg-info text-white">
+                <tr class="text-center">
+                  <th class="vam" rowspan="2" style="min-width: 15px;">#</th>
+                  <th class="vam" rowspan="2" style="min-width: 150px;">Nama TK</th>
+                  <th class="vam" rowspan="2" style="min-width: 60px;">Kelas</th>
+                  <th class="vam" rowspan="2" style="min-width: 60px;">Rombel</th>
+                  <th class="vam" colspan="3" rowspan="1" style="min-width: 80px;">Peserta Didik/Jenis Kelamin</th>
+                </tr>
+                <tr class="text-center">
+                  <th class="vam">L</th>
+                  <th class="vam">P</th>
+                  <th class="vam">Jumlah</th>
                 </tr>
               </thead>
 
@@ -95,9 +174,12 @@
 <div class="toast_container"></div>
 
 <script>
-  var urlDatatable = "<?= site_url('pdt_tahun_ajaran/get_data') ?>";
-  // var init_btn_add = false;
-  var tabel_tahun_ajaran = $("#table_tahun_ajaran").DataTable({
+  // URL datatable
+  var urlDatatable_rekap_all = "<?= site_url('pdt_laporan/get_data_rekap_tk') ?>";
+  // var urlDatatable_rekap = "<.?= site_url('pdt_laporan/get_data_rekap_tk') ?>";
+  // var urlDatatable_disabilitas = "<.?= site_url('pdt_laporan/get_data_rekap_disabilitas') ?>";
+
+  var tabel_rekap_pd_all = $("#tabel_rekap_pd_all").DataTable({
     responsive: true,
     processing: false,
     serverSide: true,
@@ -113,15 +195,12 @@
     ],
     /* set placeholder dari input search */
     language: {
-      searchPlaceholder: "Cari data tahun ajar..."
+      searchPlaceholder: ""
     },
     ajax: {
-      url: urlDatatable,
+      url: urlDatatable_rekap_all,
       /* parameter yang dikirimkan ke controller */
       data: {
-        // semester: function() {
-        //   return $('#semester').val();
-        // },
         id_tahun_ajaran: function() {
           return $('#id_tahun_ajaran').val();
         },
@@ -132,12 +211,12 @@
       type: 'POST',
       beforeSend: function() {
         // lakukan sesuatu sebelum mulai ajax process
-        $('.loading_tabel_tahun_ajaran').addClass('show');
+        $('.loading_tabel_rekap_pd_all').addClass('show');
       },
     },
     /* Sesuaikan jumlah kolom dengan id table yang digunakan */
     columns: [{
-        data: 'tahun_ajar',
+        data: 'ket_sekolah',
         orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -145,15 +224,7 @@
         },
       },
       {
-        data: 'nama_sekolah',
-        orderable: false,
-        className: 'vat',
-        createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-start">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'jenjang',
+        data: 'ket_kelas',
         orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -161,7 +232,7 @@
         },
       },
       {
-        data: 'jumlah_rombel',
+        data: 'nama_rombel',
         orderable: false,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -169,13 +240,37 @@
         },
       },
       {
-        data: 'id_tahun_ajaran',
+        data: 'jumlah_laki_laki',
         orderable: false,
-        className: 'vam',
+        className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div class="text-center">' + rowData['aksi_display'] + '</div>');
+          $(td).html('<div class="text-center">' + cellData + '</div>');
         },
       },
+      {
+        data: 'jumlah_perempuan',
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        },
+      },
+      {
+        data: 'jumlah_total',
+        orderable: false,
+        className: 'vat',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html('<div class="text-center">' + cellData + '</div>');
+        },
+      },
+      // {
+      //   data: 'id_tahun_ajaran',
+      //   orderable: false,
+      //   className: 'vam',
+      //   createdCell: function(td, cellData, rowData, row, col) {
+      //     $(td).html('<div class="text-center">' + rowData['aksi_display'] + '</div>');
+      //   },
+      // },
     ],
     /* Lakukan fungsi callback pada bracket ini */
     drawCallback: function(settings) {
@@ -186,13 +281,107 @@
         /* jalankan apabila return false */
       }
       /* parameter callback untuk kostumisasi fungsi */
-      $('.loading_tabel_tahun_ajaran').removeClass('show');
+      $('.loading_tabel_rekap_pd_all').removeClass('show');
     }
   });
 
-  /* fungsi untuk reload datatable ajax */
+  // var tabel_rekap_pd = $("#tabel_rekap_pd").DataTable({
+  //   responsive: true,
+  //   processing: false,
+  //   serverSide: true,
+  //   orderCellsTop: true,
+  //   dom: '<"row g-1"' +
+  //     '<"col-12 col-sm-6 init_btn_container"><"col-12 col-sm-6 vam"f>' +
+  //     '<"col-12"tr>' +
+  //     '<"col-12 col-sm-6"li><"col-12 col-sm-6"p>' +
+  //     '>',
+  //   /* set kolom yang di sortir secara default */
+  //   order: [
+  //     [0, "asc"],
+  //   ],
+  //   /* set placeholder dari input search */
+  //   language: {
+  //     searchPlaceholder: ""
+  //   },
+  //   ajax: {
+  //     url: urlDatatable_rekap,
+  //     /* parameter yang dikirimkan ke controller */
+  //     data: {
+  //       // semester: function() {
+  //       //   return $('#semester').val();
+  //       // },
+  //       id_tahun_ajaran: function() {
+  //         return $('#id_tahun_ajaran').val();
+  //       },
+  //       id_sekolah: function() {
+  //         return $('#id_sekolah').val();
+  //       },
+  //     },
+  //     type: 'POST',
+  //     beforeSend: function() {
+  //       // lakukan sesuatu sebelum mulai ajax process
+  //       $('.loading_tabel_rekap_pd').addClass('show');
+  //     },
+  //   },
+  //   /* Sesuaikan jumlah kolom dengan id table yang digunakan */
+  //   columns: [{
+  //       data: 'tahun_ajar',
+  //       orderable: false,
+  //       className: 'vat',
+  //       createdCell: function(td, cellData, rowData, row, col) {
+  //         $(td).html('<div class="text-start">' + cellData + '</div>');
+  //       },
+  //     },
+  //     {
+  //       data: 'nama_sekolah',
+  //       orderable: false,
+  //       className: 'vat',
+  //       createdCell: function(td, cellData, rowData, row, col) {
+  //         $(td).html('<div class="text-start">' + cellData + '</div>');
+  //       },
+  //     },
+  //     {
+  //       data: 'jenjang',
+  //       orderable: false,
+  //       className: 'vat',
+  //       createdCell: function(td, cellData, rowData, row, col) {
+  //         $(td).html('<div class="text-center">' + cellData + '</div>');
+  //       },
+  //     },
+  //     {
+  //       data: 'jumlah_rombel',
+  //       orderable: false,
+  //       className: 'vat',
+  //       createdCell: function(td, cellData, rowData, row, col) {
+  //         $(td).html('<div class="text-center">' + cellData + '</div>');
+  //       },
+  //     },
+  //     {
+  //       data: 'id_tahun_ajaran',
+  //       orderable: false,
+  //       className: 'vam',
+  //       createdCell: function(td, cellData, rowData, row, col) {
+  //         $(td).html('<div class="text-center">' + rowData['aksi_display'] + '</div>');
+  //       },
+  //     },
+  //   ],
+  //   /* Lakukan fungsi callback pada bracket ini */
+  //   drawCallback: function(settings) {
+  //     /* gunakan code ini utk mengambil data response ke dalam drawCallback */
+  //     let api = this.api();
+  //     let json = api.ajax.json();
+  //     if (json.status == false) {
+  //       /* jalankan apabila return false */
+  //     }
+  //     /* parameter callback untuk kostumisasi fungsi */
+  //     $('.loading_tabel_rekap_pd').removeClass('show');
+  //   }
+  // });
+
+  // /* fungsi untuk reload datatable ajax */
   function reload_table() {
-    tabel_tahun_ajaran.ajax.reload();
+    tabel_rekap_pd_all.ajax.reload();
+    // tabel_rekap_pd.ajax.reload();
   }
 
   // Select2 Instansi Sekolah
@@ -254,24 +443,4 @@
     $('id_tahun_ajaran').empty();
     // what to do when clearing (only if allowClear: true)
   });
-
-  // function modal(id, type) {
-  //   var url = "<?= site_url('pdt_tahun_ajaran/modal') ?>";
-  //   $.ajax({
-  //     type: "POST",
-  //     url: url,
-  //     data: {
-  //       id: id,
-  //       type: type
-  //     },
-  //     success: function(res) {
-  //       if (res.status) {
-  //         $("#modal_content_id").html(res.html).show();
-  //         $("#whole_modal_id").modal("show");
-  //       } else {
-  //         toaster('info', 'Unknown error on modal calls.\n- ' + res.message);
-  //       }
-  //     }
-  //   });
-  // }
 </script>
