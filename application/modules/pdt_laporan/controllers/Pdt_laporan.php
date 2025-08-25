@@ -81,6 +81,9 @@ class Pdt_laporan extends MY_Controller
       'search' => $this->input->post("search[value]"),
       'draw' => $this->input->post("draw"),
       /* additional data can be declared here */
+      'id_sekolah' => $this->input->post('id_sekolah'),
+      'id_tahun_ajaran' => $this->input->post('id_tahun_ajaran'),
+      'bulan' => $this->input->post('bulan')
     );
     // move the db operation to the designated models
     $result = $this->mdl_laporan->get_datatable_tk($param);
