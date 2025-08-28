@@ -83,9 +83,6 @@
         <div class="card-title">
           <h4 class="card-title space-between">
             <div><i class="fas fa-user me-2"></i>Manajemen Peserta Didik</div>
-            <div>
-              <a href="javascript:void(0)" class="btn btn-sm btn-info pull-right">Insert Data Batch PD <i class="fas fa-file mx-1"></i></a>
-            </div>
           </h4>
           <input type="hidden" id="id_rombel" name="id_rombel" value="<?= $data['id']; ?>">
         </div>
