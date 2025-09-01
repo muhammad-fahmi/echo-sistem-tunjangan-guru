@@ -1,12 +1,12 @@
 <div class="row page-titles">
   <div class="col-md-4 col-12 align-self-center">
-    <h3 class="text-themecolor mb-0">Laporan Peserta Didik TK</h3>
+    <h3 class="text-themecolor mb-0">Laporan Peserta Didik</h3>
     <ol class="breadcrumb mb-0">
       <li class="breadcrumb-item">
         <a href="<?= site_url('pangkalan_data'); ?>">Pangkalan Data</a>
       </li>
       <li class="breadcrumb-item active">Laporan</li>
-      <li class="breadcrumb-item active">Laporan Peserta Didik TK</li>
+      <li class="breadcrumb-item active">Laporan Peserta Didik</li>
     </ol>
   </div>
 </div>
@@ -16,7 +16,7 @@
     <div class="col-12">
       <div class="card">
         <div class="card-title">
-          <h4 class="space-between">Laporan Peserta Didik</h4>
+          <h4 class="space-between">Filter Rekap Peserta Didik</h4>
         </div>
         <div class="card-body">
           <!-- Unit Kerja -->
@@ -33,7 +33,7 @@
           </div>
 
           <!-- Tahun Ajar -->
-          <div class="row mb-4">
+          <div class="row mb-2">
             <div class="col-4 col-lg-3">
               <label for="id_tahun_ajaran">Tahun Ajaran</label>
             </div>
@@ -45,9 +45,30 @@
             </div>
           </div>
 
+          <div class="row mb-4">
+            <div class="col-4 col-lg-3">
+              <label for="bulan">Per Bulan</label>
+            </div>
+            <div class="col-8 col-lg-9">
+              <select type="text" name="bulan" class="form-select form-select" style="width:100%" id="bulan">
+                <option value="1">Januari</option>
+                <option value="2">Februari</option>
+                <option value="3">Maret</option>
+                <option value="4">April</option>
+                <option value="5">Mei</option>
+                <option value="6">Juni</option>
+                <option value="7">Juli</option>
+                <option value="8">Agustus</option>
+                <option value="9">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Desember</option>
+              </select>
+            </div>
+          </div>
+
           <div class="modal-footer text-start gap-2">
-            <button class="btn btn-primary" onclick="reload_table()"><i class="fas fa-retweet"></i> Refresh </button>
-            <button class="btn btn-info" onclick=""><i class="fas fa-file"></i> Cetak </button>
+            <button id="btnCari" name="btnCari" class="btn btn-info"><i class="fas fa-search"></i> Cari</button>
           </div>
         </div>
       </div>
@@ -74,12 +95,12 @@
                   <th class="vam" rowspan="2" style="min-width: 150px;">Sekolah</th>
                   <th class="vam" rowspan="2" style="min-width: 60px;">Kelas</th>
                   <th class="vam" rowspan="2" style="min-width: 60px;">Rombel</th>
-                  <th class="vam" colspan="3" rowspan="1" style="min-width: 80px;">Peserta Didik/Jenis Kelamin</th>
+                  <th class="vam" colspan="3" rowspan="1" style="min-width: 60px;">Peserta Didik/Jenis Kelamin</th>
                 </tr>
                 <tr class="text-center">
-                  <th class="vam">L</th>
-                  <th class="vam">P</th>
-                  <th class="vam">Jumlah</th>
+                  <th class="vam" style="min-width: 20px;">L</th>
+                  <th class="vam" style="min-width: 20px;">P</th>
+                  <th class="vam" style="min-width: 20px;">Jumlah</th>
                 </tr>
               </thead>
 
@@ -92,7 +113,7 @@
     </div>
 
     <!-- REKAP II -->
-    <div class="col-12">
+    <!-- <div class="col-12">
       <div class="card">
         <div class="card-title">
           <h4 class="space-between">Rekap Peserta Didik</h4>
@@ -128,10 +149,10 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- REKAP III -->
-    <div class="col-12">
+    <!-- <div class="col-12">
       <div class="card">
         <div class="card-title">
           <h4 class="space-between">Peserta Didik Penyandang Disabilitas</h4>
@@ -167,13 +188,14 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </div>
 
 <div class="toast_container"></div>
 
 <script>
+  var init_btn_refresh = false;
   // URL datatable
   var urlDatatable_rekap_all = "<?= site_url('pdt_laporan/get_data_rekap_tk') ?>";
   // var urlDatatable_rekap = "<.?= site_url('pdt_laporan/get_data_rekap_tk') ?>";
@@ -201,12 +223,15 @@
       url: urlDatatable_rekap_all,
       /* parameter yang dikirimkan ke controller */
       data: {
-        id_tahun_ajaran: function() {
-          return $('#id_tahun_ajaran').val();
-        },
         id_sekolah: function() {
           return $('#id_sekolah').val();
         },
+        id_tahun_ajaran: function() {
+          return $('#id_tahun_ajaran').val();
+        },
+        // jenis_laporan: function() {
+        //   return $('#jenis_laporan').val();
+        // }
       },
       type: 'POST',
       beforeSend: function() {
@@ -272,6 +297,7 @@
       //   },
       // },
     ],
+
     /* Lakukan fungsi callback pada bracket ini */
     drawCallback: function(settings) {
       /* gunakan code ini utk mengambil data response ke dalam drawCallback */
@@ -282,6 +308,20 @@
       }
       /* parameter callback untuk kostumisasi fungsi */
       $('.loading_tabel_rekap_pd_all').removeClass('show');
+
+      let btn_refresh = '<button class="btn btn-primary me-2" onclick="reload_table()">' +
+        '<i class="fas fa-retweet me-1"></i> Refresh' +
+        '</button>';
+
+      let btn_cetak = '<button class="btn btn-success me-2" onclick="on_dev()">' +
+        '<i class="fas fa-file me-1"></i> Cetak' +
+        '</button>';
+
+      if (!init_btn_refresh) {
+        $('.init_btn_container').append(btn_refresh);
+        $('.init_btn_container').append(btn_cetak);
+        init_btn_refresh = true;
+      }
     }
   });
 
@@ -383,6 +423,10 @@
     tabel_rekap_pd_all.ajax.reload();
     // tabel_rekap_pd.ajax.reload();
   }
+
+  $('#btnCari').on('click', function() {
+    tabel_rekap_pd_all.ajax.reload();
+  });
 
   // Select2 Instansi Sekolah
   $('#id_sekolah').select2({

@@ -45,17 +45,17 @@ class Mdl_pdt_laporan extends CI_Model
         ->group_end();
     }
 
-    // if (check_var($data['id_sekolah'])) {
-    //   $this->db->where('id_sekolah', $data['id_sekolah']);
-    // }
+    if (check_var($data['id_sekolah'])) {
+      $this->db->where('id_sekolah', $data['id_sekolah']);
+    }
 
-    // if (check_var($data['id_kelas'])) {
-    //   $this->db->where('id_kelas', $data['id_kelas']);
-    // }
+    if (check_var($data['id_kelas'])) {
+      $this->db->where('id_kelas', $data['id_kelas']);
+    }
 
-    // if (check_var($data['nama_rombel'])) {
-    //   $this->db->where('nama_rombel', $data['nama_rombel']);
-    // }
+    if (check_var($data['nama_rombel'])) {
+      $this->db->where('nama_rombel', $data['nama_rombel']);
+    }
   }
 
   public function query_data_rekap_pd_sd($data)
@@ -138,18 +138,6 @@ class Mdl_pdt_laporan extends CI_Model
     $data_result = [];
     foreach ($query_result as $row) {
       $row['no'] = $no++;
-
-      // tampilan aksi
-      // $encrypt_id = encrypt_id($row['']);
-      // $tombol_detail = '<a href="' . site_url('pdt_tahun_ajaran/detail/') . $encrypt_id . '" class="badge bg-info clickable text-white me-1 py-1"><i class="fas fa-eye"></i> Detail</a>';
-      // $tombol_delete = ($this->session->userdata('kewenangan') == '10') ?
-      //   '<div onclick="modal(`' . $encrypt_id . '`, `delete_siswa_rombel`)" class="badge bg-danger clickable me-1 py-1" title="Hapus"><i class="fas fa-trash"></i> Hapus</div>'
-      //   : '';
-
-      // $row['aksi_display'] = '<div class="d-grid gap-1">' .
-      //   $tombol_detail
-      //   . '</div>';
-
       // store modified data into the result
       $data_result[] = $row;
     }

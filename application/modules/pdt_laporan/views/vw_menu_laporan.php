@@ -27,29 +27,31 @@
         <div class="card">
           <div class="card-body">
             <h2 class="text-center py-2"><i class="fas fa-file"></i></h2>
-            <h4 class="text-center">Lap. Peserta Didik TK</h4>
+            <h4 class="text-center">Lap. Keadaan PD</h4>
           </div>
         </div>
       </a>
     </div>
 
     <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-      <a href="<?= site_url('pdt_laporan/menu_lap_peserta_didik_sd'); ?>">
+      <!-- <a href="<.?= site_url('pdt_laporan/menu_lap_peserta_didik_sd'); ?>"> -->
+      <a href="#" onclick="on_dev()">
         <div class="card">
           <div class="card-body">
             <h2 class="text-center py-2"><i class="fas fa-file"></i></h2>
-            <h4 class="text-center">Lap. Peserta Didik SD</h4>
+            <h4 class="text-center">Lap. Berdasarkan Agama</h4>
           </div>
         </div>
       </a>
     </div>
 
     <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-      <a href="<?= site_url('pdt_laporan/menu_lap_peserta_didik_smp'); ?>">
+      <!-- <a href="<.?= site_url('pdt_laporan/menu_lap_peserta_didik_smp'); ?>"> -->
+      <a href="#" onclick="on_dev()">
         <div class="card">
           <div class="card-body">
             <h2 class="text-center py-2"><i class="fas fa-file"></i></h2>
-            <h4 class="text-center">Lap. Peserta Didik SMP</h4>
+            <h4 class="text-center">Lap. Berdasarkan Ragam Disabilitas</h4>
           </div>
         </div>
       </a>
