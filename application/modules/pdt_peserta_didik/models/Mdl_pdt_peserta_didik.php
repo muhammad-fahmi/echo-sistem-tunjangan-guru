@@ -78,7 +78,7 @@ class Mdl_pdt_peserta_didik extends CI_Model
       // tampilan aksi
       $encrypt_id = encrypt_id($row['id_siswa']); // enkrip rowData `id_siswa`
       $tombol_edit = '<div onclick="modal(`' . $encrypt_id . '`, `edit_peserta_didik`)" class="badge bg-primary clickable me-1" title="Edit"><i class="fas fa-edit"></i> Edit</div>';
-      $tombol_detail = '<a href="' . site_url('pdt_peserta_didik/detail/') . $encrypt_id . '" class="badge bg-info clickable text-white me-1 py-1"><i class="fas fa-upload"></i> Update</a>';
+      $tombol_detail = '<a href="' . site_url('pdt_peserta_didik/detail/') . $encrypt_id . '" class="badge bg-info clickable text-white me-1 py-1"><i class="fas fa-eye"></i> Detail</a>';
       $tombol_delete = ($this->session->userdata('kewenangan') == '00') ?
         '<div onclick="modal(`' . $encrypt_id . '`, `delete_peserta_didik`)" class="badge bg-danger clickable me-1 py-1" title="Hapus"><i class="fas fa-trash"></i> Hapus</div>'
         : '';
