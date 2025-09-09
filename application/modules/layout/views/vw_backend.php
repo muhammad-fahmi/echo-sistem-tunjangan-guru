@@ -132,7 +132,7 @@
             <!--End Logo icon -->
             <!-- Logo text -->
             <span class="logo-text">
-              <h3 style="color:white;font-weight:600">PROGURINDA</h3>
+              <h3 style="color:white;font-weight:600">SIMDIKS</h3>
               <!-- dark Logo text -->
               <!-- <img src="<.?= base_url("theme/assets/images/logo-text.png") ?>" alt="homepage" class="dark-logo" /> -->
               <!-- Light Logo text -->

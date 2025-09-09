@@ -9,10 +9,10 @@
       <a href="<?= site_url('dashboard') ?>" class="clickable portal-menu text-center">
         <div class="inner">
           <div class="icon text-light fas fa-file"></div>
-          <h3 class="text-light">PROGURINDA</h3>
+          <h3 class="text-light">TUNJANGAN</h3>
           <p>
             <small>
-              Aplikasi untu manajemen Tunjangan Guru
+              Aplikasi untuk manajemen Tunjangan Guru Disdik
             </small>
           </p>
         </div>
@@ -23,16 +23,15 @@
       <a href="<?= site_url('pangkalan_data') ?>" class="clickable portal-menu pdt text-center">
         <div class="inner">
           <div class="icon text-light fas fa-edit"></div>
-          <h3 class="text-light">PANGKALAN DATA</h3>
+          <h3 class="text-light">Sistem Informasi Manajemen Pendidikan Samarinda (SIMDIKS)</h3>
           <p>
             <small>
-              Aplikasi untuk Pangkalan Data Dinas Pendidikan (Disdik)
+              Aplikasi untuk Pangkalan Data Dinas Pendidikan
             </small>
           </p>
         </div>
       </a>
     </div>
-
   </div>
 
 </div>

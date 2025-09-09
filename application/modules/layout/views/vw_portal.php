@@ -74,10 +74,10 @@
                 DINAS PENDIDIKAN DAN KEBUDAYAAN
               </h2>
               <h3 class="text-white mt-4 fw-light">
-                PRO GURINDA
+                SIMDIKS
               </h3>
               <h4 class="text-white mt-4 fw-light">
-                Produktifitas Guru Samarinda
+                Sistem Informasi Manajemen Pendidikan Samarinda
               </h4>
             </div>
           </div>
