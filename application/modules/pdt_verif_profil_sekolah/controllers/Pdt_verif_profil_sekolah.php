@@ -172,7 +172,7 @@ class Pdt_verif_profil_sekolah extends MY_Controller
 
   public function do_verif()
   {
-    if (!check_perm('verif', 'PDT_ProfilSekolah')) return output_json([
+    if (!check_perm('verif', 'PDT_VerifProfilSekolah')) return output_json([
       'status' => false,
       'message' => 'invalid permissions'
     ], 403);
