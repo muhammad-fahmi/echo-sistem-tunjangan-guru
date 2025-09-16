@@ -141,10 +141,17 @@ class Pdt_profil_sekolah extends MY_Controller
     if (!$data_sekolah) return output_error('Maaf, data Sekolah tidak valid.');
 
     $data_dokumen = $this->mdl_profsekolah->get_latest_update_sekolah($kode_ukerja);
+    /* // DEBUG
+    highlight_string("<?php\nDATA DOKUMEN = " . var_export($data_dokumen, true) . ";\n\n\n?>");
+    */
 
     $is_master = true;
     $rearrange_data = true;
     $arranged_inventaris = $this->mdl_profsekolah->get_data_inventaris($kode_ukerja, $is_master, $rearrange_data);
+    /* // DEBUG
+    highlight_string("<?php\nDATA INVENTARIS = " . var_export($arranged_inventaris, true) . ";\n\n\n?>");
+    return;
+    */
 
     try {
       $template_file = $this->config->item('template_path') . 'laporan_sekolah.xlsx';
@@ -166,6 +173,34 @@ class Pdt_profil_sekolah extends MY_Controller
       $sheet->setCellValue('D8', check_var($data_sekolah, 'ket_status_sekolah', ''));
       $sheet->setCellValue('D9', check_var($data_sekolah, 'npsn', ''));
       $sheet->setCellValue('D10', check_var($data_sekolah, 'nss', ''));
+      $sheet->setCellValue('D11', check_var($data_sekolah, 'no_statistik_bangunan', ''));
+      $akreditasi = check_var($data_dokumen, 'akreditasi', '-');
+      $tahun_akreditasi = check_var($data_dokumen, 'periode_thn', '-');
+      $sheet->setCellValue('D12', $akreditasi . ' / ' . $tahun_akreditasi);
+      $pendidikan_inklusif = (check_var($data_dokumen, 'inklusif', 0) == 1) ? 'Ya' : 'Tidak';
+      $sheet->setCellValue('D13', $pendidikan_inklusif);
+      $sheet->setCellValue('D15', check_var($data_dokumen, 'alamat', ''));
+      $sheet->setCellValue('D16', check_var($data_dokumen, 'nama_kelurahan', ''));
+      $sheet->setCellValue('D17', check_var($data_dokumen, 'nama_kecamatan', ''));
+      $sheet->setCellValue('D18', check_var($data_dokumen, 'kode_pos', ''));
+      $lat = check_var($data_dokumen, 'lat', '-');
+      $long = check_var($data_dokumen, 'long', '-');
+      $koordinat = 'LAT: ' . $lat . ' / LONG: ' . $long;
+      $sheet->setCellValue('D19', $koordinat);
+      $sheet->setCellValue('D20', check_var($data_dokumen, 'telepon', ''));
+      $sheet->setCellValue('D21', check_var($data_dokumen, 'website', ''));
+      $sheet->setCellValue('D22', check_var($data_dokumen, 'email', ''));
+      $sheet->setCellValue('D23', check_var($data_dokumen, 'no_rek_bank', ''));
+      $sheet->setCellValue('D24', check_var($data_dokumen, 'nama_bank', ''));
+      $sheet->setCellValue('D25', check_var($data_dokumen, 'cabang_kcp_unit', ''));
+      $sheet->setCellValue('D26', check_var($data_dokumen, 'nama_wajib_pajak', ''));
+      $sheet->setCellValue('D27', check_var($data_dokumen, 'npwp', ''));
+      $sheet->setCellValue('D28', check_var($data_dokumen, 'no_sk_pendirian', ''));
+      $sheet->setCellValue('D29', em_date('j F Y', 'set', check_var($data_dokumen, 'tgl_sk_pendirian', '')));
+      $sheet->setCellValue('D30', check_var($data_dokumen, 'no_sk_izin_operasional', ''));
+      $sheet->setCellValue('D31', em_date('j F Y', 'set', check_var($data_dokumen, 'tgl_sk_izin_operasional', '')));
+      $sheet->setCellValue('D32', to_rp(check_var($data_dokumen, 'luas_tanah', 0), false));
+      $sheet->setCellValue('D33', check_var($data_dokumen, 'kepemilikan_tanah', '-'));
 
       // set data inventaris
       set_inventaris_cells($sheet, $arranged_inventaris);

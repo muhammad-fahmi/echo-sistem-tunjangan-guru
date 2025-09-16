@@ -62,6 +62,7 @@ class Pdt_rombongan_belajar extends MY_Controller
       'search' => $this->input->post("search[value]"),
       'draw' => $this->input->post("draw"),
       /* additional data can be declared here */
+      'id_sekolah' => $this->session->userdata('kode_unor')
     );
     // move the db operation to the designated models
     $result = $this->mdl_rombongan_belajar->get_datatable($param);

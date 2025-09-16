@@ -26,6 +26,24 @@
   <!-- basic table -->
   <div class="row">
     <div class="col-12">
+      <?php
+      $show_debug = false;
+      if ($show_debug) {
+      ?>
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">DATA (DEBUG)</h4>
+              <small>
+                <?php highlight_string("<?php\nSESSION = " . var_export($this->session->userdata(), true) . ";\n\n?>"); ?>
+                <?php highlight_string("<?php\nDATA = " . var_export($data, true) . ";\n\n?>"); ?>
+              </small>
+            </div>
+          </div>
+        </div>
+      <?php
+      }
+      ?>
       <div class="card">
         <div class="card-title">
           <h4 class="space-between">Daftar Data Tahun Ajaran</h4>
@@ -53,7 +71,6 @@
               <select type="text" name="semester" class="form-select form-select" style="width:100%" id="semester">
                 <option value="1">I</option>
                 <option value="2">II</option>
-                <option value="3">III</option>
               </select>
             </div>
           </div>
@@ -73,7 +90,7 @@
 
           <div class="modal-footer text-start gap-2">
             <button class="btn btn-primary" onclick="reload_table()"><i class="fas fa-retweet"></i> Refresh </button>
-            <button class="btn btn-info" onclick=""><i class="fas fa-file"></i> Cetak </button>
+            <button class="btn btn-info" onclick="on_dev()"><i class="fas fa-file"></i> Cetak </button>
           </div>
 
           <div class="table-responsive mt-4">

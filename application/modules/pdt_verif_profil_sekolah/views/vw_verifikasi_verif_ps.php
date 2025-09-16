@@ -668,7 +668,6 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
               <?php
               $items = get_inventaris_items();
               $fields = get_inventaris_fields();
-
               foreach ($items as $key => $value) {
                 echo '<tr>';
                 echo ($key == 'total')
@@ -676,14 +675,14 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                   : '<td class="text-start vam">' . $value . '</td>';
                 foreach ($fields as $field_name) {
                   $dokumen_inv = $dokumen['inventaris'];
-                  $default_value = (isset($dokumen['inventaris'][$key][$field_name]))
-                    ? $dokumen['inventaris'][$key][$field_name]
+                  $default_value = (isset($dokumen_inv[$key][$field_name]))
+                    ? $dokumen_inv[$key][$field_name]
                     : 0;
 
                   $value_ori = (isset($data['inventaris'][$key][$field_name]))
                     ? $data['inventaris'][$key][$field_name] : null;
-                  $value_dokumen = (isset($dokumen['inventaris'][$key][$field_name]))
-                    ? $dokumen['inventaris'][$key][$field_name] : null;
+                  $value_dokumen = (isset($dokumen_inv[$key][$field_name]))
+                    ? $dokumen_inv[$key][$field_name] : null;
                   $changed_data_class = ($value_dokumen != $value_ori)
                     ? 'new_change' : '';
 
