@@ -647,7 +647,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
               <div class="desc_block new_data new_tgl_sk_kepsek" attr-data="tgl_sk_kepsek">
                 <label>Tgl. SK Kepala Sekolah</label>
                 <?php
-                $tgl_sk_kepsek = em_date('j F Y', 'set', check_var($data, 'tgl_sk_kepsek', ''));
+                $tgl_sk_kepsek = em_date('j F Y', 'set', check_var($dokumen, 'tgl_sk_kepsek', ''));
                 ?>
                 <div><?= check_var($tgl_sk_kepsek, null, '-') ?></div>
               </div>
