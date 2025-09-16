@@ -289,13 +289,6 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
               </div>
 
               <div class="col-12">
-                <div class="desc_block old_data old_npwp" attr-data="npwp">
-                  <label>NPWP</label>
-                  <div><?= check_var($data, 'npwp', '-') ?></div>
-                </div>
-              </div>
-
-              <div class="col-12">
                 <div class="desc_block old_data old_no_hp" attr-data="no_hp">
                   <label>No. HP</label>
                   <div><?= check_var($data, 'no_hp', '-') ?></div>
@@ -612,13 +605,6 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
               <div class="desc_block new_data new_email" attr-data="email">
                 <label>E-mail</label>
                 <div><?= check_var($dokumen, 'email', '-') ?></div>
-              </div>
-            </div>
-
-            <div class="col-12">
-              <div class="desc_block new_data new_npwp" attr-data="npwp">
-                <label>NPWP</label>
-                <div><?= check_var($dokumen, 'npwp', '-') ?></div>
               </div>
             </div>
 

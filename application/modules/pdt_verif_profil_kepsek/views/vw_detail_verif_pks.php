@@ -332,13 +332,6 @@
 
                 <div class="col-12">
                   <div class="desc_block">
-                    <label>NPWP</label>
-                    <div><?= check_var($data, 'npwp', '-') ?></div>
-                  </div>
-                </div>
-
-                <div class="col-12">
-                  <div class="desc_block">
                     <label>No. HP</label>
                     <div><?= check_var($data, 'no_hp', '-') ?></div>
                   </div>
