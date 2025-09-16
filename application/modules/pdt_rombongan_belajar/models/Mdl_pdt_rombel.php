@@ -46,6 +46,10 @@ class Mdl_pdt_rombel extends CI_Model
         ->or_like('nama_rombel', $data['search'])
         ->group_end();
     }
+
+    if (check_var($data['id_sekolah'])) {
+      $this->db->where('id_sekolah', $data['id_sekolah']);
+    }
   }
 
   public function query_data_siswa($data)

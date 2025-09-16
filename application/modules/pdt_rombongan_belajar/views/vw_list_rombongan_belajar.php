@@ -26,11 +26,30 @@
   <!-- basic table -->
   <div class="row">
     <div class="col-12">
+      <?php
+      $show_debug = false;
+      if ($show_debug) {
+      ?>
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">DATA (DEBUG)</h4>
+              <small>
+                <?php highlight_string("<?php\nSESSION = " . var_export($this->session->userdata(), true) . ";\n\n?>"); ?>
+                <?php highlight_string("<?php\nDATA = " . var_export($data, true) . ";\n\n?>"); ?>
+              </small>
+            </div>
+          </div>
+        </div>
+      <?php
+      }
+      ?>
       <div class="card">
         <div class="card-title">
           <h4 class="space-between">Daftar Rombongan Belajar</h4>
         </div>
         <div class="card-body">
+
 
           <div class="table-responsive">
 
@@ -85,7 +104,7 @@
     ],
     /* set placeholder dari input search */
     language: {
-      searchPlaceholder: "Cari data rombongan belajar..."
+      searchPlaceholder: "Cari data rombel..."
     },
     ajax: {
       url: urlDatatable,

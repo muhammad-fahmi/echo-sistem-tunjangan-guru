@@ -195,7 +195,7 @@
                     </div>
                   </div>
 
-                  <div class="col-12">
+                  <!-- <div class="col-12">
                     <div class="desc_block">
                       <label for="tgl_keluar">Tgl. Keluar</label>
                       <div class="text_value"><?= check_var($data, 'tgl_keluar', '-') ?></div>
@@ -207,7 +207,7 @@
                       <label for="alasan_keluar">Alasan Keluar</label>
                       <div class="text_value"><?= check_var($data, 'alasan_keluar', '-') ?></div>
                     </div>
-                  </div>
+                  </div> -->
 
                   <div class="col-12">
                     <div class="desc_block">
