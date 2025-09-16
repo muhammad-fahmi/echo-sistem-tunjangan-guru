@@ -44,6 +44,11 @@ class Mdl_pdt_tahun_ajaran extends CI_Model
         ->or_like('jenjang', $data['search'])
         ->group_end();
     }
+
+    // filter additional
+    if (check_var($data['id_sekolah'])) {
+      $this->db->where('id_sekolah', $data['id_sekolah']);
+    }
   }
 
   public function query_data_rombel_tahun_ajaran($data)
