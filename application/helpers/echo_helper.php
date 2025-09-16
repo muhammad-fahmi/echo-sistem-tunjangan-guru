@@ -1,6 +1,8 @@
 <?php
 
-/** cek apakah data yang diberikan itu string kosong atau null */
+/**
+ * cek apakah data yang diberikan itu string kosong atau null
+ */
 function isset_nn_nes($data, $placeholder = null)
 {
   $result = false;
@@ -21,6 +23,7 @@ function isset_nn_nes($data, $placeholder = null)
 function is_logged_in()
 {
   $CI = &get_instance();
+  $CI = new MY_Controller();
   $logged_in = $CI->session->userdata('logged_in');
   $id_user = $CI->session->userdata('id_user');
 
@@ -126,7 +129,9 @@ function clean_string($string = 'String_ placeholder')
   return $cleanedString;
 }
 
-/** ambil data datetime berdasarkan waktu saat ini (dalam timezone GMT+8 secara default). dengan output berupa string */
+/**
+ * ambil data datetime berdasarkan waktu saat ini (dalam timezone GMT+8 secara default). dengan output berupa string
+ */
 function datetime_now($alphanum = false, $timezone = 'Asia/Hong_Kong')
 {
   $now = new DateTime();
@@ -342,7 +347,9 @@ function key_reference($digit)
   return $txt;
 }
 
-/** ubah string dalam format datetime mysql menjadi string dalam format waktu indonesia. output yang dihasilkan berbentuk array yang berisi tanggal, waktu, dan tanggal+waktu (output berupa string kosong apabila parameter fungsi tidak diisi) */
+/**
+ * ubah string dalam format datetime mysql menjadi string dalam format waktu indonesia. output yang dihasilkan berbentuk array yang berisi tanggal, waktu, dan tanggal+waktu (output berupa string kosong apabila parameter fungsi tidak diisi)
+ */
 function datetime_to_view($datetime_string = '')
 {
   if (strlen($datetime_string) >= 19) {
@@ -368,7 +375,9 @@ function datetime_to_view($datetime_string = '')
   return $result;
 }
 
-/** fungsi ini untuk mengubah format SQL date menjadi view format date, return string */
+/**
+ * fungsi ini untuk mengubah format SQL date menjadi view format date, return string
+ */
 function date_to_view($date_string = "")
 {
   if (strlen($date_string) >= 10) {
@@ -379,7 +388,8 @@ function date_to_view($date_string = "")
   }
 }
 
-/** ubah string datetime dalam format indonesia menjadi string datetime dalam format mysql. output berupa string
+/**
+ * ubah string datetime dalam format indonesia menjadi string datetime dalam format mysql. output berupa string
  * - **require :** date string & time string (if it's datetime, split them first)
  * - **output :** string sql datetime
  */
@@ -395,9 +405,11 @@ function datetime_to_sql($date_string = '', $time_string = '')
   return $result;
 }
 
-/** buat perhitungan elapsed time dengan membandingkan datetime yang ada di parameter dengan datetime sekarang (saat ini) dan output hasilnya berupa string */
+/**
+ * buat perhitungan elapsed time dengan membandingkan datetime yang ada di parameter dengan datetime sekarang (saat ini) dan output hasilnya berupa string
+ */
 function datetime_elapsed_time($datetime = '', $full = false, $lang = 'en', $array = false)
-{
+{;
   $datetime = ($datetime == '') ? datetime_now() : $datetime;
   date_default_timezone_set('Asia/Hong_Kong');
   $now = new DateTime;
@@ -479,7 +491,9 @@ function datetime_elapsed_time($datetime = '', $full = false, $lang = 'en', $arr
   }
 }
 
-/** convert angka parameter menjadi format yang lebih singkat (contoh : 1,43m) */
+/**
+ *convert angka parameter menjadi format yang lebih singkat (contoh : 1,43m)
+ */
 function short_num($num, $decimals = 2, $lang = 'en',  $caps = false)
 {
   /* cek locale */
@@ -534,10 +548,13 @@ function short_num($num, $decimals = 2, $lang = 'en',  $caps = false)
   return $result;
 }
 
-/** fungsi untuk ngambil data yang ada di field tertentu pada tabel sesuai dengan kondisi `where` */
+/**
+ * fungsi untuk ngambil data yang ada di field tertentu pada tabel sesuai dengan kondisi `where`
+ */
 function fetch_single_data($table_name, $field_name, $where = null, $placeholder = '')
 {
   $CI = &get_instance();
+  $CI = new MY_Controller();
   if ($where == null) return $placeholder;
   $q = $CI->db->get_where($table_name, $where);
   $count = $q->num_rows();
@@ -548,10 +565,13 @@ function fetch_single_data($table_name, $field_name, $where = null, $placeholder
   return $data[$field_name];
 }
 
-/** fungsi untuk ngambil 1 row dari tabel dengan kondisi yang ditentukan */
+/**
+ * fungsi untuk ngambil 1 row dari tabel dengan kondisi yang ditentukan
+ */
 function fetch_row_data($table_name, $where = null, $placeholder = '')
 {
   $CI = &get_instance();
+  $CI = new MY_Controller();
   if ($where == null) return $placeholder;
   $q = $CI->db->get_where($table_name, $where);
   $count = $q->num_rows();
@@ -561,10 +581,13 @@ function fetch_row_data($table_name, $where = null, $placeholder = '')
   return $data;
 }
 
-/** fungsi untuk ngambil nilai apakah ada atau tidak di DB */
+/**
+ * fungsi untuk ngambil nilai apakah ada atau tidak di DB
+ */
 function fetch_num_rows($table_name, $where = null)
 {
   $CI = &get_instance();
+  $CI = new MY_Controller();
   if ($where == null) return 0;
   $q = $CI->db->get_where($table_name, $where);
   $count = $q->num_rows();
@@ -578,6 +601,7 @@ function fetch_num_rows($table_name, $where = null)
 function post_safe($key = null, $default = null)
 {
   $CI = &get_instance();
+  $CI = new MY_Controller();
   $value = $CI->input->post($key, TRUE); // TRUE enables XSS filtering
 
   return $value !== null ? $value : $default;
@@ -589,32 +613,41 @@ function post_safe($key = null, $default = null)
 function get_safe($key = null, $default = null)
 {
   $CI = &get_instance();
+  $CI = new MY_Controller();
   $value = $CI->input->get($key, TRUE);
 
   return $value !== null ? $value : $default;
 }
 
-/** fungsi untuk ngecek kewenangan di sesi dan menentukan apakah yg login saat ini termasuk admin (output : true / false) */
+/**
+ * fungsi untuk ngecek kewenangan di sesi dan menentukan apakah yg login saat ini termasuk admin (output : true / false)
+ */
 function is_admin()
 {
   $CI = &get_instance();
+  $CI = new MY_Controller();
   $cur_kewenangan = $CI->session->userdata('kewenangan');
 
   return ($cur_kewenangan == '00' || $cur_kewenangan == '01' || $cur_kewenangan == '02')
     ? true : false;
 }
 
-/** fungsi untuk ngecek kewenangan di sesi dan menentukan apakah yg login saat ini merupakan super admin (output: true / false) */
+/**
+ * fungsi untuk ngecek kewenangan di sesi dan menentukan apakah yg login saat ini merupakan super admin (output: true / false)
+ */
 function is_super_admin()
 {
   $CI = &get_instance();
+  $CI = new MY_Controller();
   $cur_kewenangan = $CI->session->userdata('kewenangan');
 
   return ($cur_kewenangan == '00')
     ? true : false;
 }
 
-// Define a mapping from digits to character strings
+/**
+ * Define a mapping from digits to character strings
+ */
 function get_digit_to_string_mapping()
 {
   return [
@@ -631,7 +664,9 @@ function get_digit_to_string_mapping()
   ];
 }
 
-// Define a reverse mapping from character strings to digits
+/**
+ * Define a reverse mapping from character strings to digits
+ */
 function get_string_to_digit_mapping()
 {
   $mapping = get_digit_to_string_mapping();
@@ -832,6 +867,7 @@ function array_periode_bulan()
 function check_perm($action, $menu = null)
 {
   $CI = &get_instance();
+  $CI = new MY_Controller();
   $cur_kewenangan = $CI->session->userdata('kewenangan');
   $cur_menu = ($menu === null)
     ? $CI->session->userdata('menu')
@@ -870,6 +906,7 @@ function menu_loader($echo = true)
   // dan pastikan ada permission tag (privilege dipisah dengan koma)
   // dan pastikan ada order, untuk mengurutkan menunya
   $CI = &get_instance();
+  $CI = new MY_Controller();
   $table = 'v_kewenangan_menu';
   $hr = '<hr style="border: 1px solid #efefef; opacity: 1;">';
 
@@ -1139,6 +1176,7 @@ function clean_empty_or_all_no_permissions($data)
 function output_json($response_array, $status_code = 200)
 {
   $CI = &get_instance();
+  $CI = new MY_Controller();
   $CI->output
     ->set_content_type('application/json')
     ->set_status_header($status_code)
@@ -1204,6 +1242,7 @@ function setStrCellValue($sheet, $cells, $data)
 function s_log($__FUNCTION__, $value = 'logged activity', $reset = false)
 {
   $CI = &get_instance();
+  $CI = new MY_Controller();
   $microtime = number_format(microtime(true), 8, '', '');
 
   $curLog = $CI->session->userdata('__LOG SESSION__');
@@ -1224,6 +1263,7 @@ function menu_auth($privilege = '200', $menu = '-')
   // pastikan ada permission tag (privilege dipisah dengan koma)
   // dan pastikan ada order, untuk mengurutkan menunya
   $CI = &get_instance();
+  $CI = new MY_Controller();
   $table = 'm_menu';
   // query untuk tarik data menu
   $data = $CI->db->select('*')->from($table)
@@ -1245,6 +1285,7 @@ function menu_auth($privilege = '200', $menu = '-')
 function menu_loader_sipedal($username, $kewenangan)
 {
   $CI = &get_instance();
+  $CI = new MY_Controller();
   if ($kewenangan == 11) {
     $username = "atasan_langsung";
   }
@@ -1276,6 +1317,7 @@ function menu_loader_sipedal($username, $kewenangan)
 function menu_auth_sipedal($username, $module, $kewenangan)
 {
   $CI = &get_instance();
+  $CI = new MY_Controller();
   if ($kewenangan == '11') {
     // gunakan username atasan_langsung
     $username = 'atasan_langsung';
@@ -1431,6 +1473,7 @@ function log_generator($username = '-', $table = '-', $object = '-', $message = 
 {
   $curdate = datetime_now();
   $CI = &get_instance();
+  $CI = new MY_Controller();
   $data = array(
     'subject' => $username,
     'table' => $table,
@@ -1500,6 +1543,7 @@ function format_log_view($array_data)
 function generate_no_dok()
 {
   $CI = &get_instance();
+  $CI = new MY_Controller();
   $curyear = date('Y');
   $no = $CI->db->select('id')->from('r_dok_sewa')
     ->like('tgl_dok', $curyear)->get()->num_rows();
@@ -1655,6 +1699,7 @@ function get_all_date_in_between($start_date, $end_date)
 function ajax_response($array_res)
 {
   $CI = &get_instance();
+  $CI = new MY_Controller();
   $CI->output
     ->set_content_type('application/json')
     ->set_output(json_encode($array_res));
@@ -1693,6 +1738,7 @@ function get_status_id_hari_kerja($int_code = 0, $with_label = false)
 function ssh_get_volume_selection()
 {
   $CI = &get_instance();
+  $CI = new MY_Controller();
   $query =  $CI->db->select('volume_standar')->from('r_standarharga')
     ->order_by('volume_standar', 'ASC')->group_by('volume_standar')->get();
   return [
@@ -1704,6 +1750,7 @@ function ssh_get_volume_selection()
 function keg_get_unor_selection()
 {
   $CI = &get_instance();
+  $CI = new MY_Controller();
   $query =  $CI->db->select('kode_unor, ket_unor')->from('m_unor')
     ->order_by('kode_unor', 'ASC')->group_by('kode_unor')->get();
   return [
@@ -1715,6 +1762,7 @@ function keg_get_unor_selection()
 function keg_get_kegiatan_selection()
 {
   $CI = &get_instance();
+  $CI = new MY_Controller();
   $query =  $CI->db->select('kode_kegiatan, uraian_kegiatan')->from('m_kegiatan')->where([
     'jns_kegiatan' => 'D'
   ])->order_by('kode_kegiatan', 'ASC')->group_by('kode_kegiatan')->get();
@@ -1724,7 +1772,8 @@ function keg_get_kegiatan_selection()
   ];
 }
 
-function cek_folder_kosong($dir) {
+function cek_folder_kosong($dir)
+{
   // Cek apakah direktori ada
   if (!is_dir($dir)) {
     return false; // Direktori tidak ada
