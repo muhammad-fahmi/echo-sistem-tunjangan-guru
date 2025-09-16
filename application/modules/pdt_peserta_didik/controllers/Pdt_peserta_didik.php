@@ -212,7 +212,7 @@ class Pdt_peserta_didik extends MY_Controller
     /// |----------------------------------------
     /// | AMBIL DATA POST
     /// |----------------------------------------
-    $post = $this->input->post();
+    $post = post_safe();
 
     // set data array utk proses insert
     $data_to_save = array(
@@ -228,7 +228,7 @@ class Pdt_peserta_didik extends MY_Controller
       'alamat' => $post['alamat'],
       // 's_aktif' => $post['s_aktif'],
       's_aktif' => 1,
-      'tgl_masuk' => em_date('Y-m-d'),
+      'tgl_masuk' => $post['tgl_masuk'],
       'pdpd' => $post['pdpd_options'],
     );
 

@@ -76,6 +76,13 @@
       <div class="col-12 col-lg-12 form_mapel mb-2">
         <label for="alamat">Alamat</label>
         <input type="text" name="alamat" id="alamat" rows="3" class="form-control form-control-sm" value="<?= (string) $data['alamat'] ?>">
+        <div class="invalid-feedback"></div>
+      </div>
+
+      <div class="col-12 form_mapel mb-2">
+        <label for="tgl_masuk">Tgl. Masuk</label>
+        <input type="text" name="tgl_masuk" id="tgl_masuk" class="form-control form-control-sm" value="<?= $data['tgl_masuk']; ?>">
+        <div class="invalid-feedback"></div>
       </div>
 
       <!-- Status Aktif tampil sesuai kewenangan -->
@@ -121,6 +128,15 @@
       select_pd.style.display = checkbox.checked ? 'block' : 'none';
     }
   }
+
+  // input date format
+  $('#tgl_masuk').datepicker({
+    format: 'yyyy-mm-dd',
+    orientation: 'top',
+    todayHighlight: true,
+    autoclose: true,
+    language: "id-ID"
+  });
 
   /// |----------------------------------------------------------------------
   /// | >> SELECT2 AGAMA
