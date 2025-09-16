@@ -270,9 +270,9 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                 <?php
                 $mttpi = (check_var($data, 'menerima_ttp_insentif', '-'));
                 if ($mttpi == 'Y') {
-                  $mttpi = 'Ya';
+                  $mttpi = 'Menerima';
                 } elseif ($mttpi == 'N') {
-                  $mttpi = 'Tidak';
+                  $mttpi = 'Tidak Menerima';
                 }
                 ?>
                 <div class="desc_block old_data old_menerima_ttp_insentif" attr-data="menerima_ttp_insentif">
@@ -590,9 +590,9 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
               <?php
               $mttpi = (check_var($dokumen, 'menerima_ttp_insentif', '-'));
               if ($mttpi == 'Y') {
-                $mttpi = 'Ya';
+                $mttpi = 'Menerima';
               } elseif ($mttpi == 'N') {
-                $mttpi = 'Tidak';
+                $mttpi = 'Tidak Menerima';
               }
               ?>
               <div class="desc_block new_data new_menerima_ttp_insentif" attr-data="menerima_ttp_insentif">

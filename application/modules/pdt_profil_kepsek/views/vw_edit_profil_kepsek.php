@@ -312,8 +312,8 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                       <label for="menerima_ttp_insentif">Menerima TTP Insentif</label>
                       <select name="menerima_ttp_insentif" id="menerima_ttp_insentif" class="form-select">
                         <option value="" default hidden>- Pilih Status TTP Insentif -</option>
-                        <option value="Y" <?= ($mttpi == 'Y') ? 'selected' : '' ?>>Ya, Menerima TTP Insentif</option>
-                        <option value="N" <?= ($mttpi == 'N') ? 'selected' : '' ?>>Tidak Menerima TTP Insentif</option>
+                        <option value="Y" <?= ($mttpi == 'Y') ? 'selected' : '' ?>>Menerima</option>
+                        <option value="N" <?= ($mttpi == 'N') ? 'selected' : '' ?>>Tidak Menerima</option>
                       </select>
                       <div class="invalid-feedback" id="error_menerima_ttp_insentif"></div>
                     </div>

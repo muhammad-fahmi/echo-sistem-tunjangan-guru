@@ -312,9 +312,9 @@
                   <?php
                   $mttpi = (check_var($data, 'menerima_ttp_insentif', '-'));
                   if ($mttpi == 'Y') {
-                    $mttpi = 'Ya';
+                    $mttpi = 'Menerima';
                   } elseif ($mttpi == 'N') {
-                    $mttpi = 'Tidak';
+                    $mttpi = 'Tidak Menerima';
                   }
                   ?>
                   <div class="desc_block">

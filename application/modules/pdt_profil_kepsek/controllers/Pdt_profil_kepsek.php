@@ -235,7 +235,8 @@ class Pdt_profil_kepsek extends MY_Controller
         $sheet->setCellValue("D18", check_var($data_kepsek, 'nama_rek_bank', ''));
         $sheet->setCellValue("D19", check_var($data_kepsek, 'nama_bank', ''));
         $sheet->setCellValue("D20", check_var($data_kepsek, 'npwp', ''));
-        $sheet->setCellValue("D21", check_var($data_kepsek, 'menerima_ttp_insentif', ''));
+        $menerima_ttp = (check_var($data_kepsek, 'menerima_ttp_insentif', 'N') == 'Y') ? 'Menerima' : 'Tidak Menerima';
+        $sheet->setCellValue("D21", $menerima_ttp);
         $sheet->setCellValue("D22", check_var($data_kepsek, 'pangkat_gol_ruang', ''));
         $sheet->setCellValue("D23", check_var($data_kepsek, 'jenjang_jabatan', ''));
         $sheet->setCellValue("D24", check_var($data_kepsek, 'ket_status', ''));
@@ -290,7 +291,8 @@ class Pdt_profil_kepsek extends MY_Controller
         setStrCellValue($sheet, 'D18', check_var($data_kepsek, 'nama_rek_bank', ''));
         setStrCellValue($sheet, 'D19', check_var($data_kepsek, 'nama_bank', ''));
         setStrCellValue($sheet, 'D20', check_var($data_kepsek, 'npwp', ''));
-        setStrCellValue($sheet, 'D21', check_var($data_kepsek, 'menerima_ttp_insentif', ''));
+        $menerima_ttp = (check_var($data_kepsek, 'menerima_ttp_insentif', 'N') == 'Y') ? 'Menerima' : 'Tidak Menerima';
+        $sheet->setCellValue("D21", $menerima_ttp);
         setStrCellValue($sheet, 'D22', check_var($data_kepsek, 'pangkat_gol_ruang', ''));
         setStrCellValue($sheet, 'D23', check_var($data_kepsek, 'jenjang_jabatan', ''));
         setStrCellValue($sheet, 'D24', check_var($data_kepsek, 'ket_status', ''));
