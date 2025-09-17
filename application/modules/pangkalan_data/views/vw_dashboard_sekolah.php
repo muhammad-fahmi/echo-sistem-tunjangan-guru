@@ -333,9 +333,9 @@
                   <td style="width: 100%;"><?= check_var($data_kepsek, 'pendidikan', '-') ?></td>
                 </tr>
                 <tr>
-                  <td style="min-width: 150px;">NO. SERTIFIKAT PENDIDIKAN</td>
+                  <td style="min-width: 150px;">NO. SERTIFIKAT PENDIDIK</td>
                   <td style="min-width: 20px; text-align: center;">:</td>
-                  <td style="width: 100%;"><?= check_var($data_kepsek, 'no_sertifikat_pendidikan', '-') ?></td>
+                  <td style="width: 100%;"><?= check_var($data_kepsek, 'no_sertifikat_pendidik', '-') ?></td>
                 </tr>
                 <tr>
                   <td style="min-width: 150px;">NO. SERTIFIKAT GP</td>
