@@ -312,10 +312,15 @@
                   <td style="min-width: 20px; text-align: center;">:</td>
                   <td style="width: 100%;"><?= check_var($data_kepsek, 'alamat_saat_ini', '-') ?></td>
                 </tr>
+                <!-- <tr>
+                  <td colspan="3">
+                    <?php highlight_string("<?php\nOUTPUT = " . var_export($data_kepsek, true) . ";\n?>"); ?>
+                  </td>
+                </tr> -->
                 <tr>
                   <td style="min-width: 150px;">STATUS PERNIKAHAN</td>
                   <td style="min-width: 20px; text-align: center;">:</td>
-                  <td style="width: 100%;"><?= check_var($data_kepsek, 'status_pernikahan', '-') ?></td>
+                  <td style="width: 100%;"><?= check_var($data_kepsek, 'ket_status_pernikahan', '-') ?></td>
                 </tr>
                 <tr>
                   <td style="min-width: 150px;">KODE DIDIK</td>
