@@ -499,3 +499,8 @@ td.new_change {
 		opacity: 1;
 	}
 }
+
+table.dataTable thead th.sorting_desc::after,
+table.dataTable thead th.sorting_desc::before {
+	display: none !important;
+}
