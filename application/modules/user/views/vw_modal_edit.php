@@ -32,6 +32,7 @@
           <option value="" default hidden>-- Pilih Kewenangan --</option>
           <option value="00" <?= ($data['kewenangan'] == '00') ? 'default selected' : ''; ?>>Super Admin</option>
           <option value="01" <?= ($data['kewenangan'] == '01') ? 'default selected' : ''; ?>>Administrator</option>
+          <option value="02" <?= ($data['kewenangan'] == '02') ? 'default selected' : ''; ?>>Admin Disdik</option>
           <option value="10" <?= ($data['kewenangan'] == '10') ? 'default selected' : ''; ?>>Admin OPD / Unit Kerja</option>
         </select>
       </div>
