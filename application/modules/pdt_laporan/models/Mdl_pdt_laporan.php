@@ -111,6 +111,7 @@ class Mdl_pdt_laporan extends CI_Model
     }
   }
 
+
   /// |---------------------------------------------------------
   /// | >> PROSES MODEL GET DATA
   /// |---------------------------------------------------------
@@ -193,6 +194,136 @@ class Mdl_pdt_laporan extends CI_Model
       'data' => $data_result,
       'draw' => (int)$data['draw']
     );
+  }
+
+  public function get_all_data_pendidik()
+  {
+    $this->db->from('temp_ptk_dapodik')
+      ->where('jenis_ptk', 'Guru');
+    return $this->db->count_all_results();
+  }
+
+  public function get_tenaga_pendidik_pns()
+  {
+    $this->db->from('temp_ptk_dapodik')
+      ->group_start()
+      ->where('status_kepegawaian', 'PNS')
+      ->or_where('status_kepegawaian', 'CPNS')
+      ->or_where('status_kepegawaian', 'PNS Depag')
+      ->or_where('status_kepegawaian', 'PNS Diperbantukan')
+      ->group_end()
+      ->where('jenis_ptk', 'Guru')
+      ->order_by('status_kepegawaian', 'ASC');
+    return $this->db->count_all_results();
+  }
+
+  public function get_tenaga_pendidik_pppk()
+  {
+    $this->db->from('temp_ptk_dapodik')
+      ->group_start()
+      ->or_where('status_kepegawaian', 'PPPK')
+      ->group_end()
+      ->where('jenis_ptk', 'Guru')
+      ->order_by('status_kepegawaian', 'ASC');
+    return $this->db->count_all_results();
+  }
+
+  public function get_tenaga_pendidik_negeri()
+  {
+    $this->db->from('temp_ptk_dapodik')
+      ->where('status_instansi', 'NEGERI')
+      ->not_group_start()
+      ->where('status_kepegawaian', 'CPNS')
+      ->or_where('status_kepegawaian', 'PNS')
+      ->or_where('status_kepegawaian', 'PNS Depag')
+      ->or_where('status_kepegawaian', 'PNS Diperbantukan')
+      ->or_where('status_kepegawaian', 'PPPK')
+      ->group_end()
+      ->where('jenis_ptk', 'Guru');
+    return $this->db->count_all_results();
+  }
+  public function get_tenaga_pendidik_swasta()
+  {
+    $this->db->from('temp_ptk_dapodik')
+      ->where('status_instansi', 'SWASTA')
+      ->not_group_start()
+      ->where('status_kepegawaian', 'CPNS')
+      ->or_where('status_kepegawaian', 'PNS')
+      ->or_where('status_kepegawaian', 'PNS Depag')
+      ->or_where('status_kepegawaian', 'PNS Diperbantukan')
+      ->or_where('status_kepegawaian', 'PPPK')
+      ->group_end()
+      ->where('jenis_ptk', 'Guru');
+    return $this->db->count_all_results();
+  }
+
+  public function get_detail_tenaga_pendidik($nik)
+  {
+    $result = $this->db->from('temp_ptk_dapodik')->like('nik', $nik)->get()->row_array();
+    return $result;
+  }
+
+
+  public function get_all_data_kependidikan()
+  {
+    $this->db->from('temp_ptk_dapodik')
+      ->where('jenis_ptk !=', 'Guru');
+    return $this->db->count_all_results();
+  }
+
+  public function get_tenaga_kependidikan_pns()
+  {
+    $this->db->from('temp_ptk_dapodik')
+      ->group_start()
+      ->where('status_kepegawaian', 'PNS')
+      ->or_where('status_kepegawaian', 'CPNS')
+      ->or_where('status_kepegawaian', 'PNS Depag')
+      ->or_where('status_kepegawaian', 'PNS Diperbantukan')
+      ->group_end()
+      ->where('jenis_ptk !=', 'Guru')
+      ->order_by('status_kepegawaian', 'ASC');
+    return $this->db->count_all_results();
+  }
+
+  public function get_tenaga_kependidikan_pppk()
+  {
+    $this->db->from('temp_ptk_dapodik')
+      ->group_start()
+      ->or_where('status_kepegawaian', 'PPPK')
+      ->group_end()
+      ->where('jenis_ptk !=', 'Guru')
+      ->order_by('status_kepegawaian', 'ASC');
+    return $this->db->count_all_results();
+  }
+
+  public function get_tenaga_kependidikan_negeri()
+  {
+    $this->db->from('temp_ptk_dapodik')
+      ->where('status_instansi', 'NEGERI')
+      ->not_group_start()
+      ->where('status_kepegawaian', 'CPNS')
+      ->or_where('status_kepegawaian', 'PNS')
+      ->or_where('status_kepegawaian', 'PNS Depag')
+      ->or_where('status_kepegawaian', 'PNS Diperbantukan')
+      ->or_where('status_kepegawaian', 'PPPK')
+      ->group_end()
+      ->where('jenis_ptk !=', 'Guru');
+    return $this->db->count_all_results();
+  }
+
+  public function get_tenaga_kependidikan_swasta()
+  {
+    $this->db->from('temp_ptk_dapodik')
+      ->where('status_instansi', 'SWASTA')
+      ->not_group_start()
+      ->where('status_kepegawaian', 'CPNS')
+      ->or_where('status_kepegawaian', 'PNS')
+      ->or_where('status_kepegawaian', 'PNS Depag')
+      ->or_where('status_kepegawaian', 'PNS Diperbantukan')
+      ->or_where('status_kepegawaian', 'PPPK')
+      ->group_end()
+      ->where('jenis_ptk', 'Guru');
+    return $this->db->count_all_results();
   }
 
   /// |---------------------------------------------------------
