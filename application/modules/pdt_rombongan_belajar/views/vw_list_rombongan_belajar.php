@@ -61,12 +61,12 @@
 
               <thead class="bg-info text-white">
                 <tr class="text-center">
-                  <th class="vat" style="min-width: 30px;">#</th>
-                  <th class="vat" style="min-width: 100px;">Jenjang</th>
-                  <th class="vat" style="min-width: 150px;">Sekolah</th>
-                  <th class="vat" style="min-width: 60px;">Kelas</th>
-                  <th class="vat" style="min-width: 80px;">Rombel</th>
-                  <th class="vat" style="min-width: 60px;">Aksi</th>
+                  <th class="vam" style="min-width: 30px;">#</th>
+                  <th class="vam" style="min-width: 100px;">Jenjang</th>
+                  <th class="vam" style="min-width: 150px;">Sekolah</th>
+                  <th class="vam" style="min-width: 60px;">Kelas</th>
+                  <th class="vam" style="min-width: 80px;">Rombel</th>
+                  <th class="vam" style="min-width: 60px;">Aksi</th>
                 </tr>
               </thead>
 
@@ -86,6 +86,12 @@
 <!-- End Container fluid  -->
 <!-- -------------------------------------------------------------- -->
 <script>
+  // disable sorting icon
+  $('#table_rombel').on('init.dt', function() {
+    $('#table_rombel thead th.no-sort')
+      .removeClass('sorting sorting_asc sorting_desc sorting_disabled');
+  });
+  // 
   var init_btn_add = false;
   let urlDatatable = "<?= site_url('pdt_rombongan_belajar/get_data') ?>";
   var table_rombel = $("#table_rombel").DataTable({
@@ -132,7 +138,7 @@
       {
         data: 'ket_jenjang',
         orderable: false,
-        className: 'vat',
+        className: 'vat no-sort',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-start">' + cellData + '</div>');
         }
