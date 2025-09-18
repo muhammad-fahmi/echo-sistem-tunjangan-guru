@@ -67,11 +67,13 @@
 <script>
   var urlDatatable = "<?= site_url('ptk/datalist') ?>";
   var init_btn_add = false;
+  $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
+    show_notify("error", "DataTables Error: " + message);
+  };
   var tabel_ptk = $("#table_ptk").DataTable({
     responsive: true,
     processing: true,
     serverSide: true,
-    orderCellsTop: true,
     dom: '<"row g-1"' +
       '<"col-12 col-sm-6 init_btn_container"><"col-12 col-sm-6 vam"f>' +
       '<"col-12"tr>' +
@@ -79,7 +81,7 @@
       '>',
     /* set kolom yang di sortir secara default */
     order: [
-      [0, "asc"],
+      [1, "asc"],
     ],
     /* set placeholder dari input search */
     language: {
@@ -100,8 +102,7 @@
       },
     },
     /* Sesuaikan jumlah kolom dengan id table yang digunakan */
-    columns: [
-      {
+    columns: [{
         data: 'nip',
         orderable: false,
         className: 'vam',
@@ -130,7 +131,7 @@
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div>[' + cellData +'] '+rowData["nama_gol"]+'</div>');
+          $(td).html('<div>[' + cellData + '] ' + rowData["nama_gol"] + '</div>');
         },
       },
       {
@@ -139,9 +140,9 @@
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
           var display = "";
-          if (cellData !== false){
+          if (cellData !== false) {
             display = rowData.status_gtk;
-          }else{
+          } else {
             display = "Belum Diset";
           }
           $(td).html('<div class="text-end">' + display + '</div>');
@@ -153,29 +154,28 @@
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
           var display = "";
-          if (cellData !== false){
+          if (cellData !== false) {
             display = rowData.jenis_ptk;
-          }else{
+          } else {
             display = "Belum Diset";
           }
-          $(td).html('<div class="text-end">' + cellData + '</div>');
-        },
-      },
+          $(td).html('<div class="text-end">' + display + '</div>');
+        },      },
       {
         data: 'keterangan_ptk',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
-          if (rowData.keterangan_ptk != "" && rowData.jenisketerangan_ptk_ptk != null){
+          var display = "";
+          if (rowData.keterangan_ptk != "" && rowData.keterangan_ptk != null) {
             display = rowData.keterangan_ptk;
-          }else{
+          } else {
             display = "-";
           }
-          $(td).html('<div class="text-end">' + cellData + '</div>');
-        },
-      },
+          $(td).html('<div class="text-end">' + display + '</div>');
+        },      },
       {
-        data: 'nip',
+        data: 'encoded_nip',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -184,7 +184,7 @@
             'Pilih' +
             '</button>' +
             '<ul class="dropdown-menu">' +
-            '<li><a class="dropdown-item" href="<?php echo site_url("ptk/edit/"); ?>'+btoa(cellData)+'"><i class="fas fa-edit me-1"></i>Edit</a></li>' +
+            '<li><a class="dropdown-item" href="<?php echo site_url("ptk/edit/"); ?>' + cellData + '"><i class="fas fa-edit me-1"></i>Edit</a></li>' +
             '</ul>' +
             '</div>';
           $(td).html('<div class="text-center">' + html_aksi + '</div>');

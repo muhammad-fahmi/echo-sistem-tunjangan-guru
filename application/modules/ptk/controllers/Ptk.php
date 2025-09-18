@@ -19,7 +19,7 @@ class Ptk extends MY_Controller
   public function index()
   {
     // lakukan proses init halaman
-
+    $sent_data = [];
     $data = array(
       'page_title' => "List PTK",
       'module' => "ptk",
@@ -57,7 +57,7 @@ class Ptk extends MY_Controller
   }
 
   public function edit($nip)
-  { 
+  {
     $decoded_nip = base64_decode($nip);
     $kode_ukerja = $this->session->userdata("kode_unor");
     $q_data_gtk  = $this->db->where(["nip" => $decoded_nip,"kode_ukerja" => $kode_ukerja,"s_aktif" => "-1"])->get("v_progurinda_ptk");
@@ -75,7 +75,7 @@ class Ptk extends MY_Controller
       );
       echo Modules::run('layout/backend', $data);
     }else{
-      //return / redirect ke page sebelumnya  
+      //return / redirect ke page sebelumnya
       echo "NIP tidak ditemukan";
     }
   }

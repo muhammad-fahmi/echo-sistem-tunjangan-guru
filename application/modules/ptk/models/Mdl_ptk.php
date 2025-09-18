@@ -43,10 +43,10 @@ class Mdl_ptk extends CI_Model
     /* kalau ada tambahan where condition bisa add lagi di atas */
     // deklarasi query yang digunakan
     $query_result = $this->db->query("SELECT * FROM $table
-      $where_unit_kerja $where_s_aktif $where_search 
+      $where_unit_kerja $where_s_aktif $where_search
       ORDER BY $data[order_column] $data[order_sort],tugas_tambahan desc
       LIMIT $data[start], $data[length]");
-    $query_total = $this->db->query("SELECT * FROM $table 
+    $query_total = $this->db->query("SELECT * FROM $table
       $where_unit_kerja $where_s_aktif $where_search");
     // cari total hasil
     $total_count = $query_total->num_rows();
@@ -58,9 +58,10 @@ class Mdl_ptk extends CI_Model
       /// |----------------------------------------------------------------------
       /// | PENATAAN DATA SEBELUM DIMASUKKAN KE DALAM RESULT_ARRAY
       /// |----------------------------------------------------------------------
-      
+
       $data_result[$index] = $row;
-      // $data_result[$index]['nip'] = isset_nn_nes($row['nip'], '-');
+      $data_result[$index]['nip'] = isset_nn_nes($row['nip'], '-');
+      $data_result[$index]['encoded_nip'] = base64_encode(isset_nn_nes($row['nip'], '-'));
       $data_result[$index]['nama_lengkap'] = isset_nn_nes($row['nama_lengkap'], '-');
       $data_result[$index]['ket_jab'] = isset_nn_nes($row['ket_jab'], '-');
       $data_result[$index]['ket_gol'] = isset_nn_nes($row['ket_gol'], '-');
