@@ -48,7 +48,7 @@
 
 <div class="modal-footer">
   <div class="col-md-12 d-flex justify-content-end">
-    <button type="button" class="btn btn-danger mx-2" data-bs-dismiss="modal">Close</button>
+    <button type="button" class="btn btn-danger mx-2" data-bs-dismiss="modal" onclick="cancelImportFile()">Close</button>
     <button type="button" class="btn btn-primary mx-2 d-none" id="btn_import" onclick="importFile()">Import</button>
   </div>
 </div>
@@ -279,6 +279,27 @@
       .catch(error => {
         console.error('Error:', error);
       });
+  }
+
+  var cancelImportFile = () => {
+    // Clear the file input and hide related elements
+    $('#i_import_siswa').val(''); // Clear the file input
+    $("#uploaded_file").html(''); // Clear the uploaded file display
+    $("#btn_import").addClass('d-none').prop('hidden', true); // Hide the import button
+    $("#preview_response_container").addClass('d-none'); // Hide the preview container
+    $("div.alert_message").addClass('d-none'); // Hide the alert message
+    $("#import_container").removeClass('d-none'); // Show the import container
+    $.ajax({
+      type: "GET",
+      url: "<?= site_url('pdt_peserta_didik/cancel_import') ?>",
+      success: function(res) {
+        if (res.status) {
+          console.log(res.message);
+        } else {
+          console.error('Failed to clear temporary data');
+        }
+      }
+    });
   }
 
   $(function() {
