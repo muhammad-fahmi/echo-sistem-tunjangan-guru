@@ -81,7 +81,7 @@
 
       <div class="col-12 form_mapel mb-2">
         <label for="tgl_masuk">Tgl. Masuk</label>
-        <input type="text" name="tgl_masuk" id="tgl_masuk" class="form-control form-control-sm" value="<?= $data['tgl_masuk']; ?>">
+        <input type="text" name="tgl_masuk" id="tgl_masuk" class="form-control form-control-sm" value="<?= (string) $data['tgl_masuk']; ?>">
         <div class="invalid-feedback"></div>
       </div>
 
@@ -107,6 +107,13 @@
           <?php $selected = ($data["pdpd"] != "") ? "selected" : ""; ?>
           <option value="<?= (string) $data["pdpd"]; ?>" <?= $selected ?>><?= (string) $data["ket_disabilitas"]; ?></option>
         </select>
+      </div>
+
+      <div class="col-12 form_mapel mb-2">
+        <!-- <label for="id_sekolah">Sekolah</label> -->
+        <input type="hidden" id="id_sekolah" name="id_sekolah" class="form-control form-control" value="<?= (string) $this->session->userdata("kode_unor"); ?>">
+        <input type="hidden" id="ket_sekolah" name="ket_sekolah" class="form-control form-control" value="<?= (string) $this->session->userdata("ket_unor"); ?>" readonly>
+        <!-- <div class="invalid-feedback"></div> -->
       </div>
 
     </div>

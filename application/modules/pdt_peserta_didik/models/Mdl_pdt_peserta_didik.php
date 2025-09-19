@@ -46,6 +46,10 @@ class Mdl_pdt_peserta_didik extends CI_Model
         ->or_like('ket_agama', $data['search'])
         ->group_end();
     }
+
+    if (check_var($data['ket_sekolah'])) {
+      $this->db->where('ket_sekolah', $data['ket_sekolah']);
+    }
   }
 
   /// |----------------------------------------------------------

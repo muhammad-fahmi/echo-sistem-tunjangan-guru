@@ -49,8 +49,6 @@
           <h4 class="space-between">Daftar Rombongan Belajar</h4>
         </div>
         <div class="card-body">
-
-
           <div class="table-responsive">
 
             <div class="_loading loading_table_rombel">
@@ -86,12 +84,6 @@
 <!-- End Container fluid  -->
 <!-- -------------------------------------------------------------- -->
 <script>
-  // disable sorting icon
-  $('#table_rombel').on('init.dt', function() {
-    $('#table_rombel thead th.no-sort')
-      .removeClass('sorting sorting_asc sorting_desc sorting_disabled');
-  });
-  // 
   var init_btn_add = false;
   let urlDatatable = "<?= site_url('pdt_rombongan_belajar/get_data') ?>";
   var table_rombel = $("#table_rombel").DataTable({
@@ -138,7 +130,7 @@
       {
         data: 'ket_jenjang',
         orderable: false,
-        className: 'vat no-sort',
+        className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-start">' + cellData + '</div>');
         }
@@ -153,7 +145,7 @@
       },
       {
         data: 'ket_kelas',
-        orderable: false,
+        orderable: true,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-center">' + cellData + '</div>');
@@ -161,7 +153,7 @@
       },
       {
         data: 'nama_rombel',
-        orderable: false,
+        orderable: true,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-center">' + cellData + '</div>');
