@@ -354,7 +354,8 @@ class Pdt_peserta_didik extends MY_Controller
 
   public function import_data()
   {
-    $dir = 'uploads';
+    $config_dir = $this->config->item("upload_path");
+    $dir = $config_dir.'uploads';
     if (cek_folder_kosong($dir)) {
       return $this->output
         ->set_content_type('application/json')
@@ -366,7 +367,7 @@ class Pdt_peserta_didik extends MY_Controller
       $file_name = $this->session->userdata('file_name');
 
       $reader = new Xlsx();
-      $spreadsheet = $reader->load('uploads/' . $file_name); // Load file yang tadi diupload ke folder tmp
+      $spreadsheet = $reader->load($config_dir.'uploads/' . $file_name); // Load file yang tadi diupload ke folder tmp
       $sheet = $spreadsheet->getActiveSheet()->toArray(null, false, false, true);
       $data = [];
       array_shift($sheet); // Hapus header dari array
