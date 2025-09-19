@@ -107,7 +107,7 @@
                   <th class="vam" style="min-width: 150px;">Nama Sekolah</th>
                   <th class="vam" style="min-width: 60px;">Jenjang</th>
                   <th class="vam" style="min-width: 20px;">Jumlah Rombel</th>
-                  <th class="vat" style="min-width: 30px;">Aksi</th>
+                  <th class="vam" style="min-width: 30px;">Aksi</th>
                 </tr>
               </thead>
 
@@ -195,7 +195,7 @@
       },
       {
         data: 'jumlah_rombel',
-        orderable: false,
+        orderable: true,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-center">' + cellData + '</div>');

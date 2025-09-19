@@ -41,9 +41,9 @@ class Mdl_pdt_rombel extends CI_Model
     // where condition
     if (check_var($data, 'search')) {
       $this->db->group_start()
-        ->like('ket_jenjang', $data['search'])
-        ->or_like('ket_kelas', $data['search'])
+        ->like('ket_kelas', $data['search'])
         ->or_like('nama_rombel', $data['search'])
+        // ->or_like('nama_rombel', $data['search'])
         ->group_end();
     }
 

@@ -210,7 +210,7 @@ class Pdt_rombongan_belajar extends MY_Controller
     /// |----------------------------------------
     /// | AMBIL DATA POST
     /// |----------------------------------------
-    $post = $this->input->post();
+    $post = post_safe();
 
     // set data array utk proses insert
     $data_to_save = array(
@@ -237,7 +237,7 @@ class Pdt_rombongan_belajar extends MY_Controller
     /// |----------------------------------------
     /// | AMBIL DATA POST
     /// |----------------------------------------
-    $post = $this->input->post();
+    $post = post_safe();
 
     // set data array utk proses insert
     $data_to_save = array(

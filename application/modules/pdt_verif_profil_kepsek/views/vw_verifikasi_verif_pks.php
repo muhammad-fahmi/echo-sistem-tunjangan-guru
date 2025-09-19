@@ -270,9 +270,9 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                 <?php
                 $mttpi = (check_var($data, 'menerima_ttp_insentif', '-'));
                 if ($mttpi == 'Y') {
-                  $mttpi = 'Ya';
+                  $mttpi = 'Menerima';
                 } elseif ($mttpi == 'N') {
-                  $mttpi = 'Tidak';
+                  $mttpi = 'Tidak Menerima';
                 }
                 ?>
                 <div class="desc_block old_data old_menerima_ttp_insentif" attr-data="menerima_ttp_insentif">
@@ -285,13 +285,6 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                 <div class="desc_block old_data old_email" attr-data="email">
                   <label>E-mail</label>
                   <div><?= check_var($data, 'email', '-') ?></div>
-                </div>
-              </div>
-
-              <div class="col-12">
-                <div class="desc_block old_data old_npwp" attr-data="npwp">
-                  <label>NPWP</label>
-                  <div><?= check_var($data, 'npwp', '-') ?></div>
                 </div>
               </div>
 
@@ -597,9 +590,9 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
               <?php
               $mttpi = (check_var($dokumen, 'menerima_ttp_insentif', '-'));
               if ($mttpi == 'Y') {
-                $mttpi = 'Ya';
+                $mttpi = 'Menerima';
               } elseif ($mttpi == 'N') {
-                $mttpi = 'Tidak';
+                $mttpi = 'Tidak Menerima';
               }
               ?>
               <div class="desc_block new_data new_menerima_ttp_insentif" attr-data="menerima_ttp_insentif">
@@ -612,13 +605,6 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
               <div class="desc_block new_data new_email" attr-data="email">
                 <label>E-mail</label>
                 <div><?= check_var($dokumen, 'email', '-') ?></div>
-              </div>
-            </div>
-
-            <div class="col-12">
-              <div class="desc_block new_data new_npwp" attr-data="npwp">
-                <label>NPWP</label>
-                <div><?= check_var($dokumen, 'npwp', '-') ?></div>
               </div>
             </div>
 
@@ -647,7 +633,7 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
               <div class="desc_block new_data new_tgl_sk_kepsek" attr-data="tgl_sk_kepsek">
                 <label>Tgl. SK Kepala Sekolah</label>
                 <?php
-                $tgl_sk_kepsek = em_date('j F Y', 'set', check_var($data, 'tgl_sk_kepsek', ''));
+                $tgl_sk_kepsek = em_date('j F Y', 'set', check_var($dokumen, 'tgl_sk_kepsek', ''));
                 ?>
                 <div><?= check_var($tgl_sk_kepsek, null, '-') ?></div>
               </div>

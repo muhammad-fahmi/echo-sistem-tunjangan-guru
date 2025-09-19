@@ -39,9 +39,9 @@ class Mdl_pdt_tahun_ajaran extends CI_Model
     // where condition
     if (check_var($data, 'search')) {
       $this->db->group_start()
-        ->like('tahun_ajar', $data['search'])
-        ->or_like('nama_sekolah', $data['search'])
+        ->like('nama_sekolah', $data['search'])
         ->or_like('jenjang', $data['search'])
+        // ->or_like('jenjang', $data['search'])
         ->group_end();
     }
 

@@ -253,9 +253,9 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                   <?php
                   $mttpi = (check_var($data, 'menerima_ttp_insentif', '-'));
                   if ($mttpi == 'Y') {
-                    $mttpi = 'Ya';
+                    $mttpi = 'Menerima';
                   } elseif ($mttpi == 'N') {
-                    $mttpi = 'Tidak';
+                    $mttpi = 'Tidak Menerima';
                   }
                   ?>
                   <div class="desc_block">
@@ -268,13 +268,6 @@ $cur_kewenangan = $this->session->userdata('kewenangan');
                   <div class="desc_block">
                     <label>E-mail</label>
                     <div><?= check_var($data, 'email', '-') ?></div>
-                  </div>
-                </div>
-
-                <div class="col-12">
-                  <div class="desc_block">
-                    <label>NPWP</label>
-                    <div><?= check_var($data, 'npwp', '-') ?></div>
                   </div>
                 </div>
 

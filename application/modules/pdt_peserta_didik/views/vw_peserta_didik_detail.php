@@ -212,7 +212,7 @@
                   <div class="col-12">
                     <div class="desc_block">
                       <label for="ket_disabilitas">Penyandang Disabilitas</label>
-                      <div class="text_value"><?= check_var($data, 'ket_disabilitas', '-') ?></div>
+                      <div class="text_value"><?= check_var($data, 'ket_disabilitas', 'Tidak') ?></div>
                     </div>
                   </div>
 
