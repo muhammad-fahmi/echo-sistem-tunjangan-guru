@@ -20,9 +20,8 @@ class Layout extends MY_Controller
       $module = $data['module'] ?? 'layout';
       $view = $data['view'] ?? 'vw_error_404';
       $page_title = $data['page_title'] ?? '______';
-      $view_page = "$module/$view";
       $newdata['page_title'] = $page_title;
-      $newdata['view'] = $view_page;
+      $newdata['view'] = "$module/$view";
       return $newdata;
     } else {
       return false;

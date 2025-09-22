@@ -27,6 +27,7 @@
           <option value="" default selected hidden>-- Pilih Kewenangan --</option>
           <option value="00">Super Admin</option>
           <option value="01">Administrator</option>
+          <option value="02">Admin Disdik</option>
           <option value="10">Admin OPD / Unit Kerja</option>
         </select>
       </div>

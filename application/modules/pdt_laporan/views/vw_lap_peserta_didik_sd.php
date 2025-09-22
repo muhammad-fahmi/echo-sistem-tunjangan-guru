@@ -256,7 +256,7 @@
   });
 
   // function modal(id, type) {
-  //   var url = "<?= site_url('pdt_tahun_ajaran/modal') ?>";
+  //   var url = "<.?= site_url('pdt_tahun_ajaran/modal') ?>";
   //   $.ajax({
   //     type: "POST",
   //     url: url,

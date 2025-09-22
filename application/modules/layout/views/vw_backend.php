@@ -78,7 +78,7 @@
   <!-- select2 lib -->
   <script src="<?= base_url("theme/dist/libs/select2/dist/js/select2.full.min.js"); ?>"></script>
   <script src="<?= base_url("theme/dist/libs/select2/dist/js/select2.min.js"); ?>"></script>
-  <script src="<?php echo base_url("theme/assets/pangkalan_data/notifyjs/notify.min.js"); ?>"></script>
+  <script src="<?= base_url("theme/assets/pangkalan_data/notifyjs/notify.min.js"); ?>"></script>
 
   <!-- Leaflet JS -->
   <script type="text/javascript" src="<?= base_url('theme/assets/pangkalan_data/leaflet/leaflet.js'); ?>"></script>

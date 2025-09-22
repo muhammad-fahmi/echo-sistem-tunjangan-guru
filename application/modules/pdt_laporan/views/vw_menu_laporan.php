@@ -56,6 +56,40 @@
         </div>
       </a>
     </div>
+
+    <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+      <a href="<?= site_url('pdt_laporan/menu_lap_rekap_tenaga_pendidik'); ?>">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="text-center py-2"><i class="fas fa-file"></i></h2>
+            <h4 class="text-center">Lap. Rekap Tenaga Pendidik</h4>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+      <a href="<?= site_url('pdt_laporan/menu_lap_rekap_tenaga_kependidikan'); ?>">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="text-center py-2"><i class="fas fa-file"></i></h2>
+            <h4 class="text-center">Lap. Rekap Tenaga Kependidikan</h4>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+      <a href="<?= site_url('pdt_laporan/menu_lap_rekap_ptk'); ?>">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="text-center py-2"><i class="fas fa-file"></i></h2>
+            <h4 class="text-center">Lap. Rekap PTK</h4>
+          </div>
+        </div>
+      </a>
+    </div>
+
   </div>
 
 </div>

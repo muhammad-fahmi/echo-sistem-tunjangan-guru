@@ -34,7 +34,7 @@ class Mdl_user extends CI_Model
     // lakukan filtering data
     // deklarasi where condition
     $where_search = (isset_nn_nes($data['search']))
-      ? "AND (username LIKE '%$data[search]%' 
+      ? "AND (username LIKE '%$data[search]%'
       OR id_user LIKE '%$data[search]%'
       OR kewenangan LIKE '%$data[search]%'
       OR ket_ukerja LIKE '%$data[search]%'
@@ -42,11 +42,11 @@ class Mdl_user extends CI_Model
       : "";
     /* kalau ada tambahan where condition bisa add lagi di atas */
     // deklarasi query yang digunakan
-    $query_result = $this->db->query("SELECT * FROM $table 
-      WHERE $primary_key IS NOT NULL $where_search 
+    $query_result = $this->db->query("SELECT * FROM $table
+      WHERE $primary_key IS NOT NULL $where_search
       ORDER BY $data[order_column] $data[order_sort]
       LIMIT $data[start], $data[length]");
-    $query_total = $this->db->query("SELECT * FROM $table 
+    $query_total = $this->db->query("SELECT * FROM $table
       WHERE $primary_key IS NOT NULL $where_search");
     // cari total hasil
     $total_count = 0;
@@ -61,6 +61,7 @@ class Mdl_user extends CI_Model
       $ket_kewenangan = array(
         "00" => "Super Admin",
         "01" => "Administrator",
+        "02" => "Admin Disdik",
         "10" => "Admin OPD"
       );
       /// |----------------------------------------------------------------------
@@ -105,7 +106,6 @@ class Mdl_user extends CI_Model
       $data = [
         'id_user' => $this->input->post('id_user'),
         'username' => $this->input->post('username'),
-        'pass_str' => null,
         'password' => encrypt_pwd($this->input->post('password')),
         'salt' => micin(),
         'email_user' => $this->input->post('email_user'),

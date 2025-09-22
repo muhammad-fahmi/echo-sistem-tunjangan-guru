@@ -87,6 +87,7 @@ class Pdt_peserta_didik extends MY_Controller
       'search' => $this->input->post("search[value]"),
       'draw' => $this->input->post("draw"),
       /* additional data can be declared here */
+      'ket_sekolah' => $this->session->userdata('ket_unor')
     );
     // move the db operation to the designated models
     $result = $this->mdl_peserta_didik->get_datatable($param);
@@ -124,7 +125,7 @@ class Pdt_peserta_didik extends MY_Controller
           /// |----------------------------------------
           $dataset = [
             // 'id_siswa' => $this->mdl_peserta_didik->generate_id_siswa(),
-            'id_siswa' => '',
+            'id_siswa' => 0,
             'nama' => '',
             'nisn' => '',
             'nik' => '',
@@ -136,6 +137,7 @@ class Pdt_peserta_didik extends MY_Controller
             'alamat' => '',
             's_aktif' => '',
             'pdpd' => '',
+            'ket_sekolah' => '',
             'type' => ''
           ];
           $data = [
@@ -230,6 +232,7 @@ class Pdt_peserta_didik extends MY_Controller
       's_aktif' => 1,
       'tgl_masuk' => $post['tgl_masuk'],
       'pdpd' => $post['pdpd_options'],
+      'ket_sekolah' => $post['ket_sekolah']
     );
 
     // Jika peserta didik di non-aktifkan, lanjutkan proses insert data
@@ -354,7 +357,8 @@ class Pdt_peserta_didik extends MY_Controller
 
   public function import_data()
   {
-    $dir = 'uploads';
+    $config_dir = $this->config->item("upload_path");
+    $dir = $config_dir.'uploads';
     if (cek_folder_kosong($dir)) {
       return $this->output
         ->set_content_type('application/json')
@@ -366,7 +370,7 @@ class Pdt_peserta_didik extends MY_Controller
       $file_name = $this->session->userdata('file_name');
 
       $reader = new Xlsx();
-      $spreadsheet = $reader->load('uploads/' . $file_name); // Load file yang tadi diupload ke folder tmp
+      $spreadsheet = $reader->load($config_dir.'uploads/' . $file_name); // Load file yang tadi diupload ke folder tmp
       $sheet = $spreadsheet->getActiveSheet()->toArray(null, false, false, true);
       $data = [];
       array_shift($sheet); // Hapus header dari array
@@ -456,5 +460,20 @@ class Pdt_peserta_didik extends MY_Controller
           'data' => $data
         ]));
     }
+  }
+
+  public function cancel_import()
+  {
+    $dir = 'uploads';
+    if (!cek_folder_kosong($dir)) {
+      unlink('uploads/' . $this->session->userdata('file_name')); // Hapus file yang sudah diupload
+      $this->session->unset_userdata('file_name'); // Hapus nama file dari session
+    }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode([
+        'status' => true,
+        'message' => "Proses import data dibatalkan.",
+      ]));
   }
 }

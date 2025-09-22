@@ -23,7 +23,6 @@ function isset_nn_nes($data, $placeholder = null)
 function is_logged_in()
 {
   $CI = &get_instance();
-  $CI = new MY_Controller();
   $logged_in = $CI->session->userdata('logged_in');
   $id_user = $CI->session->userdata('id_user');
 
@@ -409,7 +408,7 @@ function datetime_to_sql($date_string = '', $time_string = '')
  * buat perhitungan elapsed time dengan membandingkan datetime yang ada di parameter dengan datetime sekarang (saat ini) dan output hasilnya berupa string
  */
 function datetime_elapsed_time($datetime = '', $full = false, $lang = 'en', $array = false)
-{;
+{
   $datetime = ($datetime == '') ? datetime_now() : $datetime;
   date_default_timezone_set('Asia/Hong_Kong');
   $now = new DateTime;
@@ -554,7 +553,6 @@ function short_num($num, $decimals = 2, $lang = 'en',  $caps = false)
 function fetch_single_data($table_name, $field_name, $where = null, $placeholder = '')
 {
   $CI = &get_instance();
-  $CI = new MY_Controller();
   if ($where == null) return $placeholder;
   $q = $CI->db->get_where($table_name, $where);
   $count = $q->num_rows();
@@ -571,7 +569,6 @@ function fetch_single_data($table_name, $field_name, $where = null, $placeholder
 function fetch_row_data($table_name, $where = null, $placeholder = '')
 {
   $CI = &get_instance();
-  $CI = new MY_Controller();
   if ($where == null) return $placeholder;
   $q = $CI->db->get_where($table_name, $where);
   $count = $q->num_rows();
@@ -587,7 +584,6 @@ function fetch_row_data($table_name, $where = null, $placeholder = '')
 function fetch_num_rows($table_name, $where = null)
 {
   $CI = &get_instance();
-  $CI = new MY_Controller();
   if ($where == null) return 0;
   $q = $CI->db->get_where($table_name, $where);
   $count = $q->num_rows();
@@ -601,7 +597,6 @@ function fetch_num_rows($table_name, $where = null)
 function post_safe($key = null, $default = null)
 {
   $CI = &get_instance();
-  $CI = new MY_Controller();
   $value = $CI->input->post($key, TRUE); // TRUE enables XSS filtering
 
   return $value !== null ? $value : $default;
@@ -613,7 +608,6 @@ function post_safe($key = null, $default = null)
 function get_safe($key = null, $default = null)
 {
   $CI = &get_instance();
-  $CI = new MY_Controller();
   $value = $CI->input->get($key, TRUE);
 
   return $value !== null ? $value : $default;
@@ -625,10 +619,9 @@ function get_safe($key = null, $default = null)
 function is_admin()
 {
   $CI = &get_instance();
-  $CI = new MY_Controller();
   $cur_kewenangan = $CI->session->userdata('kewenangan');
 
-  return ($cur_kewenangan == '00' || $cur_kewenangan == '01' || $cur_kewenangan == '02')
+  return ($cur_kewenangan == '01' || $cur_kewenangan == '02')
     ? true : false;
 }
 
@@ -638,7 +631,6 @@ function is_admin()
 function is_super_admin()
 {
   $CI = &get_instance();
-  $CI = new MY_Controller();
   $cur_kewenangan = $CI->session->userdata('kewenangan');
 
   return ($cur_kewenangan == '00')
@@ -867,7 +859,6 @@ function array_periode_bulan()
 function check_perm($action, $menu = null)
 {
   $CI = &get_instance();
-  $CI = new MY_Controller();
   $cur_kewenangan = $CI->session->userdata('kewenangan');
   $cur_menu = ($menu === null)
     ? $CI->session->userdata('menu')
@@ -906,7 +897,6 @@ function menu_loader($echo = true)
   // dan pastikan ada permission tag (privilege dipisah dengan koma)
   // dan pastikan ada order, untuk mengurutkan menunya
   $CI = &get_instance();
-  $CI = new MY_Controller();
   $table = 'v_kewenangan_menu';
   $hr = '<hr style="border: 1px solid #efefef; opacity: 1;">';
 
@@ -1065,6 +1055,23 @@ function menu_loader($echo = true)
             </div>
           </a>
         </li>';
+
+      // sisipkan menu manajemen user
+      $on_dev = false;
+      $href = ($on_dev)
+        ? 'onclick="on_dev()"'
+        : 'href="' . site_url('pdt_manajemen_menu') . '"';
+      // sisipkan menu manajemen menu
+      $man_menu_active = ($cur_menu == 'PDT_ManajemenMenu') ? 'selected' : '';
+      $html .= '<li class="bz_sidebar_item PDT_ManajemenMenu ' . $man_menu_active . '">
+          <a ' . $href . ' class="sidebar_link">
+            <div class="icon"><i class="fas fa-list"></i></div>
+            <div class="hide-menu">
+              <div class="main">Manajemen Menu</div>
+              <div class="sub">Pengaturan Tampilan Menu</div>
+            </div>
+          </a>
+        </li>';
     }
 
     // logout
@@ -1176,7 +1183,6 @@ function clean_empty_or_all_no_permissions($data)
 function output_json($response_array, $status_code = 200)
 {
   $CI = &get_instance();
-  $CI = new MY_Controller();
   $CI->output
     ->set_content_type('application/json')
     ->set_status_header($status_code)
@@ -1242,7 +1248,6 @@ function setStrCellValue($sheet, $cells, $data)
 function s_log($__FUNCTION__, $value = 'logged activity', $reset = false)
 {
   $CI = &get_instance();
-  $CI = new MY_Controller();
   $microtime = number_format(microtime(true), 8, '', '');
 
   $curLog = $CI->session->userdata('__LOG SESSION__');
@@ -1263,7 +1268,6 @@ function menu_auth($privilege = '200', $menu = '-')
   // pastikan ada permission tag (privilege dipisah dengan koma)
   // dan pastikan ada order, untuk mengurutkan menunya
   $CI = &get_instance();
-  $CI = new MY_Controller();
   $table = 'm_menu';
   // query untuk tarik data menu
   $data = $CI->db->select('*')->from($table)
@@ -1285,7 +1289,6 @@ function menu_auth($privilege = '200', $menu = '-')
 function menu_loader_sipedal($username, $kewenangan)
 {
   $CI = &get_instance();
-  $CI = new MY_Controller();
   if ($kewenangan == 11) {
     $username = "atasan_langsung";
   }
@@ -1317,7 +1320,6 @@ function menu_loader_sipedal($username, $kewenangan)
 function menu_auth_sipedal($username, $module, $kewenangan)
 {
   $CI = &get_instance();
-  $CI = new MY_Controller();
   if ($kewenangan == '11') {
     // gunakan username atasan_langsung
     $username = 'atasan_langsung';
@@ -1473,7 +1475,6 @@ function log_generator($username = '-', $table = '-', $object = '-', $message = 
 {
   $curdate = datetime_now();
   $CI = &get_instance();
-  $CI = new MY_Controller();
   $data = array(
     'subject' => $username,
     'table' => $table,
@@ -1543,7 +1544,6 @@ function format_log_view($array_data)
 function generate_no_dok()
 {
   $CI = &get_instance();
-  $CI = new MY_Controller();
   $curyear = date('Y');
   $no = $CI->db->select('id')->from('r_dok_sewa')
     ->like('tgl_dok', $curyear)->get()->num_rows();
@@ -1699,7 +1699,6 @@ function get_all_date_in_between($start_date, $end_date)
 function ajax_response($array_res)
 {
   $CI = &get_instance();
-  $CI = new MY_Controller();
   $CI->output
     ->set_content_type('application/json')
     ->set_output(json_encode($array_res));
@@ -1738,7 +1737,6 @@ function get_status_id_hari_kerja($int_code = 0, $with_label = false)
 function ssh_get_volume_selection()
 {
   $CI = &get_instance();
-  $CI = new MY_Controller();
   $query =  $CI->db->select('volume_standar')->from('r_standarharga')
     ->order_by('volume_standar', 'ASC')->group_by('volume_standar')->get();
   return [
@@ -1750,7 +1748,6 @@ function ssh_get_volume_selection()
 function keg_get_unor_selection()
 {
   $CI = &get_instance();
-  $CI = new MY_Controller();
   $query =  $CI->db->select('kode_unor, ket_unor')->from('m_unor')
     ->order_by('kode_unor', 'ASC')->group_by('kode_unor')->get();
   return [
@@ -1762,7 +1759,6 @@ function keg_get_unor_selection()
 function keg_get_kegiatan_selection()
 {
   $CI = &get_instance();
-  $CI = new MY_Controller();
   $query =  $CI->db->select('kode_kegiatan, uraian_kegiatan')->from('m_kegiatan')->where([
     'jns_kegiatan' => 'D'
   ])->order_by('kode_kegiatan', 'ASC')->group_by('kode_kegiatan')->get();
