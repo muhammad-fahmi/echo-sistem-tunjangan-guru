@@ -1,10 +1,8 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class Pdt_laporan extends MY_Controller
 {
@@ -128,88 +126,32 @@ class Pdt_laporan extends MY_Controller
 
   public function cetak_rekap_tenaga_pendidik()
   {
-    $dataset = [
-      "data_tenaga_pendidik_pns" => isset_nn_nes($this->mdl_laporan->get_tenaga_pendidik_pns(), 0) ? $this->mdl_laporan->get_tenaga_pendidik_pns() : 0,
-      "data_tenaga_pendidik_pppk" => isset_nn_nes($this->mdl_laporan->get_tenaga_pendidik_pppk(), 0) ? $this->mdl_laporan->get_tenaga_pendidik_pppk() : 0,
-      "data_tenaga_pendidik_negeri" => isset_nn_nes($this->mdl_laporan->get_tenaga_pendidik_negeri(), 0) ? $this->mdl_laporan->get_tenaga_pendidik_negeri() : 0,
-      "data_tenaga_pendidik_swasta" => isset_nn_nes($this->mdl_laporan->get_tenaga_pendidik_swasta(), 0) ? $this->mdl_laporan->get_tenaga_pendidik_swasta() : 0,
-      "total_data" => $this->mdl_laporan->get_all_data_pendidik()
-    ];
+    $count_data_tenaga_pendidik_pns = isset_nn_nes($this->mdl_laporan->get_tenaga_pendidik_pns(), 0) ? $this->mdl_laporan->get_tenaga_pendidik_pns() : 0;
 
-    $data = [
-      'data' => $dataset
-    ];
+    $count_data_tenaga_pendidik_pppk = isset_nn_nes($this->mdl_laporan->get_tenaga_pendidik_pppk(), 0) ? $this->mdl_laporan->get_tenaga_pendidik_pppk() : 0;
 
-    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Html();
-    $spreadsheet = $reader->loadFromString($this->load->view('vw_cetak_rekap_tenaga_pendidik', $data, true));
-    $spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+    $count_data_tenaga_pendidik_negeri = isset_nn_nes($this->mdl_laporan->get_tenaga_pendidik_negeri(), 0) ? $this->mdl_laporan->get_tenaga_pendidik_negeri() : 0;
 
-    $spreadsheet->getActiveSheet()->getStyle('A1:K3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-    $spreadsheet->getActiveSheet()->getStyle('A1:K3')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+    $count_data_tenaga_pendidik_swasta = isset_nn_nes($this->mdl_laporan->get_tenaga_pendidik_swasta(), 0) ? $this->mdl_laporan->get_tenaga_pendidik_swasta() : 0;
 
-    $spreadsheet->getActiveSheet()->getStyle('A4:K29')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-    $spreadsheet->getActiveSheet()->getStyle('A4:K29')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+    $count_total_data = $this->mdl_laporan->get_all_data_pendidik();
 
-    $spreadsheet->getActiveSheet()->getStyle('B4:B29')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
-    $spreadsheet->getActiveSheet()->getStyle('B4:B29')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+    $spreadsheet = IOFactory::load('template_laporan_rekap_tenaga_pendidik.xlsx');
 
-    // Define the start and end row numbers and the desired height
-    $startRow = 1;
-    $endRow = 14;
-    $rowHeight = 20; // Example height in points
+    $worksheet = $spreadsheet->getActiveSheet();
 
-    // Loop through the rows and set the height
-    for ($row = $startRow; $row <= $endRow; $row++) {
-      // Set row height for row 1
-      $spreadsheet->getActiveSheet()->getRowDimension($row)->setRowHeight($rowHeight);
-    }
+    $worksheet->getCell('C8')->setValue($count_data_tenaga_pendidik_pns);
+    $worksheet->getCell('D8')->setValue($count_data_tenaga_pendidik_pppk);
+    $worksheet->getCell('E8')->setValue($count_data_tenaga_pendidik_pns + $count_data_tenaga_pendidik_pppk);
+    $worksheet->getCell('F8')->setValue($count_data_tenaga_pendidik_negeri);
+    $worksheet->getCell('G8')->setValue($count_data_tenaga_pendidik_swasta);
+    $worksheet->getCell('H8')->setValue($count_data_tenaga_pendidik_negeri + $count_data_tenaga_pendidik_swasta);
+    $worksheet->getCell('I8')->setValue($count_data_tenaga_pendidik_pns + $count_data_tenaga_pendidik_pppk);
+    $worksheet->getCell('J8')->setValue($count_data_tenaga_pendidik_negeri + $count_data_tenaga_pendidik_swasta);
+    $worksheet->getCell('K8')->setValue($count_data_tenaga_pendidik_pns + $count_data_tenaga_pendidik_pppk + $count_data_tenaga_pendidik_negeri + $count_data_tenaga_pendidik_swasta);
 
-    $startColumn = 65;
-    $endColumn = 76;
-    $columnWidth = 10; // Example height in points
 
-    for ($column = $startColumn; $column <= $endColumn; $column++) {
-      // Set column width for column A
-      $spreadsheet->getActiveSheet()->getColumnDimension(chr($column))->setWidth($columnWidth);
-    }
-
-    $spreadsheet->getActiveSheet()->getStyle('B4')
-      ->getFill()
-      ->setFillType(Fill::FILL_SOLID)
-      ->getStartColor()
-      ->setARGB('FFFFFF00');
-
-    $spreadsheet->getActiveSheet()->getStyle('B7')
-      ->getFill()
-      ->setFillType(Fill::FILL_SOLID)
-      ->getStartColor()
-      ->setARGB('FFFFFF00');
-
-    $spreadsheet->getActiveSheet()->getStyle('B12')
-      ->getFill()
-      ->setFillType(Fill::FILL_SOLID)
-      ->getStartColor()
-      ->setARGB('FFFFFF00');
-
-    $spreadsheet->getActiveSheet()->getStyle('B16')
-      ->getFill()
-      ->setFillType(Fill::FILL_SOLID)
-      ->getStartColor()
-      ->setARGB('FFFFFF00');
-
-    $spreadsheet->getActiveSheet()->getStyle('B19')
-      ->getFill()
-      ->setFillType(Fill::FILL_SOLID)
-      ->getStartColor()
-      ->setARGB('FFFFFF00');
-
-    $spreadsheet->getActiveSheet()->getStyle('B23')
-      ->getFill()
-      ->setFillType(Fill::FILL_SOLID)
-      ->getStartColor()
-      ->setARGB('FFFFFF00');
-
-    $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+    $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
     $writer->save('laporan_rekap_tenaga_pendidik.xlsx');
 
     $file_url = 'laporan_rekap_tenaga_pendidik.xlsx';
@@ -242,88 +184,32 @@ class Pdt_laporan extends MY_Controller
 
   public function cetak_rekap_tenaga_kependidikan()
   {
-    $dataset = [
-      "data_tenaga_kependidikan_pns" => isset_nn_nes($this->mdl_laporan->get_tenaga_kependidikan_pns(), 0) ? $this->mdl_laporan->get_tenaga_kependidikan_pns() : 0,
-      "data_tenaga_kependidikan_pppk" => isset_nn_nes($this->mdl_laporan->get_tenaga_kependidikan_pppk(), 0) ? $this->mdl_laporan->get_tenaga_kependidikan_pppk() : 0,
-      "data_tenaga_kependidikan_negeri" => isset_nn_nes($this->mdl_laporan->get_tenaga_kependidikan_negeri(), 0) ? $this->mdl_laporan->get_tenaga_kependidikan_negeri() : 0,
-      "data_tenaga_kependidikan_swasta" => isset_nn_nes($this->mdl_laporan->get_tenaga_kependidikan_swasta(), 0) ? $this->mdl_laporan->get_tenaga_kependidikan_swasta() : 0,
-      "total_data" => $this->mdl_laporan->get_all_data_kependidikan()
-    ];
+    $count_data_tenaga_kependidikan_pns = isset_nn_nes($this->mdl_laporan->get_tenaga_kependidikan_pns(), 0) ? $this->mdl_laporan->get_tenaga_kependidikan_pns() : 0;
 
-    $data = [
-      'data' => $dataset
-    ];
+    $count_data_tenaga_kependidikan_pppk = isset_nn_nes($this->mdl_laporan->get_tenaga_kependidikan_pppk(), 0) ? $this->mdl_laporan->get_tenaga_kependidikan_pppk() : 0;
 
-    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Html();
-    $spreadsheet = $reader->loadFromString($this->load->view('vw_cetak_rekap_tenaga_kependidikan', $data, true));
-    $spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+    $count_data_tenaga_kependidikan_negeri = isset_nn_nes($this->mdl_laporan->get_tenaga_kependidikan_negeri(), 0) ? $this->mdl_laporan->get_tenaga_kependidikan_negeri() : 0;
 
-    $spreadsheet->getActiveSheet()->getStyle('A1:K3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-    $spreadsheet->getActiveSheet()->getStyle('A1:K3')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+    $count_data_tenaga_kependidikan_swasta = isset_nn_nes($this->mdl_laporan->get_tenaga_kependidikan_swasta(), 0) ? $this->mdl_laporan->get_tenaga_kependidikan_swasta() : 0;
 
-    $spreadsheet->getActiveSheet()->getStyle('A4:K29')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-    $spreadsheet->getActiveSheet()->getStyle('A4:K29')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+    $count_total_data = $this->mdl_laporan->get_all_data_kependidikan();
 
-    $spreadsheet->getActiveSheet()->getStyle('B4:B29')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
-    $spreadsheet->getActiveSheet()->getStyle('B4:B29')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+    $spreadsheet = IOFactory::load('template_laporan_rekap_tenaga_kependidikan.xlsx');
 
-    // Define the start and end row numbers and the desired height
-    $startRow = 1;
-    $endRow = 14;
-    $rowHeight = 20; // Example height in points
+    $worksheet = $spreadsheet->getActiveSheet();
 
-    // Loop through the rows and set the height
-    for ($row = $startRow; $row <= $endRow; $row++) {
-      // Set row height for row 1
-      $spreadsheet->getActiveSheet()->getRowDimension($row)->setRowHeight($rowHeight);
-    }
+    $worksheet->getCell('C8')->setValue($count_data_tenaga_kependidikan_pns);
+    $worksheet->getCell('D8')->setValue($count_data_tenaga_kependidikan_pppk);
+    $worksheet->getCell('E8')->setValue($count_data_tenaga_kependidikan_pns + $count_data_tenaga_kependidikan_pppk);
+    $worksheet->getCell('F8')->setValue($count_data_tenaga_kependidikan_negeri);
+    $worksheet->getCell('G8')->setValue($count_data_tenaga_kependidikan_swasta);
+    $worksheet->getCell('H8')->setValue($count_data_tenaga_kependidikan_negeri + $count_data_tenaga_kependidikan_swasta);
+    $worksheet->getCell('I8')->setValue($count_data_tenaga_kependidikan_pns + $count_data_tenaga_kependidikan_pppk);
+    $worksheet->getCell('J8')->setValue($count_data_tenaga_kependidikan_negeri + $count_data_tenaga_kependidikan_swasta);
+    $worksheet->getCell('K8')->setValue($count_data_tenaga_kependidikan_pns + $count_data_tenaga_kependidikan_pppk + $count_data_tenaga_kependidikan_negeri + $count_data_tenaga_kependidikan_swasta);
 
-    $startColumn = 65;
-    $endColumn = 76;
-    $columnWidth = 10; // Example height in points
 
-    for ($column = $startColumn; $column <= $endColumn; $column++) {
-      // Set column width for column A
-      $spreadsheet->getActiveSheet()->getColumnDimension(chr($column))->setWidth($columnWidth);
-    }
-
-    $spreadsheet->getActiveSheet()->getStyle('B4')
-      ->getFill()
-      ->setFillType(Fill::FILL_SOLID)
-      ->getStartColor()
-      ->setARGB('FFFFFF00');
-
-    $spreadsheet->getActiveSheet()->getStyle('B7')
-      ->getFill()
-      ->setFillType(Fill::FILL_SOLID)
-      ->getStartColor()
-      ->setARGB('FFFFFF00');
-
-    $spreadsheet->getActiveSheet()->getStyle('B12')
-      ->getFill()
-      ->setFillType(Fill::FILL_SOLID)
-      ->getStartColor()
-      ->setARGB('FFFFFF00');
-
-    $spreadsheet->getActiveSheet()->getStyle('B16')
-      ->getFill()
-      ->setFillType(Fill::FILL_SOLID)
-      ->getStartColor()
-      ->setARGB('FFFFFF00');
-
-    $spreadsheet->getActiveSheet()->getStyle('B19')
-      ->getFill()
-      ->setFillType(Fill::FILL_SOLID)
-      ->getStartColor()
-      ->setARGB('FFFFFF00');
-
-    $spreadsheet->getActiveSheet()->getStyle('B23')
-      ->getFill()
-      ->setFillType(Fill::FILL_SOLID)
-      ->getStartColor()
-      ->setARGB('FFFFFF00');
-
-    $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+    $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
     $writer->save('laporan_rekap_tenaga_kependidikan.xlsx');
 
     $file_url = 'laporan_rekap_tenaga_kependidikan.xlsx';
@@ -336,7 +222,18 @@ class Pdt_laporan extends MY_Controller
 
   public function menu_lap_rekap_ptk()
   {
-    $dataset = array();
+    $dataset = [
+      "data_tenaga_pendidik_pns" => isset_nn_nes($this->mdl_laporan->get_tenaga_pendidik_pns(), 0) ? $this->mdl_laporan->get_tenaga_pendidik_pns() : 0,
+      "data_tenaga_pendidik_pppk" => isset_nn_nes($this->mdl_laporan->get_tenaga_pendidik_pppk(), 0) ? $this->mdl_laporan->get_tenaga_pendidik_pppk() : 0,
+      "data_tenaga_pendidik_negeri" => isset_nn_nes($this->mdl_laporan->get_tenaga_pendidik_negeri(), 0) ? $this->mdl_laporan->get_tenaga_pendidik_negeri() : 0,
+      "data_tenaga_pendidik_swasta" => isset_nn_nes($this->mdl_laporan->get_tenaga_pendidik_swasta(), 0) ? $this->mdl_laporan->get_tenaga_pendidik_swasta() : 0,
+      "total_data_pendidik" => $this->mdl_laporan->get_all_data_pendidik(),
+      "data_tenaga_kependidikan_pns" => isset_nn_nes($this->mdl_laporan->get_tenaga_kependidikan_pns(), 0) ? $this->mdl_laporan->get_tenaga_kependidikan_pns() : 0,
+      "data_tenaga_kependidikan_pppk" => isset_nn_nes($this->mdl_laporan->get_tenaga_kependidikan_pppk(), 0) ? $this->mdl_laporan->get_tenaga_kependidikan_pppk() : 0,
+      "data_tenaga_kependidikan_negeri" => isset_nn_nes($this->mdl_laporan->get_tenaga_kependidikan_negeri(), 0) ? $this->mdl_laporan->get_tenaga_kependidikan_negeri() : 0,
+      "data_tenaga_kependidikan_swasta" => isset_nn_nes($this->mdl_laporan->get_tenaga_kependidikan_swasta(), 0) ? $this->mdl_laporan->get_tenaga_kependidikan_swasta() : 0,
+      "total_data_kependidikan" => $this->mdl_laporan->get_all_data_kependidikan()
+    ];
     // lakukan proses init halaman
     $data = array(
       'page_title' => "Laporan Rekap PTK | PROGURINDA",
@@ -345,5 +242,63 @@ class Pdt_laporan extends MY_Controller
       'data' => $dataset
     );
     echo Modules::run('layout/backend', $data);
+  }
+
+  public function cetak_rekap_ptk()
+  {
+    $count_data_tenaga_pendidik_pns = isset_nn_nes($this->mdl_laporan->get_tenaga_pendidik_pns(), 0) ? $this->mdl_laporan->get_tenaga_pendidik_pns() : 0;
+
+    $count_data_tenaga_pendidik_pppk = isset_nn_nes($this->mdl_laporan->get_tenaga_pendidik_pppk(), 0) ? $this->mdl_laporan->get_tenaga_pendidik_pppk() : 0;
+
+    $count_data_tenaga_pendidik_negeri = isset_nn_nes($this->mdl_laporan->get_tenaga_pendidik_negeri(), 0) ? $this->mdl_laporan->get_tenaga_pendidik_negeri() : 0;
+
+    $count_data_tenaga_pendidik_swasta = isset_nn_nes($this->mdl_laporan->get_tenaga_pendidik_swasta(), 0) ? $this->mdl_laporan->get_tenaga_pendidik_swasta() : 0;
+
+    $count_total_data = $this->mdl_laporan->get_all_data_pendidik();
+
+    $count_data_tenaga_kependidikan_pns = isset_nn_nes($this->mdl_laporan->get_tenaga_kependidikan_pns(), 0) ? $this->mdl_laporan->get_tenaga_kependidikan_pns() : 0;
+
+    $count_data_tenaga_kependidikan_pppk = isset_nn_nes($this->mdl_laporan->get_tenaga_kependidikan_pppk(), 0) ? $this->mdl_laporan->get_tenaga_kependidikan_pppk() : 0;
+
+    $count_data_tenaga_kependidikan_negeri = isset_nn_nes($this->mdl_laporan->get_tenaga_kependidikan_negeri(), 0) ? $this->mdl_laporan->get_tenaga_kependidikan_negeri() : 0;
+
+    $count_data_tenaga_kependidikan_swasta = isset_nn_nes($this->mdl_laporan->get_tenaga_kependidikan_swasta(), 0) ? $this->mdl_laporan->get_tenaga_kependidikan_swasta() : 0;
+
+    $count_total_data_kependidikan = $this->mdl_laporan->get_all_data_kependidikan();
+
+    $spreadsheet = IOFactory::load('template_laporan_rekap_ptk.xlsx');
+
+    $worksheet = $spreadsheet->getActiveSheet();
+
+    $worksheet->getCell('C9')->setValue($count_data_tenaga_pendidik_pns);
+    $worksheet->getCell('D9')->setValue($count_data_tenaga_pendidik_pppk);
+    $worksheet->getCell('E9')->setValue($count_data_tenaga_pendidik_pns + $count_data_tenaga_pendidik_pppk);
+    $worksheet->getCell('F9')->setValue($count_data_tenaga_pendidik_negeri);
+    $worksheet->getCell('G9')->setValue($count_data_tenaga_pendidik_swasta);
+    $worksheet->getCell('H9')->setValue($count_data_tenaga_pendidik_negeri + $count_data_tenaga_pendidik_swasta);
+    $worksheet->getCell('I9')->setValue($count_data_tenaga_pendidik_pns + $count_data_tenaga_pendidik_pppk);
+    $worksheet->getCell('J9')->setValue($count_data_tenaga_pendidik_negeri + $count_data_tenaga_pendidik_swasta);
+    $worksheet->getCell('K9')->setValue($count_data_tenaga_pendidik_pns + $count_data_tenaga_pendidik_pppk + $count_data_tenaga_pendidik_negeri + $count_data_tenaga_pendidik_swasta);
+
+    $worksheet->getCell('C10')->setValue($count_data_tenaga_kependidikan_pns);
+    $worksheet->getCell('D10')->setValue($count_data_tenaga_kependidikan_pppk);
+    $worksheet->getCell('E10')->setValue($count_data_tenaga_kependidikan_pns + $count_data_tenaga_kependidikan_pppk);
+    $worksheet->getCell('F10')->setValue($count_data_tenaga_kependidikan_negeri);
+    $worksheet->getCell('G10')->setValue($count_data_tenaga_kependidikan_swasta);
+    $worksheet->getCell('H10')->setValue($count_data_tenaga_kependidikan_negeri + $count_data_tenaga_kependidikan_swasta);
+    $worksheet->getCell('I10')->setValue($count_data_tenaga_kependidikan_pns + $count_data_tenaga_kependidikan_pppk);
+    $worksheet->getCell('J10')->setValue($count_data_tenaga_kependidikan_negeri + $count_data_tenaga_kependidikan_swasta);
+    $worksheet->getCell('K10')->setValue($count_data_tenaga_kependidikan_pns + $count_data_tenaga_kependidikan_pppk + $count_data_tenaga_kependidikan_negeri + $count_data_tenaga_kependidikan_swasta);
+
+
+    $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+    $writer->save('laporan_rekap_ptk.xlsx');
+
+    $file_url = 'laporan_rekap_ptk.xlsx';
+    header('Content-Type: application/octet-stream');
+    header("Content-Transfer-Encoding: Binary");
+    header("Content-disposition: attachment; filename=\"" . basename($file_url) . "\"");
+    readfile($file_url);
+    unlink('laporan_rekap_ptk.xlsx');
   }
 }

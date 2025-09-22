@@ -322,7 +322,7 @@ class Mdl_pdt_laporan extends CI_Model
       ->or_where('status_kepegawaian', 'PNS Diperbantukan')
       ->or_where('status_kepegawaian', 'PPPK')
       ->group_end()
-      ->where('jenis_ptk', 'Guru');
+      ->where('jenis_ptk !=', 'Guru');
     return $this->db->count_all_results();
   }
 
