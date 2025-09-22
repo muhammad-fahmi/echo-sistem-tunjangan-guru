@@ -27,8 +27,8 @@
     <div class="col-12">
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title">Form Pendidik dan Tenaga Kependidikan ASN/PPPK</h4>
-          <form action="<?= site_url("ptk/save"); ?>" method="POST" enctype="multipart/form-data">
+          <h4 class="card-title">Form Pendidik dan Tenaga Kependidikan NON-ASN</h4>
+          <form action="<?= site_url("pdt_ptk/save"); ?>" method="POST" enctype="multipart/form-data">
             <div class="row">
               <div class="col-12 col-lg-4 col-sm-12" style="margin-bottom:15px">
                 <!-- Photo Section -->
@@ -81,14 +81,14 @@
                     </div>
                     <div class="col-6 col-lg-3 col-sm-12" style="margin-top:15px;">
                       <label for="NIP">TMT Jabatan</label>
-                      <input type="date" name="tmt_jab" id="tmt_jab" class="form-control"  placeholder="T.M.T Jabatan ">
+                      <input type="date" name="tmt_jab" id="tmt_jab" class="form-control"  placeholder="T.M.T" value="<?= $data_gtk["tmt_jab"]; ?>">
                     </div>
                     <div class="col-6 col-lg-3 col-sm-12" style="margin-top:15px;">
                       <label for="NIP">Status CPNS/PNS</label>
                       <select name="status_cpns" id="status_cpns" class="form-control">
-                        <option value="1">CPNS</option>
-                        <option value="2">PNS</option>
-                        <option value="3">PPPK</option>
+                        <option value="1" <?= ($data_gtk["status_cpns"] == "1") ? "selected" : ""; ?>>CPNS</option>
+                        <option value="2" <?= ($data_gtk["status_cpns"] == "2") ? "selected" : ""; ?>>PNS</option>
+                        <option value="3" <?= ($data_gtk["status_cpns"] == "3") ? "selected" : ""; ?>>PPPK</option>
                       </select>
                     </div>
                     <div class="col-12 col-lg-3 col-sm-12" style="margin-top:15px;">
@@ -97,7 +97,12 @@
                         <?php
                         $list_gol = $this->db->get("m_gol")->result_array();
                         foreach ($list_gol as $key => $value) {
-                          echo '<option value="'.$value["kode_gol"].'">'.$value["ket_gol"].' '.$value["nama_gol"].'</option>';
+                          if($value["kode_gol"] == $data_gtk["kode_gol"]){
+                            $selected = "selected"; 
+                          }else{
+                            $selected = "";
+                          }
+                          echo '<option value="'.$value["kode_gol"].'" '.$selected.'>'.$value["ket_gol"].' '.$value["nama_gol"].'</option>';
                         }
                         ?>
                       </select>
@@ -105,25 +110,25 @@
                     <div class="col-12 col-lg-3 col-sm-12" style="margin-top:15px;">
                       <label for="NIP">Jenjang JF Guru</label>
                       <select name="jenjang_jf" id="jenjang_jf" class="form-control">
-                        <option value="Guru Ahli Pertama">Guru Ahli Pertama</option>
-                        <option value="Guru Ahli Muda">Guru Ahli Muda</option>
-                        <option value="Guru Ahli Madya">Guru Ahli Madya</option>
-                        <option value="Guru Ahli Utama">Guru Ahli Utama</option>
+                        <option value="Guru Ahli Pertama" <?= ($data_gtk["jenjang_jf"] == "Guru Ahli Pertama") ? "selected" : ""; ?>>Guru Ahli Pertama</option>
+                        <option value="Guru Ahli Muda" <?= ($data_gtk["jenjang_jf"] == "Guru Ahli Muda") ? "selected" : ""; ?>>Guru Ahli Muda</option>
+                        <option value="Guru Ahli Madya" <?= ($data_gtk["jenjang_jf"] == "Guru Ahli Madya") ? "selected" : ""; ?>>Guru Ahli Madya</option>
+                        <option value="Guru Ahli Utama" <?= ($data_gtk["jenjang_jf"] == "Guru Ahli Utama") ? "selected" : ""; ?>>Guru Ahli Utama</option>
                       </select>
                     </div>
                     <div class="col-12 col-lg-3 col-sm-12" style="margin-top:15px;">
                       <label for="status_gtk">Status GTK</label>
                       <select name="status_gtk" id="status_gtk" class="form-control">
-                        <option value="Pendidik Guru">Guru Ahli Pertama</option>
-                        <option value="Tendik Staf">Tendik Staf</option>
-                        <option value="Non GTK">Non GTK</option>
+                        <option value="Pendidik Guru" <?= ($data_gtk["status_gtk"] == "Pendidik Guru") ? "selected" : ""; ?>>Pendidik Guru</option>
+                        <option value="Tendik Staf" <?= ($data_gtk["status_gtk"] == "Tendik Staf") ? "selected" : ""; ?>>Tendik Staf</option>
+                        <option value="Non GTK" <?= ($data_gtk["status_gtk"] == "Non GTK") ? "selected" : ""; ?>>Non GTK</option>
                       </select>
                     </div>
                     <div class="col-12 col-lg-3 col-sm-12" style="margin-top:15px;">
                       <label for="NIP">Jenis PTK</label>
                       <select name="jenis_ptk" id="jenis_ptk" class="form-control">
-                        <option value="Guru Kelas">Guru Kelas</option>
-                        <option value="Guru Mapel">Guru Mapel</option>
+                        <option value="Guru Kelas" <?= ($data_gtk["jenis_ptk"] == "Guru Kelas") ? "selected" : ""; ?>>Guru Kelas</option>
+                        <option value="Guru Mapel" <?= ($data_gtk["jenis_ptk"] == "Guru Mapel") ? "selected" : ""; ?>>Guru Mapel</option>
                       </select>
                     </div>
                     <div class="col-12 col-lg-3 col-sm-" style="margin-top:15px;">
@@ -133,59 +138,59 @@
                     <div class="col-12 col-lg-3 col-sm-12" style="margin-top:15px;">
                       <label for="NIP">Pembimbing PDPD</label>
                       <select name="pembimbing_pdpd" id="pembimbing_pdpd" class="form-control">
-                        <option value="YA">YA</option>
-                        <option value="TIDAK">TIDAK</option>
+                        <option value="YA" <?= ($data_gtk["pembimbing_pdpd"] == "YA") ? "selected" : ""; ?>>YA</option>
+                        <option value="TIDAK" <?= ($data_gtk["pembimbing_pdpd"] == "TIDAK") ? "selected" : ""; ?>>TIDAK</option>
                       </select>
                     </div>
                     <div class="col-12 col-lg-6 col-sm-12" style="margin-top:15px;">
                       <label for="NIP">Agama</label>
                       <select name="kode_agama" id="kode_agama" class="form-control">
-                        <option value="1">Islam</option>
-                        <option value="2">Kristen</option>
-                        <option value="3">Katholik</option>
-                        <option value="4">Hindu</option>
-                        <option value="5">Buddha</option>
-                        <option value="6">Kepercayaan</option>
-                        <option value="7">-</option>
+                        <option <?= ($data_gtk["kode_agama"] == "1") ? "selected" : ""; ?> value="1">Islam</option>
+                        <option <?= ($data_gtk["kode_agama"] == "2") ? "selected" : ""; ?> value="2">Kristen</option>
+                        <option <?= ($data_gtk["kode_agama"] == "3") ? "selected" : ""; ?> value="3">Katholik</option>
+                        <option <?= ($data_gtk["kode_agama"] == "4") ? "selected" : ""; ?> value="4">Hindu</option>
+                        <option <?= ($data_gtk["kode_agama"] == "5") ? "selected" : ""; ?> value="5">Buddha</option>
+                        <option <?= ($data_gtk["kode_agama"] == "6") ? "selected" : ""; ?> value="6">Kepercayaan</option>
+                        <option <?= ($data_gtk["kode_agama"] == "7") ? "selected" : ""; ?> value="7">-</option>
                       </select>
                     </div>
                     <div class="col-12 col-lg-6 col-sm-12" style="margin-top:15px;">
                       <label for="NIP">NUPTK</label>
-                      <input type="text" name="nuptk" id="nuptk" placeholder="Isi dengan NUPTK" class="form-control">
+                      <input type="text" name="nuptk" id="nuptk" placeholder="Isi dengan NUPTK" class="form-control" value="<?= $data_gtk["nuptk"]; ?>">
                     </div>
                     <div class="col-12 col-lg-6 col-sm-12" style="margin-top:15px;">
                       <label for="NIP">NUKS</label>
-                      <input type="text" name="nuks" id="nuks" class="form-control" placeholder="Isi dengan NUKS">
+                      <input type="text" name="nuks" id="nuks" class="form-control" placeholder="Isi dengan NUKS" value="<?= $data_gtk["nuks"]; ?>">
                     </div>
                     <div class="col-12 col-lg-6 col-sm-12" style="margin-top:15px;">
                       <label for="NIP">NRG</label>
-                      <input type="text" name="nrg" id="nrg" placeholder="Isi dengan NRG"class="form-control">
+                      <input type="text" name="nrg" id="nrg" placeholder="Isi dengan NRG"class="form-control" value="<?= $data_gtk["nrg"]; ?>">
                     </div>
                     <div class="col-12 col-lg-6 col-sm-12" style="margin-top:15px;">
                       <label for="NIP">No Sertifikat Pendidik</label>
-                      <input type="text" name="no_serdik" id="no_serdik" class="form-control" placeholder="Isi dengan No Serdik">
+                      <input type="text" name="no_serdik" id="no_serdik" class="form-control" placeholder="Isi dengan No Serdik" value="<?= $data_gtk["no_serdik"]; ?>">
                     </div>
                     <div class="col-12 col-lg-6 col-sm-12" style="margin-top:15px;">
                       <label for="NIP">No Sertifikat Guru Penggerak</label>
-                      <input type="text" name="no_sergp" id="no_sergp" class="form-control" placeholder="Isi dengan sertifikat guru penggerak">
+                      <input type="text" name="no_sergp" id="no_sergp" class="form-control" placeholder="Isi dengan sertifikat guru penggerak" value="<?= $data_gtk["no_sergp"]; ?>">
                     </div>
                     <div class="col-12 col-lg-12 col-sm-12" style="margin-top:15px;">
                       <label for="NIP">No Sertifikat Guru Calon Kepala Sekolah</label>
-                      <input type="text" name="no_crs" id="no_crs" class="form-control">
+                      <input type="text" name="no_crs" id="no_crs" class="form-control" value="<?= $data_gtk["no_crs"]; ?>">
                     </div>
                     <div class="col-12 col-lg-12 col-sm-12" style="margin-top:15px;">
                       <label for="NIP">Alamat (Domisili)</label>
                       <textarea name="alamat" id="alamat" class="form-control" style="-webkit-box-sizing: border-box;
                              -moz-box-sizing: border-box;
-                              box-sizing: border-box;" rows="5"></textarea>
+                              box-sizing: border-box;" rows="5"><?= $data_gtk["alamat"]; ?></textarea>
                     </div>
                     <div class="col-12 col-lg-6 col-sm-12" style="margin-top:15px;">
                       <label for="NIP">Pendidikan</label>
-                      <input type="text" name="pendidikan" id="pendidikan" class="form-control" placeholder="Isi dengan Pendidikan Terakhir">
+                      <input type="text" name="pendidikan" id="pendidikan" value="<?= $data_gtk["pendidikan"]; ?>" class="form-control" placeholder="Isi dengan Pendidikan Terakhir">
                     </div>
                     <div class="col-12 col-lg-6 col-sm-12" style="margin-top:15px;">
                       <label for="NIP">Prodi</label>
-                      <input type="text" name="prodi" id="prodi" class="form-control" placeholder="Isi dengan nama Prodi Pendidikan">
+                      <input type="text" name="prodi" id="prodi" class="form-control" value="<?= $data_gtk["prodi"]; ?>" placeholder="Isi dengan nama Prodi Pendidikan">
                     </div>
                     <div class="col-12 col-lg-6 col-sm-12" style="margin-top:15px;">
                       <label for="NIP">Tunjangan Pusat</label>
@@ -201,19 +206,19 @@
                     </div>
                     <div class="col-12 col-lg-6 col-sm-12" style="margin-top:15px;">
                       <label for="NIP">No Rek Bank</label>
-                      <input type="text" name="no_rek_bank" id="no_rek_bank" class="form-control" placeholder="Isi dengan No Rekening BANK">
+                      <input type="text" name="no_rek_bank" id="no_rek_bank" class="form-control" value="<?= $data_gtk["no_rek_bank"]; ?>" placeholder="Isi dengan No Rekening BANK">
                     </div>
                     <div class="col-12 col-lg-6 col-sm-12" style="margin-top:15px;">
                       <label for="NIP">Nama Rek Bank</label>
-                      <input type="text" name="nama_rek_bank" id="nama_rek_bank" class="form-control">
+                      <input type="text" name="nama_rek_bank" id="nama_rek_bank" class="form-control" value="<?= $data_gtk["nama_rek_bank"]; ?>">
                     </div>
                     <div class="col-12 col-lg-6 col-sm-12" style="margin-top:15px;">
                       <label for="NIP">Nama Bank</label>
-                      <input type="text" name="nama_bank" id="nama_bank" class="form-control">
+                      <input type="text" name="nama_bank" id="nama_bank" class="form-control" value="<?= $data_gtk["nama_bank"]; ?>">
                     </div>
-                    <div class="col-12 col-lg-6 col-sm-12" style="margin-top:15px;">
+                    <div class="col-12 col-lg-6 col-sm-12" style="margin-top:15px;" >
                       <label for="NIP">NPWP</label>
-                      <input type="text" name="npwp" id="npwp" class="form-control">
+                      <input type="text" name="npwp" id="npwp" class="form-control" value="<?= $data_gtk["npwp"]; ?>">
                     </div>
                     <div class="col-12 col-lg-6 col-sm-12" style="margin-top:15px;">
                       <label for="NIP">Dapodik</label>
@@ -224,21 +229,21 @@
                     </div>
                     <div class="col-12 col-lg-6 col-sm-12" style="margin-top:15px;">
                       <label for="NIP">TMT Dapodik</label>
-                      <input type="date" name="tmt_masuk_dapodik" id="tmt_masuk_dapodik" class="form-control">
+                      <input type="date" name="tmt_masuk_dapodik" id="tmt_masuk_dapodik" class="form-control" value="<?= $data_gtk["tmt_masuk_dapodik"]; ?>">
                     </div>
                     <div class="col-12 col-lg-6 col-sm-12" style="margin-top:15px;">
                       <label for="NIP">TMT Awal Honorer (Khusus NON ASN)</label>
-                     <input type="date" name="tmt_awal_honorer" id="tmt_awal_honorer" class="form-control">
+                     <input type="date" name="tmt_awal_honorer" id="tmt_awal_honorer" value="<?= $data_gtk["tmt_awal_honorer"]; ?>" class="form-control">
                     </div>
                     <div class="col-12 col-lg-6 col-sm-12" style="margin-top:15px;">
                       <label for="NIP">Sumber Gaji (Khusus Non ASN)</label>
                       <select class="form-control" name="sumber_gaji" id="sumber_gaji">
-                        <option value="PTT-B">APBD (PTT-B)</option>
-                        <option value="PTT-A">APBD (PTT-A)</option>
-                        <option value="BOSP">BOSP(BOSNAS)</option>
-                        <option value="BOSDA">BOSDA(BOSDA)</option>
-                        <option value="YAYASAN">YAYASAN</option>
-                        <option value="LAIN">SUMBER LAIN</option>
+                        <option <?= ($data_gtk["kode_agama"] == "1") ? "selected" : ""; ?> value="PTT-B">APBD (PTT-B)</option>
+                        <option <?= ($data_gtk["kode_agama"] == "1") ? "selected" : ""; ?> value="PTT-A">APBD (PTT-A)</option>
+                        <option <?= ($data_gtk["kode_agama"] == "1") ? "selected" : ""; ?> value="BOSP">BOSP(BOSNAS)</option>
+                        <option <?= ($data_gtk["kode_agama"] == "1") ? "selected" : ""; ?> value="BOSDA">BOSDA(BOSDA)</option>
+                        <option <?= ($data_gtk["kode_agama"] == "1") ? "selected" : ""; ?> value="YAYASAN">YAYASAN</option>
+                        <option <?= ($data_gtk["kode_agama"] == "1") ? "selected" : ""; ?> value="LAIN">SUMBER LAIN</option>
                       </select>
                     </div>
                     <div class="col-5 col-lg-3 col-sm-12" style="margin-top:15px;">

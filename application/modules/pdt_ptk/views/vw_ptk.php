@@ -45,7 +45,6 @@
                   <th>Golongan</th>
                   <th>Status Pendidik</th>
                   <th>Jenis PTK</th>
-                  <th>Keterangan</th>
                   <th>Aksi</th>
                 </tr>
               </thead>
@@ -65,7 +64,7 @@
 <!-- -------------------------------------------------------------- -->
 
 <script>
-  var urlDatatable = "<?= site_url('ptk/datalist') ?>";
+  var urlDatatable = "<?= site_url('pdt_ptk/datalist') ?>";
   var init_btn_add = false;
   var tabel_ptk = $("#table_ptk").DataTable({
     responsive: true,
@@ -110,7 +109,7 @@
         },
       },
       {
-        data: 'nama_lengkap',
+        data: 'nama',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -118,7 +117,7 @@
         },
       },
       {
-        data: 'ket_jab',
+        data: 'jabatan_ptk',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -126,15 +125,15 @@
         },
       },
       {
-        data: 'ket_gol',
+        data: 'pangkat_golongan',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
-          $(td).html('<div>[' + cellData +'] '+rowData["nama_gol"]+'</div>');
+          $(td).html('<div>' + cellData +'</div>');
         },
       },
       {
-        data: 'status_gtk',
+        data: 'status_kepegawaian',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
@@ -161,30 +160,19 @@
           $(td).html('<div class="text-end">' + cellData + '</div>');
         },
       },
+      
       {
-        data: 'keterangan_ptk',
-        orderable: false,
-        className: 'vam',
-        createdCell: function(td, cellData, rowData, row, col) {
-          if (rowData.keterangan_ptk != "" && rowData.jenisketerangan_ptk_ptk != null){
-            display = rowData.keterangan_ptk;
-          }else{
-            display = "-";
-          }
-          $(td).html('<div class="text-end">' + cellData + '</div>');
-        },
-      },
-      {
-        data: 'nip',
+        data: 'encoded_id',
         orderable: false,
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
           let id_entry = cellData;
+          console.log(cellData);
           let html_aksi = '<div class="btn-group">' + '<button type="button" class="btn btn-sm btn-light-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">' +
             'Pilih' +
             '</button>' +
             '<ul class="dropdown-menu">' +
-            '<li><a class="dropdown-item" href="<?php echo site_url("ptk/edit/"); ?>'+btoa(cellData)+'"><i class="fas fa-edit me-1"></i>Edit</a></li>' +
+            '<li><a class="dropdown-item" href="<?php echo site_url("pdt_ptk/edit/"); ?>'+cellData+'"><i class="fas fa-edit me-1"></i>Edit</a></li>' +
             '</ul>' +
             '</div>';
           $(td).html('<div class="text-center">' + html_aksi + '</div>');

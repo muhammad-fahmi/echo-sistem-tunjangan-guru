@@ -49,8 +49,6 @@
           <h4 class="space-between">Daftar Rombongan Belajar</h4>
         </div>
         <div class="card-body">
-
-
           <div class="table-responsive">
 
             <div class="_loading loading_table_rombel">
@@ -61,12 +59,12 @@
 
               <thead class="bg-info text-white">
                 <tr class="text-center">
-                  <th class="vat" style="min-width: 30px;">#</th>
-                  <th class="vat" style="min-width: 100px;">Jenjang</th>
-                  <th class="vat" style="min-width: 150px;">Sekolah</th>
-                  <th class="vat" style="min-width: 60px;">Kelas</th>
-                  <th class="vat" style="min-width: 80px;">Rombel</th>
-                  <th class="vat" style="min-width: 60px;">Aksi</th>
+                  <th class="vam" style="min-width: 30px;">#</th>
+                  <th class="vam" style="min-width: 100px;">Jenjang</th>
+                  <th class="vam" style="min-width: 150px;">Sekolah</th>
+                  <th class="vam" style="min-width: 60px;">Kelas</th>
+                  <th class="vam" style="min-width: 80px;">Rombel</th>
+                  <th class="vam" style="min-width: 60px;">Aksi</th>
                 </tr>
               </thead>
 
@@ -147,7 +145,7 @@
       },
       {
         data: 'ket_kelas',
-        orderable: false,
+        orderable: true,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-center">' + cellData + '</div>');
@@ -155,7 +153,7 @@
       },
       {
         data: 'nama_rombel',
-        orderable: false,
+        orderable: true,
         className: 'vat',
         createdCell: function(td, cellData, rowData, row, col) {
           $(td).html('<div class="text-center">' + cellData + '</div>');
