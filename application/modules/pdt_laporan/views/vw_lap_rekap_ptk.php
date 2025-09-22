@@ -38,32 +38,34 @@
 
                     <!-- Unit Kerja -->
                     <!-- <div class="row mb-2">
-              <div class="col-4 col-lg-3">
-                <label for="tempat_tugas">Sekolah</label>
-              </div>
-              <div class="col-8 col-lg-9">
-                <select type="text" name="tempat_tugas" class="form-select form-select" style="width:100%" id="tempat_tugas">
-                  <.?php $selected = ($data["tempat_tugas"] != "") ? "selected" : ""; ?>
-                  <option value="<.?php echo $data["tempat_tugas"]; ?>" <.?php echo $selected ?>><.?php echo $data["tempat_tugas"]; ?></option>
-                </select>
-              </div>
-            </div> -->
+                        <div class="col-4 col-lg-3">
+                            <label for="tempat_tugas">Sekolah</label>
+                        </div>
+                        <div class="col-8 col-lg-9">
+                            <select type="text" name="tempat_tugas" class="form-select form-select" style="width:100%" id="tempat_tugas">
+                                <.?php $selected=($data["tempat_tugas"] !="" ) ? "selected" : "" ; ?>
+                                    <option value="<.?php echo $data[" tempat_tugas"]; ?>" <.?php echo $selected ?>><.?php echo $data["tempat_tugas"]; ?>
+                                    </option>
+                            </select>
+                        </div>
+                    </div> -->
 
                     <!-- Status Instansi -->
                     <!-- <div class="row mb-2">
-              <div class="col-4 col-lg-3">
-                <label for="status_instansi">Status Instansi</label>
-              </div>
-              <div class="col-8 col-lg-9">
-                <select type="text" name="status_instansi" class="form-select form-select" style="width:100%" id="status_instansi">
-                  <option value="negeri">Negeri</option>
-                  <option value="swasta">Swasta</option>
-                </select>
-              </div>
-            </div> -->
+                        <div class="col-4 col-lg-3">
+                            <label for="status_instansi">Status Instansi</label>
+                        </div>
+                        <div class="col-8 col-lg-9">
+                            <select type="text" name="status_instansi" class="form-select form-select" style="width:100%" id="status_instansi">
+                                <option value="negeri">Negeri</option>
+                                <option value="swasta">Swasta</option>
+                            </select>
+                        </div>
+                    </div> -->
 
                     <div class="modal-footer text-start gap-2">
-                        <a class="btn btn-info" href="<?= site_url("pdt_laporan/cetak_rekap_ptk"); ?>"><i class="fas fa-file"></i> Cetak </a>
+                        <a class="btn btn-info" href="<?= site_url("pdt_laporan/cetak_rekap_ptk"); ?>"><i
+                                class="fas fa-file"></i> Cetak </a>
                     </div>
 
                     <div class="table-responsive mt-4 table-container">
@@ -76,8 +78,10 @@
                                 <tr class="text-center">
                                     <th class="vam text-center" style="min-width: 30px;" rowspan="3">No</th>
                                     <th class="vam text-center" style="min-width: 30px;" rowspan="3">Keterangan</th>
-                                    <th class="vam text-center" style="min-width: 150px;" colspan="6">Tenaga Kependidikan</th>
-                                    <th class="vam text-center" style="min-width: 20px;" colspan="3" rowspan="2">Jumlah Tenaga Kependidikan</th>
+                                    <th class="vam text-center" style="min-width: 150px;" colspan="6">Tenaga
+                                        Kependidikan</th>
+                                    <th class="vam text-center" style="min-width: 20px;" colspan="3" rowspan="2">Jumlah
+                                        Tenaga Kependidikan</th>
                                 </tr>
                                 <tr>
                                     <th class="vam text-center" colspan="3">ASN</th>
@@ -107,44 +111,67 @@
                                 <tr>
                                     <td><span class="ms-3">Tenaga Pendidik/Guru</span></td>
                                     <!-- CPNS_PNS -->
-                                    <td class="text-center fw-bold"><?= (string) $data['data_tenaga_pendidik_pns']; ?></td>
+                                    <td class="text-center fw-bold"><?= (string) $data['data_tenaga_pendidik_pns']; ?>
+                                    </td>
                                     <!-- PPPK -->
-                                    <td class="text-center fw-bold"><?= (string) $data['data_tenaga_pendidik_pppk']; ?></td>
+                                    <td class="text-center fw-bold"><?= (string) $data['data_tenaga_pendidik_pppk']; ?>
+                                    </td>
                                     <!-- Jumlah ASN -->
-                                    <td class="text-center fw-bold"><?= (string) ($data['data_tenaga_pendidik_pns'] + $data['data_tenaga_pendidik_pppk']); ?></td>
+                                    <td class="text-center fw-bold">
+                                        <?= (string) ($data['data_tenaga_pendidik_pns'] + $data['data_tenaga_pendidik_pppk']); ?>
+                                    </td>
                                     <!-- Negeri -->
-                                    <td class="text-center fw-bold"><?= $data['data_tenaga_pendidik_negeri']; ?></td>
+                                    <td class="text-center fw-bold"><?= (string) $data['data_tenaga_pendidik_negeri']; ?></td>
                                     <!-- Swasta -->
-                                    <td class="text-center fw-bold"><?= $data['data_tenaga_pendidik_swasta']; ?></td>
+                                    <td class="text-center fw-bold"><?= (string) $data['data_tenaga_pendidik_swasta']; ?></td>
                                     <!-- Jumlah Non-ASN -->
-                                    <td class="text-center fw-bold"><?= (string) ($data['data_tenaga_pendidik_negeri'] + $data['data_tenaga_pendidik_swasta']); ?></td>
+                                    <td class="text-center fw-bold">
+                                        <?= (string) ($data['data_tenaga_pendidik_negeri'] + $data['data_tenaga_pendidik_swasta']); ?>
+                                    </td>
                                     <!-- Jumlah ASN -->
-                                    <td class="text-center fw-bold"><?= (string) ($data['data_tenaga_pendidik_pns'] + $data['data_tenaga_pendidik_pppk']); ?></td>
+                                    <td class="text-center fw-bold">
+                                        <?= (string) ($data['data_tenaga_pendidik_pns'] + $data['data_tenaga_pendidik_pppk']); ?>
+                                    </td>
                                     <!-- Jumlah Non-ASN -->
-                                    <td class="text-center fw-bold"><?= (string) ($data['data_tenaga_pendidik_negeri'] + $data['data_tenaga_pendidik_swasta']); ?></td>
+                                    <td class="text-center fw-bold">
+                                        <?= (string) ($data['data_tenaga_pendidik_negeri'] + $data['data_tenaga_pendidik_swasta']); ?>
+                                    </td>
                                     <!-- Total (ASN + Non-ASN) -->
                                     <td class="text-center fw-bold"><?= (string) ($data['total_data_pendidik']); ?></td>
                                 </tr>
                                 <tr>
                                     <td><span class="ms-3">Tenaga Kependidikan</span></td>
                                     <!-- CPNS_PNS -->
-                                    <td class="text-center fw-bold"><?= (string) $data['data_tenaga_kependidikan_pns']; ?></td>
+                                    <td class="text-center fw-bold">
+                                        <?= (string) $data['data_tenaga_kependidikan_pns']; ?></td>
                                     <!-- PPPK -->
-                                    <td class="text-center fw-bold"><?= (string) $data['data_tenaga_kependidikan_pppk']; ?></td>
+                                    <td class="text-center fw-bold">
+                                        <?= (string) $data['data_tenaga_kependidikan_pppk']; ?></td>
                                     <!-- Jumlah ASN -->
-                                    <td class="text-center fw-bold"><?= (string) ($data['data_tenaga_kependidikan_pns'] + $data['data_tenaga_kependidikan_pppk']); ?></td>
+                                    <td class="text-center fw-bold">
+                                        <?= (string) ($data['data_tenaga_kependidikan_pns'] + $data['data_tenaga_kependidikan_pppk']); ?>
+                                    </td>
                                     <!-- Negeri -->
-                                    <td class="text-center fw-bold"><?= $data['data_tenaga_kependidikan_negeri']; ?></td>
+                                    <td class="text-center fw-bold"><?= (string) $data['data_tenaga_kependidikan_negeri']; ?>
+                                    </td>
                                     <!-- Swasta -->
-                                    <td class="text-center fw-bold"><?= $data['data_tenaga_kependidikan_swasta']; ?></td>
+                                    <td class="text-center fw-bold"><?= (string) $data['data_tenaga_kependidikan_swasta']; ?>
+                                    </td>
                                     <!-- Jumlah Non-ASN -->
-                                    <td class="text-center fw-bold"><?= (string) ($data['data_tenaga_kependidikan_negeri'] + $data['data_tenaga_kependidikan_swasta']); ?></td>
+                                    <td class="text-center fw-bold">
+                                        <?= (string) ($data['data_tenaga_kependidikan_negeri'] + $data['data_tenaga_kependidikan_swasta']); ?>
+                                    </td>
                                     <!-- Jumlah ASN -->
-                                    <td class="text-center fw-bold"><?= (string) ($data['data_tenaga_kependidikan_pns'] + $data['data_tenaga_kependidikan_pppk']); ?></td>
+                                    <td class="text-center fw-bold">
+                                        <?= (string) ($data['data_tenaga_kependidikan_pns'] + $data['data_tenaga_kependidikan_pppk']); ?>
+                                    </td>
                                     <!-- Jumlah Non-ASN -->
-                                    <td class="text-center fw-bold"><?= (string) ($data['data_tenaga_kependidikan_negeri'] + $data['data_tenaga_kependidikan_swasta']); ?></td>
+                                    <td class="text-center fw-bold">
+                                        <?= (string) ($data['data_tenaga_kependidikan_negeri'] + $data['data_tenaga_kependidikan_swasta']); ?>
+                                    </td>
                                     <!-- Total (ASN + Non-ASN) -->
-                                    <td class="text-center fw-bold"><?= (string) ($data['total_data_kependidikan']); ?></td>
+                                    <td class="text-center fw-bold"><?= (string) ($data['total_data_kependidikan']); ?>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td colspan="10" class="fw-bold">Belum Terdata/Masuk</td>
