@@ -8,13 +8,13 @@
 
 <div class="row page-titles">
   <div class="col-md-4 col-12 align-self-center">
-    <h3 class="text-themecolor mb-0">Laporan Rekap Tenaga Pendidik</h3>
+    <h3 class="text-themecolor mb-0">Laporan Rekapitulasi Tenaga Pendidik</h3>
     <ol class="breadcrumb mb-0">
       <li class="breadcrumb-item">
         <a href="<?= site_url('pangkalan_data'); ?>">Pangkalan Data</a>
       </li>
       <li class="breadcrumb-item active">Laporan</li>
-      <li class="breadcrumb-item active">Laporan Rekap Tenaga Pendidik</li>
+      <li class="breadcrumb-item active">Laporan Rekapitulasi Tenaga Pendidik</li>
     </ol>
   </div>
 </div>
@@ -25,8 +25,7 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title">
-            <h3>Rekap Tenaga Pendidik/Guru</h3>
-            <small>Rekapitulasi tenaga pendidik/guru</small>
+            <h3>Rekapitulasi Tenaga Pendidik/Guru</h3>
           </div>
         </div>
         <div class="card-body">

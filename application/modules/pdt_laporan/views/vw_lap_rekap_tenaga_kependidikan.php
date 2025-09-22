@@ -8,13 +8,13 @@
 
 <div class="row page-titles">
   <div class="col-md-4 col-12 align-self-center">
-    <h3 class="text-themecolor mb-0">Laporan Rekap Tenaga Kependidikan</h3>
+    <h3 class="text-themecolor mb-0">Laporan Rekapitulasi Tenaga Kependidikan</h3>
     <ol class="breadcrumb mb-0">
       <li class="breadcrumb-item">
         <a href="<?= site_url('pangkalan_data'); ?>">Pangkalan Data</a>
       </li>
       <li class="breadcrumb-item active">Laporan</li>
-      <li class="breadcrumb-item active">Laporan Rekap Tenaga Kependidikan</li>
+      <li class="breadcrumb-item active">Laporan Rekapitulasi Tenaga Kependidikan</li>
     </ol>
   </div>
 </div>
@@ -25,8 +25,7 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title">
-            <h3>Rekap Tenaga Kependidikan</h3>
-            <small>Rekapitulasi tenaga kependidikan</small>
+            <h3>Rekapitulasi Tenaga Kependidikan</h3>
           </div>
         </div>
         <div class="card-body">
@@ -105,9 +104,9 @@
                   <!-- Jumlah ASN -->
                   <td class="text-center fw-bold"><?= (string) ($data['data_tenaga_kependidikan_pns'] + $data['data_tenaga_kependidikan_pppk']); ?></td>
                   <!-- Negeri -->
-                  <td class="text-center fw-bold"><?= $data['data_tenaga_kependidikan_negeri']; ?></td>
+                  <td class="text-center fw-bold"><?= (string) $data['data_tenaga_kependidikan_negeri']; ?></td>
                   <!-- Swasta -->
-                  <td class="text-center fw-bold"><?= $data['data_tenaga_kependidikan_swasta']; ?></td>
+                  <td class="text-center fw-bold"><?= (string) $data['data_tenaga_kependidikan_swasta']; ?></td>
                   <!-- Jumlah Non-ASN -->
                   <td class="text-center fw-bold"><?= (string) ($data['data_tenaga_kependidikan_negeri'] + $data['data_tenaga_kependidikan_swasta']); ?></td>
                   <!-- Jumlah ASN -->
