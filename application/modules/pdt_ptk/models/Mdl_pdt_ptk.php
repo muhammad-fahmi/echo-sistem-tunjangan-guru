@@ -58,7 +58,7 @@ class Mdl_pdt_ptk extends CI_Model
       /// |----------------------------------------------------------------------
       /// | PENATAAN DATA SEBELUM DIMASUKKAN KE DALAM RESULT_ARRAY
       /// |----------------------------------------------------------------------
-      
+
       $data_result[$index] = $row;
       // $data_result[$index]['nip'] = isset_nn_nes($row['nip'], '-');
       $data_result[$index]['nama_lengkap'] = isset_nn_nes($row['nama'], '-');

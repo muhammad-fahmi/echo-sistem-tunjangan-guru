@@ -66,11 +66,13 @@
 <script>
   var urlDatatable = "<?= site_url('pdt_ptk/datalist') ?>";
   var init_btn_add = false;
+  $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
+    show_notify("error", "DataTables Error: " + message);
+  };
   var tabel_ptk = $("#table_ptk").DataTable({
     responsive: true,
     processing: true,
     serverSide: true,
-    orderCellsTop: true,
     dom: '<"row g-1"' +
       '<"col-12 col-sm-6 init_btn_container"><"col-12 col-sm-6 vam"f>' +
       '<"col-12"tr>' +
@@ -78,7 +80,7 @@
       '>',
     /* set kolom yang di sortir secara default */
     order: [
-      [0, "asc"],
+      [1, "asc"],
     ],
     /* set placeholder dari input search */
     language: {
@@ -99,8 +101,7 @@
       },
     },
     /* Sesuaikan jumlah kolom dengan id table yang digunakan */
-    columns: [
-      {
+    columns: [{
         data: 'nip',
         orderable: false,
         className: 'vam',
@@ -138,9 +139,9 @@
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
           var display = "";
-          if (cellData !== false){
+          if (cellData !== false) {
             display = rowData.status_gtk;
-          }else{
+          } else {
             display = "Belum Diset";
           }
           $(td).html('<div class="text-end">' + display + '</div>');
@@ -152,15 +153,15 @@
         className: 'vam',
         createdCell: function(td, cellData, rowData, row, col) {
           var display = "";
-          if (cellData !== false){
+          if (cellData !== false) {
             display = rowData.jenis_ptk;
-          }else{
+          } else {
             display = "Belum Diset";
           }
           $(td).html('<div class="text-end">' + cellData + '</div>');
         },
       },
-      
+
       {
         data: 'encoded_id',
         orderable: false,

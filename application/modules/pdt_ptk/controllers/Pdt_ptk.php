@@ -58,7 +58,7 @@ class Pdt_ptk extends MY_Controller
   }
 
   public function edit($id_gtk)
-  { 
+  {
     $decoded_id_gtk = base64_decode($id_gtk);
     $kode_ukerja = $this->session->userdata("kode_unor");
     $q_data_gtk  = $this->db->where(["id_gtk" => $decoded_id_gtk,"kode_ukerja" => $kode_ukerja,"status_aktif" => "-1"])->get("m_gtk_asn_p3k");
@@ -86,7 +86,7 @@ class Pdt_ptk extends MY_Controller
     //form validation read only tidak perlu diinputkan
     $data_gtk["nip"] = $this->input->post("nip");
     $data_gtk["nik"] = $this->input->post("nik");
-    $data_gtk["id_gtk"] = $this->input->post("id_gtk"); 
+    $data_gtk["id_gtk"] = $this->input->post("id_gtk");
     $data_gtk["jns_kelamin"] = $this->input->post("jns_kelamin");
     $data_gtk["kode_kawin"] = $this->input->post("kode_kawin");
     $data_gtk["tmt_jab"] = $this->input->post("tmt_jab");

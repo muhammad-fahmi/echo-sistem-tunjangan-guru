@@ -461,4 +461,19 @@ class Pdt_peserta_didik extends MY_Controller
         ]));
     }
   }
+
+  public function cancel_import()
+  {
+    $dir = 'uploads';
+    if (!cek_folder_kosong($dir)) {
+      unlink('uploads/' . $this->session->userdata('file_name')); // Hapus file yang sudah diupload
+      $this->session->unset_userdata('file_name'); // Hapus nama file dari session
+    }
+    return $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode([
+        'status' => true,
+        'message' => "Proses import data dibatalkan.",
+      ]));
+  }
 }
